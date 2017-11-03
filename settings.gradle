@@ -1,0 +1,1 @@
+include ':app', ':note', ':data', ':domain', ':common', ':news'

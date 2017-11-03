@@ -1,0 +1,60 @@
+package cn.androidpi.news.entity
+
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import java.util.*
+
+/**
+ * 一条新闻。
+ * Created by jastrelax on 2017/11/2.
+ */
+
+@Entity(tableName = "news")
+class News {
+
+    @PrimaryKey
+    var id: Long? = null
+
+    /**
+     * 服务端的id
+     */
+    var newsId: String? = null
+    /**
+     * 分类
+     */
+    var category: String? = null
+    /**
+     * 原始标题
+     */
+    @ColumnInfo(name = "origin_title")
+    var originTitle: String? = null
+    /**
+     * 发表时间
+     */
+    @ColumnInfo(name = "publish_time")
+    var publishTime: String? = null
+    /**
+     * 来源名称
+     */
+    @ColumnInfo(name = "source_name")
+    var sourceName: String? = null
+    /**
+     * 来源链接
+     */
+    @ColumnInfo(name = "source_url")
+    var sourceUrl: String? = null
+    /**
+     * 标题
+     */
+    var title: String? = null
+    /**
+     * 链接
+     */
+    var url: String? = null
+    /**
+     * 关键词
+     */
+    var keywords: Array<String>? = null
+
+}
