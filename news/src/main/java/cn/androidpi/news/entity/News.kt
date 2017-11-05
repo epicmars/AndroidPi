@@ -57,4 +57,8 @@ class News {
      */
     var keywords: Array<String>? = null
 
+    override fun toString(): String {
+        return "News(id=$id, newsId=$newsId, category=$category, originTitle=$originTitle, publishTime=$publishTime, sourceName=$sourceName, sourceUrl=$sourceUrl, title=$title, url=$url, keywords=${Arrays.toString(keywords)})"
+    }
+
 }

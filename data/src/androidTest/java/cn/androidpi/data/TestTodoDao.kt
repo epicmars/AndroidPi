@@ -42,7 +42,7 @@ class TestTodoDao {
     }
 
     @Test
-    fun addAndReadTodo() {
+    fun testTodoDao() {
 
         // 无论是内存中还是本地存储中的数据库，先删除所有数据
         var todoItems = todoDao!!.getAll()

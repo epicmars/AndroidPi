@@ -1,6 +1,9 @@
 package cn.androidpi.data.remote.dto
 
 /**
+ * 新闻服务接口请求数据。
+ * @see cn.androidpi.data.remote.api.NewsApi.getNews
+ *
  * Created by jastrelax on 2017/11/2.
  */
 

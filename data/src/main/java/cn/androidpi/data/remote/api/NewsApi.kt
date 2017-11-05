@@ -6,10 +6,11 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
+ * 新闻服务API。
  * Created by jastrelax on 2017/11/2.
  */
 interface NewsApi {
 
     @GET("/api/v1/news/")
-    fun getNews(@Query("page") page: Int = 0, @Query("count") count: Int = 12): Single<List<ResNews>>
+    fun getNews(@Query("page") page: Int, @Query("count") count: Int): Single<List<ResNews>>
 }

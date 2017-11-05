@@ -3,6 +3,7 @@ package cn.androidpi.data.local
 import android.arch.persistence.room.TypeConverter
 
 /**
+ * 字符串数组到字符串间的转换，转换后的字符数组项使用","号分隔。
  * Created by jastrelax on 2017/11/2.
  */
 class StringArrayConverter {

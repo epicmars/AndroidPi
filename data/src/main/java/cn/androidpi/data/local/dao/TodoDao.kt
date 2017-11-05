@@ -13,7 +13,7 @@ import cn.androidpi.note.entity.Todo
 interface TodoDao {
 
     @Insert
-    fun insert(todo: Todo)
+    fun insert(vararg todoItems: Todo)
 
     @Query("select * from todo")
     fun getAll(): Array<Todo>

@@ -10,11 +10,16 @@ import io.reactivex.Single
 
 interface NewsRepo {
 
+    companion object {
+        // 新闻页面文章数默认大小
+        const val PAGE_SIZE = 12
+    }
+
     /**
      * 获取新闻
      *
-     * @param page   页数
-     * @param count  每页新闻数量
+     * @param page   页数，默认为第一页
+     * @param count  每页新闻数量，默认大小为12篇
      */
-    fun getNews(page: Int, count: Int): Single<List<News>>
+    fun getNews(page: Int = 0, count: Int = PAGE_SIZE): Single<List<News>>
 }

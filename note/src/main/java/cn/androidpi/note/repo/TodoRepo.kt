@@ -10,8 +10,20 @@ import java.util.*
  */
 interface TodoRepo {
 
-    fun newTodo(startTime: Date, deadline: Date, whatTodo: String): Completable
+    /**
+     * 添加一条新的待办事项。
+     *
+     * @param startTime 待办事项的开始时间
+     * @param deadline  待办事项的截止时间
+     * @param whatTodo  待办的内容
+     */
+    fun addNewTodo(startTime: Date, deadline: Date, whatTodo: String): Completable
 
+    /**
+     * 获取今天的待办事项。
+     *
+     * @return 今天的待办事项
+     */
     fun todoToday(): Single<Array<Todo>>
 
 }

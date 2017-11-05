@@ -4,6 +4,8 @@ import cn.androidpi.news.entity.News
 import com.google.gson.annotations.SerializedName
 
 /**
+ * 新闻服务接口返回数据。
+ * @see cn.androidpi.data.remote.api.NewsApi.getNews
  * Created by jastrelax on 2017/11/2.
  */
 

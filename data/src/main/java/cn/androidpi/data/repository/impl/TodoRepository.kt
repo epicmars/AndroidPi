@@ -16,7 +16,7 @@ class TodoRepository : TodoRepo {
     @Inject
     val todoDao: TodoDao? = null
 
-    override fun newTodo(startTime: Date, deadline: Date, whatTodo: String): Completable {
+    override fun addNewTodo(startTime: Date, deadline: Date, whatTodo: String): Completable {
         return Completable.fromAction {
             val todo = Todo()
             todo.createdTime = Date()
