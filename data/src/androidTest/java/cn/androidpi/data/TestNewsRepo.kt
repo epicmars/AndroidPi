@@ -57,21 +57,14 @@ class TestNewsRepo {
 
     @Test
     @Throws(Exception::class)
-    fun testGetNews() {
-        mNewsRepo!!.getNews()
+    fun testNewsRepo() {
+        mNewsRepo!!.getLatestNews()
                 .subscribe(object : SingleObserver<List<News>> {
                     override fun onSuccess(t: List<News>?) {
                         println("TestNewsRepo.onSuccess")
                         assertEquals(NewsRepo.PAGE_SIZE, t!!.size)
                         // the news may return from local database if server is down
                         println(t.toTypedArray())
-                        val newsDao = mNewsDb?.newsDao()
-                        newsDao?.insertNews(*t.toTypedArray())
-
-                        val newsInDb = newsDao!!.getNews()
-                        assertEquals(NewsRepo.PAGE_SIZE, newsInDb.size)
-                        println(newsInDb.toTypedArray())
-
                     }
 
                     override fun onSubscribe(d: Disposable?) {
