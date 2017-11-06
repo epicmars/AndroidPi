@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "344b87055f2896e47531234735a1280e",
+    "identityHash": "36ba736f6bc7d5960eefb02759c7e42b",
     "entities": [
       {
         "tableName": "news",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `newsId` TEXT, `category` TEXT, `origin_title` TEXT, `publish_time` TEXT, `source_name` TEXT, `source_url` TEXT, `title` TEXT, `url` TEXT, `keywords` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `news_id` TEXT, `category` TEXT, `origin_title` TEXT, `publish_time` TEXT, `source_name` TEXT, `source_url` TEXT, `title` TEXT, `url` TEXT, `keywords` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -16,7 +16,7 @@
           },
           {
             "fieldPath": "newsId",
-            "columnName": "newsId",
+            "columnName": "news_id",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -75,13 +75,22 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_news_news_id",
+            "unique": true,
+            "columnNames": [
+              "news_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_news_news_id` ON `${TABLE_NAME}` (`news_id`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"344b87055f2896e47531234735a1280e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"36ba736f6bc7d5960eefb02759c7e42b\")"
     ]
   }
 }

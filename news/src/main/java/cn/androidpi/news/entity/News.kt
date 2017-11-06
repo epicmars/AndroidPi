@@ -2,6 +2,7 @@ package cn.androidpi.news.entity
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
@@ -10,7 +11,8 @@ import java.util.*
  * Created by jastrelax on 2017/11/2.
  */
 
-@Entity(tableName = "news")
+@Entity(tableName = "news",
+        indices = arrayOf(Index(value = "news_id", unique = true)))
 class News {
 
     @PrimaryKey
@@ -19,6 +21,7 @@ class News {
     /**
      * 服务端的id
      */
+    @ColumnInfo(name = "news_id")
     var newsId: String? = null
     /**
      * 分类

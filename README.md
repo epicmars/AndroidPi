@@ -3,7 +3,7 @@ AndroidPi
 
 这是一个对Android应用开发技术的探索与实验性项目，主要研究包括应用架构、测试驱动开发、设计模式等方面的内容，大多都是与工程实践相关。
 
-[Readme英文版](/README-en.md)
+[Readme English Version](/README-en.md)
 
 ## MVP与MVVM，该选哪一个？
 目前为止，我在工作中用过的应用架构有基于Otto的总线模式和MVP模式，业余时间使用Clean架构和MVVM做过一些开发。对于这些模式有一些很好的开源项目可以参考:

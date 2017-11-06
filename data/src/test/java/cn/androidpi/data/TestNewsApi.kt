@@ -12,12 +12,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import retrofit2.Retrofit
+import java.lang.Exception
 
 /**
  * Created by jastrelax on 2017/11/3.
  */
 
-@RunWith(JUnit4::class)
 class TestNewsApi {
 
     var retrofit: Retrofit? = null
@@ -30,6 +30,7 @@ class TestNewsApi {
     }
 
     @Test
+    @Throws(Exception::class)
     fun testGetNews() {
 
         getNewsByPage(0)
@@ -38,8 +39,9 @@ class TestNewsApi {
 
     }
 
+    @Throws(Exception::class)
     fun getNewsByPage(page: Int) {
-        newsApi?.getNews(page, 10)
+        newsApi?.getNews(page, NewsRepo.PAGE_SIZE)
                 ?.subscribe(object : SingleObserver<List<ResNews>> {
 
                     override fun onError(e: Throwable?) {
@@ -50,7 +52,7 @@ class TestNewsApi {
                     override fun onSuccess(t: List<ResNews>?) {
                         println("TestNewsApi.onSuccess")
                         assertEquals(NewsRepo.PAGE_SIZE, t!!.size)
-                        t?.let {
+                        t!!.let {
                             for (news in t) {
                                 println(news.toString())
                             }

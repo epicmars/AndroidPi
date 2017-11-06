@@ -1,6 +1,7 @@
 package cn.androidpi.data
 
 import android.arch.persistence.room.Room
+import android.database.sqlite.SQLiteConstraintException
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import cn.androidpi.data.local.NewsDatabase
@@ -40,15 +41,18 @@ class TestNewsDao {
         newsDb!!.close()
     }
 
+    @Test(expected = SQLiteConstraintException::class)
+    @Throws(Exception::class)
+    fun testInsertingNews() {
+        val news = createOneNews()
+        news.id = null
+        news.newsId = "afbadc01239453920"
+        newsDao!!.insertNews(news, news)
+    }
+
     @Test
     @Throws(Exception::class)
-    fun testNewsDao() {
-
-        insertNews(1)
-
-        var newsPage = newsDao!!.getNews()
-        assertEquals(1, newsPage.size)
-        println(newsPage.toTypedArray())
+    fun testGetNews() {
 
         insertNews(100)
         var firstPage = newsDao!!.getNews(0)
@@ -60,30 +64,33 @@ class TestNewsDao {
         assertEquals(NewsRepo.PAGE_SIZE, secondPage.size)
 
         println(secondPage.toTypedArray())
-
     }
 
     fun insertNews(count: Int) {
 
         val newsItems = Array<News>(count, {
             i ->
-            val news = News()
-            news.category = "news"
-            news.keywords = arrayOf("nasa",
-                    "哈勃望远镜",
-                    "哈勃",
-                    "大气层")
-            news.publishTime = "2017-11-02 13:52:34"
-            news.originTitle = "原标题：哈勃望远镜， 无法与你说再见"
-            news.sourceUrl = "http://www.stdaily.com/"
-            news.sourceName = "科技日报社-中国科技网"
-            news.title = "哈勃望远镜慢慢坠入大气层，NASA现在也无能为力"
-            news.url = "http://tech.163.com/17/1102/13/D288VV5200097U81.html"
-
-            news
+            createOneNews()
         })
 
         newsDao!!.insertNews(*newsItems)
+    }
+
+    fun createOneNews(): News {
+        val news = News()
+        news.category = "news"
+        news.keywords = arrayOf("nasa",
+                "哈勃望远镜",
+                "哈勃",
+                "大气层")
+        news.publishTime = "2017-11-02 13:52:34"
+        news.originTitle = "原标题：哈勃望远镜， 无法与你说再见"
+        news.sourceUrl = "http://www.stdaily.com/"
+        news.sourceName = "科技日报社-中国科技网"
+        news.title = "哈勃望远镜慢慢坠入大气层，NASA现在也无能为力"
+        news.url = "http://tech.163.com/17/1102/13/D288VV5200097U81.html"
+
+        return news
     }
 
 }
