@@ -1,63 +1,73 @@
 package cn.androidpi.data
 
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
-import cn.androidpi.common.networks.http.RetrofitClientFactory
-import cn.androidpi.data.local.NewsDatabase
+import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.data.remote.api.NewsApi
+import cn.androidpi.data.remote.dto.ResNews
 import cn.androidpi.data.repository.impl.NewsRepository
 import cn.androidpi.news.entity.News
-
-import org.junit.Before
-import org.junit.runner.RunWith
-
 import cn.androidpi.news.repo.NewsRepo
+import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
-import retrofit2.Retrofit
+import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import java.io.IOException
 
 /**
+ * Test cases for news repository.
+ *
+ * @see https://developer.android.com/topic/libraries/architecture/guide.html
+ * @see TestNewsApi
+ *
+ * When testing the repositories, because smaller unit tests for Dao and Api already
+ * existed. There this no need to do that again, they can be mocked here.
+ *
  * Created by jastrelax on 2017/11/5.
  */
-@RunWith(AndroidJUnit4::class)
 class TestNewsRepo {
 
     var mNewsRepo: NewsRepo? = null
-    var mRetrofit: Retrofit? = null
-    var mNewsApi: NewsApi? = null
-    var mNewsDb: NewsDatabase? = null
+    var mNewsApi: NewsApi? = mock(NewsApi::class.java)
+    var mNewsDao: NewsDao? = mock(NewsDao::class.java)
 
     @Before
     fun init() {
-        val context = InstrumentationRegistry.getTargetContext()
-
-        mRetrofit = RetrofitClientFactory.newsHttpClient(BuildConfig.NEWS_BASE_URL)
-        mNewsApi = mRetrofit?.create(NewsApi::class.java)
-        mNewsDb = Room.inMemoryDatabaseBuilder(context, NewsDatabase::class.java)
-                .allowMainThreadQueries().build()
-//        mNewsDb = Room.databaseBuilder(context, NewsDatabase::class.java, "test_news.db")
-//                .allowMainThreadQueries().build()
         var newsRepo = NewsRepository()
         newsRepo.newsApi = mNewsApi
-        newsRepo.newsDao = mNewsDb?.newsDao()
-
+        newsRepo.newsDao = mNewsDao
         mNewsRepo = newsRepo
     }
 
     @After
     @Throws(IOException::class)
     fun reclaim() {
-        mNewsDb!!.close()
+
     }
 
     @Test
     @Throws(Exception::class)
     fun testNewsRepo() {
+        //
+        val page = 0
+        val count = NewsRepo.PAGE_SIZE
+        // Faek news response
+        val fakeNewsResponse = arrayListOf<ResNews>()
+        // Fake news
+        val fakeNews = arrayListOf<News>()
+        for(i in 1..count) {
+            fakeNewsResponse.add(ResNews())
+            fakeNews.add(News())
+        }
+
+        Mockito.`when`(mNewsApi!!.getNews(page, count))
+                .thenReturn(Single.error(IOException("request failed")))
+        Mockito.`when`(mNewsDao!!.getNews(page, count))
+                .thenReturn(fakeNews)
+        // getLatestNews should pass if server is down
         mNewsRepo!!.getLatestNews()
                 .subscribe(object : SingleObserver<List<News>> {
                     override fun onSuccess(t: List<News>?) {

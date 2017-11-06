@@ -9,13 +9,27 @@ import io.reactivex.disposables.Disposable
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import retrofit2.Retrofit
 import java.lang.Exception
 
 /**
- * Created by jastrelax on 2017/11/3.
+ * Test cases for news api.
+ *
+ * @see https://developer.android.com/topic/libraries/architecture/guide.html
+ * @see TestNewsRepo
+ *
+ * To make tests independent from outside world, actual network call should be
+ * avoided. A fake local server can be created for testing.
+ * There are some Helpful libraries, eg.
+ * [nanohttpd](https://github.com/NanoHttpd/nanohttpd)
+ * [MockWebServer](https://github.com/square/okhttp/tree/master/mockwebserver)
+ * [MockRetrofit](https://github.com/square/retrofit/tree/master/retrofit-mock)
+ *
+ * The Nanohttpd and Mockwebserver should be used in the api tests which talks
+ * directly with server, thus the response message can be modified as needed.
+ *
+ * The architecture guide said we should not communicate with the remote server,
+ * just testing locally. But in real life it seems don't make sense.
  */
 
 class TestNewsApi {
