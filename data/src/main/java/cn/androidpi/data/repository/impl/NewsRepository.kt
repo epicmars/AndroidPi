@@ -1,20 +1,21 @@
 package cn.androidpi.data.repository.impl
 
-import javax.inject.Inject
-
 import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.data.remote.api.NewsApi
+import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.repo.NewsRepo
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by jastrelax on 2017/11/2.
  */
 
-class NewsRepository : NewsRepo {
+@Singleton
+class NewsRepository @Inject constructor() : NewsRepo {
 
     @Inject
     internal var newsApi: NewsApi? = null

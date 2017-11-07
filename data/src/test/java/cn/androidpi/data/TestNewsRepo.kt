@@ -3,9 +3,10 @@ package cn.androidpi.data
 import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.data.remote.api.NewsApi
 import cn.androidpi.data.remote.dto.ResNews
+import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.data.repository.impl.NewsRepository
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.repo.NewsRepo
+import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
@@ -53,7 +54,7 @@ class TestNewsRepo {
     fun testNewsRepo() {
         //
         val page = 0
-        val count = NewsRepo.PAGE_SIZE
+        val count = PAGE_SIZE
         // Faek news response
         val fakeNewsResponse = arrayListOf<ResNews>()
         // Fake news
@@ -72,9 +73,9 @@ class TestNewsRepo {
                 .subscribe(object : SingleObserver<List<News>> {
                     override fun onSuccess(t: List<News>?) {
                         println("TestNewsRepo.onSuccess")
-                        assertEquals(NewsRepo.PAGE_SIZE, t!!.size)
+                        assertEquals(PAGE_SIZE, t!!.size)
                         // the news may return from local database if server is down
-                        println(t.toTypedArray())
+                        println(t)
                     }
 
                     override fun onSubscribe(d: Disposable?) {

@@ -1,4 +1,4 @@
-package cn.androidpi.note.repo
+package cn.androidpi.data.repository
 
 import cn.androidpi.note.entity.Todo
 import io.reactivex.Completable
@@ -17,7 +17,7 @@ interface TodoRepo {
      * @param deadline  待办事项的截止时间
      * @param whatTodo  待办的内容
      */
-    fun addNewTodo(startTime: Date, deadline: Date, whatTodo: String): Completable
+    fun addTodoItem(startTime: Date, deadline: Date, whatTodo: String): Completable
 
     /**
      * 获取今天的待办事项。

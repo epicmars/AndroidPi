@@ -3,7 +3,7 @@ package cn.androidpi.data
 import cn.androidpi.common.networks.http.RetrofitClientFactory
 import cn.androidpi.data.remote.api.NewsApi
 import cn.androidpi.data.remote.dto.ResNews
-import cn.androidpi.news.repo.NewsRepo
+import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import org.junit.Assert.assertEquals
@@ -55,7 +55,7 @@ class TestNewsApi {
 
     @Throws(Exception::class)
     fun getNewsByPage(page: Int) {
-        newsApi?.getNews(page, NewsRepo.PAGE_SIZE)
+        newsApi?.getNews(page, PAGE_SIZE)
                 ?.subscribe(object : SingleObserver<List<ResNews>> {
 
                     override fun onError(e: Throwable?) {
@@ -65,12 +65,8 @@ class TestNewsApi {
 
                     override fun onSuccess(t: List<ResNews>?) {
                         println("TestNewsApi.onSuccess")
-                        assertEquals(NewsRepo.PAGE_SIZE, t!!.size)
-                        t!!.let {
-                            for (news in t) {
-                                println(news.toString())
-                            }
-                        }
+                        assertEquals(PAGE_SIZE, t!!.size)
+                        println(t)
                     }
 
                     override fun onSubscribe(d: Disposable?) {

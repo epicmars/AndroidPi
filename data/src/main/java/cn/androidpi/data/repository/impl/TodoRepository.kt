@@ -1,22 +1,24 @@
 package cn.androidpi.data.repository.impl
 
 import cn.androidpi.data.local.dao.TodoDao
+import cn.androidpi.data.repository.TodoRepo
 import cn.androidpi.note.entity.Todo
-import cn.androidpi.note.repo.TodoRepo
 import io.reactivex.Completable
 import io.reactivex.Single
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by jastrelax on 2017/11/2.
  */
-class TodoRepository : TodoRepo {
+@Singleton
+class TodoRepository @Inject constructor() : TodoRepo {
 
     @Inject
     val todoDao: TodoDao? = null
 
-    override fun addNewTodo(startTime: Date, deadline: Date, whatTodo: String): Completable {
+    override fun addTodoItem(startTime: Date, deadline: Date, whatTodo: String): Completable {
         return Completable.fromAction {
             val todo = Todo()
             todo.createdTime = Date()

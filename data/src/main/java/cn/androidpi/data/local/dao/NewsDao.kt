@@ -5,7 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.repo.NewsRepo
+import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 
 /**
  * Created by jastrelax on 2017/11/2.
@@ -18,6 +18,6 @@ interface NewsDao {
     fun insertNews(vararg newsItems: News)
 
     @Query("select * from news limit :count offset :page * :count ")
-    fun getNews(page: Int = 0, count: Int = NewsRepo.PAGE_SIZE) : List<News>
+    fun getNews(page: Int = 0, count: Int = PAGE_SIZE) : List<News>
 
 }

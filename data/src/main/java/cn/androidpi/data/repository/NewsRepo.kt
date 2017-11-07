@@ -1,6 +1,7 @@
-package cn.androidpi.news.repo
+package cn.androidpi.data.repository
 
 import cn.androidpi.news.entity.News
+import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 import io.reactivex.Single
 
 /**
@@ -10,10 +11,6 @@ import io.reactivex.Single
 
 interface NewsRepo {
 
-    companion object {
-        // 新闻页面文章数默认大小
-        const val PAGE_SIZE = 12
-    }
 
     /**
      * 从服务端更新新闻

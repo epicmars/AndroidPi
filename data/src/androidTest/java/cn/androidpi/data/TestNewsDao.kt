@@ -7,7 +7,7 @@ import android.support.test.runner.AndroidJUnit4
 import cn.androidpi.data.local.NewsDatabase
 import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.repo.NewsRepo
+import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -56,12 +56,12 @@ class TestNewsDao {
 
         insertNews(100)
         var firstPage = newsDao!!.getNews(0)
-        assertEquals(NewsRepo.PAGE_SIZE, firstPage.size)
+        assertEquals(PAGE_SIZE, firstPage.size)
 
         println(firstPage.toTypedArray())
 
         var secondPage = newsDao!!.getNews(1)
-        assertEquals(NewsRepo.PAGE_SIZE, secondPage.size)
+        assertEquals(PAGE_SIZE, secondPage.size)
 
         println(secondPage.toTypedArray())
     }

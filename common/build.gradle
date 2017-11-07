@@ -64,18 +64,19 @@ dependencies {
 
     // rxjava
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2_version"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
 
     // guava
 //    implementation "com.google.guava:guava:$guava_version"
 
     // log
-    implementation "com.jakewharton.timber:timber:$timber_version"
+    api "com.jakewharton.timber:timber:$timber_version"
     implementation "com.orhanobut:logger:$logger_version"
 
     // dagger2
-    api "com.google.dagger:dagger:$dagger2_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    api "com.google.dagger:dagger-android:$dagger2_version"
+    api "com.google.dagger:dagger-android-support:$dagger2_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 
     // leakcanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
