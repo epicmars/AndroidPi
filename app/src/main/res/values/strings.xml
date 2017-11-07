@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">AndroidPi</string>
+
+    <string name="navigation_drawer_open">打开导航栏</string>
+    <string name="navigation_drawer_close">关闭导航栏</string>
+    <string name="system">系统</string>
+    <string name="setting">设置</string>
+
+    <!--新闻-->
+    <string name="news">科技动态</string>
+
+    <!--待办事项-->
+    <string name="todo">待办事项</string>
+
 </resources>

@@ -68,6 +68,12 @@ dependencies {
     implementation project(':news')
     implementation project(':note')
     implementation project(':domain')
+
+    // dagger2
+    // api "com.google.dagger:dagger:$dagger2_version"
+    api "com.google.dagger:dagger-android:$dagger2_version"
+    api "com.google.dagger:dagger-android-support:$dagger2_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 }
 repositories {
     mavenCentral()

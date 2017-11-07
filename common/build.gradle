@@ -67,16 +67,11 @@ dependencies {
     api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
 
     // guava
-//    implementation "com.google.guava:guava:$guava_version"
+    // implementation "com.google.guava:guava:$guava_version"
 
     // log
     api "com.jakewharton.timber:timber:$timber_version"
     implementation "com.orhanobut:logger:$logger_version"
-
-    // dagger2
-    api "com.google.dagger:dagger-android:$dagger2_version"
-    api "com.google.dagger:dagger-android-support:$dagger2_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 
     // leakcanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
@@ -84,6 +79,6 @@ dependencies {
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
 
     // zxing
-//    implementation "com.google.zxing:android-core:$zxing_version"
-//    implementation "com.google.zxing:core:$zxing_version"
+    // implementation "com.google.zxing:android-core:$zxing_version"
+    // implementation "com.google.zxing:core:$zxing_version"
 }
