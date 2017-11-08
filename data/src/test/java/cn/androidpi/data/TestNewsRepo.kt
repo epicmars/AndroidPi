@@ -38,8 +38,8 @@ class TestNewsRepo {
     @Before
     fun init() {
         var newsRepo = NewsRepository()
-        newsRepo.newsApi = mNewsApi
-        newsRepo.newsDao = mNewsDao
+        newsRepo.newsApi = mNewsApi!!
+        newsRepo.newsDao = mNewsDao!!
         mNewsRepo = newsRepo
     }
 

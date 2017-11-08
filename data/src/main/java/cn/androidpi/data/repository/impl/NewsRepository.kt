@@ -18,26 +18,26 @@ import javax.inject.Singleton
 class NewsRepository @Inject constructor() : NewsRepo {
 
     @Inject
-    internal var newsApi: NewsApi? = null
+    lateinit var newsApi: NewsApi
 
     @Inject
-    internal var newsDao: NewsDao? = null
+    lateinit var newsDao: NewsDao
 
     override fun refreshNews(page: Int, count: Int): Single<List<News>> {
 
-        return newsApi!!.getNews(page, count)
+        return newsApi.getNews(page, count)
                 .toObservable()
                 .flatMap { resNews -> Observable.fromIterable(resNews) }
                 .map { resNews -> resNews.toNews() }
                 .toList()
                 .doOnSuccess {
-                    newsDao?.insertNews(*it.toTypedArray())
+                    newsDao.insertNews(*it.toTypedArray())
                 }
     }
 
     override fun getNews(page: Int, count: Int): Single<List<News>> {
         return Single.fromCallable{
-            newsDao!!.getNews(page, count)
+            newsDao.getNews(page, count)
         }
     }
 

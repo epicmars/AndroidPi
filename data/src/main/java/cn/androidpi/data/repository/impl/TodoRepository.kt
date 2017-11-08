@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class TodoRepository @Inject constructor() : TodoRepo {
 
     @Inject
-    val todoDao: TodoDao? = null
+    lateinit var todoDao: TodoDao
 
     override fun addTodoItem(startTime: Date, deadline: Date, whatTodo: String): Completable {
         return Completable.fromAction {
@@ -25,13 +25,13 @@ class TodoRepository @Inject constructor() : TodoRepo {
             todo.startTime = startTime
             todo.deadline = deadline
             todo.content = whatTodo
-            todoDao!!.insert(todo)
+            todoDao.insert(todo)
         }
     }
 
     override fun todoToday(): Single<Array<Todo>> {
         return Single.fromCallable {
-            todoDao!!.todoToday()
+            todoDao.todoToday()
         }
     }
 }

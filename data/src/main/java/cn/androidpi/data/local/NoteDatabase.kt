@@ -15,5 +15,9 @@ import cn.androidpi.note.entity.Todo
 @TypeConverters(DateConverter::class, StringArrayConverter::class)
 abstract class NoteDatabase : RoomDatabase() {
 
+    companion object {
+        val DATABASE_NAME = "note.db"
+    }
+
     abstract fun todoDao(): TodoDao
 }

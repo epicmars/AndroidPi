@@ -17,7 +17,7 @@ interface NewsDao {
     @Insert
     fun insertNews(vararg newsItems: News)
 
-    @Query("select * from news limit :count offset :page * :count ")
+    @Query("select * from news order by publish_time desc limit :count offset :page * :count")
     fun getNews(page: Int = 0, count: Int = PAGE_SIZE) : List<News>
 
 }

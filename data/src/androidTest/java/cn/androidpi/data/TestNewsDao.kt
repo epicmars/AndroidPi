@@ -10,10 +10,14 @@ import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by jastrelax on 2017/11/2.
@@ -24,6 +28,8 @@ class TestNewsDao {
 
     var newsDao: NewsDao? = null
     var newsDb : NewsDatabase? = null
+    val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val now: Calendar = Calendar.getInstance()
 
     @Before
     fun createDb() {
@@ -56,14 +62,24 @@ class TestNewsDao {
 
         insertNews(100)
         var firstPage = newsDao!!.getNews(0)
+        // page size is [PAGE_SIZE]
         assertEquals(PAGE_SIZE, firstPage.size)
+        // order by publish time in descending order
+        val it = firstPage.iterator()
+        while (it.hasNext()) {
+            val current = it.next()
+            val next = it.next()
+            if (next != null) {
+                assertTrue(current.publishTime!! >= next.publishTime!!)
+            }
+        }
 
-        println(firstPage.toTypedArray())
+        println(firstPage)
 
         var secondPage = newsDao!!.getNews(1)
         assertEquals(PAGE_SIZE, secondPage.size)
 
-        println(secondPage.toTypedArray())
+        println(secondPage)
     }
 
     fun insertNews(count: Int) {
@@ -83,7 +99,8 @@ class TestNewsDao {
                 "哈勃望远镜",
                 "哈勃",
                 "大气层")
-        news.publishTime = "2017-11-02 13:52:34"
+        now.add(Calendar.SECOND, 10)
+        news.publishTime = dateFormat.format(now.time)
         news.originTitle = "原标题：哈勃望远镜， 无法与你说再见"
         news.sourceUrl = "http://www.stdaily.com/"
         news.sourceName = "科技日报社-中国科技网"

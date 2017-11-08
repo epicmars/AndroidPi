@@ -14,6 +14,10 @@ import cn.androidpi.news.entity.News
 @TypeConverters(DateConverter::class, StringArrayConverter::class)
 abstract class NewsDatabase : RoomDatabase() {
 
+    companion object {
+        val DATABASE_NAME = "news.db"
+    }
+
     abstract fun newsDao(): NewsDao
 
 }

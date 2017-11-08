@@ -34,6 +34,7 @@ class ResNews {
     fun toNews(): News {
 
         var news = News()
+        news.title = title
         news.newsId = _id?.oid
         news.category = category
         news.originTitle = originTitle
