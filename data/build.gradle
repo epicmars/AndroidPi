@@ -57,6 +57,7 @@ dependencies {
     // test
     testImplementation 'org.mockito:mockito-core:2.11.0'
     testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
 
     // room
     implementation "android.arch.persistence.room:runtime:$arch_lifecycle_ext_version"
@@ -70,10 +71,14 @@ dependencies {
     implementation project(':domain')
 
     // dagger2
-    // api "com.google.dagger:dagger:$dagger2_version"
+    api "com.google.dagger:dagger:$dagger2_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    // dagger2 android
     api "com.google.dagger:dagger-android:$dagger2_version"
     api "com.google.dagger:dagger-android-support:$dagger2_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
+    // room
+    kapt "android.arch.persistence.room:compiler:$arch_lifecycle_ext_version"
 }
 repositories {
     mavenCentral()

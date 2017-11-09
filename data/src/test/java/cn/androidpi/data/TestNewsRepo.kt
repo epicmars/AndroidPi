@@ -21,11 +21,11 @@ import java.io.IOException
 /**
  * Test cases for news repository.
  *
- * @see https://developer.android.com/topic/libraries/architecture/guide.html
- * @see TestNewsApi
- *
  * When testing the repositories, because smaller unit tests for Dao and Api already
- * existed. There this no need to do that again, they can be mocked here.
+ * existed. There is no need to do that again, they can be mocked here.
+ *
+ * @see TestNewsDao
+ * @see TestNewsApi
  *
  * Created by jastrelax on 2017/11/5.
  */

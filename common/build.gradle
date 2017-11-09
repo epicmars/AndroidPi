@@ -39,11 +39,9 @@ dependencies {
     // lifecycle
     api "android.arch.lifecycle:runtime:$arch_lifecycle_ext_version"
     api "android.arch.lifecycle:extensions:$arch_lifecycle_ext_version"
-    kapt "android.arch.lifecycle:compiler:$arch_lifecycle_ext_version"
 
     // room
     api "android.arch.persistence.room:runtime:$arch_lifecycle_ext_version"
-    kapt "android.arch.persistence.room:compiler:$arch_lifecycle_ext_version"
     testApi "android.arch.persistence.room:testing:$arch_lifecycle_ext_version"
     api "android.arch.persistence.room:rxjava2:$arch_lifecycle_ext_version"
 
@@ -56,7 +54,7 @@ dependencies {
     // http
     api "com.squareup.retrofit2:retrofit:$retrofit_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    api "com.squareup.okhttp3:logging-interceptor:$okhttp3"
+    api "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     api "com.squareup.retrofit2:adapter-rxjava2:$adapter_rxjava2_version"
 
     // gson

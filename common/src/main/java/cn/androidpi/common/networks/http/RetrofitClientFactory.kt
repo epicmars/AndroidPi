@@ -1,7 +1,6 @@
 package cn.androidpi.common.networks.http
 
 import cn.androidpi.common.BuildConfig
-import cn.androidpi.common.json.GsonHelper
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -15,8 +14,12 @@ import timber.log.Timber
 
 object RetrofitClientFactory {
 
-    fun newsHttpClient(baseUrl: String): Retrofit {
-        val builder = OkHttpClient().newBuilder()
+    fun newRetrofit(baseUrl: String): Retrofit {
+        return retrofitBuilder().baseUrl(baseUrl).build()
+    }
+
+    fun retrofitBuilder(): Retrofit.Builder {
+        val builder = okHttpClientBuilder()
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(debugLoggingInterceptor())
         }
@@ -24,8 +27,10 @@ object RetrofitClientFactory {
                 .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(baseUrl)
-                .build()
+    }
+
+    fun okHttpClientBuilder(): OkHttpClient.Builder {
+        return OkHttpClient().newBuilder()
     }
 
     fun debugLoggingInterceptor(): HttpLoggingInterceptor {
