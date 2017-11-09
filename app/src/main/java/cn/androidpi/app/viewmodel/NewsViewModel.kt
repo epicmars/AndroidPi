@@ -5,10 +5,12 @@ import android.arch.lifecycle.ViewModel
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsModel
+import dagger.Lazy
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -17,26 +19,43 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
     @Inject
-    var mNewsRepo: NewsRepo? = null
+    lateinit var mNewsRepo: Lazy<NewsRepo>
 
-    @Inject
-    var mNews: MutableLiveData<List<News>>? = null
+    val mNews: MutableLiveData<ArrayList<News>> = MutableLiveData()
+
+    val mNewsInternal: ArrayList<News> = ArrayList()
+
+    var mPage = 0
 
     override fun getLatestNews(page: Int, count: Int) {
 
-        mNewsRepo?.getLatestNews(page, count)
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(object : SingleObserver<List<News>> {
+        mNewsRepo.get().getLatestNews(page, count)
+                 .subscribeOn(Schedulers.io())
+                 .observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(object : SingleObserver<List<News>> {
                     override fun onError(e: Throwable?) {
+                        Timber.e(e)
                     }
 
-                    override fun onSuccess(t: List<News>?) {
-                        mNews?.value = t
+                    override fun onSuccess(t: List<News>) {
+                        if (page == 0) {
+                            mNewsInternal.clear()
+                        }
+                        mNewsInternal.addAll(t)
+                        mNews.value = mNewsInternal
                     }
 
                     override fun onSubscribe(d: Disposable?) {
                     }
                 })
+    }
+
+    fun refreshPage() {
+        mPage = 0
+        getLatestNews(mPage)
+    }
+
+    fun nextPage() {
+        getLatestNews(++mPage)
     }
 }

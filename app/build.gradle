@@ -65,7 +65,11 @@ dependencies {
     // databinding
     kapt "com.android.databinding:compiler:$android_plugin_version"
     // dagger2
+    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    // dagger2 android
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
+    // lifecycle
+    kapt "android.arch.lifecycle:compiler:$arch_lifecycle_ext_version"
 
     implementation project(':news')
     implementation project(':note')

@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import cn.androidpi.app.R
+import cn.androidpi.app.components.base.BaseActivity
 import cn.androidpi.app.components.fragment.MainFragment
 import cn.androidpi.app.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     var binding: ActivityMainBinding? = null
 

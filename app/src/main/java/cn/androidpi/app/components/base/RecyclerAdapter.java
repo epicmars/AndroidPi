@@ -63,13 +63,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         return mDataViewMap.get(item.getClass().hashCode());
     }
 
-    public void setPayloads(Collection<?> mPayloads) {
-        if (null == mPayloads) {
-            // TODO: 2017/9/1 数据为空的占位
+    public void setPayloads(Collection<?> payloads) {
+        if (null == payloads) {
+            // TODO: 2017/9/1 数据为空的占位对象
             return;
         }
         this.mPayloads.clear();
-        this.mPayloads.addAll(mPayloads);
+        this.mPayloads.addAll(payloads);
+        notifyDataSetChanged();
+    }
+
+    public List<Object> getPayloads() {
+        return mPayloads;
+    }
+
+    public void addPayload(Collection<?> payloads) {
+        if (null == payloads) {
+            return;
+        }
+        this.mPayloads.addAll(payloads);
         notifyDataSetChanged();
     }
 }

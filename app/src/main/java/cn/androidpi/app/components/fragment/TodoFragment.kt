@@ -21,7 +21,7 @@ import javax.inject.Inject
 class TodoFragment : BaseFragment<FragmentTodoBinding>() {
 
     @Inject
-    var mTodoModel: TodoViewModel? = null
+    lateinit var mTodoModel: TodoViewModel
 
     var mAdapter: RecyclerAdapter? = null
 
@@ -47,7 +47,7 @@ class TodoFragment : BaseFragment<FragmentTodoBinding>() {
                 index -> aTestTodo
             }))
         }
-        mTodoModel?.mTodoToday?.observe(this, object : Observer<Array<Todo>> {
+        mTodoModel.mTodoToday.observe(this, object : Observer<Array<Todo>> {
             override fun onChanged(t: Array<Todo>?) {
                 mAdapter?.setPayloads(t?.toList())
             }

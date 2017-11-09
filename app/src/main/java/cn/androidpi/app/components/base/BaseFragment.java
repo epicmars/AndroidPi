@@ -9,13 +9,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import dagger.android.support.AndroidSupportInjection;
+
 /**
  * Created by jastrelax on 2017/9/8.
  */
 
-public class BaseFragment<VDB extends ViewDataBinding> extends Fragment {
+public abstract class BaseFragment<VDB extends ViewDataBinding> extends Fragment {
 
     protected VDB mBinding;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        AndroidSupportInjection.inject(this);
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override

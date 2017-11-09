@@ -5,7 +5,8 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_holder_one_line_height"
-        android:padding="@dimen/view_holder_padding">
+        android:padding="@dimen/view_holder_padding"
+        android:background="@drawable/listitem_bg_selector">
 
         <TextView
             android:id="@+id/tv_title"

@@ -1,5 +1,7 @@
 package cn.androidpi.app.components.viewholder
 
+import android.content.Intent
+import android.net.Uri
 import android.view.View
 import cn.androidpi.app.R
 import cn.androidpi.app.components.base.BaseViewHolder
@@ -17,5 +19,11 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
     override fun <T : Any?> present(data: T) {
         val news = data as? News
         mBinding.tvTitle.text = news?.title
+
+        itemView.setOnClickListener {
+            v: View? ->
+            val action = Intent(Intent.ACTION_VIEW, Uri.parse(news?.url))
+            v?.context?.startActivity(action)
+        }
     }
 }
