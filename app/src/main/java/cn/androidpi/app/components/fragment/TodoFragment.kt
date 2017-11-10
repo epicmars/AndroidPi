@@ -13,6 +13,7 @@ import cn.androidpi.app.components.base.BindLayout
 import cn.androidpi.app.components.base.RecyclerAdapter
 import cn.androidpi.app.components.viewholder.TodoViewHolder
 import cn.androidpi.app.databinding.FragmentTodoBinding
+import cn.androidpi.app.view.TodoView
 import cn.androidpi.app.viewmodel.TodoViewModel
 import cn.androidpi.note.entity.Todo
 import javax.inject.Inject
@@ -21,7 +22,7 @@ import javax.inject.Inject
  * Created by jastrelax on 2017/11/7.
  */
 @BindLayout(R.layout.fragment_todo)
-class TodoFragment : BaseFragment<FragmentTodoBinding>() {
+class TodoFragment : BaseFragment<FragmentTodoBinding>(), TodoView {
 
     companion object {
         val REQUEST_ADD_TODO_ITEM = 100
@@ -36,7 +37,6 @@ class TodoFragment : BaseFragment<FragmentTodoBinding>() {
 
     var mAdapter: RecyclerAdapter? = null
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mAdapter = RecyclerAdapter()
@@ -49,21 +49,29 @@ class TodoFragment : BaseFragment<FragmentTodoBinding>() {
             startActivityForResult(Intent(context, TodoEditActivity::class.java), REQUEST_ADD_TODO_ITEM)
         }
 
-        mTodoModel.mTodoToday.observe(this, object : Observer<Array<Todo>> {
+        mTodoModel.mTodoList.observe(this, object : Observer<Array<Todo>> {
             override fun onChanged(t: Array<Todo>?) {
                 mAdapter?.setPayloads(t?.toList())
             }
         })
 
-        mTodoModel.whatTodoToday()
+        showTodoList()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_ADD_TODO_ITEM) {
             if (resultCode == Activity.RESULT_OK) {
-                mTodoModel.whatTodoToday()
+                showTodoList()
             }
         }
+    }
+
+    override fun showTodoList() {
+        mTodoModel.loadTodoList()
+    }
+
+    override fun showTodoToday() {
+        mTodoModel.loadTodoToday()
     }
 }

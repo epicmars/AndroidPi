@@ -18,6 +18,12 @@ class TodoRepository @Inject constructor() : TodoRepo {
     @Inject
     lateinit var todoDao: TodoDao
 
+    override fun todoList(): Single<Array<Todo>> {
+        return Single.fromCallable {
+            todoDao.getAll()
+        }
+    }
+
     override fun saveTodoItem(startTime: Date, deadline: Date, whatTodo: String): Completable {
         return Completable.fromAction {
             val todo = Todo()

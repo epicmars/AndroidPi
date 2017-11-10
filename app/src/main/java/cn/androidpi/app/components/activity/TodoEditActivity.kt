@@ -34,11 +34,11 @@ class TodoEditActivity : BaseActivity(), TodoEditView, DatePickerFragment.OnDate
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_todo_edit)
 
-        mBinding?.tvStartTime?.setOnClickListener {
+        mBinding?.llStartTime?.setOnClickListener {
             DatePickerFragment.newInstance(TAG_START_TIME).show(supportFragmentManager, TAG_START_TIME)
         }
 
-        mBinding?.tvDeadline?.setOnClickListener {
+        mBinding?.llDeadline?.setOnClickListener {
             DatePickerFragment.newInstance(TAG_DEADLINE).show(supportFragmentManager, TAG_DEADLINE)
         }
 
@@ -56,10 +56,10 @@ class TodoEditActivity : BaseActivity(), TodoEditView, DatePickerFragment.OnDate
 
         mBinding?.btnCommit?.setOnClickListener {
             if (!mViewModel.isValidContent()) {
-                Snackbar.make(btn_commit, "待办事项不能为空", Snackbar.LENGTH_SHORT)
+                Snackbar.make(btn_commit, R.string.todo_tip_content_is_blank, Snackbar.LENGTH_SHORT)
                         .show()
             } else if (!mViewModel.isValidDate()) {
-                Snackbar.make(btn_commit, "开始时间不能晚于截止时间", Snackbar.LENGTH_SHORT)
+                Snackbar.make(btn_commit, R.string.todo_top_start_later_than_deadline, Snackbar.LENGTH_SHORT)
                         .show()
             } else {
                 commitTodoItem()

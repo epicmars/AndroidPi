@@ -11,6 +11,11 @@ import java.util.*
 interface TodoRepo {
 
     /**
+     * 获取所有的待办事项。
+     */
+    fun todoList(): Single<Array<Todo>>
+
+    /**
      * 添加一条新的待办事项。
      *
      * @param startTime 待办事项的开始时间

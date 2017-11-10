@@ -22,29 +22,54 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_start_time"
+                    <LinearLayout
+                        android:id="@+id/ll_start_time"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/view_holder_one_line_height"
-                        android:paddingStart="@dimen/editor_padding"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
                         android:paddingEnd="@dimen/editor_padding"
-                        android:background="@drawable/listitem_bg_selector"
-                        android:drawableStart="@drawable/ic_date_range"
-                        android:drawablePadding="8dp"
-                        android:gravity="center_vertical"
-                        android:hint="@string/todo_hint_start_time" />
+                        android:paddingStart="@dimen/editor_padding"
+                        android:background="@drawable/listitem_bg_selector">
 
-                    <TextView
-                        android:id="@+id/tv_deadline"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="@string/todo_hint_start_time"
+                            android:drawablePadding="8dp"
+                            android:drawableStart="@drawable/ic_date_range"/>
+
+                        <TextView
+                            android:id="@+id/tv_start_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/view_holder_one_line_height"
+                            android:gravity="center_vertical|end" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_deadline"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/view_holder_one_line_height"
-                        android:paddingStart="@dimen/editor_padding"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
                         android:paddingEnd="@dimen/editor_padding"
-                        android:background="@drawable/listitem_bg_selector"
-                        android:drawableStart="@drawable/ic_date_range"
-                        android:drawablePadding="8dp"
-                        android:gravity="center_vertical"
-                        android:hint="@string/todo_hint_deadline" />
+                        android:paddingStart="@dimen/editor_padding"
+                        android:background="@drawable/listitem_bg_selector">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="@string/todo_hint_deadline"
+                            android:drawablePadding="8dp"
+                            android:drawableStart="@drawable/ic_date_range"/>
+
+                        <TextView
+                            android:id="@+id/tv_deadline"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/view_holder_one_line_height"
+                            android:gravity="center_vertical|end" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -52,17 +77,17 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginTop="@dimen/panel_item_margin_vertical">
+                android:layout_marginTop="@dimen/panel_item_margin_vertical"
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/et_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/editor_padding"
+                    android:background="@null"
                     android:gravity="top"
                     android:hint="@string/todo"
-                    android:background="@null"/>
+                    android:padding="@dimen/editor_padding" />
             </android.support.v7.widget.CardView>
 
             <Button

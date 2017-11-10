@@ -39,6 +39,6 @@ class TodoEditViewModel @Inject constructor(): ViewModel(), TodoEditModel {
         if(mStartTime.value == null || mDeadline.value == null) {
             return false
         }
-        return mDeadline.value!!.after(mStartTime.value)
+        return mDeadline.value!! == (mStartTime.value) || mDeadline.value!!.after(mStartTime.value)
     }
 }

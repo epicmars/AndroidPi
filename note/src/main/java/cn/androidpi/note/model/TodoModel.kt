@@ -5,5 +5,7 @@ package cn.androidpi.note.model
  */
 interface TodoModel {
 
-    fun whatTodoToday()
+    fun loadTodoList()
+
+    fun loadTodoToday()
 }

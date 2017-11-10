@@ -22,8 +22,26 @@ class TodoViewModel @Inject constructor() : ViewModel(), TodoModel {
     lateinit var mTodoRepo: Lazy<TodoRepo>
 
     val mTodoToday: MutableLiveData<Array<Todo>> = MutableLiveData()
+    val mTodoList: MutableLiveData<Array<Todo>> = MutableLiveData()
 
-    override fun whatTodoToday() {
+    override fun loadTodoList() {
+        mTodoRepo.get().todoList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Array<Todo>> {
+                    override fun onSubscribe(d: Disposable?) {
+                    }
+
+                    override fun onSuccess(t: Array<Todo>?) {
+                        mTodoList.value = t
+                    }
+
+                    override fun onError(e: Throwable?) {
+                    }
+                })
+    }
+
+    override fun loadTodoToday() {
         mTodoRepo.get().todoToday()
                  .subscribeOn(Schedulers.io())
                  .observeOn(AndroidSchedulers.mainThread())
