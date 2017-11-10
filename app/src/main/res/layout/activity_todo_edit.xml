@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context="cn.androidpi.app.components.activity.TodoEditActivity">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/panel_item_margin_vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_start_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_holder_one_line_height"
+                        android:paddingStart="@dimen/editor_padding"
+                        android:paddingEnd="@dimen/editor_padding"
+                        android:background="@drawable/listitem_bg_selector"
+                        android:drawableStart="@drawable/ic_date_range"
+                        android:drawablePadding="8dp"
+                        android:gravity="center_vertical"
+                        android:hint="@string/todo_hint_start_time" />
+
+                    <TextView
+                        android:id="@+id/tv_deadline"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_holder_one_line_height"
+                        android:paddingStart="@dimen/editor_padding"
+                        android:paddingEnd="@dimen/editor_padding"
+                        android:background="@drawable/listitem_bg_selector"
+                        android:drawableStart="@drawable/ic_date_range"
+                        android:drawablePadding="8dp"
+                        android:gravity="center_vertical"
+                        android:hint="@string/todo_hint_deadline" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/panel_item_margin_vertical">
+
+                <EditText
+                    android:id="@+id/et_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/editor_padding"
+                    android:gravity="top"
+                    android:hint="@string/todo"
+                    android:background="@null"/>
+            </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/btn_commit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/panel_item_margin_vertical"
+                android:text="@string/confirm" />
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

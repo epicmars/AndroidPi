@@ -9,16 +9,24 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
 
-    <!--view holder-->
-    <dimen name="view_holder_padding">16dp</dimen>
+    <!-- view holder -->
+    <dimen name="view_holder_padding">8dp</dimen>
+    <dimen name="view_holder_padding_horizontal">16dp</dimen>
+    <dimen name="view_holder_padding_vertical">8dp</dimen>
     <dimen name="view_holder_one_line_height">48dp</dimen>
-    <dimen name="view_holder_two_line_height">64dp</dimen>
+    <dimen name="view_holder_two_line_height">72dp</dimen>
 
-    <dimen name="view_holder_margin_vertical">8dp</dimen>
     <dimen name="view_holder_margin_horizontal">16dp</dimen>
-
+    <dimen name="view_holder_margin_vertical">8dp</dimen>
 
     <!-- todolist card view -->
     <dimen name="todo_card_width">200dp</dimen>
     <dimen name="todo_card_height">240dp</dimen>
+
+    <!-- action panel-->
+    <dimen name="panel_item_margin_horizontal">16dp</dimen>
+    <dimen name="panel_item_margin_vertical">16dp</dimen>
+
+    <!-- editor -->
+    <dimen name="editor_padding">16dp</dimen>
 </resources>

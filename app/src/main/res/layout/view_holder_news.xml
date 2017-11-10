@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/view_holder_one_line_height"
-        android:padding="@dimen/view_holder_padding"
+        android:layout_height="@dimen/view_holder_two_line_height"
+        android:paddingLeft="@dimen/view_holder_padding_horizontal"
+        android:paddingRight="@dimen/view_holder_padding_horizontal"
+        android:paddingTop="@dimen/view_holder_padding_vertical"
+        android:paddingBottom="@dimen/view_holder_padding_vertical"
         android:background="@drawable/listitem_bg_selector">
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Title: 新闻标题"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:maxLines="2"
+            android:textSize="16sp"
+            tools:text="Title: 新闻标题 Type aligns to a 4dp baseline grid. See detailed information on " />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

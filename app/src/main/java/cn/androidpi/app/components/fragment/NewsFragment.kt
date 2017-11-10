@@ -2,6 +2,7 @@ package cn.androidpi.app.components.fragment
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -41,6 +42,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             super.onCreateView(inflater, container, savedInstanceState)
 
             mBinding.recyclerNews.layoutManager = LinearLayoutManager(context)
+            mBinding.recyclerNews.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             mBinding.recyclerNews.adapter = mAdapter
             // pull down to refresh
             mBinding.swipeRefresh.setOnRefreshListener({
@@ -67,7 +69,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 }
             })
         }
-        return mBinding.root
+        return mBinding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

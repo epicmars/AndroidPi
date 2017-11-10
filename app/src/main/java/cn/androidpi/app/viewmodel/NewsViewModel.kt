@@ -27,7 +27,7 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
     var mPage = 0
 
-    override fun getLatestNews(page: Int, count: Int) {
+    fun getLatestNews(page: Int, count: Int = NewsModel.PAGE_SIZE) {
 
         mNewsRepo.get().getLatestNews(page, count)
                  .subscribeOn(Schedulers.io())
@@ -50,12 +50,12 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
                 })
     }
 
-    fun refreshPage() {
+    override fun refreshPage() {
         mPage = 0
         getLatestNews(mPage)
     }
 
-    fun nextPage() {
+    override fun nextPage() {
         getLatestNews(++mPage)
     }
 }

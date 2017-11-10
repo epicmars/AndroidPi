@@ -17,7 +17,7 @@ interface TodoRepo {
      * @param deadline  待办事项的截止时间
      * @param whatTodo  待办的内容
      */
-    fun addTodoItem(startTime: Date, deadline: Date, whatTodo: String): Completable
+    fun saveTodoItem(startTime: Date, deadline: Date, whatTodo: String): Completable
 
     /**
      * 获取今天的待办事项。

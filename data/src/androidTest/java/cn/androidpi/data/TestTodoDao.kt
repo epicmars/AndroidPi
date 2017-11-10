@@ -72,6 +72,9 @@ class TestTodoDao {
         }
 
         val todoToday = todoItemsToday[0]
+        assertEquals(todo.createdTime, todoToday.createdTime)
+        assertEquals(todo.startTime, todoToday.startTime)
+
         // 更新今天的事项
         todoToday.content = "吃火锅后看电影"
         todoDao!!.update(todoToday)

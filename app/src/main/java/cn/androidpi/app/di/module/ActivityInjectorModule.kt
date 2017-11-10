@@ -1,6 +1,7 @@
 package cn.androidpi.app.di.module
 
 import cn.androidpi.app.components.activity.MainActivity
+import cn.androidpi.app.components.activity.TodoEditActivity
 import cn.androidpi.app.di.scope.ActivityScope
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -14,4 +15,8 @@ abstract class ActivityInjectorModule {
     @ActivityScope
     @ContributesAndroidInjector
     abstract fun contributeMainActivityInjector(): MainActivity
+
+    @ActivityScope
+    @ContributesAndroidInjector
+    abstract fun contributeTodoEditActivityInjector(): TodoEditActivity
 }
