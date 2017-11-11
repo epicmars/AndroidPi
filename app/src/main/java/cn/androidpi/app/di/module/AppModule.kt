@@ -9,7 +9,7 @@ import javax.inject.Singleton
 /**
  * Created by jastrelax on 2017/11/7.
  */
-@Module(includes = arrayOf(RepoModule::class))
+@Module(includes = arrayOf(RepoModule::class, ViewModelModule::class))
 class AppModule(val context: Context) {
 
     @Provides

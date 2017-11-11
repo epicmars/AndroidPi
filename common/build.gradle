@@ -72,7 +72,7 @@ dependencies {
     implementation "com.orhanobut:logger:$logger_version"
 
     // leakcanary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+    debugApi "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
 
