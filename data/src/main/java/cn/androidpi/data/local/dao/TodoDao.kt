@@ -13,13 +13,16 @@ import cn.androidpi.note.entity.Todo
 interface TodoDao {
 
     @Insert
-    fun insert(vararg todoItems: Todo)
+    fun insert(vararg todoItems: Todo): Array<Long>
 
     @Query("select * from todo")
-    fun getAll(): Array<Todo>
+    fun findAll(): Array<Todo>
+
+    @Query("select * from todo where id = :id")
+    fun findById(id: Long): Todo
 
     @Query("select * from todo where date(start_time/1000, 'unixepoch') = date('now')")
-    fun todoToday(): Array<Todo>
+    fun findTodoToday(): Array<Todo>
 
     @Update
     fun update(vararg todoItems: Todo)

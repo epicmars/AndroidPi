@@ -27,10 +27,10 @@ class TestTodoDao {
     @Before
     fun createDb() {
         val context = InstrumentationRegistry.getTargetContext()
-//        noteDb = Room.inMemoryDatabaseBuilder(context, NoteDatabase::class.java)
-//                .allowMainThreadQueries().build()
-        noteDb = Room.databaseBuilder(context, NoteDatabase::class.java, "test_note.db")
-                .build()
+        noteDb = Room.inMemoryDatabaseBuilder(context, NoteDatabase::class.java)
+                .allowMainThreadQueries().build()
+//        noteDb = Room.databaseBuilder(context, NoteDatabase::class.java, "test_note.db")
+//                .build()
         // safe call
         todoDao = noteDb!!.todoDao()
     }
@@ -45,27 +45,21 @@ class TestTodoDao {
     fun testTodoDao() {
 
         // 无论是内存中还是本地存储中的数据库，先删除所有数据
-        var todoItems = todoDao!!.getAll()
+        var todoItems = todoDao!!.findAll()
         todoDao!!.delete(*todoItems)
-        todoItems = todoDao!!.getAll()
+        todoItems = todoDao!!.findAll()
         assertEquals(0, todoItems.size)
 
         // 插入一条今日待办事项
-        val todo = Todo()
-        todo.createdTime = Date()
-        todo.content = "吃火锅"
-        todo.startTime = Date()
-        val cal = Calendar.getInstance()
-        cal.add(Calendar.DAY_OF_WEEK, 1)
-        todo.deadline = cal.time
+        val todo = createTodo()
         todoDao!!.insert(todo)
 
         // 获取所有事项
-        todoItems = todoDao!!.getAll()
+        todoItems = todoDao!!.findAll()
         assertEquals(1, todoItems.size)
 
         // 获取今天的事项
-        var todoItemsToday = todoDao!!.todoToday()
+        var todoItemsToday = todoDao!!.findTodoToday()
         assertEquals(1, todoItemsToday.size)
         for (t in todoItemsToday) {
             Log.d("what to do today:",  t.content)
@@ -78,9 +72,29 @@ class TestTodoDao {
         // 更新今天的事项
         todoToday.content = "吃火锅后看电影"
         todoDao!!.update(todoToday)
-        for (t in todoDao!!.todoToday()) {
+        for (t in todoDao!!.findTodoToday()) {
             Log.d("what to do today:",  t.content)
         }
+    }
 
+    @Test
+    fun testFindById() {
+        val newTodo = createTodo()
+        val ids = todoDao?.insert(newTodo)
+        val todo = todoDao?.findById(ids!![0])
+        assertEquals(newTodo, todo)
+    }
+
+    private fun createTodo(): Todo {
+        val todo = Todo()
+        todo.createdTime = Date()
+        todo.content = "吃火锅"
+        todo.startTime = Date()
+        todo.tags = arrayOf("美食")
+        todo.status = Todo.Status.START
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.DAY_OF_WEEK, 1)
+        todo.deadline = cal.time
+        return todo
     }
 }

@@ -20,7 +20,7 @@ class TodoRepository @Inject constructor() : TodoRepo {
 
     override fun todoList(): Single<Array<Todo>> {
         return Single.fromCallable {
-            todoDao.getAll()
+            todoDao.findAll()
         }
     }
 
@@ -37,7 +37,19 @@ class TodoRepository @Inject constructor() : TodoRepo {
 
     override fun todoToday(): Single<Array<Todo>> {
         return Single.fromCallable {
-            todoDao.todoToday()
+            todoDao.findTodoToday()
+        }
+    }
+
+    override fun getTodo(id: Long): Single<Todo> {
+        return Single.fromCallable {
+            todoDao.findById(id)
+        }
+    }
+
+    override fun updateTodo(todo: Todo): Completable {
+        return Completable.fromAction {
+            todoDao.update(todo)
         }
     }
 }

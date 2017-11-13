@@ -31,4 +31,18 @@ interface TodoRepo {
      */
     fun todoToday(): Single<Array<Todo>>
 
+    /**
+     * 根据id获取本地的todo.
+     *
+     * @param id 要查询的todo的id
+     * @return 根据id查询到的todo事项
+     */
+    fun getTodo(id: Long): Single<Todo>
+
+    /**
+     * 更新一条todo事项。
+     *
+     * @param todo 要更新的todo事项
+     */
+    fun updateTodo(todo: Todo): Completable
 }
