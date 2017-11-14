@@ -17,7 +17,7 @@ import javax.inject.Inject
  * Created by jastrelax on 2017/11/7.
  */
 
-class TodoViewModel @Inject constructor() : ViewModel(), TodoModel {
+class TodoListViewModel @Inject constructor() : ViewModel(), TodoModel {
 
     @Inject
     lateinit var mTodoRepo: Lazy<TodoRepo>

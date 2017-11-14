@@ -17,4 +17,7 @@
     <string name="todo_tip_content_is_blank">待办事项为空</string>
     <string name="todo_top_start_later_than_deadline">开始时间晚于截止时间</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

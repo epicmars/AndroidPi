@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import cn.androidpi.app.viewmodel.NewsViewModel
 import cn.androidpi.app.viewmodel.TodoEditViewModel
-import cn.androidpi.app.viewmodel.TodoViewModel
+import cn.androidpi.app.viewmodel.TodoListViewModel
 import cn.androidpi.app.viewmodel.ViewModelFactory
 import dagger.Binds
 import dagger.Module
@@ -23,8 +23,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(TodoViewModel::class)
-    abstract fun provideTodoViewModel(todoViewModel: TodoViewModel): ViewModel
+    @ViewModelKey(TodoListViewModel::class)
+    abstract fun provideTodoViewModel(todoViewModel: TodoListViewModel): ViewModel
 
     @Binds
     @IntoMap

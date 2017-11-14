@@ -2,8 +2,11 @@ package cn.androidpi.app.components.viewholder
 
 import android.view.View
 import cn.androidpi.app.R
+import cn.androidpi.app.components.activity.TemplateActivity
 import cn.androidpi.app.components.base.BaseViewHolder
 import cn.androidpi.app.components.base.BindLayout
+import cn.androidpi.app.components.fragment.FragmentFactory
+import cn.androidpi.app.components.fragment.TodoFragment
 import cn.androidpi.app.databinding.ViewHolderTodoBinding
 import cn.androidpi.note.entity.Todo
 
@@ -16,5 +19,13 @@ class TodoViewHolder(itemView: View) : BaseViewHolder<ViewHolderTodoBinding>(ite
     override fun <T : Any?> present(data: T) {
         val todo = data as? Todo
         mBinding?.tvTodoContent?.text = todo?.content
+        itemView.setOnClickListener {
+            TemplateActivity.startWith(it.context, fragmentName = TodoFragment::class.java.canonicalName,
+                    factory = object : FragmentFactory<TodoFragment>() {
+                        override fun create(): TodoFragment {
+                            return TodoFragment.newInstance(todo!!)
+                        }
+                    })
+            }
+        }
     }
-}

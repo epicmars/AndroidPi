@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".components.activity.TodoEditActivity"></activity>
+        <activity android:name=".components.activity.TodoEditActivity" />
+        <activity android:name=".components.activity.TemplateActivity"></activity>
     </application>
 
 </manifest>
