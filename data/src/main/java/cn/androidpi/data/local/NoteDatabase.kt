@@ -28,14 +28,14 @@ abstract class NoteDatabase : RoomDatabase() {
 class TodoStatusConverter {
 
     @TypeConverter
-    fun fromStatus(status: Todo.Status): String {
-        return status.name
+    fun fromStatus(status: Todo.Status?): String? {
+        return status?.name
     }
 
     @TypeConverter
     @Throws(IllegalArgumentException::class)
-    fun fromString(statusStr: String): Todo.Status {
-        return Todo.Status.valueOf(statusStr)
+    fun fromString(statusStr: String?): Todo.Status? {
+        return if (statusStr == null) null else Todo.Status.valueOf(statusStr)
     }
 }
 

@@ -10,6 +10,7 @@ import javax.inject.Singleton
  * [JvmSuppressWildcards] will prevent the compiler from generating wildcards.
  *
  * See [https://stackoverflow.com/questions/44638878/binding-into-map-with-kclass-type].
+ * and [https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-suppress-wildcards/index.html]
  *
  * Created by jastrelax on 2017/11/11.
  */
