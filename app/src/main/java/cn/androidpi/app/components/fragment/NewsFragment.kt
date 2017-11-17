@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -18,6 +19,10 @@ import cn.androidpi.app.components.viewholder.NewsViewHolder
 import cn.androidpi.app.databinding.FragmentNewsBinding
 import cn.androidpi.app.view.NewsView
 import cn.androidpi.app.viewmodel.NewsViewModel
+import cn.androidpi.app.widget.PullDownHeaderBehavior
+import cn.androidpi.app.widget.PullDownListener
+import cn.androidpi.app.widget.ScrollViewBehavior
+import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -60,9 +65,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mAdapter.register(NewsViewHolder::class.java)
         mBinding.recyclerNews.adapter = mAdapter
         // pull down to refresh
-        mBinding.swipeRefresh.setOnRefreshListener({
-            loadFirstPage()
-        })
+//        mBinding.swipeRefresh.setOnRefreshListener({
+//            loadFirstPage()
+//        })
 
         // pull up to load more
         mBinding.recyclerNews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -83,6 +88,36 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 }
             }
         })
+        //
+        val lpHeader = mBinding.progressBar.layoutParams as CoordinatorLayout.LayoutParams
+        val behavior = PullDownHeaderBehavior()
+        behavior.addPullDownListener(object : PullDownListener {
+            override fun onRefreshCancelled() {
+
+            }
+
+            override fun onRefreshFinish() {
+
+            }
+
+            override fun onRefreshException(exception: Exception?) {
+
+            }
+
+            override fun onRefreshTimeout() {
+
+            }
+
+            override fun onRefresh() {
+                refreshWithSwipe()
+            }
+        })
+        lpHeader.behavior = behavior
+        mBinding.progressBar.layoutParams = lpHeader
+
+        val lpScroll = mBinding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
+        lpScroll.behavior = ScrollViewBehavior<View>()
+        mBinding.recyclerNews.layoutParams = lpScroll
         return mBinding.root
     }
 
@@ -99,11 +134,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     fun refreshWithSwipe() {
         loadFirstPage()
-        mBinding.swipeRefresh.isRefreshing = true
+//        mBinding.swipeRefresh.isRefreshing = true
     }
 
     fun refreshFinished() {
-        mBinding.swipeRefresh.isRefreshing = false
+//        mBinding.swipeRefresh.isRefreshing = false
     }
 
     override fun loadFirstPage() {

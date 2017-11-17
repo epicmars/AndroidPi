@@ -23,7 +23,9 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
         itemView.setOnClickListener {
             v: View? ->
             val action = Intent(Intent.ACTION_VIEW, Uri.parse(news?.url))
-            v?.context?.startActivity(action)
+            if (action.resolveActivity(itemView.context.packageManager) != null) {
+                v?.context?.startActivity(action)
+            }
         }
     }
 }
