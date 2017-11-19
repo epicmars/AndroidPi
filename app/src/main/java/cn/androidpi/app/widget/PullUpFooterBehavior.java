@@ -2,30 +2,30 @@ package cn.androidpi.app.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jastrelax on 2017/11/17.
+ * Created by jastrelax on 2017/11/19.
  */
 
-public class PullDownHeaderBehavior extends HeaderBehavior implements PullingRefresher {
+public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> implements PullingRefresher{
 
     private List<PullingListener> mListeners = new ArrayList<>();
 
-    public PullDownHeaderBehavior() {
+    public PullUpFooterBehavior() {
         this(null, null);
     }
 
-    public PullDownHeaderBehavior(Context context) {
+    public PullUpFooterBehavior(Context context) {
         this(context, null);
     }
 
-    public PullDownHeaderBehavior(Context context, AttributeSet attrs) {
+    public PullUpFooterBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        addHeaderListener(new HeaderListener() {
+        addFooterListener(new FooterListener() {
             @Override
             public void onHide() {
 
@@ -45,13 +45,13 @@ public class PullDownHeaderBehavior extends HeaderBehavior implements PullingRef
         });
     }
 
-    public void addPullDownListener(PullingListener listener) {
+    public void addPullUpListener(PullingListener listener) {
         if (null == listener)
             return;
         mListeners.add(listener);
     }
 
-    public void removePullDownListener(PullingListener listener) {
+    public void removePullUpListener(PullingListener listener) {
         if (null == listener)
             return;
         mListeners.remove(listener);

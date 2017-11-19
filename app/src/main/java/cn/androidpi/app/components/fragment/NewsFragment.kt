@@ -20,7 +20,8 @@ import cn.androidpi.app.databinding.FragmentNewsBinding
 import cn.androidpi.app.view.NewsView
 import cn.androidpi.app.viewmodel.NewsViewModel
 import cn.androidpi.app.widget.PullDownHeaderBehavior
-import cn.androidpi.app.widget.PullDownListener
+import cn.androidpi.app.widget.PullUpFooterBehavior
+import cn.androidpi.app.widget.PullingListener
 import cn.androidpi.app.widget.ScrollViewBehavior
 import java.lang.Exception
 import javax.inject.Inject
@@ -74,24 +75,22 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
-                }
             }
 
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val lastVisibleItem = (recyclerView?.layoutManager as LinearLayoutManager)
-                        .findLastVisibleItemPosition()
-                val totalItemCount = recyclerView?.layoutManager.itemCount
-                if (lastVisibleItem >= totalItemCount - 6) {
-                    loadNextPage()
-                }
+//                val lastVisibleItem = (recyclerView?.layoutManager as LinearLayoutManager)
+//                        .findLastVisibleItemPosition()
+//                val totalItemCount = recyclerView?.layoutManager.itemCount
+//                if (lastVisibleItem >= totalItemCount - 6) {
+//                    loadNextPage()
+//                }
             }
         })
         //
         val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
         val behavior = PullDownHeaderBehavior(context)
-        behavior.addPullDownListener(object : PullDownListener {
+        behavior.addPullDownListener(object : PullingListener {
             override fun onRefreshCancelled() {
 
             }
@@ -114,6 +113,30 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         })
         lpHeader.behavior = behavior
         mBinding.scrollHeader.layoutParams = lpHeader
+
+        val lpFooter = mBinding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
+        val footerBehavior = PullUpFooterBehavior<View>(context)
+        footerBehavior.addPullUpListener(object : PullingListener {
+            override fun onRefreshCancelled() {
+
+            }
+
+            override fun onRefreshFinish() {
+            }
+
+            override fun onRefreshException(exception: Exception?) {
+            }
+
+            override fun onRefreshTimeout() {
+            }
+
+            override fun onRefresh() {
+                loadNextPage()
+            }
+        })
+
+        lpFooter.behavior = footerBehavior;
+        mBinding.scrollFooter.layoutParams = lpFooter
 
         val lpScroll = mBinding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
         lpScroll.behavior = ScrollViewBehavior<View>()

@@ -4,7 +4,7 @@ package cn.androidpi.app.widget;
  * Created by jastrelax on 2017/11/16.
  */
 
-public interface PullDownListener {
+public interface PullingListener {
 
     void onRefresh();
 
