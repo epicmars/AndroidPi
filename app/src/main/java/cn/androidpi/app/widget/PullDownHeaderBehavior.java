@@ -1,5 +1,7 @@
 package cn.androidpi.app.widget;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,11 @@ public class PullDownHeaderBehavior extends HeaderBehavior implements PullDownRe
 
     public PullDownHeaderBehavior() {
 
+    }
+
+    public PullDownHeaderBehavior(Context context) {
+        super(context);
+
         addHeaderListener(new HeaderListener() {
             @Override
             public void onHide() {
@@ -21,6 +28,11 @@ public class PullDownHeaderBehavior extends HeaderBehavior implements PullDownRe
 
             @Override
             public void onShow() {
+
+            }
+
+            @Override
+            public void onStopScroll() {
                 for (PullDownListener l : mListeners) {
                     l.onRefresh();
                 }

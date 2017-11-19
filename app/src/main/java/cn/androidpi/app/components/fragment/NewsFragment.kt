@@ -89,8 +89,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
         })
         //
-        val lpHeader = mBinding.progressBar.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = PullDownHeaderBehavior()
+        val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
+        val behavior = PullDownHeaderBehavior(context)
         behavior.addPullDownListener(object : PullDownListener {
             override fun onRefreshCancelled() {
 
@@ -113,7 +113,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
         })
         lpHeader.behavior = behavior
-        mBinding.progressBar.layoutParams = lpHeader
+        mBinding.scrollHeader.layoutParams = lpHeader
 
         val lpScroll = mBinding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
         lpScroll.behavior = ScrollViewBehavior<View>()

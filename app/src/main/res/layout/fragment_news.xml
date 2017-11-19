@@ -6,10 +6,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
+        <FrameLayout
+            android:id="@+id/scroll_header"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/view_holder_two_line_height" />
+            android:layout_height="@dimen/view_holder_two_line_height">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                />
+        </FrameLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_news"
