@@ -17,7 +17,7 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class FooterBehavior<V extends View> extends ViewOffsetBehavior<V>{
+public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
 
     public interface FooterListener {
         void onHide();
@@ -26,8 +26,7 @@ public class FooterBehavior<V extends View> extends ViewOffsetBehavior<V>{
     }
 
     private int DEFAULT_HEIGHT;
-    private int mTop;
-    private int mHeight;
+    private int BASE_LINE;
 
     private List<FooterListener> mListeners = new ArrayList<>();
 
@@ -59,11 +58,13 @@ public class FooterBehavior<V extends View> extends ViewOffsetBehavior<V>{
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (DEFAULT_HEIGHT == 0) {
-            mHeight = DEFAULT_HEIGHT = child.getHeight();
+            DEFAULT_HEIGHT = child.getHeight();
         }
-        int offset = parent.getBottom();
-        resetTop();
-        setTopAndBottomOffset(offset);
+        if (BASE_LINE == 0) {
+            BASE_LINE = parent.getBottom();
+        }
+        cancelAnimation();
+        setTopAndBottomOffset(BASE_LINE);
         return handled;
     }
 
@@ -77,18 +78,21 @@ public class FooterBehavior<V extends View> extends ViewOffsetBehavior<V>{
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         if (type == TYPE_TOUCH) {
             if (!isInvisible()) {
+                int bottom = coordinatorLayout.getBottom();
+                int top = child.getTop();
+                int height = child.getHeight();
+
                 int offset = 0;
                 // Pull down
                 if (dy < 0) {
-                    offset = MathUtils.clamp(-dy, 0, -mTop);
+                    offset = MathUtils.clamp(-dy, 0, bottom - top);
                 }
                 // Pull up
                 else if (dy > 0) {
-                    offset = MathUtils.clamp(-dy, -mHeight-mTop, 0);
+                    offset = MathUtils.clamp(-dy, - height + (bottom - top), 0);
                 }
                 if (offset != 0) {
-                    offsetTop(offset);
-                    ViewCompat.offsetTopAndBottom(child, offset);
+                    offsetTopAndBottom(child, offset);
                     consumed[1] = -offset;
                 }
             }
@@ -99,11 +103,13 @@ public class FooterBehavior<V extends View> extends ViewOffsetBehavior<V>{
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         if (type == TYPE_TOUCH) {
             if (isInvisible()) {
+                int bottom = coordinatorLayout.getBottom();
+                int top = child.getTop();
+                int height = child.getHeight();
                 // Pulling up unconsumed by scrolling content is consumed by footer.
                 if (dyUnconsumed > 0) {
-                    int offset = MathUtils.clamp(-dyUnconsumed, -mHeight-mTop, 0);
-                    offsetTop(offset);
-                    ViewCompat.offsetTopAndBottom(child, offset);
+                    int offset = MathUtils.clamp(-dyUnconsumed, - height + (bottom - top), 0);
+                    offsetTopAndBottom(child, offset);
                 }
             }
         }
@@ -116,27 +122,29 @@ public class FooterBehavior<V extends View> extends ViewOffsetBehavior<V>{
                 for (FooterListener l : mListeners) {
                     l.onStopScroll();
                 }
+            } else if (isPartialVisible()) {
+                animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, 0);
             }
         }
     }
 
-    private void resetTop() {
-        mTop = 0;
-    }
-
-    private void offsetTop(int offset) {
-        mTop += offset;
+    private void offsetTopAndBottom(View child, int offset) {
+        setTopAndBottomOffset(getTopAndBottomOffset() + offset);
     }
 
     private boolean isCompleteVisible() {
-        return mTop <= -DEFAULT_HEIGHT;
+        return getTopAndBottomOffset() <= BASE_LINE - DEFAULT_HEIGHT;
     }
 
     private boolean isPartialVisible() {
-        return mTop > -DEFAULT_HEIGHT && mTop < 0;
+        return getTopAndBottomOffset() > BASE_LINE - DEFAULT_HEIGHT && getTopAndBottomOffset() < BASE_LINE;
     }
 
     private boolean isInvisible() {
-        return mTop >= 0;
+        return getTopAndBottomOffset() >= BASE_LINE;
+    }
+
+    private boolean isVisible() {
+        return !isInvisible();
     }
 }

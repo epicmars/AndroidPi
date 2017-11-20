@@ -9,7 +9,7 @@
         <FrameLayout
             android:id="@+id/scroll_header"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/view_holder_two_line_height">
+            android:layout_height="200dp">
 
             <ProgressBar
                 android:id="@+id/header_progress_bar"

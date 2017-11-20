@@ -16,6 +16,7 @@
     <dimen name="view_holder_padding_vertical">8dp</dimen>
     <dimen name="view_holder_one_line_height">48dp</dimen>
     <dimen name="view_holder_two_line_height">72dp</dimen>
+    <dimen name="view_holder_three_line_height">96dp</dimen>
 
     <dimen name="view_holder_margin_horizontal">16dp</dimen>
     <dimen name="view_holder_margin_vertical">8dp</dimen>
