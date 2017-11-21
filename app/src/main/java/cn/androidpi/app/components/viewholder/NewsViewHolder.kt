@@ -19,6 +19,7 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
     override fun <T : Any?> present(data: T) {
         val news = data as? News
         mBinding.tvTitle.text = news?.title
+        mBinding.tvPublishTime.text = news?.publishTime
 
         itemView.setOnClickListener {
             v: View? ->

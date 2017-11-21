@@ -1,44 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/scroll_header"
+        <ProgressBar
+            android:id="@+id/pulling_progress"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:visibility="gone"/>
 
-            <ProgressBar
-                android:id="@+id/header_progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                />
-        </FrameLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_news"
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/pager_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/view_holder_news"
-            android:background="@android:color/white" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <FrameLayout
-            android:id="@+id/scroll_footer"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/view_holder_two_line_height">
+            <cn.androidpi.app.widget.PullDownHeaderView
+                android:id="@+id/scroll_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </cn.androidpi.app.widget.PullDownHeaderView>
 
-            <ProgressBar
-                android:id="@+id/footer_progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                />
-        </FrameLayout>
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/news_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    </android.support.design.widget.CoordinatorLayout>
+                <LinearLayout
+                    android:id="@+id/ll_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/news_pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@android:color/background_light" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_news"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/white"
+                        tools:listitem="@layout/view_holder_news" />
+                </LinearLayout>
+
+            </android.support.v4.widget.NestedScrollView>
+
+            <FrameLayout
+                android:id="@+id/scroll_footer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_holder_two_line_height">
+
+                <ProgressBar
+                    android:id="@+id/footer_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
 
 </layout>

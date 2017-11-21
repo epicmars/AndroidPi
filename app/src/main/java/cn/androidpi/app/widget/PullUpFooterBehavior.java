@@ -63,7 +63,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
     }
 
     @Override
-    public void refreshFinish() {
+    public void refreshComplete() {
 
     }
 

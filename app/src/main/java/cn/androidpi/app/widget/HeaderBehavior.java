@@ -7,7 +7,6 @@ import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Scroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +20,18 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
 
     public interface HeaderListener {
-        void onHide();
 
-        void onShow();
+        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max);
 
-        void onStopScroll();
+        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max);
+
+        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max);
     }
 
     private List<HeaderListener> mListeners = new ArrayList<>();
-    private Scroller mScroller;
-    private int mLastY;
+    private int mScrolledDistance;
+    private CoordinatorLayout mParent;
+    private V mChild;
 
     private int DEFAULT_HEIGHT;
 
@@ -44,16 +45,15 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
 
     public HeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.mScroller = new Scroller(context);
     }
 
-    public void addHeaderListener(HeaderListener listener) {
+    protected void addHeaderListener(HeaderListener listener) {
         if (null == listener)
             return;
         mListeners.add(listener);
     }
 
-    public void removeHeaderListener(HeaderListener listener) {
+    protected void removeHeaderListener(HeaderListener listener) {
         if (null == listener) {
             return;
         }
@@ -63,6 +63,12 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         super.onLayoutChild(parent, child, layoutDirection);
+        if (mParent == null) {
+            mParent = parent;
+        }
+        if (mChild == null) {
+            mChild = child;
+        }
         if (DEFAULT_HEIGHT == 0) {
             DEFAULT_HEIGHT = child.getHeight();
         }
@@ -99,7 +105,10 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
                     offset = MathUtils.clamp(-dy, 0, -top);
                 }
                 if (offset != 0) {
-                    offsetTopAndBottom(child, offset);
+                    for (HeaderListener l : mListeners) {
+                        l.onPreScroll(coordinatorLayout, child, height);
+                    }
+                    offsetTopAndBottom(coordinatorLayout, child, offset);
                     consumed[1] = -offset;
                 }
             }
@@ -115,7 +124,7 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
             if (isInvisible()) {
                 if (dyUnconsumed < 0) {
                     int offset = MathUtils.clamp(-dyUnconsumed, 0, -top);
-                    offsetTopAndBottom(child, offset);
+                    offsetTopAndBottom(coordinatorLayout, child, offset);
                 }
             }
         }
@@ -123,17 +132,37 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
 
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
-        int top = child.getTop();
-        int height = child.getHeight();
         if (type == TYPE_TOUCH) {
-            if (isCompleteVisible()) {
-                for (HeaderListener l : mListeners) {
-                    l.onStopScroll();
-                }
-            } else if (isPartialVisible()) {
-                int offset = - (height + top);
-                animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, 0);
+            int top = child.getTop();
+            int height = child.getHeight();
+            for (HeaderListener l : mListeners) {
+                l.onStopScroll(coordinatorLayout, child, height + getTopAndBottomOffset(), height);
             }
+        }
+    }
+
+    @Override
+    public void onDetachedFromLayoutParams() {
+        super.onDetachedFromLayoutParams();
+        mListeners.clear();
+        mParent = null;
+        mChild = null;
+    }
+
+    public CoordinatorLayout getParent() {
+        return mParent;
+    }
+
+    public V getChild() {
+        return mChild;
+    }
+
+    protected void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child) {
+        if (isVisible()) {
+            int height = child.getHeight();
+            int top = child.getTop();
+            int offset = - (height + top);
+            animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, 0);
         }
     }
 
@@ -141,8 +170,14 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
         animateOffsetWithDuration(coordinatorLayout, child, getTopAndBottomOffset() + offset, duration);
     }
 
-    private void offsetTopAndBottom(View child, int offset) {
-        setTopAndBottomOffset(getTopAndBottomOffset() + offset);
+    private void offsetTopAndBottom(CoordinatorLayout coordinatorLayout, View child, int offset) {
+        int current = getTopAndBottomOffset() + offset;
+        int top = child.getTop();
+        int height = child.getHeight();
+        setTopAndBottomOffset(current);
+        for (HeaderListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, height + current, offset, height);
+        }
     }
 
     private boolean isCompleteVisible() {

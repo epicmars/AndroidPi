@@ -23,7 +23,6 @@ import cn.androidpi.app.widget.PullDownHeaderBehavior
 import cn.androidpi.app.widget.PullUpFooterBehavior
 import cn.androidpi.app.widget.PullingListener
 import cn.androidpi.app.widget.ScrollViewBehavior
-import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -89,26 +88,36 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         })
         //
         val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = PullDownHeaderBehavior(context)
+        if (lpHeader.behavior == null) {
+            lpHeader.behavior = PullDownHeaderBehavior<View>()
+        }
+        val behavior = lpHeader.behavior as PullDownHeaderBehavior
         behavior.addPullDownListener(object : PullingListener {
-            override fun onRefreshCancelled() {
 
+            override fun onStartPulling(max: Int) {
+//                mBinding.pullingProgress.visibility = View.VISIBLE
+//                mBinding.pullingProgress.max = max
             }
 
-            override fun onRefreshFinish() {
-
+            override fun onPulling(current: Int, delta: Int, max: Int) {
+//                mBinding.pullingProgress.setProgress(current)
             }
 
-            override fun onRefreshException(exception: Exception?) {
-
+            override fun onStopPulling(current: Int, max: Int) {
+//                mBinding.pullingProgress.visibility = View.GONE
             }
 
-            override fun onRefreshTimeout() {
+            override fun onRefreshStart() {
+            }
 
+            override fun onRefreshReady() {
             }
 
             override fun onRefresh() {
                 refreshWithSwipe()
+            }
+
+            override fun onRefreshComplete() {
             }
         })
         lpHeader.behavior = behavior
@@ -117,30 +126,41 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         val lpFooter = mBinding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
         val footerBehavior = PullUpFooterBehavior<View>(context)
         footerBehavior.addPullUpListener(object : PullingListener {
-            override fun onRefreshCancelled() {
+
+            override fun onStartPulling(max: Int) {
+            }
+
+            override fun onPulling(current: Int, delta: Int, max: Int) {
 
             }
 
-            override fun onRefreshFinish() {
+            override fun onStopPulling(current: Int, max: Int) {
+
             }
 
-            override fun onRefreshException(exception: Exception?) {
+            override fun onRefreshStart() {
             }
 
-            override fun onRefreshTimeout() {
+            override fun onRefreshReady() {
             }
 
             override fun onRefresh() {
                 loadNextPage()
             }
+
+            override fun onRefreshComplete() {
+            }
         })
 
-        lpFooter.behavior = footerBehavior;
+        lpFooter.behavior = footerBehavior
         mBinding.scrollFooter.layoutParams = lpFooter
 
-        val lpScroll = mBinding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
+        val lpScroll = mBinding.newsContent.layoutParams as CoordinatorLayout.LayoutParams
         lpScroll.behavior = ScrollViewBehavior<View>()
-        mBinding.recyclerNews.layoutParams = lpScroll
+        mBinding.newsContent.layoutParams = lpScroll
+
+        mBinding.recyclerNews.isFocusable = false
+        mBinding.recyclerNews.isNestedScrollingEnabled = false
         return mBinding.root
     }
 
@@ -161,6 +181,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
     }
 
     fun refreshFinished() {
+        val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
+        val behavior = lpHeader.behavior as PullDownHeaderBehavior
+        behavior.refreshComplete()
 //        mBinding.swipeRefresh.isRefreshing = false
     }
 

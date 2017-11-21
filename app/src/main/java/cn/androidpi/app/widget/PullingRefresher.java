@@ -8,7 +8,7 @@ public interface PullingRefresher {
 
     void refresh();
 
-    void refreshFinish();
+    void refreshComplete();
 
     void refreshTimeout();
 

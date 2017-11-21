@@ -61,7 +61,7 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
             DEFAULT_HEIGHT = child.getHeight();
         }
         if (BASE_LINE == 0) {
-            BASE_LINE = parent.getBottom();
+            BASE_LINE = parent.getBottom() - parent.getTop();
         }
         cancelAnimation();
         setTopAndBottomOffset(BASE_LINE);
@@ -78,7 +78,7 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         if (type == TYPE_TOUCH) {
             if (!isInvisible()) {
-                int bottom = coordinatorLayout.getBottom();
+                int bottom = coordinatorLayout.getHeight();
                 int top = child.getTop();
                 int height = child.getHeight();
 
@@ -103,7 +103,7 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         if (type == TYPE_TOUCH) {
             if (isInvisible()) {
-                int bottom = coordinatorLayout.getBottom();
+                int bottom = coordinatorLayout.getHeight();
                 int top = child.getTop();
                 int height = child.getHeight();
                 // Pulling up unconsumed by scrolling content is consumed by footer.

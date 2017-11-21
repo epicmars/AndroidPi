@@ -5,7 +5,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/view_holder_two_line_height"
+        android:layout_height="@dimen/view_holder_three_line_height"
         android:paddingLeft="@dimen/view_holder_padding_horizontal"
         android:paddingRight="@dimen/view_holder_padding_horizontal"
         android:paddingTop="@dimen/view_holder_padding_vertical"
@@ -21,8 +21,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:maxLines="2"
-            android:textSize="16sp"
+            android:textSize="18sp"
+            android:textColor="@android:color/primary_text_light"
             tools:text="Title: 新闻标题 Type aligns to a 4dp baseline grid. See detailed information on " />
+
+        <TextView
+            android:id="@+id/tv_publish_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:maxLines="1"
+            android:textColor="@android:color/tertiary_text_light"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="2017年11月20日22:35:58" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

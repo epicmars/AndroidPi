@@ -5,6 +5,10 @@ import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 /**
+ * A behavior for scrollable child of {@link CoordinatorLayout}.
+ *
+ * View with this behavior must be a direct child of {@link CoordinatorLayout}.
+ *
  * Created by jastrelax on 2017/11/16.
  */
 
