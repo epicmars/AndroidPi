@@ -24,4 +24,10 @@ public @interface BindLayout {
      * @return
      */
     Class<?>[] dataTypes() default {};
+
+    /**
+     * 是否允许依赖注入。
+     * @return
+     */
+    boolean injectable() default true;
 }

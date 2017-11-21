@@ -9,8 +9,7 @@ import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,6 +69,7 @@ class TestNewsDao {
             val current = it.next()
             val next = it.next()
             if (next != null) {
+                assertNotNull(next.images)
                 assertTrue(current.publishTime!! >= next.publishTime!!)
             }
         }
@@ -106,6 +106,7 @@ class TestNewsDao {
         news.sourceName = "科技日报社-中国科技网"
         news.title = "哈勃望远镜慢慢坠入大气层，NASA现在也无能为力"
         news.url = "http://tech.163.com/17/1102/13/D288VV5200097U81.html"
+        news.images = arrayOf("dsadf")
 
         return news
     }

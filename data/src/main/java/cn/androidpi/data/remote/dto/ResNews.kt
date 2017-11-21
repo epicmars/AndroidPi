@@ -2,6 +2,7 @@ package cn.androidpi.data.remote.dto
 
 import cn.androidpi.news.entity.News
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 /**
  * 新闻服务接口返回数据。
@@ -24,6 +25,7 @@ class ResNews {
     var title: String? = null
     var url: String? = null
     var keywords: List<String>? = null
+    var images: Array<String>? = null
 
     class IdBean {
 
@@ -43,12 +45,13 @@ class ResNews {
         news.sourceUrl = sourceUrl
         news.url = url
         news.keywords = keywords?.toTypedArray()
+        news.images = images?.copyOf()
 
         return news
     }
 
     override fun toString(): String {
-        return "ResNews(_id=$_id, category=$category, originTitle=$originTitle, publishTime=$publishTime, sourceName=$sourceName, sourceUrl=$sourceUrl, title=$title, url=$url, keywords=$keywords)"
+        return "ResNews(_id=$_id, category=$category, originTitle=$originTitle, publishTime=$publishTime, sourceName=$sourceName, sourceUrl=$sourceUrl, title=$title, url=$url, keywords=$keywords, images=${Arrays.toString(images)})"
     }
 
 

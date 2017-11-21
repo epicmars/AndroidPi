@@ -14,6 +14,8 @@ class StringArrayConverter {
         if (array == null)
             return null
         for (s in array) {
+            if (s.isBlank())
+                continue
             sb.append(s)
             sb.append(",")
         }

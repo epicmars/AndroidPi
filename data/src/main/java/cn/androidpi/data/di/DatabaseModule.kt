@@ -2,6 +2,7 @@ package cn.androidpi.data.di
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import cn.androidpi.data.local.NEWS_MIGRATION_1_2
 import cn.androidpi.data.local.NOTE_MIGRATION_1_2
 import cn.androidpi.data.local.NewsDatabase
 import cn.androidpi.data.local.NoteDatabase
@@ -29,6 +30,7 @@ class DatabaseModule {
     @Singleton
     fun provideNewsDatabase(context: Context): NewsDatabase {
         return Room.databaseBuilder(context, NewsDatabase::class.java, NewsDatabase.DATABASE_NAME)
+                .addMigrations(NEWS_MIGRATION_1_2)
                 .build()
     }
 

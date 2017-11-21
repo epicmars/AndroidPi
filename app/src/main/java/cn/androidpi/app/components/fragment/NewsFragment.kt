@@ -38,6 +38,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     lateinit var mAdapter: RecyclerAdapter
 
+    lateinit var mNewsCoverAdapter: NewsCoverPageAdapter
+
     companion object {
         fun newInstance(): NewsFragment {
             return NewsFragment()
@@ -161,6 +163,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         mBinding.recyclerNews.isFocusable = false
         mBinding.recyclerNews.isNestedScrollingEnabled = false
+
+        // news cover pager
+        mNewsCoverAdapter = NewsCoverPageAdapter(fragmentManager)
+        mBinding.newsPager.adapter = mNewsCoverAdapter
+        mBinding.newsPager.offscreenPageLimit = 2
         return mBinding.root
     }
 
@@ -168,7 +175,10 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         super.onViewCreated(view, savedInstanceState)
         mNewsModel.mNews.observe(this, Observer { t ->
             refreshFinished()
-            mAdapter.setPayloads(t)
+            val coverNews = t?.subList(0, 5)
+            mNewsCoverAdapter.setCoverNews(coverNews)
+            val itemNews = t?.subList(5, t.size)
+            mAdapter.setPayloads(itemNews)
         })
         if (null == savedInstanceState) {
             refreshWithSwipe()

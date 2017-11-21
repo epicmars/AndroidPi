@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_news_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_holder_one_line_height"
+            android:layout_gravity="bottom"
+            android:textSize="12sp"
+            android:textColor="@android:color/primary_text_dark"
+            android:background="#80323232"
+            android:padding="@dimen/view_holder_padding"
+            tools:text="新闻标题"
+            android:gravity="center_vertical"
+            />
+    </FrameLayout>
+
+</layout>

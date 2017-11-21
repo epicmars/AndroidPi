@@ -19,15 +19,20 @@ abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
 
     lateinit var mBinding: VDB
 
+    var mBindLayout: BindLayout? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
+        mBindLayout = javaClass.getAnnotation(BindLayout::class.java)
+        if (mBindLayout != null && mBindLayout!!.injectable) {
+            AndroidSupportInjection.inject(this)
+        }
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val bindLayout = javaClass.getAnnotation(BindLayout::class.java) ?: // A fragment without view.
+        mBindLayout ?: // A fragment without view.
                 return super.onCreateView(inflater, container, savedInstanceState)
-        mBinding = DataBindingUtil.inflate(inflater, bindLayout.value, container, false)
+        mBinding = DataBindingUtil.inflate(inflater, mBindLayout!!.value, container, false)
         return mBinding.root
     }
 
