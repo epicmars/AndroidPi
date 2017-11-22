@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsModel
+import cn.androidpi.news.model.NewsPage
 import dagger.Lazy
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,9 +22,9 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
     @Inject
     lateinit var mNewsRepo: Lazy<NewsRepo>
 
-    val mNews: MutableLiveData<ArrayList<News>> = MutableLiveData()
+    val mNews: MutableLiveData<NewsPage> = MutableLiveData()
 
-    val mNewsInternal: ArrayList<News> = ArrayList()
+    val mNewsPage = NewsPage()
 
     var mPage = 0
 
@@ -39,10 +40,11 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
                     override fun onSuccess(t: List<News>) {
                         if (page == 0) {
-                            mNewsInternal.clear()
+                            mNewsPage.firstPage(t)
+                        } else {
+                            mNewsPage.currentPage(page, t)
                         }
-                        mNewsInternal.addAll(t)
-                        mNews.value = mNewsInternal
+                        mNews.value = mNewsPage
                     }
 
                     override fun onSubscribe(d: Disposable?) {

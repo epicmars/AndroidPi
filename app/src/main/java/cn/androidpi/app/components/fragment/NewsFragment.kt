@@ -18,6 +18,7 @@ import cn.androidpi.app.components.base.RecyclerAdapter
 import cn.androidpi.app.components.viewholder.NewsViewHolder
 import cn.androidpi.app.databinding.FragmentNewsBinding
 import cn.androidpi.app.view.NewsView
+import cn.androidpi.app.viewmodel.CoverNewsViewModel
 import cn.androidpi.app.viewmodel.NewsViewModel
 import cn.androidpi.app.widget.PullDownHeaderBehavior
 import cn.androidpi.app.widget.PullUpFooterBehavior
@@ -33,12 +34,14 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     lateinit var mNewsModel: NewsViewModel
 
+    lateinit var mCoverNewsModel: CoverNewsViewModel
+
     @Inject
     lateinit var mViewModelFactory: ViewModelProvider.Factory
 
     lateinit var mAdapter: RecyclerAdapter
 
-    lateinit var mNewsCoverAdapter: NewsCoverPageAdapter
+    lateinit var mNewsCoverAdapter: CoverNewsPageAdapter
 
     companion object {
         fun newInstance(): NewsFragment {
@@ -52,6 +55,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         // onCreate will not be called, therefore [NewsViewModel] will not be recreated.
         mNewsModel = ViewModelProviders.of(this, mViewModelFactory)
                 .get(NewsViewModel::class.java)
+        mCoverNewsModel = ViewModelProviders.of(activity!!).get(CoverNewsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -116,7 +120,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
 
             override fun onRefresh() {
-                refreshWithSwipe()
+                refreshWithLoading()
             }
 
             override fun onRefreshComplete() {
@@ -165,7 +169,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mBinding.recyclerNews.isNestedScrollingEnabled = false
 
         // news cover pager
-        mNewsCoverAdapter = NewsCoverPageAdapter(fragmentManager)
+        mNewsCoverAdapter = CoverNewsPageAdapter(fragmentManager, mCoverNewsModel)
         mBinding.newsPager.adapter = mNewsCoverAdapter
         mBinding.newsPager.offscreenPageLimit = 2
         return mBinding.root
@@ -175,26 +179,40 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         super.onViewCreated(view, savedInstanceState)
         mNewsModel.mNews.observe(this, Observer { t ->
             refreshFinished()
-            val coverNews = t?.subList(0, 5)
-            mNewsCoverAdapter.setCoverNews(coverNews)
-            val itemNews = t?.subList(5, t.size)
-            mAdapter.setPayloads(itemNews)
+            val currentPage = t?.currentPage()
+            if (currentPage == null || currentPage.isEmpty())
+                return@Observer
+            val MAX_COVER_SIZE = 5
+            if (t.isFirstPage()) {
+                val coverSize = Math.min(MAX_COVER_SIZE, currentPage.size)
+                val coverNews = currentPage.subList(0, coverSize)
+                val coverImagesSize = mNewsCoverAdapter.setCoverNews(coverNews)
+                if (coverImagesSize <= 0) {
+                    mBinding.newsPager.visibility = View.GONE
+                } else {
+                    mBinding.newsPager.visibility = View.VISIBLE
+                }
+                val itemNews = currentPage.subList(coverSize, currentPage.size)
+                mAdapter.setPayloads(itemNews)
+            } else {
+                val previous = t.previousPages()
+                val start = Math.min(MAX_COVER_SIZE, previous.size)
+                mAdapter.appendPayloads(previous.subList(start, previous.size), currentPage)
+            }
         })
         if (null == savedInstanceState) {
-            refreshWithSwipe()
+            refreshWithLoading()
         }
     }
 
-    fun refreshWithSwipe() {
+    fun refreshWithLoading() {
         loadFirstPage()
-//        mBinding.swipeRefresh.isRefreshing = true
     }
 
     fun refreshFinished() {
         val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
         val behavior = lpHeader.behavior as PullDownHeaderBehavior
         behavior.refreshComplete()
-//        mBinding.swipeRefresh.isRefreshing = false
     }
 
     override fun loadFirstPage() {

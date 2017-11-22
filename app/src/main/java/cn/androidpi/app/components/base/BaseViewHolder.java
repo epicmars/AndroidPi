@@ -106,4 +106,8 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
      * 展示数据。
      */
     public abstract <T> void present(T data);
+
+    public void onRecycled() {
+        // empty
+    }
 }

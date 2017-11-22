@@ -74,6 +74,42 @@ class News() : Parcelable {
      */
     var images: Array<String>? = null
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as News
+
+        if (id != other.id) return false
+        if (newsId != other.newsId) return false
+        if (category != other.category) return false
+        if (originTitle != other.originTitle) return false
+        if (publishTime != other.publishTime) return false
+        if (sourceName != other.sourceName) return false
+        if (sourceUrl != other.sourceUrl) return false
+        if (title != other.title) return false
+        if (url != other.url) return false
+        if (!Arrays.equals(keywords, other.keywords)) return false
+        if (!Arrays.equals(images, other.images)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + (newsId?.hashCode() ?: 0)
+        result = 31 * result + (category?.hashCode() ?: 0)
+        result = 31 * result + (originTitle?.hashCode() ?: 0)
+        result = 31 * result + (publishTime?.hashCode() ?: 0)
+        result = 31 * result + (sourceName?.hashCode() ?: 0)
+        result = 31 * result + (sourceUrl?.hashCode() ?: 0)
+        result = 31 * result + (title?.hashCode() ?: 0)
+        result = 31 * result + (url?.hashCode() ?: 0)
+        result = 31 * result + (keywords?.let { Arrays.hashCode(it) } ?: 0)
+        result = 31 * result + (images?.let { Arrays.hashCode(it) } ?: 0)
+        return result
+    }
+
     override fun toString(): String {
         return "News(id=$id, newsId=$newsId, category=$category, originTitle=$originTitle, publishTime=$publishTime, sourceName=$sourceName, sourceUrl=$sourceUrl, title=$title, url=$url, keywords=${Arrays.toString(keywords)}, images=${Arrays.toString(images)})"
     }

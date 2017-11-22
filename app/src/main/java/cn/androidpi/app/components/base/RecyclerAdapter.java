@@ -53,6 +53,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     }
 
     @Override
+    public void onViewRecycled(BaseViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.onRecycled();
+    }
+
+    @Override
     public int getItemCount() {
         return mPayloads.size();
     }
@@ -63,9 +69,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         return mDataViewMap.get(item.getClass().hashCode());
     }
 
+    public List<Object> getPayloads() {
+        return mPayloads;
+    }
+
+    /**
+     * Set adapter payloads.
+     * @param payloads
+     */
     public void setPayloads(Collection<?> payloads) {
         if (null == payloads) {
-            // TODO: 2017/9/1 数据为空的占位对象
             return;
         }
         this.mPayloads.clear();
@@ -73,15 +86,41 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         notifyDataSetChanged();
     }
 
-    public List<Object> getPayloads() {
-        return mPayloads;
-    }
-
-    public void addPayload(Collection<?> payloads) {
-        if (null == payloads) {
+    /**
+     * Add payload to current payloads.
+     * @param payloads
+     */
+    public void addPayloads(Collection<?> payloads) {
+        if (null == payloads || payloads.isEmpty()) {
             return;
         }
+        int positionStart = mPayloads.size();
+        int itemCount = payloads.size();
         this.mPayloads.addAll(payloads);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(positionStart, itemCount);
+    }
+
+    /**
+     * Append payloads with source, the source doesn't contain the payloads to be appended.
+     *
+     * @param source   source payloads
+     * @param payloads payloads to be appended
+     */
+    public void appendPayloads(Collection<?> source, Collection<?> payloads) {
+        // Adapter payload is empty, set to source.
+        if (null == payloads || payloads.isEmpty()) {
+            setPayloads(source);
+            return;
+        }
+        if (!mPayloads.isEmpty() || source == null || source.isEmpty()) {
+            // The source is empty, add to current payloads.
+            addPayloads(payloads);
+            return;
+        }
+        int positionStart = source.size();
+        int itemCount = payloads.size();
+        mPayloads.addAll(source);
+        mPayloads.addAll(payloads);
+        notifyItemRangeInserted(positionStart, itemCount);
     }
 }

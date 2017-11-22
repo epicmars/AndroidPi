@@ -7,6 +7,7 @@ import cn.androidpi.news.entity.News
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,9 +31,6 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 .flatMap { resNews -> Observable.fromIterable(resNews) }
                 .map { resNews -> resNews.toNews() }
                 .toList()
-                .doOnSuccess {
-                    newsDao.insertNews(*it.toTypedArray())
-                }
     }
 
     override fun getNews(page: Int, count: Int): Single<List<News>> {
@@ -46,11 +44,19 @@ class NewsRepository @Inject constructor() : NewsRepo {
         // @see https://developer.android.com/topic/libraries/architecture/guide.html
 
         // When get latest news, [refreshNews] and zip with the data stream from local
-        // database, and get news from local too when request failed.
+        // database, and get news from local when request failed.
         return refreshNews(page, count)
+                .doOnSuccess {
+                    for (news in it) {
+                        newsDao.insertNews(news)
+                    }
+                }
                 .zipWith(getNews(page, count), BiFunction {
                     t1: List<News>, t2: List<News> -> t2
                 })
+                .doOnError {
+                    Timber.e(it)
+                }
                 .onErrorResumeNext(getNews(page, count))
     }
 }

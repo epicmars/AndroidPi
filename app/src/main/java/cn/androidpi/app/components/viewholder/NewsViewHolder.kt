@@ -8,6 +8,7 @@ import cn.androidpi.app.components.base.BaseViewHolder
 import cn.androidpi.app.components.base.BindLayout
 import cn.androidpi.app.databinding.ViewHolderNewsBinding
 import cn.androidpi.news.entity.News
+import com.bumptech.glide.Glide
 
 /**
  * Created by jastrelax on 2017/11/7.
@@ -21,6 +22,11 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
         mBinding.tvTitle.text = news?.title
         mBinding.tvPublishTime.text = news?.publishTime
 
+        if (news != null && news.images != null && news.images!!.isNotEmpty()) {
+            mBinding.ivImage.visibility = View.VISIBLE
+            Glide.with(itemView).load(news.images!![0]).into(mBinding.ivImage)
+        }
+
         itemView.setOnClickListener {
             v: View? ->
             val action = Intent(Intent.ACTION_VIEW, Uri.parse(news?.url))
@@ -28,5 +34,12 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
                 v?.context?.startActivity(action)
             }
         }
+    }
+
+    override fun onRecycled() {
+        super.onRecycled()
+        itemView.setOnClickListener(null)
+        mBinding.ivImage.visibility = View.GONE
+        Glide.with(itemView).clear(mBinding.ivImage)
     }
 }
