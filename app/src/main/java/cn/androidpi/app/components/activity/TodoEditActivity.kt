@@ -7,12 +7,15 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.SeekBar
 import cn.androidpi.app.R
 import cn.androidpi.app.components.base.BaseActivity
 import cn.androidpi.app.components.fragment.DatePickerFragment
 import cn.androidpi.app.databinding.ActivityTodoEditBinding
 import cn.androidpi.app.view.TodoEditView
 import cn.androidpi.app.viewmodel.TodoEditViewModel
+import cn.androidpi.common.color.ColorModel
+import cn.androidpi.common.color.HSV
 import cn.androidpi.common.datetime.DateUtils
 import kotlinx.android.synthetic.main.activity_todo_edit.*
 import java.util.*
@@ -67,6 +70,24 @@ class TodoEditActivity : BaseActivity(), TodoEditView, DatePickerFragment.OnDate
                 finish()
             }
         }
+
+        // priority selection
+        mBinding?.sbPriority?.max = 180
+        mBinding?.sbPriority?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            val hsv = HSV()
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                seekBar?.setBackgroundColor(ColorModel.hsvToRgb(hsv.set(180 - progress, 0.78f, 1f), alpha = 255))
+//                mBinding?.tvPriority?.setBackgroundColor()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
 
         mViewModel.mStartTime.observe(this, Observer {
             t -> mBinding?.tvStartTime?.text = DateUtils.formatStandard(t!!)

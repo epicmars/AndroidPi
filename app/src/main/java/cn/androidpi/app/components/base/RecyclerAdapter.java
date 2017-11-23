@@ -49,13 +49,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         Object item = mPayloads.get(position);
-        holder.resolve(item);
+        holder.onBindViewHolder(item);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(BaseViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        holder.onAttachedToWindow();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(BaseViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.onDetachedToWindow();
     }
 
     @Override
     public void onViewRecycled(BaseViewHolder holder) {
         super.onViewRecycled(holder);
-        holder.onRecycled();
+        holder.onViewRecycled();
     }
 
     @Override

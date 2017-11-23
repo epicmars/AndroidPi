@@ -2,6 +2,8 @@ package cn.androidpi.app.components.fragment
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -55,11 +57,19 @@ class CoverNewsFragment : BaseFragment<FragmentCoverNewsBinding>() {
                 }
                 mNews = t[mPosition!!]
                 mBinding.tvTitle.text = mNews?.title
+                mBinding.ivNewsCover.setOnClickListener {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(mNews?.url)))
+                }
                 Glide.with(view)
                         .load(mNews?.images?.get(0))
                         .into(mBinding.ivNewsCover)
             }
         })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Glide.with(this).clear(mBinding.ivNewsCover)
     }
 }
 

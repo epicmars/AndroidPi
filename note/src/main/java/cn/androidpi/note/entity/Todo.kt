@@ -25,7 +25,9 @@ class Todo() : Parcelable {
         /** 取消 **/
         CANCEL,           // user action
         /** 逾期 **/
-        OVERDUE           // deadline < now and status == START
+        OVERDUE,           // deadline < now and status == START
+        /** 删除 **/       // deleted by user
+        DELETED
     }
 
     @PrimaryKey
@@ -67,6 +69,11 @@ class Todo() : Parcelable {
      */
     var status: Status? = Status.NEW
 
+    /**
+     * 优先级，由低到高，数值为[0,180]，0或null表示无优先级。
+     */
+    var priority: Int? = null
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -80,6 +87,7 @@ class Todo() : Parcelable {
         if (content != other.content) return false
         if (!Arrays.equals(tags, other.tags)) return false
         if (status != other.status) return false
+        if (priority != other.priority) return false
 
         return true
     }
@@ -92,6 +100,7 @@ class Todo() : Parcelable {
         result = 31 * result + (content?.hashCode() ?: 0)
         result = 31 * result + (tags?.let { Arrays.hashCode(it) } ?: 0)
         result = 31 * result + (status?.hashCode() ?: 0)
+        result = 31 * result + (priority?.hashCode() ?: 0)
         return result
     }
 
@@ -103,7 +112,10 @@ class Todo() : Parcelable {
         deadline = Date(source.readLong())
         content = source.readString()
         tags = source.createStringArray()
-        status = if(source.readInt() == -1) Status.values()[source.readInt()] else null
+        val stat = source.readInt()
+        status = if(stat != -1) Status.values()[stat] else null
+        val prio = source.readInt()
+        priority = if (prio != -1) prio else null
     }
 
     override fun describeContents() = 0
@@ -117,6 +129,7 @@ class Todo() : Parcelable {
         dest.writeString(content)
         dest.writeStringArray(tags)
         dest.writeInt(status?.ordinal ?: -1)
+        dest.writeInt(priority ?: -1)
     }
 
 

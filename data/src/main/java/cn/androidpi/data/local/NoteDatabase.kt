@@ -14,7 +14,7 @@ import cn.androidpi.note.entity.Todo
  * Created by jastrelax on 2017/11/2.
  */
 
-@Database(entities = arrayOf(Todo::class), version = 2)
+@Database(entities = arrayOf(Todo::class), version = 3)
 @TypeConverters(DateConverter::class, StringArrayConverter::class, TodoStatusConverter::class)
 abstract class NoteDatabase : RoomDatabase() {
 
@@ -52,5 +52,11 @@ object NOTE_MIGRATION_1_2 : Migration(1, 2) {
             END
             ;
             """)
+    }
+}
+
+object NOTE_MIGRATION_2_3 : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE todo ADD COLUMN priority INTEGER;")
     }
 }

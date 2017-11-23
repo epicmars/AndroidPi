@@ -6,7 +6,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_holder_three_line_height"
-        android:background="@drawable/listitem_bg_selector"
+        android:background="?attr/selectableItemBackground"
         android:paddingBottom="@dimen/view_holder_padding_vertical"
         android:paddingStart="8dp"
         android:paddingEnd="@dimen/view_holder_padding_horizontal"

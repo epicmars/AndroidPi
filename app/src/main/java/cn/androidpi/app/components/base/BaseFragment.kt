@@ -19,7 +19,7 @@ abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
 
     lateinit var mBinding: VDB
 
-    var mBindLayout: BindLayout? = null
+    protected var mBindLayout: BindLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBindLayout = javaClass.getAnnotation(BindLayout::class.java)

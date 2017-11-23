@@ -23,7 +23,7 @@
 
     <!-- todolist card view -->
     <dimen name="todo_card_width">200dp</dimen>
-    <dimen name="todo_card_height">240dp</dimen>
+    <dimen name="todo_card_height">200dp</dimen>
 
     <!-- action panel-->
     <dimen name="panel_item_margin_horizontal">16dp</dimen>

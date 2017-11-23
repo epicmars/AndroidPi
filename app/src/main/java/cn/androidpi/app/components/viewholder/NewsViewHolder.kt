@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 @BindLayout(value = R.layout.view_holder_news, dataTypes = arrayOf(News::class))
 class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(itemView) {
 
-    override fun <T : Any?> present(data: T) {
+    override fun <T : Any?> onBindView(data: T) {
         val news = data as? News
         mBinding.tvTitle.text = news?.title
         mBinding.tvPublishTime.text = news?.publishTime
@@ -36,8 +36,8 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
         }
     }
 
-    override fun onRecycled() {
-        super.onRecycled()
+    override fun onViewRecycled() {
+        super.onViewRecycled()
         itemView.setOnClickListener(null)
         mBinding.ivImage.visibility = View.GONE
         Glide.with(itemView).clear(mBinding.ivImage)
