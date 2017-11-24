@@ -8,4 +8,6 @@
     <string name="todo_tip_content_is_blank">待办事项为空</string>
     <string name="todo_top_start_later_than_deadline">开始时间晚于截止时间</string>
 
+    <string name="transition_todo_content">transition_todo_content</string>
+
 </resources>

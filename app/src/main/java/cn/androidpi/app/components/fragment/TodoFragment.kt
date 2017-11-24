@@ -1,5 +1,6 @@
 package cn.androidpi.app.components.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import cn.androidpi.app.R
@@ -9,7 +10,6 @@ import cn.androidpi.app.databinding.FragmentTodoBinding
 import cn.androidpi.note.entity.Todo
 
 /**
- *
  * Created by jastrelax on 2017-11-14
  */
 @BindLayout(R.layout.fragment_todo)
@@ -27,6 +27,9 @@ class TodoFragment : BaseFragment<FragmentTodoBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mBinding.tvTodoContent.text = mTodo?.content
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity?.supportStartPostponedEnterTransition()
+        }
     }
 
     companion object {
