@@ -8,28 +8,39 @@ import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
  */
 
 class NewsPage {
-    var currentPage = 0
-    var newsList: MutableList<News> = ArrayList()
+    var mPage = 0
+    var mNewsList: MutableList<News> = ArrayList()
 
     fun firstPage(news: List<News>) {
-        newsList.clear()
-        currentPage(0, news)
+        mPage = 0
+        mNewsList.clear()
+        mNewsList.addAll(news)
     }
 
-    fun currentPage(page: Int, news: List<News>) {
-        currentPage = page
-        newsList.addAll(news)
+    fun getNextPageNum(): Int {
+        return mPage + 1
     }
 
-    fun currentPage(): List<News> {
-        val start = currentPage * PAGE_SIZE
-        return newsList.subList(start, start + PAGE_SIZE)
+    fun nextPage(news: List<News>) {
+        mPage++
+        mNewsList.addAll(news)
     }
 
-    fun previousPages(): List<News> {
-        val end = currentPage * PAGE_SIZE
-        return newsList.subList(0, end)
+    fun getCurrentPage(): List<News> {
+        val size = mNewsList.size
+        val start = clamp(mPage * PAGE_SIZE, 0, size-1)
+        val end = clamp(start + PAGE_SIZE, 0, size)
+        return mNewsList.subList(start, end)
     }
 
-    fun isFirstPage() = currentPage == 0
+    fun getPreviousPages(): List<News> {
+        val end = clamp(mPage * PAGE_SIZE, 0, mNewsList.size)
+        return mNewsList.subList(0, end)
+    }
+
+    fun isFirstPage() = mPage == 0
+
+    fun clamp(index: Int, min: Int, max: Int): Int{
+        return maxOf(min, minOf(index, max))
+    }
 }

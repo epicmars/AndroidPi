@@ -2,6 +2,7 @@ package cn.androidpi.app.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import cn.androidpi.common.datetime.DateTimeUtils
 import cn.androidpi.data.repository.TodoRepo
 import cn.androidpi.note.model.TodoEditModel
 import io.reactivex.schedulers.Schedulers
@@ -12,21 +13,37 @@ import javax.inject.Inject
 /**
  * Created by jastrelax on 2017/11/10.
  */
-class TodoEditViewModel @Inject constructor(): ViewModel(), TodoEditModel {
+class TodoEditViewModel @Inject constructor() : ViewModel(), TodoEditModel {
 
     @Inject
     lateinit var mTodoRepo: TodoRepo
 
-    var mStartTime: MutableLiveData<Date> = MutableLiveData()
-    var mDeadline: MutableLiveData<Date> = MutableLiveData()
+    var mStartDate = MutableLiveData<Date>()
+    var mStartTime = MutableLiveData<Date>()
+    var mDeadlineDate = MutableLiveData<Date>()
+    var mDeadlineTime = MutableLiveData<Date>()
+    //
+    var mDateTimeStart = MutableLiveData<Date>()
+    var mDateTimeDeadline = MutableLiveData<Date>()
     var mTodoContent: MutableLiveData<String> = MutableLiveData()
+
+    init {
+        val now = DateTimeUtils.now()
+        mStartDate.value = now.time
+        mStartTime.value = now.time
+//        mDateTimeStart.value = now.time
+
+        mDeadlineDate.value = now.time
+        mDeadlineTime.value = now.time
+//        mDateTimeDeadline.value = now.time
+    }
 
     override fun addTodoItem() {
         try {
-            mTodoRepo.saveTodoItem(mStartTime.value!!, mDeadline.value!!, mTodoContent.value!!)
+            mTodoRepo.saveTodoItem(mDateTimeStart.value, mDateTimeDeadline.value, mTodoContent.value!!)
                     .subscribeOn(Schedulers.io())
                     .subscribe()
-        } catch (e: NullPointerException){
+        } catch (e: NullPointerException) {
             Timber.e(e)
         }
     }
@@ -36,9 +53,44 @@ class TodoEditViewModel @Inject constructor(): ViewModel(), TodoEditModel {
     }
 
     fun isValidDate(): Boolean {
-        if(mStartTime.value == null || mDeadline.value == null) {
-            return false
+        if (mDateTimeStart.value == null || mDateTimeDeadline.value == null) {
+            return true
         }
-        return mDeadline.value!! == (mStartTime.value) || mDeadline.value!!.after(mStartTime.value)
+        return mDateTimeDeadline.value!! == (mDateTimeStart.value) || mDateTimeDeadline.value!!.after(mDateTimeStart.value)
+    }
+
+    fun updateDatetime() {
+
+        mDateTimeStart.value = DateTimeUtils.assembleDateTime(mStartDate.value, mStartTime.value)
+        mDateTimeDeadline.value = DateTimeUtils.assembleDateTime(mDeadlineDate.value, mDeadlineTime.value)
+
+        val calendar = Calendar.getInstance()
+        calendar.time = mDateTimeStart.value
+        calendar.set(Calendar.SECOND, 0)
+        mDateTimeStart.value = calendar.time
+
+        calendar.time = mDateTimeDeadline.value
+        calendar.set(Calendar.SECOND, 0)
+        mDateTimeDeadline.value = calendar.time
+    }
+
+    fun updateStartDate(startDate: Date) {
+        mStartDate.value = startDate
+        updateDatetime()
+    }
+
+    fun updateStartTime(startTime: Date) {
+        mStartTime.value = startTime
+        updateDatetime()
+    }
+
+    fun updateDeadlineDate(deadline: Date) {
+        mDeadlineDate.value = deadline
+        updateDatetime()
+    }
+
+    fun updateDeadlineTime(deadlineTime: Date) {
+        mDeadlineTime.value = deadlineTime
+        updateDatetime()
     }
 }

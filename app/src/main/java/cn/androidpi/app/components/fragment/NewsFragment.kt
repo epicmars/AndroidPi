@@ -179,7 +179,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         super.onViewCreated(view, savedInstanceState)
         mNewsModel.mNews.observe(this, Observer { t ->
             refreshFinished()
-            val currentPage = t?.currentPage()
+            val currentPage = t?.getCurrentPage()
             if (currentPage == null || currentPage.isEmpty())
                 return@Observer
             val MAX_COVER_SIZE = 5
@@ -195,7 +195,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 val itemNews = currentPage.subList(coverSize, currentPage.size)
                 mAdapter.setPayloads(itemNews)
             } else {
-                val previous = t.previousPages()
+                val previous = t.getPreviousPages()
                 val start = Math.min(MAX_COVER_SIZE, previous.size)
                 mAdapter.appendPayloads(previous.subList(start, previous.size), currentPage)
             }

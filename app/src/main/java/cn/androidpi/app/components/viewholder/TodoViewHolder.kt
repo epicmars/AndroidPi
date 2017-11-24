@@ -34,9 +34,9 @@ class TodoViewHolder(itemView: View) : BaseViewHolder<ViewHolderTodoBinding>(ite
         super.onAttachedToWindow()
         // make height equal to width
         val sw = itemView.resources.displayMetrics.widthPixels
-        val lp = itemView.layoutParams as ViewGroup.MarginLayoutParams
-        lp.width = sw / 2 - lp.marginStart * 2
-        lp.height = lp.width
-        itemView.layoutParams = lp
+        val clp = itemView.layoutParams as ViewGroup.MarginLayoutParams
+        clp.width = sw / 2
+        clp.height = clp.width
+        itemView.layoutParams = clp
     }
 }

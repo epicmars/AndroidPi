@@ -50,8 +50,8 @@ class CoverNewsFragment : BaseFragment<FragmentCoverNewsBinding>() {
 
         mCoverNewsModel = ViewModelProviders.of(activity!!).get(CoverNewsViewModel::class.java)
 
-        mCoverNewsModel.mCoverNews.observe(this, object : Observer<List<News>> {
-            override fun onChanged(t: List<News>?) {
+        mCoverNewsModel.mCoverNews.observe(this, object : Observer<MutableList<News>> {
+            override fun onChanged(t: MutableList<News>?) {
                 if (t == null || mPosition == null || mPosition!! >= t.size) {
                     return
                 }

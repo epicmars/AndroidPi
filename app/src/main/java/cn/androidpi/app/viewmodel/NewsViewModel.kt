@@ -24,13 +24,15 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
     val mNews: MutableLiveData<NewsPage> = MutableLiveData()
 
-    val mNewsPage = NewsPage()
+    init {
+        mNews.value = NewsPage()
+    }
 
-    var mPage = 0
+    fun getLatestNews(isNext: Boolean, count: Int = NewsModel.PAGE_SIZE) {
 
-    fun getLatestNews(page: Int, count: Int = NewsModel.PAGE_SIZE) {
+        val page = if (isNext) mNews.value?.getNextPageNum() else 0
 
-        mNewsRepo.get().getLatestNews(page, count)
+        mNewsRepo.get().getLatestNews(page ?: 0, count)
                  .subscribeOn(Schedulers.io())
                  .observeOn(AndroidSchedulers.mainThread())
                  .subscribe(object : SingleObserver<List<News>> {
@@ -39,12 +41,12 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
                     }
 
                     override fun onSuccess(t: List<News>) {
-                        if (page == 0) {
-                            mNewsPage.firstPage(t)
+                        if (!isNext) {
+                            mNews.value?.firstPage(t)
                         } else {
-                            mNewsPage.currentPage(page, t)
+                            mNews.value?.nextPage(t)
                         }
-                        mNews.value = mNewsPage
+                        mNews.value = mNews.value
                     }
 
                     override fun onSubscribe(d: Disposable?) {
@@ -53,11 +55,10 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
     }
 
     override fun refreshPage() {
-        mPage = 0
-        getLatestNews(mPage)
+        getLatestNews(false)
     }
 
     override fun nextPage() {
-        getLatestNews(++mPage)
+        getLatestNews(true)
     }
 }

@@ -7,9 +7,13 @@ import java.util.*
  */
 interface TodoEditView {
 
+    fun updateStartDate(startDate: Date)
+
     fun updateStartTime(startTime: Date)
 
-    fun updateDeadline(deadline: Date)
+    fun updateDeadlineDate(deadlineDate: Date)
+
+    fun updateDeadlineTime(deadlineTime: Date)
 
     fun updateTodoContent(content: String)
 

@@ -9,29 +9,27 @@ import cn.androidpi.news.entity.News
  */
 class CoverNewsViewModel : ViewModel() {
 
-    var mNewsList = ArrayList<News>()
-
-    var mCoverNews  = MutableLiveData<List<News>>()
+    var mCoverNews  = MutableLiveData<MutableList<News>>()
 
     init {
-        mCoverNews.value = mNewsList
+        mCoverNews.value = ArrayList<News>()
     }
 
     fun clear() {
-        mNewsList.clear()
+        mCoverNews.value?.clear()
     }
 
     fun add(news: News) {
-        mNewsList.add(news)
+        mCoverNews.value?.add(news)
     }
 
     fun addAll(collection: Collection<News>) {
-        mNewsList.addAll(collection)
+        mCoverNews.value?.addAll(collection)
     }
 
-    fun getSize(): Int = mNewsList.size
+    fun getSize(): Int = mCoverNews.value!!.size
 
     fun update() {
-        mCoverNews.value = mNewsList
+        mCoverNews.value = mCoverNews.value
     }
 }

@@ -7,7 +7,7 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import cn.androidpi.common.datetime.DateUtils
+import cn.androidpi.common.datetime.DateTimeUtils
 import cn.androidpi.data.local.NOTE_MIGRATION_1_2
 import cn.androidpi.data.local.NoteDatabase
 import org.junit.Assert.assertEquals
@@ -57,9 +57,9 @@ class TestNoteMigration1_2 {
             val startTime = cursor.getLong(cursor.getColumnIndex("start_time"))
             val deadline = cursor.getLong(cursor.getColumnIndex("deadline"))
             val status = cursor.getString(cursor.getColumnIndex("status"))
-            if (DateUtils.formatDate(Date(startTime)) > DateUtils.formatDate(now)) {
+            if (DateTimeUtils.formatDate(Date(startTime)) > DateTimeUtils.formatDate(now)) {
                 assertEquals("NEW", status)
-            } else if (DateUtils.formatDate(now) in DateUtils.formatDate(Date(startTime))..DateUtils.formatDate(Date(deadline))) {
+            } else if (DateTimeUtils.formatDate(now) in DateTimeUtils.formatDate(Date(startTime))..DateTimeUtils.formatDate(Date(deadline))) {
                 assertEquals("START", status)
             } else {
                 assertNull(status)

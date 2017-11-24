@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.CoordinatorLayout
@@ -22,71 +23,69 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/ll_start_time"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_holder_one_line_height"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="@dimen/editor_padding"
+                        android:text="@string/todo_edit_options" />
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/c_todo_options"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingEnd="@dimen/editor_padding"
-                        android:paddingStart="@dimen/editor_padding"
-                        android:background="@drawable/listitem_bg_selector">
+                        android:visibility="gone"
+                        tools:visibility="visible">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="@string/todo_hint_start_time"
-                            android:drawablePadding="8dp"
-                            android:drawableStart="@drawable/ic_date_range"/>
+                        <cn.androidpi.app.widget.todo.TodoDateTimeView
+                            android:id="@+id/todo_start_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="1"
+                            app:label="开始"
+                            app:layout_constraintEnd_toStartOf="@+id/todo_deadline"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tag="picker-start" />
 
-                        <TextView
-                            android:id="@+id/tv_start_time"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_holder_one_line_height"
-                            android:gravity="center_vertical|end" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_deadline"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingEnd="@dimen/editor_padding"
-                        android:paddingStart="@dimen/editor_padding"
-                        android:background="@drawable/listitem_bg_selector">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="@string/todo_hint_deadline"
-                            android:drawablePadding="8dp"
-                            android:drawableStart="@drawable/ic_date_range"/>
-
-                        <TextView
-                            android:id="@+id/tv_deadline"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_holder_one_line_height"
-                            android:gravity="center_vertical|end" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        <cn.androidpi.app.widget.todo.TodoDateTimeView
+                            android:id="@+id/todo_deadline"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="1"
+                            app:label="截止"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/todo_start_time"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tag="picker-deadline" />
 
                         <TextView
                             android:id="@+id/tv_priority"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"/>
 
                         <SeekBar
                             android:id="@+id/sb_priority"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                    </LinearLayout>
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/todo_start_time" />
+
+                    </android.support.constraint.ConstraintLayout>
+
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -95,6 +94,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/panel_item_margin_vertical"
+                android:layout_marginStart="@dimen/view_holder_margin_vertical"
+                android:layout_marginEnd="@dimen/view_holder_margin_vertical"
                 android:layout_weight="1">
 
                 <EditText

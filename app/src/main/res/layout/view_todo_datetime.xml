@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/ll_start_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/editor_padding"
+        android:paddingStart="@dimen/editor_padding">
+
+        <TextView
+            android:id="@+id/tv_datetime_label"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_holder_one_line_height"
+            android:drawablePadding="8dp"
+            android:gravity="center"
+            tools:text="@string/todo_hint_start_time" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_holder_one_line_height"
+            android:background="@drawable/listitem_bg_selector"
+            android:drawableStart="@drawable/ic_date_range"
+            android:gravity="center"
+            tools:text="2017年11月23日" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_holder_one_line_height"
+            android:background="@drawable/listitem_bg_selector"
+            android:drawableStart="@drawable/ic_access_time"
+            android:gravity="center"
+            tools:text="23:06:38" />
+    </LinearLayout>
+</layout>
