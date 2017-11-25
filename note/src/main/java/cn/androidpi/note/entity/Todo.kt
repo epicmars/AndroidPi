@@ -70,7 +70,7 @@ class Todo() : Parcelable {
     var status: Status? = Status.NEW
 
     /**
-     * 优先级，由低到高，数值为[0,180]，0或null表示无优先级。
+     * 优先级，由低到高，数值为[0,100]，0或null表示无优先级。
      */
     var priority: Int? = null
 

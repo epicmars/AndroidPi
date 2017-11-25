@@ -17,6 +17,11 @@ interface TodoRepo {
 
     /**
      * 添加一条新的待办事项。
+     */
+    fun saveTodoItem(todo: Todo): Completable
+
+    /**
+     * 添加一条新的待办事项。
      *
      * @param startTime 待办事项的开始时间
      * @param deadline  待办事项的截止时间

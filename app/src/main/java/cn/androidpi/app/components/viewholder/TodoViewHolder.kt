@@ -11,6 +11,7 @@ import cn.androidpi.app.components.base.BindLayout
 import cn.androidpi.app.components.fragment.FragmentFactory
 import cn.androidpi.app.components.fragment.TodoFragment
 import cn.androidpi.app.databinding.ViewHolderTodoBinding
+import cn.androidpi.app.viewmodel.TodoEditViewModel
 import cn.androidpi.note.entity.Todo
 
 /**
@@ -21,16 +22,15 @@ class TodoViewHolder(itemView: View) : BaseViewHolder<ViewHolderTodoBinding>(ite
 
     override fun <T : Any?> onBindView(data: T) {
         val todo = data as? Todo
+        mBinding?.priorityColor?.setBackgroundColor(TodoEditViewModel.priorityColor(todo?.priority))
         mBinding?.tvTodoContent?.text = todo?.content
         itemView.setOnClickListener {
             val sharedElementName = it.resources.getString(R.string.transition_todo_content)
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(it.context as Activity, itemView, sharedElementName)
             TemplateActivity.startWith(options, it.context, fragmentName = TodoFragment::class.java.canonicalName,
                     factory = object : FragmentFactory<TodoFragment>() {
-                        val todoItem = todo
-
                         override fun create(): TodoFragment {
-                            return TodoFragment.newInstance(todoItem!!)
+                            return TodoFragment.newInstance(todo!!)
                         }
                     })
         }

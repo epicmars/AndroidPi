@@ -15,6 +15,8 @@ interface TodoEditView {
 
     fun updateDeadlineTime(deadlineTime: Date)
 
+    fun updateTodoPriority(priority: Int)
+
     fun updateTodoContent(content: String)
 
     fun commitTodoItem()

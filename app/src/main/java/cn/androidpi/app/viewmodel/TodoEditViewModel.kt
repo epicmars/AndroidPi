@@ -2,8 +2,11 @@ package cn.androidpi.app.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import cn.androidpi.common.color.ColorModel
+import cn.androidpi.common.color.HSV
 import cn.androidpi.common.datetime.DateTimeUtils
 import cn.androidpi.data.repository.TodoRepo
+import cn.androidpi.note.entity.Todo
 import cn.androidpi.note.model.TodoEditModel
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -15,6 +18,13 @@ import javax.inject.Inject
  */
 class TodoEditViewModel @Inject constructor() : ViewModel(), TodoEditModel {
 
+    companion object {
+        val hsv = HSV()
+        fun priorityColor(priority: Int?): Int {
+            return ColorModel.hsvToRgb(hsv.set(180 - ((priority ?: 0) * 1.8f).toInt(), 0.89f, 1f), alpha = 255)
+        }
+    }
+
     @Inject
     lateinit var mTodoRepo: TodoRepo
 
@@ -25,7 +35,8 @@ class TodoEditViewModel @Inject constructor() : ViewModel(), TodoEditModel {
     //
     var mDateTimeStart = MutableLiveData<Date>()
     var mDateTimeDeadline = MutableLiveData<Date>()
-    var mTodoContent: MutableLiveData<String> = MutableLiveData()
+    var mTodoContent = MutableLiveData<String>()
+    var mPriority = MutableLiveData<Int>()
 
     init {
         val now = DateTimeUtils.now()
@@ -36,11 +47,18 @@ class TodoEditViewModel @Inject constructor() : ViewModel(), TodoEditModel {
         mDeadlineDate.value = now.time
         mDeadlineTime.value = now.time
 //        mDateTimeDeadline.value = now.time
+        mPriority.value = 0
     }
 
     override fun addTodoItem() {
+        val todo = Todo()
+        todo.createdTime = Date()
+        todo.startTime = mDateTimeStart.value
+        todo.deadline = mDateTimeDeadline.value
+        todo.content = mTodoContent.value
+        todo.priority = mPriority.value
         try {
-            mTodoRepo.saveTodoItem(mDateTimeStart.value, mDateTimeDeadline.value, mTodoContent.value!!)
+            mTodoRepo.saveTodoItem(todo)
                     .subscribeOn(Schedulers.io())
                     .subscribe()
         } catch (e: NullPointerException) {
@@ -92,5 +110,9 @@ class TodoEditViewModel @Inject constructor() : ViewModel(), TodoEditModel {
     fun updateDeadlineTime(deadlineTime: Date) {
         mDeadlineTime.value = deadlineTime
         updateDatetime()
+    }
+
+    fun updatePriority(priority: Int) {
+        mPriority.value = priority
     }
 }

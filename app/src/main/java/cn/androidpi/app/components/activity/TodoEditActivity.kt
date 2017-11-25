@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.SeekBar
 import cn.androidpi.app.R
 import cn.androidpi.app.components.base.BaseActivity
@@ -39,6 +40,14 @@ class TodoEditActivity : BaseActivity(), TodoEditView, DatePickerFragment.OnDate
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_todo_edit)
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(TodoEditViewModel::class.java)
+
+        mBinding?.tvEditOptions?.setOnClickListener {
+            val todoOptions = mBinding?.cTodoOptions
+            todoOptions?.visibility = if (todoOptions?.visibility == View.GONE) View.VISIBLE else View.GONE
+            val drawableRight = resources.getDrawable(if (todoOptions?.visibility == View.GONE) R.drawable.ic_chevron_right_black_24dp else R.drawable.ic_expand_more_black_24dp)
+            mBinding?.tvEditOptions?.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null)
+        }
+
         mBinding?.etContent?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 updateTodoContent(s.toString())
@@ -66,14 +75,12 @@ class TodoEditActivity : BaseActivity(), TodoEditView, DatePickerFragment.OnDate
         }
 
         // priority selection
-        mBinding?.sbPriority?.max = 180
+        mBinding?.sbPriority?.max = 100
         mBinding?.sbPriority?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
-            val hsv = HSV()
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                seekBar?.setBackgroundColor(ColorModel.hsvToRgb(hsv.set(180 - progress, 0.78f, 1f), alpha = 255))
-//                mBinding?.tvPriority?.setBackgroundColor()
+                mViewModel.updatePriority(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -104,6 +111,14 @@ class TodoEditActivity : BaseActivity(), TodoEditView, DatePickerFragment.OnDate
         mViewModel.mDeadlineTime.observe(this, Observer {
             it?.let {
                 mBinding?.todoDeadline?.setTime(it)
+            }
+        })
+
+        mViewModel.mPriority.observe(this, object : Observer<Int> {
+            val hsv = HSV()
+
+            override fun onChanged(t: Int?) {
+                mBinding?.sbPriority?.setBackgroundColor(ColorModel.hsvToRgb(hsv.set(180 - ((t ?: 0) * 1.8f).toInt(), 0.89f, 1f), alpha = 255))
             }
         })
     }
@@ -159,5 +174,9 @@ class TodoEditActivity : BaseActivity(), TodoEditView, DatePickerFragment.OnDate
 
     override fun commitTodoItem() {
         mViewModel.addTodoItem()
+    }
+
+    override fun updateTodoPriority(priority: Int) {
+
     }
 }

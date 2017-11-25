@@ -21,14 +21,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:animateLayoutChanges="true">
 
                     <TextView
+                        android:id="@+id/tv_edit_options"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_holder_one_line_height"
                         android:background="?attr/selectableItemBackground"
                         android:padding="@dimen/editor_padding"
-                        android:text="@string/todo_edit_options" />
+                        android:text="@string/todo_edit_options"
+                        android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+                        android:drawablePadding="8dp"/>
 
                     <android.support.constraint.ConstraintLayout
                         android:id="@+id/c_todo_options"
