@@ -25,7 +25,6 @@ class NewsRepository @Inject constructor() : NewsRepo {
     lateinit var newsDao: NewsDao
 
     override fun refreshNews(page: Int, count: Int): Single<List<News>> {
-
         return newsApi.getNews(page, count)
                 .toObservable()
                 .flatMap { resNews -> Observable.fromIterable(resNews) }
@@ -34,7 +33,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
     }
 
     override fun getNews(page: Int, count: Int): Single<List<News>> {
-        return Single.fromCallable{
+        return Single.fromCallable {
             newsDao.getNews(page, count)
         }
     }
@@ -46,13 +45,19 @@ class NewsRepository @Inject constructor() : NewsRepo {
         // When get latest news, [refreshNews] and zip with the data stream from local
         // database, and get news from local when request failed.
         return refreshNews(page, count)
-                .doOnSuccess {
-                    for (news in it) {
-                        newsDao.insertNews(news)
-                    }
+                .toObservable()
+                .flatMap { newsList ->
+                    Observable.fromIterable(newsList)
                 }
-                .zipWith(getNews(page, count), BiFunction {
-                    t1: List<News>, t2: List<News> -> t2
+                .flatMap { news ->
+                    Observable.fromCallable {
+                        newsDao.insertNews(news)
+                        news
+                    }.onErrorReturnItem(news)
+                }
+                .toList()
+                .zipWith(getNews(page, count), BiFunction { t1: List<News>, t2: List<News> ->
+                    t2
                 })
                 .doOnError {
                     Timber.e(it)

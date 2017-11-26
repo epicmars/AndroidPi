@@ -3,7 +3,7 @@ apply from: 'versions.gradle'
 apply from: 'libraries.gradle'
 
 buildscript {
-    ext.kotlin_version = '1.1.60'
+    ext.kotlin_version = '1.1.61'
     repositories {
         google()
         mavenCentral()

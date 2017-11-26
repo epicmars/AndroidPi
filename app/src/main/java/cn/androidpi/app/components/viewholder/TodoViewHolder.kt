@@ -20,7 +20,7 @@ import cn.androidpi.note.entity.Todo
 @BindLayout(value = R.layout.view_holder_todo, dataTypes = arrayOf(Todo::class))
 class TodoViewHolder(itemView: View) : BaseViewHolder<ViewHolderTodoBinding>(itemView) {
 
-    override fun <T : Any?> onBindView(data: T) {
+    override fun <T : Any?> onBindView(data: T, position: Int) {
         val todo = data as? Todo
         mBinding?.priorityColor?.setBackgroundColor(TodoEditViewModel.priorityColor(todo?.priority))
         mBinding?.tvTodoContent?.text = todo?.content

@@ -49,7 +49,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         Object item = mPayloads.get(position);
-        holder.onBindViewHolder(item);
+        holder.onBindViewHolder(item, position);
     }
 
     @Override

@@ -1,20 +1,32 @@
 package cn.androidpi.news.model
 
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 
 /**
  * Created by jastrelax on 2017/11/22.
  */
 
 class NewsPage {
+    val MAX_COVER_SIZE = 5
+
     var mPage = 0
-    var mNewsList: MutableList<News> = ArrayList()
+    var mCoverNews: MutableList<News> = ArrayList()
+    var mPreviousPages: MutableList<News> = ArrayList()
+    var mCurrentPage: MutableList<News> = ArrayList()
 
     fun firstPage(news: List<News>) {
+        if (news.isEmpty())
+            return
         mPage = 0
-        mNewsList.clear()
-        mNewsList.addAll(news)
+        mCurrentPage.clear()
+        mCoverNews.clear()
+        mPreviousPages.clear()
+
+        val coverSize = Math.min(MAX_COVER_SIZE, news.size)
+        mCoverNews.addAll(news.subList(0, coverSize))
+        if (coverSize < news.size) {
+            mCurrentPage.addAll(news.subList(coverSize, news.size))
+        }
     }
 
     fun getNextPageNum(): Int {
@@ -23,24 +35,16 @@ class NewsPage {
 
     fun nextPage(news: List<News>) {
         mPage++
-        mNewsList.addAll(news)
-    }
-
-    fun getCurrentPage(): List<News> {
-        val size = mNewsList.size
-        val start = clamp(mPage * PAGE_SIZE, 0, size-1)
-        val end = clamp(start + PAGE_SIZE, 0, size)
-        return mNewsList.subList(start, end)
-    }
-
-    fun getPreviousPages(): List<News> {
-        val end = clamp(mPage * PAGE_SIZE, 0, mNewsList.size)
-        return mNewsList.subList(0, end)
+        mPreviousPages.addAll(mCurrentPage)
+        val iter = news.iterator() as MutableIterator
+        iter.forEach {
+            it ->
+            if (mPreviousPages.contains(it))
+                iter.remove()
+        }
+        mCurrentPage.clear()
+        mCurrentPage.addAll(news)
     }
 
     fun isFirstPage() = mPage == 0
-
-    fun clamp(index: Int, min: Int, max: Int): Int{
-        return maxOf(min, minOf(index, max))
-    }
 }

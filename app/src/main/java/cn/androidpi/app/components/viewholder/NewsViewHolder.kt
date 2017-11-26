@@ -17,7 +17,12 @@ import com.bumptech.glide.Glide
 @BindLayout(value = R.layout.view_holder_news, dataTypes = arrayOf(News::class))
 class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(itemView) {
 
-    override fun <T : Any?> onBindView(data: T) {
+    var lposition: Int? = null
+    var aposition: Int? = null
+
+    override fun <T : Any?> onBindView(data: T, position: Int) {
+        lposition = layoutPosition
+        aposition = adapterPosition
         val news = data as? News
         mBinding.tvTitle.text = news?.title
         mBinding.tvPublishTime.text = news?.publishTime

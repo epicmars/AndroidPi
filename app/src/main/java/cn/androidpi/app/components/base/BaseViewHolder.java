@@ -83,8 +83,9 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
      * 解析数据。
      *
      * @param data
+     * @param position
      */
-    public final void onBindViewHolder(Object data) {
+    public final void onBindViewHolder(Object data, int position) {
         if (null == data) {
             Timber.w("Data is null!");
             return;
@@ -93,7 +94,7 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
             Timber.e("Data type doesn't match the contract!");
             return;
         }
-        onBindView(data);
+        onBindView(data, position);
     }
 
     @Override
@@ -104,7 +105,7 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
     /**
      * 展示数据。
      */
-    public abstract <T> void onBindView(T data);
+    public abstract <T> void onBindView(T data, int position);
 
     protected void onAttachedToWindow() {
         // empty
