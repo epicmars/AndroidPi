@@ -3,46 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer"
+    <android.support.design.internal.ScrimInsetsFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="cn.androidpi.app.components.activity.MainActivity"
-        tools:openDrawer="start">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:theme="@style/AppTheme.AppBarOverlay"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-            <FrameLayout
-                android:id="@+id/content"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:headerLayout="@layout/drawer_header"
-            app:menu="@menu/activity_main_drawer">
+            tools:context="cn.androidpi.app.components.activity.MainActivity"
+            tools:openDrawer="start">
 
-        </android.support.design.widget.NavigationView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:fitsSystemWindows="true">
 
-    </android.support.v4.widget.DrawerLayout>
+                <android.support.design.widget.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/colorPrimary"
+                        android:minHeight="?attr/actionBarSize"
+                        app:theme="@style/AppTheme.AppBarOverlay"
+                        app:popupTheme="@style/AppTheme.PopupOverlay"
+                        android:layout_gravity="top" />
+                </android.support.design.widget.AppBarLayout>
+
+                <FrameLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <android.support.design.widget.NavigationView
+                android:id="@+id/navigation_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true"
+                app:headerLayout="@layout/drawer_header"
+                app:menu="@menu/activity_main_drawer">
+
+            </android.support.design.widget.NavigationView>
+
+        </android.support.v4.widget.DrawerLayout>
+    </android.support.design.internal.ScrimInsetsFrameLayout>
 </layout>
 

@@ -1,11 +1,12 @@
 package cn.androidpi.app.components.activity
 
 import android.databinding.DataBindingUtil
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
 import android.view.MenuItem
+import android.view.WindowManager
 import cn.androidpi.app.R
 import cn.androidpi.app.components.base.BaseActivity
 import cn.androidpi.app.components.fragment.MainFragment
@@ -19,15 +20,18 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        setSupportActionBar(binding?.toolbar)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        }
 
-        binding?.drawer?.setStatusBarBackground(R.color.colorPrimaryDark)
-        val toggle = ActionBarDrawerToggle(this, binding?.drawer, binding?.toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        binding?.drawer?.addDrawerListener(toggle)
-        toggle.syncState()
+        setSupportActionBar(binding?.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+//        binding?.drawer?.setStatusBarBackground(R.color.transparent)
+//        val toggle = ActionBarDrawerToggle(this, binding?.drawer, binding?.toolbar,
+//                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+//        binding?.drawer?.addDrawerListener(toggle)
+//        toggle.syncState()
 
         binding?.navigationView?.setNavigationItemSelectedListener(this)
 
