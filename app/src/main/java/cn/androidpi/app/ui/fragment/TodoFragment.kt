@@ -1,11 +1,11 @@
-package cn.androidpi.app.components.fragment
+package cn.androidpi.app.ui.fragment
 
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import cn.androidpi.app.R
-import cn.androidpi.app.components.base.BaseFragment
-import cn.androidpi.app.components.base.BindLayout
+import cn.androidpi.app.ui.base.BaseFragment
+import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.app.databinding.FragmentTodoBinding
 import cn.androidpi.note.entity.Todo
 

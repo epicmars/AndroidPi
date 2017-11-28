@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.activity
+package cn.androidpi.app.ui.activity
 
 import android.content.Context
 import android.content.Intent
@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import cn.androidpi.app.R
-import cn.androidpi.app.components.base.BaseActivity
-import cn.androidpi.app.components.fragment.FragmentFactory
-import cn.androidpi.app.components.fragment.FragmentFactoryMap
+import cn.androidpi.app.ui.base.BaseActivity
+import cn.androidpi.app.ui.fragment.FragmentFactory
+import cn.androidpi.app.ui.fragment.FragmentFactoryMap
 import timber.log.Timber
 
 class TemplateActivity : BaseActivity() {

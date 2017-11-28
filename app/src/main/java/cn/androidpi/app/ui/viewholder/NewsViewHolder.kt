@@ -1,14 +1,14 @@
-package cn.androidpi.app.components.viewholder
+package cn.androidpi.app.ui.viewholder
 
 import android.content.Intent
 import android.net.Uri
 import android.view.View
 import cn.androidpi.app.R
-import cn.androidpi.app.components.base.BaseViewHolder
-import cn.androidpi.app.components.base.BindLayout
 import cn.androidpi.app.databinding.ViewHolderNewsBinding
+import cn.androidpi.app.ui.base.BaseViewHolder
+import cn.androidpi.app.ui.base.BindLayout
+import cn.androidpi.common.image.glide.GlideApp
 import cn.androidpi.news.entity.News
-import com.bumptech.glide.Glide
 
 /**
  * Created by jastrelax on 2017/11/7.
@@ -29,7 +29,7 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
 
         if (news != null && news.images != null && news.images!!.isNotEmpty()) {
             mBinding.ivImage.visibility = View.VISIBLE
-            Glide.with(itemView).load(news.images!![0]).into(mBinding.ivImage)
+            GlideApp.with(itemView).load(news.images!![0]).into(mBinding.ivImage)
         }
 
         itemView.setOnClickListener {
@@ -45,6 +45,6 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
         super.onViewRecycled()
         itemView.setOnClickListener(null)
         mBinding.ivImage.visibility = View.GONE
-        Glide.with(itemView).clear(mBinding.ivImage)
+        GlideApp.with(itemView).clear(mBinding.ivImage)
     }
 }

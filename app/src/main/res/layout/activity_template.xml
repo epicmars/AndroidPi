@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cn.androidpi.app.components.activity.TemplateActivity">
+    tools:context="cn.androidpi.app.ui.activity.TemplateActivity">
 
     <FrameLayout
         android:id="@+id/content"

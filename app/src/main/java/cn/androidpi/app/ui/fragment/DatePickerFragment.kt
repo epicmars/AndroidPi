@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.fragment
+package cn.androidpi.app.ui.fragment
 
 import android.app.DatePickerDialog
 import android.app.Dialog

@@ -1,16 +1,16 @@
-package cn.androidpi.app.components.viewholder
+package cn.androidpi.app.ui.viewholder
 
 import android.app.Activity
 import android.support.v4.app.ActivityOptionsCompat
 import android.view.View
 import android.view.ViewGroup
 import cn.androidpi.app.R
-import cn.androidpi.app.components.activity.TemplateActivity
-import cn.androidpi.app.components.base.BaseViewHolder
-import cn.androidpi.app.components.base.BindLayout
-import cn.androidpi.app.components.fragment.FragmentFactory
-import cn.androidpi.app.components.fragment.TodoFragment
 import cn.androidpi.app.databinding.ViewHolderTodoBinding
+import cn.androidpi.app.ui.activity.TemplateActivity
+import cn.androidpi.app.ui.base.BaseViewHolder
+import cn.androidpi.app.ui.base.BindLayout
+import cn.androidpi.app.ui.fragment.FragmentFactory
+import cn.androidpi.app.ui.fragment.TodoFragment
 import cn.androidpi.app.viewmodel.TodoEditViewModel
 import cn.androidpi.note.entity.Todo
 

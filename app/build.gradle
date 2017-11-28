@@ -71,8 +71,6 @@ dependencies {
     // lifecycle
     kapt "android.arch.lifecycle:compiler:$arch_lifecycle_ext_version"
 
-    implementation "$glide"
-
     implementation project(':news')
     implementation project(':note')
     implementation project(':domain')

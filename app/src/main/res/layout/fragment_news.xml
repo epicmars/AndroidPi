@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
             android:padding="0dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/pager_content"
@@ -26,35 +26,14 @@
             <cn.androidpi.app.widget.PullDownHeaderView
                 android:id="@+id/scroll_header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </cn.androidpi.app.widget.PullDownHeaderView>
+                android:layout_height="wrap_content" />
 
-            <android.support.v4.widget.NestedScrollView
-                android:id="@+id/news_content"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_news"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/ll_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/news_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:background="@android:color/background_light" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycler_news"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/white"
-                        tools:listitem="@layout/view_holder_news" />
-                </LinearLayout>
-
-            </android.support.v4.widget.NestedScrollView>
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                tools:listitem="@layout/view_holder_news" />
 
             <FrameLayout
                 android:id="@+id/scroll_footer"

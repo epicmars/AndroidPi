@@ -11,16 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".components.activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:theme="@style/AppTheme.TranslucentStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".components.activity.TodoEditActivity" />
-        <activity android:name=".components.activity.TemplateActivity" />
-        <activity android:name=".components.activity.HtmlActivity">
+        <activity android:name=".ui.activity.TodoEditActivity" />
+        <activity android:name=".ui.activity.TemplateActivity" />
+        <activity android:name=".ui.activity.HtmlActivity">
             <intent-filter>
                 <action android:name="cn.androidpi.app.components.activity.HtmlActivity.ACTION_VIEW"/>
                 <data android:scheme="http" android:host="*"/>

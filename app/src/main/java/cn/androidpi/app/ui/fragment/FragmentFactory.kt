@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.fragment
+package cn.androidpi.app.ui.fragment
 
 import android.support.v4.app.Fragment
 

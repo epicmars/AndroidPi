@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.activity
+package cn.androidpi.app.ui.activity
 
 import android.databinding.DataBindingUtil
 import android.os.Build
@@ -8,8 +8,8 @@ import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import android.view.WindowManager
 import cn.androidpi.app.R
-import cn.androidpi.app.components.base.BaseActivity
-import cn.androidpi.app.components.fragment.MainFragment
+import cn.androidpi.app.ui.base.BaseActivity
+import cn.androidpi.app.ui.fragment.MainFragment
 import cn.androidpi.app.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {

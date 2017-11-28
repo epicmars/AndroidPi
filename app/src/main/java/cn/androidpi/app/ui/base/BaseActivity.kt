@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.base
+package cn.androidpi.app.ui.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

@@ -1,9 +1,9 @@
 package cn.androidpi.app.di.module
 
-import cn.androidpi.app.components.fragment.MainFragment
-import cn.androidpi.app.components.fragment.NewsFragment
-import cn.androidpi.app.components.fragment.TodoFragment
-import cn.androidpi.app.components.fragment.TodoListFragment
+import cn.androidpi.app.ui.fragment.MainFragment
+import cn.androidpi.app.ui.fragment.NewsFragment
+import cn.androidpi.app.ui.fragment.TodoFragment
+import cn.androidpi.app.ui.fragment.TodoListFragment
 import cn.androidpi.app.di.scope.FragmentScope
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

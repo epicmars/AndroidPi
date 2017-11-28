@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.activity
+package cn.androidpi.app.ui.activity
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
@@ -12,9 +12,9 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.SeekBar
 import cn.androidpi.app.R
-import cn.androidpi.app.components.base.BaseActivity
-import cn.androidpi.app.components.fragment.DatePickerFragment
-import cn.androidpi.app.components.fragment.TimePickerFragment
+import cn.androidpi.app.ui.base.BaseActivity
+import cn.androidpi.app.ui.fragment.DatePickerFragment
+import cn.androidpi.app.ui.fragment.TimePickerFragment
 import cn.androidpi.app.databinding.ActivityTodoEditBinding
 import cn.androidpi.app.view.TodoEditView
 import cn.androidpi.app.viewmodel.TodoEditViewModel

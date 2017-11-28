@@ -17,18 +17,22 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
+public class FooterBehavior<V extends View> extends AnimationBehavior<V> {
 
     public interface FooterListener {
-        void onHide();
-        void onShow();
-        void onStopScroll();
+        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max);
+
+        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max);
+
+        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max);
     }
 
     private int DEFAULT_HEIGHT;
     private int BASE_LINE;
 
     private List<FooterListener> mListeners = new ArrayList<>();
+    private CoordinatorLayout mParent;
+    private V mChild;
 
     public FooterBehavior() {
         this(null, null);
@@ -57,6 +61,12 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
+        if (mParent == null) {
+            mParent = parent;
+        }
+        if (mChild == null) {
+            mChild = child;
+        }
         if (DEFAULT_HEIGHT == 0) {
             DEFAULT_HEIGHT = child.getHeight();
         }
@@ -89,10 +99,13 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
                 }
                 // Pull up
                 else if (dy > 0) {
-                    offset = MathUtils.clamp(-dy, - height + (bottom - top), 0);
+                    offset = MathUtils.clamp(-dy, -height + (bottom - top), 0);
                 }
                 if (offset != 0) {
-                    offsetTopAndBottom(child, offset);
+                    for (FooterListener l : mListeners) {
+                        l.onPreScroll(coordinatorLayout, child, height);
+                    }
+                    offsetTopAndBottom(coordinatorLayout, child, offset);
                     consumed[1] = -offset;
                 }
             }
@@ -108,8 +121,8 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
                 int height = child.getHeight();
                 // Pulling up unconsumed by scrolling content is consumed by footer.
                 if (dyUnconsumed > 0) {
-                    int offset = MathUtils.clamp(-dyUnconsumed, - height + (bottom - top), 0);
-                    offsetTopAndBottom(child, offset);
+                    int offset = MathUtils.clamp(-dyUnconsumed, -height + (bottom - top), 0);
+                    offsetTopAndBottom(coordinatorLayout, child, offset);
                 }
             }
         }
@@ -118,18 +131,37 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V>{
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         if (type == TYPE_TOUCH) {
-            if (isCompleteVisible()) {
-                for (FooterListener l : mListeners) {
-                    l.onStopScroll();
-                }
-            } else if (isPartialVisible()) {
-                animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, 0);
+            for (FooterListener l : mListeners) {
+                l.onStopScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset(), child.getHeight());
             }
         }
     }
 
-    private void offsetTopAndBottom(View child, int offset) {
+    @Override
+    public void onDetachedFromLayoutParams() {
+        super.onDetachedFromLayoutParams();
+        mListeners.clear();
+        mParent = null;
+        mChild = null;
+    }
+
+    public CoordinatorLayout getParent() {
+        return mParent;
+    }
+
+    public V getChild() {
+        return mChild;
+    }
+
+    void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child) {
+        animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, 0);
+    }
+
+    private void offsetTopAndBottom(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int offset) {
         setTopAndBottomOffset(getTopAndBottomOffset() + offset);
+        for (FooterListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset() , -offset, child.getHeight());
+        }
     }
 
     private boolean isCompleteVisible() {

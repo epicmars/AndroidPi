@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.base;
+package cn.androidpi.app.ui.base;
 
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LifecycleRegistry;
@@ -47,7 +47,7 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
      * @param parent RecyclerView父布局。
      * @return
      */
-    public static BaseViewHolder instantiate(Class<? extends BaseViewHolder> clazz, ViewGroup parent) {
+    public static BaseViewHolder instance(Class<? extends BaseViewHolder> clazz, ViewGroup parent) {
         if (null == clazz) {
             throw new NullPointerException("The view holder class to be instantiated is null.");
         }

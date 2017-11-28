@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.activity
+package cn.androidpi.app.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

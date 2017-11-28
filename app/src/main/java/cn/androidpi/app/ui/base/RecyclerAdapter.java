@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.base;
+package cn.androidpi.app.ui.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -25,25 +25,28 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     private final List<Object> mPayloads = new ArrayList<>();
 
     /**
-     * 注册一个BaseViewHolder以用于数据展示。
-     * @param clazz
+     * 注册一个或多个BaseViewHolder以用于数据展示。
+     * @param clazzArray
+     * @return
      */
-    public RecyclerAdapter register(Class<? extends BaseViewHolder> clazz) {
-        BindLayout bindLayout = clazz.getAnnotation(BindLayout.class);
-        // 建立数据类型到布局的映射
-        for (Class dataType : bindLayout.dataTypes()) {
-            mDataViewMap.append(dataType.hashCode(), bindLayout.value());
-        }
-        // 建立布局到BaseViewHolder的映射
-        mViewHolderMap.put(bindLayout.value(), clazz);
+    public RecyclerAdapter register(Class<? extends BaseViewHolder>... clazzArray) {
 
+        for (Class clazz : clazzArray) {
+            BindLayout bindLayout = (BindLayout) clazz.getAnnotation(BindLayout.class);
+            // 建立数据类型到布局的映射
+            for (Class dataType : bindLayout.dataTypes()) {
+                mDataViewMap.append(dataType.hashCode(), bindLayout.value());
+            }
+            // 建立布局到BaseViewHolder的映射
+            mViewHolderMap.put(bindLayout.value(), clazz);
+        }
         return this;
     }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Class<? extends BaseViewHolder> viewHolderClass = mViewHolderMap.get(viewType);
-        return BaseViewHolder.instantiate(viewHolderClass, parent);
+        return BaseViewHolder.instance(viewHolderClass, parent);
     }
 
     @Override
@@ -83,6 +86,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     public List<Object> getPayloads() {
         return mPayloads;
+    }
+
+    public <T> void setPayloads(T payload) {
+        if (null == payload) {
+            return;
+        }
+        this.mPayloads.clear();
+        this.mPayloads.add(payload);
+        notifyDataSetChanged();
     }
 
     /**

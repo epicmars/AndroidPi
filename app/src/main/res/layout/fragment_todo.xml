@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transitionName="@string/transition_todo_content"
-        tools:context="cn.androidpi.app.components.fragment.TodoFragment">
+        tools:context="cn.androidpi.app.ui.fragment.TodoFragment">
 
         <TextView
             android:id="@+id/tv_todo_content"

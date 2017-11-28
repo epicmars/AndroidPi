@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.fragment
+package cn.androidpi.app.ui.fragment
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
@@ -11,11 +11,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cn.androidpi.app.R
-import cn.androidpi.app.components.activity.TodoEditActivity
-import cn.androidpi.app.components.base.BaseFragment
-import cn.androidpi.app.components.base.BindLayout
-import cn.androidpi.app.components.base.RecyclerAdapter
-import cn.androidpi.app.components.viewholder.TodoViewHolder
+import cn.androidpi.app.ui.activity.TodoEditActivity
+import cn.androidpi.app.ui.base.BaseFragment
+import cn.androidpi.app.ui.base.BindLayout
+import cn.androidpi.app.ui.base.RecyclerAdapter
+import cn.androidpi.app.ui.viewholder.TodoViewHolder
 import cn.androidpi.app.databinding.FragmentTodoListBinding
 import cn.androidpi.app.view.TodoView
 import cn.androidpi.app.viewmodel.TodoListViewModel

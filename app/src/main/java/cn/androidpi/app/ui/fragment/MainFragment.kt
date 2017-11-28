@@ -1,4 +1,4 @@
-package cn.androidpi.app.components.fragment
+package cn.androidpi.app.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
 import cn.androidpi.app.R
-import cn.androidpi.app.components.base.BaseFragment
-import cn.androidpi.app.components.base.BindLayout
+import cn.androidpi.app.ui.base.BaseFragment
+import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.app.databinding.FragmentMainBinding
 
 /**

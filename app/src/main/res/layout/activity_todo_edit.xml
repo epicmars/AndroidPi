@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="cn.androidpi.app.components.activity.TodoEditActivity">
+            tools:context="cn.androidpi.app.ui.activity.TodoEditActivity">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
