@@ -32,9 +32,9 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 .toList()
     }
 
-    override fun getNews(page: Int, count: Int): Single<List<News>> {
+    override fun getNews(page: Int, count: Int, offset: Int): Single<List<News>> {
         return Single.fromCallable {
-            newsDao.getNews(page, count)
+            newsDao.getNews(page, count, offset)
         }
     }
 
@@ -63,5 +63,27 @@ class NewsRepository @Inject constructor() : NewsRepo {
                     Timber.e(it)
                 }
                 .onErrorResumeNext(getNews(page, count))
+    }
+
+    override fun getLatestNews(page: Int, count: Int, offset: Int): Single<List<News>> {
+        return refreshNews(page, count)
+                .toObservable()
+                .flatMap { newsList ->
+                    Observable.fromIterable(newsList)
+                }
+                .flatMap { news ->
+                    Observable.fromCallable {
+                        newsDao.insertNews(news)
+                        news
+                    }.onErrorReturnItem(news)
+                }
+                .toList()
+                .zipWith(getNews(page, count, offset), BiFunction { t1: List<News>, t2: List<News> ->
+                    t2
+                })
+                .doOnError {
+                    Timber.e(it)
+                }
+                .onErrorResumeNext(getNews(page, count, offset))
     }
 }

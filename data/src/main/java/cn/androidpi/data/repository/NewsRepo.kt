@@ -35,5 +35,14 @@ interface NewsRepo {
      * @param page   页数，默认为第一页
      * @param count  每页新闻数量，默认大小为12篇
      */
-    fun getNews(page: Int = 0, count: Int = PAGE_SIZE): Single<List<News>>
+    fun getNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0): Single<List<News>>
+
+    /**
+     * 获取新闻。
+     *
+     * @param page   页数，默认为第一页
+     * @param count  每页新闻数量，默认大小为12篇
+     * @param offset 服务端与本地不同步所造成的偏移量
+     */
+    fun getLatestNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0): Single<List<News>>
 }

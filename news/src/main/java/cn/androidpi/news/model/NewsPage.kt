@@ -10,6 +10,7 @@ class NewsPage {
     val MAX_COVER_SIZE = 5
 
     var mPage = 0
+    var mOffset = 0
     var mCoverNews: MutableList<News> = ArrayList()
     var mPreviousPages: MutableList<News> = ArrayList()
     var mCurrentPage: MutableList<News> = ArrayList()
@@ -18,6 +19,7 @@ class NewsPage {
         if (news.isEmpty())
             return
         mPage = 0
+        mOffset = 0
         mCurrentPage.clear()
         mCoverNews.clear()
         mPreviousPages.clear()
@@ -37,11 +39,14 @@ class NewsPage {
         mPage++
         mPreviousPages.addAll(mCurrentPage)
         val iter = news.iterator() as MutableIterator
+        val origin = news.size
         iter.forEach {
             it ->
             if (mPreviousPages.contains(it))
                 iter.remove()
         }
+        val current = news.size
+        mOffset += origin - current
         mCurrentPage.clear()
         mCurrentPage.addAll(news)
     }

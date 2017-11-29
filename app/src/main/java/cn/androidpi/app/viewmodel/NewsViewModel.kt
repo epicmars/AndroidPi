@@ -32,10 +32,10 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
         val page = if (isNext) mNews.value?.getNextPageNum() else 0
 
-        mNewsRepo.get().getLatestNews(page ?: 0, count)
-                 .subscribeOn(Schedulers.io())
-                 .observeOn(AndroidSchedulers.mainThread())
-                 .subscribe(object : SingleObserver<List<News>> {
+        mNewsRepo.get().getLatestNews(page ?: 0, count, mNews.value?.mOffset ?: 0)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<List<News>> {
                     override fun onError(e: Throwable?) {
                         Timber.e(e)
                     }

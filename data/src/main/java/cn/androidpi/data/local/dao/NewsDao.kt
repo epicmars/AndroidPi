@@ -20,4 +20,6 @@ interface NewsDao {
     @Query("select * from news order by publish_time desc limit :count offset :page * :count")
     fun getNews(page: Int = 0, count: Int = PAGE_SIZE) : List<News>
 
+    @Query("select * from news order by publish_time desc limit :count offset :page * :count + :offset")
+    fun getNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0) : List<News>
 }
