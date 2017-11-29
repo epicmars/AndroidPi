@@ -1,6 +1,7 @@
 package cn.androidpi.app.widget;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
@@ -8,6 +9,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by jastrelax on 2017/11/19.
@@ -17,7 +19,8 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     private List<OnPullingListener> mListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
-    private boolean isRefreshing = false;
+    private AtomicBoolean isRefreshing = new AtomicBoolean(false);
+    private Handler mHandler = new Handler();
 
     public PullUpFooterBehavior() {
         this(null, null);
@@ -84,67 +87,101 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
             l.onStopPulling(current, max);
         }
         if (current >= max * 0.9) {
-            if (isRefreshing)
+            if (isRefreshing())
                 return;
             for (OnRefreshListener l : mRefreshListeners) {
                 l.onRefresh();
             }
-            isRefreshing = true;
+            setIsRefreshing(true);
         } else {
             stopScroll(coordinatorLayout, (V)child);
         }
     }
 
     public boolean isRefreshing() {
-        return isRefreshing;
+        return isRefreshing.get();
+    }
+
+    private void setIsRefreshing(boolean isRefreshing) {
+        this.isRefreshing.set(isRefreshing);
     }
 
     @Override
     public void refresh() {
-        if (isRefreshing)
+        // To avoid unnecessary task enqueueing.
+        if (isRefreshing())
             return;
-        for (OnRefreshListener l : mRefreshListeners) {
-            l.onRefresh();
-        }
-        isRefreshing = true;
+        runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                // What if multiple tasks is enqueued, check duplicate callbacks.
+                if (isRefreshing())
+                    return;
+                for (OnRefreshListener l : mRefreshListeners) {
+                    l.onRefresh();
+                }
+                setIsRefreshing(true);
+            }
+        });
     }
 
     @Override
     public void refreshComplete() {
-        for (OnRefreshListener l : mRefreshListeners) {
-            l.onRefreshComplete();
-        }
-        stopScroll(getParent(), getChild());
-        isRefreshing = false;
+        runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                for (OnRefreshListener l : mRefreshListeners) {
+                    l.onRefreshComplete();
+                }
+                stopScroll(getParent(), getChild());
+                setIsRefreshing(false);
+            }
+        });
     }
 
     @Override
     public void refreshTimeout() {
-        for (OnRefreshListener l : mRefreshListeners) {
-            l.onRefreshComplete();
-        }
-        stopScroll(getParent(), getChild());
-        isRefreshing = false;
-
+        runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                for (OnRefreshListener l : mRefreshListeners) {
+                    l.onRefreshComplete();
+                }
+                stopScroll(getParent(), getChild());
+                setIsRefreshing(false);
+            }
+        });
     }
 
     @Override
     public void refreshCancelled() {
-        for (OnRefreshListener l : mRefreshListeners) {
-            l.onRefreshComplete();
-        }
-        stopScroll(getParent(), getChild());
-        isRefreshing = false;
-
+        runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                for (OnRefreshListener l : mRefreshListeners) {
+                    l.onRefreshComplete();
+                }
+                stopScroll(getParent(), getChild());
+                setIsRefreshing(false);
+            }
+        });
     }
 
     @Override
     public void refreshException(Exception exception) {
-        for (OnRefreshListener l : mRefreshListeners) {
-            l.onRefreshComplete();
-        }
-        stopScroll(getParent(), getChild());
-        isRefreshing = false;
+        runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                for (OnRefreshListener l : mRefreshListeners) {
+                    l.onRefreshComplete();
+                }
+                stopScroll(getParent(), getChild());
+                setIsRefreshing(false);
+            }
+        });
+    }
 
+    public void runOnUIThread(Runnable runnable) {
+        mHandler.post(runnable);
     }
 }

@@ -15,8 +15,12 @@ object DateTimeUtils {
     val FORMAT_TIME: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINESE)
     val FORMAT_TIME_HH_mm: DateFormat = SimpleDateFormat("HH:mm", Locale.CHINESE)
 
-    fun formatStandard(date: Date): String {
+    fun formatDateTime(date: Date): String {
         return FORMAT_STANDARD.format(date)
+    }
+
+    fun parseDateTime(string: String): Date {
+        return FORMAT_STANDARD.parse(string)
     }
 
     fun formatDate(date: Date): String {
