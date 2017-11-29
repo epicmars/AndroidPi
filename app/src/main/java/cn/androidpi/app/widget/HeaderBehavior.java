@@ -29,7 +29,6 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
     }
 
     private List<HeaderListener> mListeners = new ArrayList<>();
-    private int mScrolledDistance;
     private CoordinatorLayout mParent;
     private V mChild;
 
@@ -172,7 +171,6 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
 
     private void offsetTopAndBottom(CoordinatorLayout coordinatorLayout, View child, int offset) {
         int current = getTopAndBottomOffset() + offset;
-        int top = child.getTop();
         int height = child.getHeight();
         setTopAndBottomOffset(current);
         for (HeaderListener l : mListeners) {

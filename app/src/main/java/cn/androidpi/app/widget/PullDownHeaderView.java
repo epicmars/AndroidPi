@@ -13,7 +13,7 @@ import cn.androidpi.app.R;
  * Created by jastrelax on 2017/11/21.
  */
 
-public class PullDownHeaderView extends FrameLayout implements PullingListener{
+public class PullDownHeaderView extends FrameLayout implements OnPullingListener, OnRefreshListener {
 
     private ProgressBar mProgressBar;
     private TextView mTvState;
@@ -43,8 +43,10 @@ public class PullDownHeaderView extends FrameLayout implements PullingListener{
             PullDownHeaderBehavior behavior = (PullDownHeaderBehavior) params.getBehavior();
             if (behavior == null) {
                 behavior = new PullDownHeaderBehavior();
+                params.setBehavior(behavior);
             }
-            behavior.addPullDownListener(this);
+            behavior.addOnPullingListener(this);
+            behavior.addOnRefreshListener(this);
         } catch (Exception e) {
 
         }

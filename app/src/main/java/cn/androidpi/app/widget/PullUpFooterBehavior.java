@@ -15,7 +15,9 @@ import java.util.List;
 
 public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> implements PullingRefresher, FooterBehavior.FooterListener {
 
-    private List<PullingListener> mListeners = new ArrayList<>();
+    private List<OnPullingListener> mListeners = new ArrayList<>();
+    private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
+    private boolean isRefreshing = false;
 
     public PullUpFooterBehavior() {
         this(null, null);
@@ -30,33 +32,47 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
         addFooterListener(this);
     }
 
-    public void addPullUpListener(PullingListener listener) {
+    public void addOnPullingListener(OnPullingListener listener) {
         if (null == listener)
             return;
         mListeners.add(listener);
     }
 
-    public void removePullUpListener(PullingListener listener) {
+    public void removeOnPullingListener(OnPullingListener listener) {
         if (null == listener)
             return;
         mListeners.remove(listener);
     }
 
+    public void addOnRefreshListener(OnRefreshListener listener) {
+        if (null == listener)
+            return;
+        mRefreshListeners.add(listener);
+    }
+
+    public void removeRefreshListener(OnRefreshListener listener) {
+        if (null == listener)
+            return;
+        mRefreshListeners.remove(listener);
+    }
+
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
-        for (PullingListener l : mListeners) {
+        for (OnPullingListener l : mListeners) {
             l.onStartPulling(max);
+        }
+        for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshStart();
         }
     }
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max) {
-        for (PullingListener l : mListeners) {
+        for (OnPullingListener l : mListeners) {
             l.onPulling(current, delta, max);
         }
         if (current >= max * 0.9) {
-            for (PullingListener l : mListeners) {
+            for (OnRefreshListener l : mRefreshListeners) {
                 l.onRefreshReady();
             }
         }
@@ -64,49 +80,71 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
-        for (PullingListener l : mListeners) {
+        for (OnPullingListener l : mListeners) {
             l.onStopPulling(current, max);
         }
         if (current >= max * 0.9) {
-            for (PullingListener l : mListeners) {
+            if (isRefreshing)
+                return;
+            for (OnRefreshListener l : mRefreshListeners) {
                 l.onRefresh();
             }
+            isRefreshing = true;
         } else {
             stopScroll(coordinatorLayout, (V)child);
         }
     }
 
+    public boolean isRefreshing() {
+        return isRefreshing;
+    }
+
     @Override
     public void refresh() {
-
+        if (isRefreshing)
+            return;
+        for (OnRefreshListener l : mRefreshListeners) {
+            l.onRefresh();
+        }
+        isRefreshing = true;
     }
 
     @Override
     public void refreshComplete() {
-        for (PullingListener l : mListeners) {
+        for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshComplete();
         }
         stopScroll(getParent(), getChild());
+        isRefreshing = false;
     }
 
     @Override
     public void refreshTimeout() {
-        for (PullingListener l : mListeners) {
+        for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshComplete();
         }
+        stopScroll(getParent(), getChild());
+        isRefreshing = false;
+
     }
 
     @Override
     public void refreshCancelled() {
-        for (PullingListener l : mListeners) {
+        for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshComplete();
         }
+        stopScroll(getParent(), getChild());
+        isRefreshing = false;
+
     }
 
     @Override
     public void refreshException(Exception exception) {
-        for (PullingListener l : mListeners) {
+        for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshComplete();
         }
+        stopScroll(getParent(), getChild());
+        isRefreshing = false;
+
     }
 }
