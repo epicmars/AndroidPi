@@ -7,10 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_holder_three_line_height"
         android:background="?attr/selectableItemBackground"
-        android:paddingBottom="@dimen/view_holder_padding_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="@dimen/view_holder_padding_horizontal"
-        android:paddingTop="@dimen/view_holder_padding_vertical">
+        android:padding="@dimen/view_holder_padding">
 
         <ImageView
             android:id="@+id/iv_image"

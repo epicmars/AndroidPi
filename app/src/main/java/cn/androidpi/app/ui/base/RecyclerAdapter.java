@@ -46,6 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Class<? extends BaseViewHolder> viewHolderClass = mViewHolderMap.get(viewType);
+        // If viewHolderClass is null, the ViewHolder may not be registered
         return BaseViewHolder.instance(viewHolderClass, parent);
     }
 
@@ -86,15 +87,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     public List<Object> getPayloads() {
         return mPayloads;
-    }
-
-    public <T> void setPayloads(T payload) {
-        if (null == payload) {
-            return;
-        }
-        this.mPayloads.clear();
-        this.mPayloads.add(payload);
-        notifyDataSetChanged();
     }
 
     /**

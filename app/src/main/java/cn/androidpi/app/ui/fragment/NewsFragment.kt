@@ -17,11 +17,11 @@ import cn.androidpi.app.ui.base.BaseFragment
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.app.ui.base.RecyclerAdapter
 import cn.androidpi.app.ui.viewholder.CoverNewsViewHolder
+import cn.androidpi.app.ui.viewholder.NewsThreeImagesViewHolder
 import cn.androidpi.app.ui.viewholder.NewsViewHolder
 import cn.androidpi.app.view.NewsView
 import cn.androidpi.app.viewmodel.NewsViewModel
 import cn.androidpi.app.widget.*
-import cn.androidpi.news.model.CoverNews
 import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
 import javax.inject.Inject
 
@@ -62,7 +62,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mBinding.recyclerNews.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
         mAdapter = RecyclerAdapter()
-        mAdapter.register(CoverNewsViewHolder::class.java, NewsViewHolder::class.java)
+        mAdapter.register(CoverNewsViewHolder::class.java,
+                NewsViewHolder::class.java,
+                NewsThreeImagesViewHolder::class.java)
         mBinding.recyclerNews.adapter = mAdapter
 
         //
@@ -175,13 +177,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             if (currentPage == null || currentPage.isEmpty())
                 return@Observer
             if (t.isFirstPage()) {
-                val coverImagesSize = t.mCoverNews.size
-                if (coverImagesSize <= 0) {
-                    mAdapter.setPayloads(currentPage)
-                } else {
-                    mAdapter.setPayloads(CoverNews(t.mCoverNews))
-                    mAdapter.addPayloads(currentPage)
-                }
+                mAdapter.setPayloads(currentPage)
             } else {
                 mAdapter.appendPayloads(t.mPreviousPages, currentPage)
             }

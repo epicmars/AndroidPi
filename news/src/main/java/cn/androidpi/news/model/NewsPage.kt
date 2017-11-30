@@ -7,16 +7,19 @@ import cn.androidpi.news.entity.News
  */
 
 class NewsPage {
-    val MAX_COVER_SIZE = 5
+    companion object {
+        val MAX_COVER_SIZE = 5
+        val IMAGE_NEWS_SIZE_THRESHOLD = 5
+    }
 
     var mPage = 0
     var mOffset = 0
     var mCoverNews: MutableList<News> = ArrayList()
-    var mPreviousPages: MutableList<News> = ArrayList()
-    var mCurrentPage: MutableList<News> = ArrayList()
+    var mPreviousPages: MutableList<Any> = ArrayList()
+    var mCurrentPage: MutableList<Any> = ArrayList()
 
-    fun firstPage(news: List<News>) {
-        if (news.isEmpty())
+    fun firstPage(newsList: List<News>) {
+        if (newsList.isEmpty())
             return
         mPage = 0
         mOffset = 0
@@ -24,10 +27,25 @@ class NewsPage {
         mCoverNews.clear()
         mPreviousPages.clear()
 
-        val coverSize = Math.min(MAX_COVER_SIZE, news.size)
-        mCoverNews.addAll(news.subList(0, coverSize))
-        if (coverSize < news.size) {
-            mCurrentPage.addAll(news.subList(coverSize, news.size))
+        val coverSize = Math.min(MAX_COVER_SIZE, newsList.size)
+        val coverNews = newsList.subList(0, coverSize)
+        for (news in coverNews) {
+            if (news.images != null && news.images!!.isNotEmpty()) {
+                mCoverNews.add(news)
+            }
+        }
+        if (mCoverNews.isNotEmpty()) {
+            mCurrentPage.add(CoverNews(mCoverNews))
+        }
+        if (coverSize < newsList.size) {
+            val remain = newsList.subList(coverSize, newsList.size)
+            for (t in remain) {
+                if (t.images != null && t.images!!.size > IMAGE_NEWS_SIZE_THRESHOLD) {
+                    mCurrentPage.add(NewsThreeImages(t))
+                } else {
+                    mCurrentPage.add(t)
+                }
+            }
         }
     }
 
@@ -35,20 +53,26 @@ class NewsPage {
         return mPage + 1
     }
 
-    fun nextPage(news: List<News>) {
+    fun nextPage(newsList: List<News>) {
         mPage++
         mPreviousPages.addAll(mCurrentPage)
-        val iter = news.iterator() as MutableIterator
-        val origin = news.size
+        val iter = newsList.iterator() as MutableIterator
+        val origin = newsList.size
         iter.forEach {
             it ->
             if (mPreviousPages.contains(it))
                 iter.remove()
         }
-        val current = news.size
+        val current = newsList.size
         mOffset += origin - current
         mCurrentPage.clear()
-        mCurrentPage.addAll(news)
+        for (t in newsList) {
+            if (t.images != null && t.images!!.size > IMAGE_NEWS_SIZE_THRESHOLD) {
+                mCurrentPage.add(NewsThreeImages(t))
+            } else {
+                mCurrentPage.add(t)
+            }
+        }
     }
 
     fun isFirstPage() = mPage == 0
