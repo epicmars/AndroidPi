@@ -79,8 +79,9 @@ class TodoEditViewModel @Inject constructor() : ViewModel(), TodoEditModel {
 
     fun updateDatetime() {
 
-        mDateTimeStart.value = DateTimeUtils.assembleDateTime(mStartDate.value, mStartTime.value)
-        mDateTimeDeadline.value = DateTimeUtils.assembleDateTime(mDeadlineDate.value, mDeadlineTime.value)
+        val now = Date()
+        mDateTimeStart.value = DateTimeUtils.assembleDateTime(mStartDate.value ?: now, mStartTime.value ?: now)
+        mDateTimeDeadline.value = DateTimeUtils.assembleDateTime(mDeadlineDate.value ?: now, mDeadlineTime.value ?: now)
 
         val calendar = Calendar.getInstance()
         calendar.time = mDateTimeStart.value

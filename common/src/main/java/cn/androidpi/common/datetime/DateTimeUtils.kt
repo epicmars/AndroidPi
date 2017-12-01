@@ -10,6 +10,11 @@ import java.util.*
 
 object DateTimeUtils {
 
+    val ONE_SECONDS_MS = 1000
+    val ONE_MINUTE_MS = ONE_SECONDS_MS * 60
+    val ONE_HOUR_MS = ONE_MINUTE_MS * 60
+    val ONE_DAY_MS = ONE_HOUR_MS * 24
+
     val FORMAT_STANDARD: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
     val FORMAT_DATE: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE)
     val FORMAT_TIME: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINESE)
@@ -39,9 +44,7 @@ object DateTimeUtils {
         return Calendar.getInstance()
     }
 
-    fun assembleDateTime(date: Date?, time: Date?): Date {
-        if (date == null || time == null)
-            return now().time
+    fun assembleDateTime(date: Date, time: Date): Date {
         val datetime = now()
         val timeCalendar = now()
         datetime.time = date
@@ -51,6 +54,15 @@ object DateTimeUtils {
         datetime.set(Calendar.SECOND, timeCalendar.get(Calendar.SECOND))
         datetime.set(Calendar.MILLISECOND, timeCalendar.get(Calendar.MILLISECOND))
         return datetime.time
+    }
+
+    fun elapsedDays(from: Date, to: Date): Int {
+        val elapsedMs = to.time - from.time
+        return (elapsedMs / ONE_DAY_MS).toInt()
+    }
+
+    fun elapsedDaysFromNow(from: Date): Int {
+        return elapsedDays(from, Date())
     }
 
 }
