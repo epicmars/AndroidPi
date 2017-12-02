@@ -29,6 +29,7 @@ class TemplateActivity : BaseActivity() {
         } catch (e: Exception) {
             Timber.e(e)
         }
+        FragmentFactoryMap.factoryMap.remove(fragmentName)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             supportPostponeEnterTransition()
         }

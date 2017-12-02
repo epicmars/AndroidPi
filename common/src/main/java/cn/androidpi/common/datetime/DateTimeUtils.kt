@@ -56,13 +56,4 @@ object DateTimeUtils {
         return datetime.time
     }
 
-    fun elapsedDays(from: Date, to: Date): Int {
-        val elapsedMs = to.time - from.time
-        return (elapsedMs / ONE_DAY_MS).toInt()
-    }
-
-    fun elapsedDaysFromNow(from: Date): Int {
-        return elapsedDays(from, Date())
-    }
-
 }

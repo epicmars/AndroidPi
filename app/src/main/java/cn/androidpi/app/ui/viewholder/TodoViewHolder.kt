@@ -57,13 +57,28 @@ class TodoViewHolder(itemView: View) : BaseViewHolder<ViewHolderTodoBinding>(ite
     fun getElapsedDays(createdTime: Date?): String? {
         if (createdTime == null)
             return null
-        val days = DateTimeUtils.elapsedDaysFromNow(createdTime)
-        if (days == 0) {
-            return itemView.context.getString(R.string.created_at, "今天")
+        val daysAndHours = elapsedDaysAndHoursFromNow(createdTime)
+        val days = daysAndHours[0]
+        val hours = daysAndHours[1]
+        if (days == 0L) {
+            val time = if (hours == 0L) "今天" else String.format("%d小时前", hours)
+            return itemView.context.getString(R.string.created_at, time)
         } else if (days < 0) {
             return itemView.context.getString(R.string.created_after, String.format("%d天", -days))
         } else {
             return itemView.context.getString(R.string.created_before, String.format("%d天", days))
         }
+    }
+
+
+    fun elapsedDaysAndHours(from: Date, to: Date): Array<Long> {
+        val elapsedMs = to.time - from.time
+        val days = elapsedMs / DateTimeUtils.ONE_DAY_MS
+        val hours = elapsedMs % DateTimeUtils.ONE_DAY_MS / DateTimeUtils.ONE_HOUR_MS
+        return arrayOf(days, hours)
+    }
+
+    fun elapsedDaysAndHoursFromNow(from: Date): Array<Long> {
+        return elapsedDaysAndHours(from, Date())
     }
 }
