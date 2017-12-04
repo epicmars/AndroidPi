@@ -182,7 +182,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 mAdapter.appendPayloads(t.mPreviousPages, currentPage)
             }
         })
-        if (null == savedInstanceState) {
+        if (null == savedInstanceState || mNewsModel.mNews.value == null || mNewsModel.mNews.value!!.isFirstPage()) {
             loadFirstPage()
         }
     }

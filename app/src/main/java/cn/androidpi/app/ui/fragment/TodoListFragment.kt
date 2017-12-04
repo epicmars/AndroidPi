@@ -11,12 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cn.androidpi.app.R
+import cn.androidpi.app.databinding.FragmentTodoListBinding
 import cn.androidpi.app.ui.activity.TodoEditActivity
 import cn.androidpi.app.ui.base.BaseFragment
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.app.ui.base.RecyclerAdapter
 import cn.androidpi.app.ui.viewholder.TodoViewHolder
-import cn.androidpi.app.databinding.FragmentTodoListBinding
 import cn.androidpi.app.view.TodoView
 import cn.androidpi.app.viewmodel.TodoListViewModel
 import cn.androidpi.note.entity.Todo
@@ -72,7 +72,7 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding>(), TodoView {
                 mAdapter?.setPayloads(t?.toList())
             }
         })
-        if (null == savedInstanceState) {
+        if (null == savedInstanceState || mTodoModel.mTodoList.value == null || mTodoModel.mTodoList.value!!.isEmpty()) {
             showTodoList()
         }
     }
