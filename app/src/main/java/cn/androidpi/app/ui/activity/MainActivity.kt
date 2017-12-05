@@ -1,16 +1,14 @@
 package cn.androidpi.app.ui.activity
 
 import android.databinding.DataBindingUtil
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
-import android.view.WindowManager
 import cn.androidpi.app.R
+import cn.androidpi.app.databinding.ActivityMainBinding
 import cn.androidpi.app.ui.base.BaseActivity
 import cn.androidpi.app.ui.fragment.MainFragment
-import cn.androidpi.app.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -19,10 +17,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        }
 
         setSupportActionBar(binding?.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)

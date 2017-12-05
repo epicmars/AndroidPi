@@ -28,14 +28,15 @@ class NewsPage {
         mPreviousPages.clear()
 
         val coverSize = Math.min(MAX_COVER_SIZE, newsList.size)
-        val coverNews = newsList.subList(0, coverSize)
-        for (news in coverNews) {
+        val coverNewsList = newsList.subList(0, coverSize)
+        for (news in coverNewsList) {
             if (news.images != null && news.images!!.isNotEmpty()) {
                 mCoverNews.add(news)
             }
         }
-        if (mCoverNews.isNotEmpty()) {
-            mCurrentPage.add(CoverNews(mCoverNews))
+        val coverNews = CoverNews.newInstance(mCoverNews)
+        if (coverNews != null) {
+            mCurrentPage.add(coverNews)
         }
         if (coverSize < newsList.size) {
             val remain = newsList.subList(coverSize, newsList.size)

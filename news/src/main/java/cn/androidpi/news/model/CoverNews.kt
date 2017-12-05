@@ -3,23 +3,27 @@ package cn.androidpi.news.model
 import cn.androidpi.common.datetime.DateTimeUtils
 import cn.androidpi.news.entity.News
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by jastrelax on 2017/11/28.
  */
-class CoverNews(newsList: MutableList<News>) {
+class CoverNews(var mNews: MutableList<News>) {
 
-    var mNews = ArrayList<News>()
-
-    init {
-        val now = Date()
-        for (news in newsList) {
-            if (news.publishTime == null)
-                continue
-            if (DateTimeUtils.parseDateTime(news.publishTime!!) > now)
-                continue
-            this.mNews.add(news)
+    companion object {
+        fun newInstance(newsList: List<News>) : CoverNews? {
+            val now = Date()
+            val validCoverNews = ArrayList<News>()
+            if (newsList.isEmpty()) return null
+            for (news in newsList) {
+                if (news.publishTime == null)
+                    continue
+                val time = DateTimeUtils.parseDateTime(news.publishTime!!)
+                if (time > now)
+                    continue
+                validCoverNews.add(news)
+            }
+            return if (validCoverNews.isEmpty()) null else CoverNews(validCoverNews)
         }
     }
-
 }

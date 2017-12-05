@@ -17,15 +17,12 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/view_holder_padding">
+                android:layout_height="match_parent">
 
                 <View
                     android:id="@+id/priority_color"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_width="4dp"
+                    android:layout_height="0dp"
                     android:background="@color/colorPrimary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -34,9 +31,9 @@
                     android:id="@+id/tv_created_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/priority_color"
                     app:layout_constraintStart_toEndOf="@+id/priority_color"
                     app:layout_constraintTop_toTopOf="@+id/priority_color"
                     tools:text="创建于今天" />
@@ -48,26 +45,24 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/priority_color"
-                    android:visibility="gone"
                     tools:text="主题：subject" />
 
                 <TextView
                     android:id="@+id/tv_todo_content"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:padding="@dimen/editor_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_todo_subject"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_created_time"
                     tools:text="内容: what to do today" />
 
             </android.support.constraint.ConstraintLayout>

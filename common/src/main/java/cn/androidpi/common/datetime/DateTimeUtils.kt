@@ -15,17 +15,13 @@ object DateTimeUtils {
     val ONE_HOUR_MS = ONE_MINUTE_MS * 60
     val ONE_DAY_MS = ONE_HOUR_MS * 24
 
-    val FORMAT_STANDARD: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
-    val FORMAT_DATE: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE)
-    val FORMAT_TIME: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINESE)
-    val FORMAT_TIME_HH_mm: DateFormat = SimpleDateFormat("HH:mm", Locale.CHINESE)
+    val FORMAT_STANDARD: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
+    val FORMAT_DATE: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+    val FORMAT_TIME: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
+    val FORMAT_TIME_HH_mm: DateFormat = SimpleDateFormat("HH:mm", Locale.CHINA)
 
     fun formatDateTime(date: Date): String {
         return FORMAT_STANDARD.format(date)
-    }
-
-    fun parseDateTime(string: String): Date {
-        return FORMAT_STANDARD.parse(string)
     }
 
     fun formatDate(date: Date): String {
@@ -54,6 +50,10 @@ object DateTimeUtils {
         datetime.set(Calendar.SECOND, timeCalendar.get(Calendar.SECOND))
         datetime.set(Calendar.MILLISECOND, timeCalendar.get(Calendar.MILLISECOND))
         return datetime.time
+    }
+
+    fun parseDateTime(string: String): Date {
+        return FORMAT_STANDARD.parse(string)
     }
 
 }
