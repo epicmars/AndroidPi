@@ -6,6 +6,7 @@ import android.util.SparseIntArray;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -87,6 +88,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     public List<Object> getPayloads() {
         return mPayloads;
+    }
+
+    /**
+     * Set adapter payloads.
+     * @param payloads
+     */
+    public <T> void setPayloads(T... payloads) {
+        setPayloads(Arrays.asList(payloads));
     }
 
     /**

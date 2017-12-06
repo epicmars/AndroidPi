@@ -23,7 +23,7 @@ class TodoListViewModel @Inject constructor() : ViewModel(), TodoModel {
     lateinit var mTodoRepo: Lazy<TodoRepo>
 
     val mTodoToday: MutableLiveData<Array<Todo>> = MutableLiveData()
-    val mTodoList: MutableLiveData<Array<Todo>> = MutableLiveData()
+    val mTodoList: MutableLiveData<Resource<Array<Todo>>> = MutableLiveData()
 
     override fun loadTodoList() {
         mTodoRepo.get().todoList()
@@ -34,11 +34,16 @@ class TodoListViewModel @Inject constructor() : ViewModel(), TodoModel {
                     }
 
                     override fun onSuccess(t: Array<Todo>?) {
-                        mTodoList.value = t
+                        if (t == null || t.isEmpty()) {
+                            mTodoList.value = Resource.error("待办事项为空", emptyArray())
+                        } else {
+                            mTodoList.value = Resource.success(t)
+                        }
                     }
 
                     override fun onError(e: Throwable?) {
                         Timber.e(e)
+                        mTodoList.value = Resource.error("加载待办事项错误", null)
                     }
                 })
     }
