@@ -9,4 +9,8 @@
         android:title="@string/todo"
         android:icon="@drawable/ic_assignment"/>
 
+    <item android:id="@+id/nav_notes"
+        android:title="@string/note"
+        android:icon="@drawable/ic_event_note_black_24dp"/>
+
 </menu>

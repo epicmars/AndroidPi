@@ -1,10 +1,7 @@
 package cn.androidpi.app.di.module
 
-import cn.androidpi.app.ui.fragment.MainFragment
-import cn.androidpi.app.ui.fragment.NewsFragment
-import cn.androidpi.app.ui.fragment.TodoFragment
-import cn.androidpi.app.ui.fragment.TodoListFragment
 import cn.androidpi.app.di.scope.FragmentScope
+import cn.androidpi.app.ui.fragment.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -29,4 +26,8 @@ abstract class FragmentInjectorModule {
     @FragmentScope
     @ContributesAndroidInjector
     abstract fun contributeTodoListFragmentInjector(): TodoListFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    abstract fun contributeNotesFragmentInjector(): NotesFragment
 }

@@ -6,15 +6,16 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverter
 import android.arch.persistence.room.TypeConverters
 import android.arch.persistence.room.migration.Migration
-
+import cn.androidpi.data.local.dao.TextNoteDao
 import cn.androidpi.data.local.dao.TodoDao
+import cn.androidpi.note.entity.TextNote
 import cn.androidpi.note.entity.Todo
 
 /**
  * Created by jastrelax on 2017/11/2.
  */
 
-@Database(entities = arrayOf(Todo::class), version = 3)
+@Database(entities = arrayOf(Todo::class, TextNote::class), version = 4)
 @TypeConverters(DateConverter::class, StringArrayConverter::class, TodoStatusConverter::class)
 abstract class NoteDatabase : RoomDatabase() {
 
@@ -23,6 +24,8 @@ abstract class NoteDatabase : RoomDatabase() {
     }
 
     abstract fun todoDao(): TodoDao
+
+    abstract fun textNoteDao(): TextNoteDao
 }
 
 class TodoStatusConverter {
@@ -58,5 +61,13 @@ object NOTE_MIGRATION_1_2 : Migration(1, 2) {
 object NOTE_MIGRATION_2_3 : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE todo ADD COLUMN priority INTEGER;")
+    }
+}
+
+
+object NOTE_MIGRATION_3_4 : Migration(3, 4) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        val tableTextNotes = "text_notes"
+        database.execSQL("CREATE TABLE IF NOT EXISTS `$tableTextNotes` (`text` TEXT, `id` INTEGER, `created_time` INTEGER, `update_time` INTEGER, `tags` TEXT, `category` TEXT, PRIMARY KEY(`id`))")
     }
 }

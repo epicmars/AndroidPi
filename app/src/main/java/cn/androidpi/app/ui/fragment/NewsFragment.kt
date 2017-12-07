@@ -18,8 +18,10 @@ import cn.androidpi.app.ui.base.BaseFragment
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.app.ui.base.RecyclerAdapter
 import cn.androidpi.app.ui.viewholder.CoverNewsViewHolder
+import cn.androidpi.app.ui.viewholder.ErrorViewHolder
 import cn.androidpi.app.ui.viewholder.NewsThreeImagesViewHolder
 import cn.androidpi.app.ui.viewholder.NewsViewHolder
+import cn.androidpi.app.ui.viewholder.items.ErrorItem
 import cn.androidpi.app.view.NewsView
 import cn.androidpi.app.viewmodel.NewsViewModel
 import cn.androidpi.app.widget.*
@@ -65,7 +67,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mAdapter = RecyclerAdapter()
         mAdapter.register(CoverNewsViewHolder::class.java,
                 NewsViewHolder::class.java,
-                NewsThreeImagesViewHolder::class.java)
+                NewsThreeImagesViewHolder::class.java,
+                ErrorViewHolder::class.java)
         mBinding.recyclerNews.adapter = mAdapter
 
         //
@@ -176,7 +179,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             refreshFinished()
             if (t == null || t.isError()) {
                 var message = if (t != null) t.message else "加载失败"
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                if (t?.data != null && t.data.isFirstPage()) {
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                } else {
+                    mAdapter.setPayloads(ErrorItem(message))
+                }
             } else {
                 val currentPage = t?.data?.mCurrentPage
                 if (currentPage == null || currentPage.isEmpty())

@@ -5,8 +5,14 @@ package cn.androidpi.domain.entity
  */
 class Location {
 
+    /**
+     * 经度
+     */
     var latitude: Double? = null
 
+    /**
+     * 纬度
+     */
     var longitude: Double? = null
 
 }

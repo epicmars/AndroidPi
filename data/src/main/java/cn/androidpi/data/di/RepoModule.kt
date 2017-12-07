@@ -1,8 +1,10 @@
 package cn.androidpi.data.di
 
 import cn.androidpi.data.repository.NewsRepo
+import cn.androidpi.data.repository.TextNoteRepo
 import cn.androidpi.data.repository.TodoRepo
 import cn.androidpi.data.repository.impl.NewsRepository
+import cn.androidpi.data.repository.impl.TextNoteRepository
 import cn.androidpi.data.repository.impl.TodoRepository
 import dagger.Binds
 import dagger.Module
@@ -21,4 +23,8 @@ abstract class RepoModule {
     @Binds
     @Singleton
     abstract fun provideNewsRepo(newsRepository: NewsRepository): NewsRepo
+
+    @Binds
+    @Singleton
+    abstract fun provideTextNoteRepo(textNoteRepo: TextNoteRepository): TextNoteRepo
 }

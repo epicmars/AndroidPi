@@ -2,10 +2,7 @@ package cn.androidpi.app.di.module
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import cn.androidpi.app.viewmodel.NewsViewModel
-import cn.androidpi.app.viewmodel.TodoEditViewModel
-import cn.androidpi.app.viewmodel.TodoListViewModel
-import cn.androidpi.app.viewmodel.ViewModelFactory
+import cn.androidpi.app.viewmodel.*
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -30,6 +27,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TodoEditViewModel::class)
     abstract fun provideTodoEditViewModel(todoEditViewModel: TodoEditViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NotesViewModel::class)
+    abstract fun provideNotesViewModel(notesViewModel: NotesViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TextNoteEditViewModel::class)
+    abstract fun provideTextNoteEditViewModel(textNoteEditViewModel: TextNoteEditViewModel): ViewModel
 
     @Binds
     abstract fun provideViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
