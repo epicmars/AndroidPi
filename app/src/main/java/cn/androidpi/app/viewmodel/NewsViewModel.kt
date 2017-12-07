@@ -22,31 +22,32 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
     @Inject
     lateinit var mNewsRepo: Lazy<NewsRepo>
 
-    val mNews: MutableLiveData<NewsPage> = MutableLiveData()
+    val mNews: MutableLiveData<Resource<NewsPage>> = MutableLiveData()
 
     init {
-        mNews.value = NewsPage()
+        mNews.value = Resource.loading(NewsPage())
     }
 
     fun getLatestNews(isNext: Boolean, count: Int = NewsModel.PAGE_SIZE) {
 
-        val page = if (isNext) mNews.value?.getNextPageNum() else 0
+        val page = if (isNext) mNews.value?.data?.getNextPageNum() else 0
 
-        mNewsRepo.get().getLatestNews(page ?: 0, count, mNews.value?.mOffset ?: 0)
+        mNewsRepo.get().getLatestNews(page ?: 0, count, mNews.value?.data?.mOffset ?: 0)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<News>> {
                     override fun onError(e: Throwable?) {
                         Timber.e(e)
+                        mNews.value = Resource.error("加载新闻失败", null)
                     }
 
                     override fun onSuccess(t: List<News>) {
                         if (!isNext) {
-                            mNews.value?.firstPage(t)
+                            mNews.value?.data?.firstPage(t)
                         } else {
-                            mNews.value?.nextPage(t)
+                            mNews.value?.data?.nextPage(t)
                         }
-                        mNews.value = mNews.value
+                        mNews.value = Resource.success(mNews.value!!.data!!)
                     }
 
                     override fun onSubscribe(d: Disposable?) {

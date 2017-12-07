@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import cn.androidpi.app.R
 import cn.androidpi.app.databinding.FragmentNewsBinding
 import cn.androidpi.app.ui.base.BaseFragment
@@ -173,16 +174,21 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         super.onViewCreated(view, savedInstanceState)
         mNewsModel.mNews.observe(this, Observer { t ->
             refreshFinished()
-            val currentPage = t?.mCurrentPage
-            if (currentPage == null || currentPage.isEmpty())
-                return@Observer
-            if (t.isFirstPage()) {
-                mAdapter.setPayloads(currentPage)
+            if (t == null || t.isError()) {
+                var message = if (t != null) t.message else "加载失败"
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             } else {
-                mAdapter.appendPayloads(t.mPreviousPages, currentPage)
+                val currentPage = t?.data?.mCurrentPage
+                if (currentPage == null || currentPage.isEmpty())
+                    return@Observer
+                if (t.data.isFirstPage()) {
+                    mAdapter.setPayloads(currentPage)
+                } else {
+                    mAdapter.appendPayloads(t.data.mPreviousPages, currentPage)
+                }
             }
         })
-        if (null == savedInstanceState || mNewsModel.mNews.value == null || mNewsModel.mNews.value!!.isFirstPage()) {
+        if (null == savedInstanceState || mNewsModel.mNews.value == null || mNewsModel.mNews.value!!.data!!.isFirstPage()) {
             loadFirstPage()
         }
     }
