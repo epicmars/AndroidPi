@@ -18,21 +18,10 @@ class TextNoteEditViewModel @Inject constructor() : ViewModel(), TextNoteEditMod
     @Inject
     lateinit var mTextNoteRepo: TextNoteRepo
 
-    var mText: String? = null
-    var mTextNote: TextNote? = null
+    var mTextNote = TextNote()
 
     override fun saveTextNote() {
-        if (mText != null) {
-            if (mText!!.isBlank())
-                return
-            saveNewTextNote()
-        } else if (mTextNote != null) {
-            updateCurrentTextNote()
-        }
-    }
-
-    fun saveNewTextNote() {
-        mTextNoteRepo.addTextNote(mText!!)
+        mTextNoteRepo.addTextNote(mTextNote)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
@@ -47,7 +36,12 @@ class TextNoteEditViewModel @Inject constructor() : ViewModel(), TextNoteEditMod
                 })
     }
 
-    fun updateCurrentTextNote() {
+    fun updateText(content: String) {
+        mTextNote.text = content
+    }
 
+    // Validity checking should be performed in view or view-model?
+    fun isValid(): Boolean {
+        return !mTextNote.text.isNullOrBlank()
     }
 }

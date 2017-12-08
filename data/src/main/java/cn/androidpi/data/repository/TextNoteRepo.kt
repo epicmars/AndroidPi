@@ -14,7 +14,7 @@ interface TextNoteRepo {
      *
      * @param text 添加的文本笔记内容
      */
-    fun addTextNote(text: String): Completable
+    fun addTextNote(textNote: TextNote): Completable
 
     /**
      * 更新一条文本笔记。

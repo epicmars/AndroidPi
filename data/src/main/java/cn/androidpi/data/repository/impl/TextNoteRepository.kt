@@ -17,10 +17,8 @@ class TextNoteRepository @Inject constructor() : TextNoteRepo {
     @Inject
     lateinit var textNoteDao: TextNoteDao
 
-    override fun addTextNote(text: String): Completable {
+    override fun addTextNote(textNote: TextNote): Completable {
         return Completable.fromAction {
-            val textNote = TextNote()
-            textNote.text = text
             textNoteDao.insert(textNote)
         }
     }
@@ -32,8 +30,6 @@ class TextNoteRepository @Inject constructor() : TextNoteRepo {
     }
 
     override fun getAllTextNotes(): Single<List<TextNote>> {
-        return Single.fromCallable {
-            textNoteDao.findAll()
-        }
+        return textNoteDao.findAll()
     }
 }

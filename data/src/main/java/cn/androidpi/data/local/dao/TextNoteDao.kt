@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 import cn.androidpi.note.entity.TextNote
+import io.reactivex.Single
 
 /**
  * 文本笔记Dao
@@ -22,5 +23,5 @@ interface TextNoteDao {
      * 查找所有文本笔记
      */
     @Query("select * from text_notes;")
-    fun findAll(): List<TextNote>
+    fun findAll(): Single<List<TextNote>>
 }

@@ -20,7 +20,7 @@ import cn.androidpi.app.ui.viewholder.ErrorViewHolder
 import cn.androidpi.app.ui.viewholder.TodoViewHolder
 import cn.androidpi.app.ui.viewholder.items.ErrorItem
 import cn.androidpi.app.view.TodoView
-import cn.androidpi.app.viewmodel.Resource
+import cn.androidpi.app.viewmodel.vo.Resource
 import cn.androidpi.app.viewmodel.TodoListViewModel
 import cn.androidpi.note.entity.Todo
 import javax.inject.Inject

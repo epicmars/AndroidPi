@@ -1,7 +1,5 @@
 package cn.androidpi.app.ui.viewholder
 
-import android.app.Activity
-import android.support.v4.app.ActivityOptionsCompat
 import android.view.View
 import android.view.ViewGroup
 import cn.androidpi.app.R
@@ -28,9 +26,9 @@ class TodoViewHolder(itemView: View) : BaseViewHolder<ViewHolderTodoBinding>(ite
         mBinding?.tvTodoContent?.text = todo?.content
         mBinding?.tvCreatedTime?.text = getElapsedDays(todo?.createdTime)
         itemView.setOnClickListener {
-            val sharedElementName = it.resources.getString(R.string.transition_todo_content)
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(it.context as Activity, itemView, sharedElementName)
-            TemplateActivity.startWith(options, it.context, fragmentName = TodoFragment::class.java.canonicalName,
+//            val sharedElementName = it.resources.getString(R.string.transition_todo_content)
+//            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(it.context as Activity, itemView, sharedElementName)
+            TemplateActivity.startWith(it.context, fragmentName = TodoFragment::class.java.canonicalName,
                     factory = object : FragmentFactory<TodoFragment>() {
                         override fun create(): TodoFragment {
                             return TodoFragment.newInstance(todo!!)

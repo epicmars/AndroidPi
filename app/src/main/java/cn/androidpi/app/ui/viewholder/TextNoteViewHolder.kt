@@ -14,6 +14,10 @@ import cn.androidpi.note.entity.TextNote
 class TextNoteViewHolder(itemView: View) : BaseViewHolder<ViewHolderTextNoteBinding>(itemView) {
 
     override fun <T : Any?> onBindView(data: T, position: Int) {
-
+        if (data == null)
+            return
+        if (data is TextNote) {
+            mBinding.tvContent.text = data.text
+        }
     }
 }

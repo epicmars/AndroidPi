@@ -1,9 +1,12 @@
 package cn.androidpi.data.repository.impl
 
+import cn.androidpi.common.datetime.DateTimeUtils
 import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.data.remote.api.NewsApi
+import cn.androidpi.data.repository.NetworkBoundFlowable
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.news.entity.News
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -33,9 +36,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
     }
 
     override fun getNews(page: Int, count: Int, offset: Int): Single<List<News>> {
-        return Single.fromCallable {
-            newsDao.getNews(page, count, offset)
-        }
+        return newsDao.getNews(page, count, offset)
     }
 
     override fun getLatestNews(page: Int, count: Int): Single<List<News>> {
@@ -66,24 +67,57 @@ class NewsRepository @Inject constructor() : NewsRepo {
     }
 
     override fun getLatestNews(page: Int, count: Int, offset: Int): Single<List<News>> {
-        return refreshNews(page, count)
-                .toObservable()
-                .flatMap { newsList ->
-                    Observable.fromIterable(newsList)
+        // 目前的获取策略
+        // 第一页总是尝试从服务端获取后保存到本地
+        // 第二页及其之后的页面首先从本地获取，然后根据本地页面判断是否请求网络
+        // 判断策略为：
+        // 1. 本地页面是否为空
+        // 2. 是否较为陈旧(obsolete)，如果页面较新鲜(fresh)则不请求网络，根据上一页最后一项的时间来判断
+
+        return object : NetworkBoundFlowable<List<News>>() {
+            override fun loadFromDb(): Flowable<List<News>> {
+                return getNews(page, count, offset).toFlowable()
+            }
+
+            override fun shouldFetch(dbResult: List<News>): Boolean {
+                if (dbResult.isEmpty() || page == 0)
+                    return true
+                val firstNews = dbResult[0]
+                if (firstNews.publishTime == null)
+                    return true
+                try {
+                    val firstDate = DateTimeUtils.parseDateTime(firstNews.publishTime!!)
+                    val lastNews = newsDao.getNewsBefore(firstNews.publishTime!!)
+                    if (lastNews.publishTime == null)
+                        return true
+                    val lastDate = DateTimeUtils.parseDateTime(lastNews.publishTime!!)
+                    return (lastDate.time - firstDate.time > 10 * DateTimeUtils.ONE_MINUTE_MS)
+                } catch (e: Exception) {
+                    return true
                 }
-                .flatMap { news ->
-                    Observable.fromCallable {
+            }
+
+            override fun createCall(): Flowable<List<News>> {
+                return refreshNews(page, count).toFlowable()
+            }
+
+            override fun saveCallResult(result: List<News>): Boolean {
+                // if at least one insertion succeed then it's fresh
+                var count = 0
+                for (news in result) {
+                    try {
                         newsDao.insertNews(news)
-                        news
-                    }.onErrorReturnItem(news)
+                    } catch (e: Exception) {
+                        // ignore
+                        count++
+                    }
                 }
-                .toList()
-                .zipWith(getNews(page, count, offset), BiFunction { t1: List<News>, t2: List<News> ->
-                    t2
-                })
-                .doOnError {
-                    Timber.e(it)
+
+                if (count > 0 && count == result.size) {
+                    return false
                 }
-                .onErrorResumeNext(getNews(page, count, offset))
+                return true
+            }
+        }.getResultAsFlowable().singleOrError()
     }
 }

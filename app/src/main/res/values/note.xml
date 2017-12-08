@@ -12,5 +12,6 @@
 
     <!-- 笔记 -->
     <string name="note">笔记</string>
+    <string name="hint_input_text_note">输入笔记内容</string>
 
 </resources>

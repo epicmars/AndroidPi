@@ -2,6 +2,7 @@ package cn.androidpi.app.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import cn.androidpi.app.viewmodel.vo.Resource
 import cn.androidpi.data.repository.TextNoteRepo
 import cn.androidpi.note.entity.TextNote
 import cn.androidpi.note.model.TextNotesModel

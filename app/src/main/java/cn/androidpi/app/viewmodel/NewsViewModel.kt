@@ -2,6 +2,7 @@ package cn.androidpi.app.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import cn.androidpi.app.viewmodel.vo.Resource
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsModel
