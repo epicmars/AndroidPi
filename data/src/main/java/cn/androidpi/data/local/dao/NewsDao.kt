@@ -2,6 +2,7 @@ package cn.androidpi.data.local.dao
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
+import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
@@ -14,10 +15,10 @@ import io.reactivex.Single
 @Dao
 interface NewsDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNews(vararg newsItems: News)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewsList(newsList: List<News>)
 
     @Query("select * from news where publish_time > :time order by publish_time asc limit 1")

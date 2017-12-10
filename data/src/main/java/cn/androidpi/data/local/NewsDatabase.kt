@@ -12,7 +12,7 @@ import cn.androidpi.news.entity.News
  * Created by jastrelax on 2017/11/2.
  */
 
-@Database(entities = arrayOf(News::class), version = 2)
+@Database(entities = arrayOf(News::class), version = 3)
 @TypeConverters(DateConverter::class, StringArrayConverter::class)
 abstract class NewsDatabase : RoomDatabase() {
 
@@ -28,5 +28,12 @@ object NEWS_MIGRATION_1_2 : Migration(1, 2) {
 
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE news ADD COLUMN images TEXT")
+    }
+}
+
+object NEWS_MIGRATION_2_3 : Migration(2, 3) {
+
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE news ADD COLUMN context TEXT")
     }
 }

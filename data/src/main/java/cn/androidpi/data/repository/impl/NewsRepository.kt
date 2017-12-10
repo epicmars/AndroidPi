@@ -1,6 +1,5 @@
 package cn.androidpi.data.repository.impl
 
-import cn.androidpi.common.datetime.DateTimeUtils
 import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.data.remote.api.NewsApi
 import cn.androidpi.data.repository.NetworkBoundFlowable
@@ -72,7 +71,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
         // 第二页及其之后的页面首先从本地获取，然后根据本地页面判断是否请求网络
         // 判断策略为：
         // 1. 本地页面是否为空
-        // 2. 是否较为陈旧(obsolete)，如果页面较新鲜(fresh)则不请求网络，根据上一页最后一项的时间来判断
+        // 2. 是否较为陈旧(obsolete)，如果页面较新鲜(fresh)则不请求网络
 
         return object : NetworkBoundFlowable<List<News>>() {
             override fun loadFromDb(): Flowable<List<News>> {
@@ -80,21 +79,15 @@ class NewsRepository @Inject constructor() : NewsRepo {
             }
 
             override fun shouldFetch(dbResult: List<News>): Boolean {
+                // if local page is empty or it's the first page
                 if (dbResult.isEmpty() || page == 0)
                     return true
-                val firstNews = dbResult[0]
-                if (firstNews.publishTime == null)
-                    return true
-                try {
-                    val firstDate = DateTimeUtils.parseDateTime(firstNews.publishTime!!)
-                    val lastNews = newsDao.getNewsBefore(firstNews.publishTime!!)
-                    if (lastNews.publishTime == null)
+                // if the page number of news has changed
+                for (news in dbResult) {
+                    if (news.context != page.toString())
                         return true
-                    val lastDate = DateTimeUtils.parseDateTime(lastNews.publishTime!!)
-                    return (lastDate.time - firstDate.time > 10 * DateTimeUtils.ONE_MINUTE_MS)
-                } catch (e: Exception) {
-                    return true
                 }
+                return false
             }
 
             override fun createCall(): Flowable<List<News>> {
@@ -105,6 +98,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 // if at least one insertion succeed then it's fresh
                 var count = 0
                 for (news in result) {
+                    news.context = page.toString()
                     try {
                         newsDao.insertNews(news)
                     } catch (e: Exception) {

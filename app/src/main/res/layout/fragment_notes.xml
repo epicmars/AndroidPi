@@ -11,7 +11,8 @@
             android:id="@+id/recycler_notes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/view_holder_text_note"/>
+            tools:listitem="@layout/view_holder_text_note"
+            android:padding="4dp"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_add"

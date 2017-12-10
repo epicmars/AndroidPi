@@ -18,6 +18,9 @@ class TextNoteViewHolder(itemView: View) : BaseViewHolder<ViewHolderTextNoteBind
             return
         if (data is TextNote) {
             mBinding.tvContent.text = data.text
+            itemView.setOnClickListener {
+
+            }
         }
     }
 }
