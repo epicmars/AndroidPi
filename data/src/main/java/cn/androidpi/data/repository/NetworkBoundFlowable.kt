@@ -17,6 +17,7 @@ abstract class NetworkBoundFlowable<Result> {
                 if (shouldFetch(t)) {
                     return fetchFromNetwork(t)
                 } else {
+                    updateDbResult(t)
                     return Flowable.just(t)
                 }
             }
@@ -47,6 +48,8 @@ abstract class NetworkBoundFlowable<Result> {
     abstract fun createCall(): Flowable<Result>
 
     abstract fun saveCallResult(result: Result): Boolean
+
+    open fun updateDbResult(dbResult: Result) {}
 
     fun onFetchFailed() {}
 

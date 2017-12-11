@@ -26,6 +26,8 @@ class NewsRepository @Inject constructor() : NewsRepo {
     @Inject
     lateinit var newsDao: NewsDao
 
+    var lastCachedPageNum: String? = null
+
     override fun refreshNews(page: Int, count: Int): Single<List<News>> {
         return newsApi.getNews(page, count)
                 .toObservable()
@@ -79,15 +81,40 @@ class NewsRepository @Inject constructor() : NewsRepo {
             }
 
             override fun shouldFetch(dbResult: List<News>): Boolean {
+                val lastPage = dbResult.last().context
                 // if local page is empty or it's the first page
-                if (dbResult.isEmpty() || page == 0)
+                if (dbResult.isEmpty() || page == 0) {
+                    lastCachedPageNum = null
+                    if (dbResult.isNotEmpty()) {
+                        lastCachedPageNum = lastPage
+                    }
                     return true
-                // if the page number of news has changed
-                for (news in dbResult) {
-                    if (news.context != page.toString())
-                        return true
                 }
-                return false
+                // if last updated news doesn't update cached news
+                if (lastCachedPageNum == null) {
+                    lastCachedPageNum = lastPage
+                    return true
+                }
+                try {
+                    val lastPageNum = Integer.parseInt(lastCachedPageNum)
+                    var isContinuous = true
+                    for (news in dbResult) {
+                        val pageNum = Integer.valueOf(news.context)
+                        if (pageNum <= 0) {
+                            isContinuous = false
+                            break
+                        }
+                    }
+                    if (lastPageNum >= 0 && isContinuous) {
+                        lastCachedPageNum = lastPage
+                        return false
+                    }
+                } catch (e: Exception) {
+                    // ignore
+                }
+
+                lastCachedPageNum = lastPage
+                return true
             }
 
             override fun createCall(): Flowable<List<News>> {
@@ -98,19 +125,35 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 // if at least one insertion succeed then it's fresh
                 var count = 0
                 for (news in result) {
-                    news.context = page.toString()
-                    try {
-                        newsDao.insertNews(news)
-                    } catch (e: Exception) {
-                        // ignore
-                        count++
+                    if (news.context != page.toString()) {
+                        try {
+                            news.context = page.toString()
+                            newsDao.insertNews(news)
+                        } catch (e: Exception) {
+                            // ignore
+                            count++
+                        }
                     }
+
                 }
 
                 if (count > 0 && count == result.size) {
                     return false
                 }
                 return true
+            }
+
+            override fun updateDbResult(dbResult: List<News>) {
+                for (news in dbResult) {
+                    if (news.context != page.toString()) {
+                        try {
+                            news.context = page.toString()
+                            newsDao.insertNews(news)
+                        } catch (e: Exception) {
+                            // ignore
+                        }
+                    }
+                }
             }
         }.getResultAsFlowable().singleOrError()
     }
