@@ -22,11 +22,14 @@ interface NewsDao {
     fun insertNewsList(newsList: List<News>)
 
     @Query("select * from news where publish_time > :time order by publish_time asc limit 1")
-    fun getNewsBefore(time: String): News
+    fun getNewsBefore(time: String): News?
 
     @Query("select * from news order by publish_time desc limit :count offset :page * :count")
     fun getNews(page: Int = 0, count: Int = PAGE_SIZE) : List<News>
 
     @Query("select * from news order by publish_time desc limit :count offset :page * :count + :offset")
     fun getNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0) : Single<List<News>>
+
+    @Query("select * from news where news_id = :newsId limit 1")
+    fun findByNewsId(newsId: String): News?
 }

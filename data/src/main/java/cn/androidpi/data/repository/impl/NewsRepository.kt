@@ -83,16 +83,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
             override fun shouldFetch(dbResult: List<News>): Boolean {
                 val lastPage = dbResult.last().context
                 // if local page is empty or it's the first page
-                if (dbResult.isEmpty() || page == 0) {
-                    lastCachedPageNum = null
-                    if (dbResult.isNotEmpty()) {
-                        lastCachedPageNum = lastPage
-                    }
-                    return true
-                }
-                // if last updated news doesn't update cached news
-                if (lastCachedPageNum == null) {
-                    lastCachedPageNum = lastPage
+                if (dbResult.isEmpty() || page == 0 || lastCachedPageNum == null) {
                     return true
                 }
                 try {
@@ -113,7 +104,6 @@ class NewsRepository @Inject constructor() : NewsRepo {
                     // ignore
                 }
 
-                lastCachedPageNum = lastPage
                 return true
             }
 
@@ -124,6 +114,17 @@ class NewsRepository @Inject constructor() : NewsRepo {
             override fun saveCallResult(result: List<News>): Boolean {
                 // if at least one insertion succeed then it's fresh
                 var count = 0
+                if (result.isEmpty()) {
+                    lastCachedPageNum = null
+                    return false
+                }
+                val last = result.last()
+                if (last.newsId == null) {
+                    lastCachedPageNum = null
+                } else {
+                    val cachedNews = newsDao.findByNewsId(last.newsId!!)
+                    lastCachedPageNum = cachedNews?.context
+                }
                 for (news in result) {
                     if (news.context != page.toString()) {
                         try {
