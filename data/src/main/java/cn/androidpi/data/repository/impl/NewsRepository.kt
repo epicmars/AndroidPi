@@ -113,7 +113,6 @@ class NewsRepository @Inject constructor() : NewsRepo {
 
             override fun saveCallResult(result: List<News>): Boolean {
                 // if at least one insertion succeed then it's fresh
-                var count = 0
                 if (result.isEmpty()) {
                     lastCachedPageNum = null
                     return false
@@ -126,20 +125,14 @@ class NewsRepository @Inject constructor() : NewsRepo {
                     lastCachedPageNum = cachedNews?.context
                 }
                 for (news in result) {
-                    if (news.context != page.toString()) {
-                        try {
-                            news.context = page.toString()
-                            newsDao.insertNews(news)
-                        } catch (e: Exception) {
-                            // ignore
-                            count++
-                        }
+                    val cachedNews = newsDao.findByNewsId(news.newsId!!)
+                    news.context = page.toString()
+                    if (cachedNews == null) {
+                        newsDao.insertNews(news)
+                    } else if (cachedNews.context != page.toString()) {
+                        news.id = cachedNews.id
+                        newsDao.updateNews(news)
                     }
-
-                }
-
-                if (count > 0 && count == result.size) {
-                    return false
                 }
                 return true
             }
@@ -149,7 +142,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
                     if (news.context != page.toString()) {
                         try {
                             news.context = page.toString()
-                            newsDao.insertNews(news)
+                            newsDao.updateNews(news)
                         } catch (e: Exception) {
                             // ignore
                         }
