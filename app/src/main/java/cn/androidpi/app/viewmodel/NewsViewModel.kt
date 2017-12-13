@@ -43,12 +43,16 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
                     }
 
                     override fun onSuccess(t: List<News>) {
-                        if (!isNext) {
-                            mNews.value?.data?.firstPage(t)
-                        } else {
-                            mNews.value?.data?.nextPage(t)
+                        var newsPage = mNews.value?.data
+                        if (newsPage == null) {
+                            newsPage = NewsPage()
                         }
-                        mNews.value = Resource.success(mNews.value!!.data!!)
+                        if (!isNext) {
+                            newsPage.firstPage(t)
+                        } else {
+                            newsPage.nextPage(t)
+                        }
+                        mNews.value = Resource.success(newsPage)
                     }
 
                     override fun onSubscribe(d: Disposable?) {

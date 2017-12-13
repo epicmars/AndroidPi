@@ -81,13 +81,11 @@ class NewsRepository @Inject constructor() : NewsRepo {
             }
 
             override fun shouldFetch(dbResult: List<News>): Boolean {
-                val lastPage = dbResult.last().context
                 // if local page is empty or it's the first page
                 if (dbResult.isEmpty() || page == 0 || lastCachedPageNum == null) {
                     return true
                 }
                 try {
-                    val lastPageNum = Integer.parseInt(lastCachedPageNum)
                     var isContinuous = true
                     for (news in dbResult) {
                         val pageNum = Integer.valueOf(news.context)
@@ -96,14 +94,10 @@ class NewsRepository @Inject constructor() : NewsRepo {
                             break
                         }
                     }
-                    if (lastPageNum >= 0 && isContinuous) {
-                        lastCachedPageNum = lastPage
-                        return false
-                    }
+                    return !isContinuous
                 } catch (e: Exception) {
                     // ignore
                 }
-
                 return true
             }
 
@@ -111,43 +105,52 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 return refreshNews(page, count).toFlowable()
             }
 
-            override fun saveCallResult(result: List<News>): Boolean {
+            override fun saveCallResult(result: List<News>) {
                 // if at least one insertion succeed then it's fresh
+                val pageStr = page.toString()
                 if (result.isEmpty()) {
-                    lastCachedPageNum = null
-                    return false
-                }
-                val last = result.last()
-                if (last.newsId == null) {
-                    lastCachedPageNum = null
-                } else {
-                    val cachedNews = newsDao.findByNewsId(last.newsId!!)
-                    lastCachedPageNum = cachedNews?.context
+                    return
                 }
                 for (news in result) {
                     val cachedNews = newsDao.findByNewsId(news.newsId!!)
-                    news.context = page.toString()
                     if (cachedNews == null) {
+                        news.context = pageStr
                         newsDao.insertNews(news)
-                    } else if (cachedNews.context != page.toString()) {
-                        news.id = cachedNews.id
-                        newsDao.updateNews(news)
-                    }
-                }
-                return true
-            }
-
-            override fun updateDbResult(dbResult: List<News>) {
-                for (news in dbResult) {
-                    if (news.context != page.toString()) {
-                        try {
-                            news.context = page.toString()
+                    } else {
+                        if (cachedNews.context == null || Integer.valueOf(cachedNews.context) == 0) {
+                            news.id = cachedNews.id
+                            news.context = pageStr
                             newsDao.updateNews(news)
-                        } catch (e: Exception) {
-                            // ignore
                         }
                     }
                 }
+            }
+
+            override fun updatedDbResult(dbResult: List<News>): Flowable<List<News>> {
+                val result = ArrayList<News>()
+                val pageStr = page.toString()
+                for (i in 0 until dbResult.size) {
+                    val news = dbResult[i]
+                    try {
+                        val pageNum = Integer.valueOf(news.context)
+                        if (page == 0 || (page > 0 && pageNum > 0)) {
+                            if (news.context != pageStr) {
+                                news.context = pageStr
+                                newsDao.updateNews(news)
+                            }
+                            lastCachedPageNum = news.context
+                            result.add(news)
+                        } else {
+                            lastCachedPageNum = null
+                            break
+                        }
+                    } catch (e: Exception) {
+                        // ignore
+                        lastCachedPageNum = null
+                        break
+                    }
+                }
+                return Flowable.just(result)
             }
         }.getResultAsFlowable().singleOrError()
     }

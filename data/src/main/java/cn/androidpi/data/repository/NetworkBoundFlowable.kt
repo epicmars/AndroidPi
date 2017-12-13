@@ -17,8 +17,7 @@ abstract class NetworkBoundFlowable<Result> {
                 if (shouldFetch(t)) {
                     return fetchFromNetwork(t)
                 } else {
-                    updateDbResult(t)
-                    return Flowable.just(t)
+                    return updatedDbResult(t)
                 }
             }
         })
@@ -29,6 +28,9 @@ abstract class NetworkBoundFlowable<Result> {
                 .doOnError {
                     onFetchFailed()
                 }
+                .onErrorResumeNext {
+                    t: Throwable -> updatedDbResult(dbResult)
+                }
                 .flatMap(object : Function<Result, Flowable<Result>> {
                     override fun apply(t: Result): Flowable<Result> {
                         try {
@@ -36,7 +38,9 @@ abstract class NetworkBoundFlowable<Result> {
                         } catch (e: Exception) {
                             Timber.e(e)
                         }
-                        return loadFromDb()
+                        return loadFromDb().flatMap {
+                            updatedDbResult(it)
+                        }
                     }
                 })
     }
@@ -47,9 +51,9 @@ abstract class NetworkBoundFlowable<Result> {
 
     abstract fun createCall(): Flowable<Result>
 
-    abstract fun saveCallResult(result: Result): Boolean
+    abstract fun saveCallResult(result: Result)
 
-    open fun updateDbResult(dbResult: Result) {}
+    abstract fun updatedDbResult(dbResult: Result): Flowable<Result>
 
     fun onFetchFailed() {}
 
