@@ -56,7 +56,6 @@
                     android:id="@+id/tv_todo_content"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
                     android:padding="@dimen/editor_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     app:layout_constraintBottom_toBottomOf="parent"

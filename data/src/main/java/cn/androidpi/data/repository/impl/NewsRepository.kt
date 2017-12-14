@@ -37,7 +37,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
     }
 
     override fun getNews(page: Int, count: Int, offset: Int): Single<List<News>> {
-        return newsDao.getNews(page, count, offset)
+        return newsDao.getNews(page, count, 0)
     }
 
     override fun getLatestNews(page: Int, count: Int): Single<List<News>> {
@@ -118,9 +118,8 @@ class NewsRepository @Inject constructor() : NewsRepo {
                         newsDao.insertNews(news)
                     } else {
                         if (cachedNews.context == null || Integer.valueOf(cachedNews.context) == 0) {
-                            news.id = cachedNews.id
-                            news.context = pageStr
-                            newsDao.updateNews(news)
+                            cachedNews.context = pageStr
+                            newsDao.updateNews(cachedNews)
                         }
                     }
                 }

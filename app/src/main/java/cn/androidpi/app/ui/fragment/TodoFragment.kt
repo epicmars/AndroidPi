@@ -19,9 +19,7 @@ class TodoFragment : BaseFragment<FragmentTodoBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mTodo = arguments!!.getParcelable(ARG_TODO_ITEM)
-        }
+        mTodo = arguments?.getParcelable(ARG_TODO_ITEM)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -185,7 +185,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                     mAdapter.setPayloads(ErrorItem(message))
                 }
             } else {
-                val currentPage = t?.data?.mCurrentPage
+                val currentPage = t.data?.mCurrentPage
                 if (currentPage == null || currentPage.isEmpty())
                     return@Observer
                 if (t.data.isFirstPage()) {
