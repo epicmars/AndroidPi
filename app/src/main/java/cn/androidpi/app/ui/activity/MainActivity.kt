@@ -18,8 +18,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        setSupportActionBar(binding?.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+//        setSupportActionBar(binding?.toolbar)
+//        supportActionBar?.setDisplayShowTitleEnabled(false)
 
 //        binding?.drawer?.setStatusBarBackground(R.color.transparent)
 //        val toggle = ActionBarDrawerToggle(this, binding?.drawer, binding?.toolbar,

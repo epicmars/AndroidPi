@@ -31,7 +31,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
             override fun getItem(position: Int): Fragment {
                 return when (position) {
-                    0 -> NewsFragment.newInstance()
+                    0 -> NewsPagerFragment.newInstance()
                     1 -> TodoListFragment.newInstance()
                     2 -> NotesFragment.newInstance()
                     else -> TempFragment.newInstance("An error occurred.")

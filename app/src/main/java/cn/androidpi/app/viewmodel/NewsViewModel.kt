@@ -4,14 +4,13 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import cn.androidpi.app.viewmodel.vo.Resource
 import cn.androidpi.data.repository.NewsRepo
-import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsModel
 import cn.androidpi.news.model.NewsPage
+import cn.androidpi.news.model.NewsPageModel
 import dagger.Lazy
-import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subscribers.DisposableSubscriber
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,6 +24,10 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
     val mNews: MutableLiveData<Resource<NewsPage>> = MutableLiveData()
 
+    var mPortal: String? = null
+
+    var mNewsPageModel = NewsPageModel()
+
     init {
         mNews.value = Resource.loading(NewsPage())
     }
@@ -33,29 +36,32 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
         val page = if (isNext) mNews.value?.data?.getNextPageNum() else 0
 
-        mNewsRepo.get().getLatestNews(page ?: 0, count, mNews.value?.data?.mOffset ?: 0)
+        mNewsRepo.get().getLatestNews(page ?: 0, count, mNews.value?.data?.mOffset ?: 0, mPortal, mNewsPageModel.lastCachedPageNum)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<List<News>> {
+                .subscribe(object : DisposableSubscriber<NewsPageModel>() {
+
                     override fun onError(e: Throwable?) {
                         Timber.e(e)
                         mNews.value = Resource.error("加载新闻失败", null)
                     }
 
-                    override fun onSuccess(t: List<News>) {
+                    override fun onNext(t: NewsPageModel) {
+                        mNewsPageModel = t
                         var newsPage = mNews.value?.data
                         if (newsPage == null) {
                             newsPage = NewsPage()
                         }
                         if (!isNext) {
-                            newsPage.firstPage(t)
+                            newsPage.firstPage(t.newsList)
                         } else {
-                            newsPage.nextPage(t)
+                            newsPage.nextPage(t.newsList)
                         }
                         mNews.value = Resource.success(newsPage)
                     }
 
-                    override fun onSubscribe(d: Disposable?) {
+                    override fun onComplete() {
+
                     }
                 })
     }

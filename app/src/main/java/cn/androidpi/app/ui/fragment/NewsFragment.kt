@@ -41,9 +41,18 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     lateinit var mAdapter: RecyclerAdapter
 
+    var mPortal: String? = null
+
     companion object {
-        fun newInstance(): NewsFragment {
-            return NewsFragment()
+
+        val KEY_PORTAL = "NewsFragment.KEY_PORTAL"
+
+        fun newInstance(portal: String?): NewsFragment {
+            val args = Bundle()
+            args.putString(KEY_PORTAL, portal)
+            val fragment = NewsFragment()
+            fragment.arguments = args
+            return fragment
         }
     }
 
@@ -53,6 +62,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         // onCreate will not be called, therefore [NewsViewModel] will not be recreated.
         mNewsModel = ViewModelProviders.of(this, mViewModelFactory)
                 .get(NewsViewModel::class.java)
+        mPortal = arguments?.getString(KEY_PORTAL)
+        mNewsModel.mPortal = mPortal
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -65,6 +76,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mBinding.recyclerNews.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
         mAdapter = RecyclerAdapter()
+        mAdapter.setFragmentManager(childFragmentManager)
         mAdapter.register(CoverNewsViewHolder::class.java,
                 NewsViewHolder::class.java,
                 NewsThreeImagesViewHolder::class.java,

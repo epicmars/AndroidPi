@@ -1,6 +1,9 @@
 package cn.androidpi.data.remote.dto
 
 import cn.androidpi.news.entity.News
+import cn.androidpi.news.model.NewsModel.Companion.portal_163
+import cn.androidpi.news.model.NewsModel.Companion.portal_ifeng
+import cn.androidpi.news.model.NewsModel.Companion.portal_qq
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
@@ -47,6 +50,13 @@ class ResNews {
         news.keywords = keywords?.toTypedArray()
         news.images = images?.copyOf()
 
+        if (url != null) {
+            when {
+                url!!.indexOf(portal_163) > 0 -> news.portal = portal_163
+                url!!.indexOf(portal_qq) > 0 -> news.portal = portal_qq
+                url!!.indexOf(portal_ifeng) > 0 -> news.portal = portal_ifeng
+            }
+        }
         return news
     }
 

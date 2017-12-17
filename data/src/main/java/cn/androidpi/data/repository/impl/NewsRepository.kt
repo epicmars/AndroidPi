@@ -5,6 +5,7 @@ import cn.androidpi.data.remote.api.NewsApi
 import cn.androidpi.data.repository.NetworkBoundFlowable
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.news.entity.News
+import cn.androidpi.news.model.NewsPageModel
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -26,8 +27,6 @@ class NewsRepository @Inject constructor() : NewsRepo {
     @Inject
     lateinit var newsDao: NewsDao
 
-    var lastCachedPageNum: String? = null
-
     override fun refreshNews(page: Int, count: Int): Single<List<News>> {
         return newsApi.getNews(page, count)
                 .toObservable()
@@ -38,6 +37,10 @@ class NewsRepository @Inject constructor() : NewsRepo {
 
     override fun getNews(page: Int, count: Int, offset: Int): Single<List<News>> {
         return newsDao.getNews(page, count, 0)
+    }
+
+    override fun getNews(page: Int, count: Int, offset: Int, portal: String): Single<List<News>> {
+        return newsDao.getNews(page, count, 0, portal)
     }
 
     override fun getLatestNews(page: Int, count: Int): Single<List<News>> {
@@ -67,7 +70,11 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 .onErrorResumeNext(getNews(page, count))
     }
 
-    override fun getLatestNews(page: Int, count: Int, offset: Int): Single<List<News>> {
+    override fun getLatestNews(page: Int, count: Int, offset: Int): Single<NewsPageModel> {
+        return getLatestNews(page, count, offset, null, null).singleOrError()
+    }
+
+    override fun getLatestNews(page: Int, count: Int, offset: Int, portal: String?, cachedPageNum: String?): Flowable<NewsPageModel> {
         // 目前的获取策略
         // 第一页总是尝试从服务端获取后保存到本地
         // 第二页及其之后的页面首先从本地获取，然后根据本地页面判断是否请求网络
@@ -75,19 +82,20 @@ class NewsRepository @Inject constructor() : NewsRepo {
         // 1. 本地页面是否为空
         // 2. 是否较为陈旧(obsolete)，如果页面较新鲜(fresh)则不请求网络
 
-        return object : NetworkBoundFlowable<List<News>>() {
-            override fun loadFromDb(): Flowable<List<News>> {
-                return getNews(page, count, offset).toFlowable()
+        val cache = getNewsPage(page, count, offset, portal).toFlowable()
+        val remoteOrCache = object : NetworkBoundFlowable<NewsPageModel>() {
+            override fun loadFromDb(): Flowable<NewsPageModel> {
+                return getNewsPage(page, count, offset, portal).toFlowable()
             }
 
-            override fun shouldFetch(dbResult: List<News>): Boolean {
+            override fun shouldFetch(dbResult: NewsPageModel): Boolean {
                 // if local page is empty or it's the first page
-                if (dbResult.isEmpty() || page == 0 || lastCachedPageNum == null) {
+                if (dbResult.newsList.isEmpty() || page == 0 || cachedPageNum == null) {
                     return true
                 }
                 try {
                     var isContinuous = true
-                    for (news in dbResult) {
+                    for (news in dbResult.newsList) {
                         val pageNum = Integer.valueOf(news.context)
                         if (pageNum <= 0) {
                             isContinuous = false
@@ -101,17 +109,20 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 return true
             }
 
-            override fun createCall(): Flowable<List<News>> {
-                return refreshNews(page, count).toFlowable()
+            override fun createCall(): Flowable<NewsPageModel> {
+                return refreshNews(page, count)
+                        .map { t ->
+                            NewsPageModel(t)
+                        }.toFlowable()
             }
 
-            override fun saveCallResult(result: List<News>) {
+            override fun saveCallResult(result: NewsPageModel) {
                 // if at least one insertion succeed then it's fresh
                 val pageStr = page.toString()
-                if (result.isEmpty()) {
+                if (result.newsList.isEmpty()) {
                     return
                 }
-                for (news in result) {
+                for (news in result.newsList) {
                     val cachedNews = newsDao.findByNewsId(news.newsId!!)
                     if (cachedNews == null) {
                         news.context = pageStr
@@ -125,11 +136,12 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 }
             }
 
-            override fun updatedDbResult(dbResult: List<News>): Flowable<List<News>> {
+            override fun updatedDbResult(dbResult: NewsPageModel): Flowable<NewsPageModel> {
                 val result = ArrayList<News>()
                 val pageStr = page.toString()
-                for (i in 0 until dbResult.size) {
-                    val news = dbResult[i]
+                var lastCachedPageNum: String? = cachedPageNum
+                for (i in 0 until dbResult.newsList.size) {
+                    val news = dbResult.newsList[i]
                     try {
                         val pageNum = Integer.valueOf(news.context)
                         if (page == 0 || (page > 0 && pageNum > 0)) {
@@ -149,8 +161,30 @@ class NewsRepository @Inject constructor() : NewsRepo {
                         break
                     }
                 }
-                return Flowable.just(result)
+                val pageModel = NewsPageModel(result)
+                pageModel.lastCachedPageNum = lastCachedPageNum
+                return Flowable.just(pageModel)
             }
-        }.getResultAsFlowable().singleOrError()
+        }.getResultAsFlowable()
+
+        if (page == 0) {
+            return cache.concatWith(remoteOrCache)
+        } else {
+            return remoteOrCache
+        }
+    }
+
+    override fun getNewsPage(page: Int, count: Int, offset: Int, portal: String?): Single<NewsPageModel> {
+        if (portal == null) {
+            return getNews(page, count, offset)
+                    .map { t ->
+                        NewsPageModel(t)
+                    }
+        } else {
+            return getNews(page, count, offset, portal)
+                    .map { t ->
+                        NewsPageModel(t)
+                    }
+        }
     }
 }

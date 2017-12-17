@@ -79,6 +79,11 @@ class News() : Parcelable {
      */
     var context: String? = null
 
+    /**
+     * 门户站点
+     */
+    var portal: String? = null
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -97,6 +102,7 @@ class News() : Parcelable {
         if (!Arrays.equals(keywords, other.keywords)) return false
         if (!Arrays.equals(images, other.images)) return false
         if (context != other.context) return false
+        if (portal != other.portal) return false
 
         return true
     }
@@ -114,6 +120,7 @@ class News() : Parcelable {
         result = 31 * result + (keywords?.let { Arrays.hashCode(it) } ?: 0)
         result = 31 * result + (images?.let { Arrays.hashCode(it) } ?: 0)
         result = 31 * result + (context?.hashCode() ?: 0)
+        result = 31 * result + (portal?.hashCode() ?: 0)
         return result
     }
 
@@ -134,6 +141,7 @@ class News() : Parcelable {
         keywords = source.createStringArray()
         images = source.createStringArray()
         context = source.readString()
+        portal = source.readString()
     }
 
     override fun describeContents() = 0
@@ -151,6 +159,7 @@ class News() : Parcelable {
         dest.writeStringArray(keywords)
         dest.writeStringArray(images)
         dest.writeString(context)
+        dest.writeString(portal)
     }
 
     companion object {

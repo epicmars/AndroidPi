@@ -1,6 +1,5 @@
 package cn.androidpi.app.ui.viewholder
 
-import android.support.v4.app.FragmentActivity
 import android.view.View
 import cn.androidpi.app.R
 import cn.androidpi.app.databinding.ViewHolderCoverNewsBinding
@@ -22,7 +21,7 @@ class CoverNewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderCoverNewsBi
         val coverNews = data as CoverNews
 
         // news cover pager
-        mNewsCoverAdapter = CoverNewsPageAdapter((itemView.context as FragmentActivity).supportFragmentManager, coverNews)
+        mNewsCoverAdapter = CoverNewsPageAdapter(mFragmentManager, coverNews)
         mBinding.newsPager.adapter = mNewsCoverAdapter
         mBinding.newsPager.offscreenPageLimit = 2
 

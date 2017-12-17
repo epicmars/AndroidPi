@@ -33,6 +33,9 @@ interface NewsDao {
     @Query("select * from news order by publish_time desc limit :count offset :page * :count + :offset")
     fun getNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0) : Single<List<News>>
 
+    @Query("select * from news where portal = :portal or url like '%'||:portal||'%' order by publish_time desc limit :count offset :page * :count + :offset")
+    fun getNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, portal: String) : Single<List<News>>
+
     @Query("select * from news where news_id = :newsId limit 1")
     fun findByNewsId(newsId: String): News?
 }

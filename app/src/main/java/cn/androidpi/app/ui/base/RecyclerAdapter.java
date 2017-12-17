@@ -1,5 +1,6 @@
 package cn.androidpi.app.ui.base;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -24,6 +25,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     private final SparseIntArray mDataViewMap = new SparseIntArray();
     private final SparseArray<Class<? extends BaseViewHolder>> mViewHolderMap= new SparseArray<>();
     private final List<Object> mPayloads = new ArrayList<>();
+    private FragmentManager mFragmentManager;
 
     /**
      * 注册一个或多个BaseViewHolder以用于数据展示。
@@ -48,7 +50,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Class<? extends BaseViewHolder> viewHolderClass = mViewHolderMap.get(viewType);
         // If viewHolderClass is null, the ViewHolder may not be registered
-        return BaseViewHolder.instance(viewHolderClass, parent);
+        return BaseViewHolder.instance(viewHolderClass, parent, mFragmentManager);
     }
 
     @Override
@@ -88,6 +90,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     public List<Object> getPayloads() {
         return mPayloads;
+    }
+
+    public void setFragmentManager(FragmentManager mFragmentManager) {
+        this.mFragmentManager = mFragmentManager;
     }
 
     /**

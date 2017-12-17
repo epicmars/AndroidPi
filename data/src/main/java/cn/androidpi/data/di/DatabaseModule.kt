@@ -31,7 +31,8 @@ class DatabaseModule {
     fun provideNewsDatabase(context: Context): NewsDatabase {
         return Room.databaseBuilder(context, NewsDatabase::class.java, NewsDatabase.DATABASE_NAME)
                 .addMigrations(NEWS_MIGRATION_1_2,
-                        NEWS_MIGRATION_2_3)
+                        NEWS_MIGRATION_2_3,
+                        NEWS_MIGRATION_3_4)
                 .build()
     }
 

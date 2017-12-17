@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LifecycleRegistry;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
 
     protected VDB mBinding;
     protected List<Class> mDataType = new ArrayList<>();
+    protected FragmentManager mFragmentManager;
 
     public BaseViewHolder(View itemView) {
         super(itemView);
@@ -74,6 +76,13 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
             Timber.e(e, "%s 实例化错误。", clazz);
         }
         return null;
+    }
+
+    public static BaseViewHolder instance(Class<? extends BaseViewHolder> clazz, ViewGroup parent, FragmentManager fm) {
+        BaseViewHolder holder = instance(clazz, parent);
+        if (holder != null)
+            holder.mFragmentManager = fm;
+        return holder;
     }
 
     private static void logError(Class<? extends BaseViewHolder> clazz, NoSuchMethodException e) {
