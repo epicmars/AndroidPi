@@ -116,22 +116,15 @@ class NewsRepository @Inject constructor() : NewsRepo {
                         }.toFlowable()
             }
 
-            override fun saveCallResult(result: NewsPageModel) {
+            override fun saveCallResult(result: NewsPageModel) {6
                 // if at least one insertion succeed then it's fresh
-                val pageStr = page.toString()
                 if (result.newsList.isEmpty()) {
                     return
                 }
                 for (news in result.newsList) {
                     val cachedNews = newsDao.findByNewsId(news.newsId!!)
                     if (cachedNews == null) {
-                        news.context = pageStr
                         newsDao.insertNews(news)
-                    } else {
-                        if (cachedNews.context == null || Integer.valueOf(cachedNews.context) == 0) {
-                            cachedNews.context = pageStr
-                            newsDao.updateNews(cachedNews)
-                        }
                     }
                 }
             }
