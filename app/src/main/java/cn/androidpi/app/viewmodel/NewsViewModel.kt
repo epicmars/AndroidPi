@@ -30,11 +30,12 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
     init {
         mNews.value = Resource.loading(NewsPage())
+        mNewsPageModel.lastCachedPageNum = "-1"
     }
 
     fun getLatestNews(isNext: Boolean, count: Int = NewsModel.PAGE_SIZE) {
 
-        val page = if (isNext) mNews.value?.data?.getNextPageNum() else 0
+        val page = if (isNext) mNewsPageModel.page else 0
 
         mNewsRepo.get().getLatestNews(page ?: 0, count, mNews.value?.data?.mOffset ?: 0, mPortal, mNewsPageModel.lastCachedPageNum)
                 .subscribeOn(Schedulers.io())

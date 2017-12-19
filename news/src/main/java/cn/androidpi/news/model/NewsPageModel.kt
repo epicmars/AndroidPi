@@ -11,7 +11,10 @@ class NewsPageModel() {
 
     var newsList: MutableList<News> = mutableListOf()
 
-    constructor(list: List<News>): this() {
-        newsList.addAll(list)
+    var page: Int? = null
+
+    constructor(page: Int, list: List<News>): this() {
+        this.page = page
+        this.newsList.addAll(list)
     }
 }

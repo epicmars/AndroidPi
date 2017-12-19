@@ -11,7 +11,7 @@ import cn.androidpi.app.ui.base.BaseFragment
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.news.model.NewsModel.Companion.portal_163
 import cn.androidpi.news.model.NewsModel.Companion.portal_163_name
-import cn.androidpi.news.model.NewsModel.Companion.portal_all
+import cn.androidpi.news.model.NewsModel.Companion.portal_all_name
 import cn.androidpi.news.model.NewsModel.Companion.portal_ifeng
 import cn.androidpi.news.model.NewsModel.Companion.portal_ifeng_name
 import cn.androidpi.news.model.NewsModel.Companion.portal_qq
@@ -44,7 +44,7 @@ class NewsPagerFragment : BaseFragment<FragmentNewsPagerBinding>() {
     class NewsPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
 
         val portals = arrayOf(null, portal_qq, portal_163, portal_ifeng)
-        val portal_names = arrayOf(portal_all, portal_qq_name, portal_163_name, portal_ifeng_name)
+        val portal_names = arrayOf(portal_all_name, portal_qq_name, portal_163_name, portal_ifeng_name)
 
         override fun getItem(position: Int): Fragment {
             return NewsFragment.newInstance(portals[position])

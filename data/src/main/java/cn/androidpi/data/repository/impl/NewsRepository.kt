@@ -5,7 +5,9 @@ import cn.androidpi.data.remote.api.NewsApi
 import cn.androidpi.data.repository.NetworkBoundFlowable
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.news.entity.News
+import cn.androidpi.news.model.NewsContext
 import cn.androidpi.news.model.NewsPageModel
+import cn.androidpi.news.model.NewsPortalContext
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -96,8 +98,9 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 try {
                     var isContinuous = true
                     for (news in dbResult.newsList) {
-                        val pageNum = Integer.valueOf(news.context)
-                        if (pageNum <= 0) {
+                        val newsContext = NewsContext.fromJson(news.context)
+                        val portalContext = newsContext?.getPortalContext(portal)
+                        if (portalContext?.page == null || portalContext.page!! <= 0) {
                             isContinuous = false
                             break
                         }
@@ -105,6 +108,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
                     return !isContinuous
                 } catch (e: Exception) {
                     // ignore
+                    Timber.e(e)
                 }
                 return true
             }
@@ -112,11 +116,11 @@ class NewsRepository @Inject constructor() : NewsRepo {
             override fun createCall(): Flowable<NewsPageModel> {
                 return refreshNews(page, count)
                         .map { t ->
-                            NewsPageModel(t)
+                            NewsPageModel(page, t)
                         }.toFlowable()
             }
 
-            override fun saveCallResult(result: NewsPageModel) {6
+            override fun saveCallResult(result: NewsPageModel) {
                 // if at least one insertion succeed then it's fresh
                 if (result.newsList.isEmpty()) {
                     return
@@ -131,36 +135,42 @@ class NewsRepository @Inject constructor() : NewsRepo {
 
             override fun updatedDbResult(dbResult: NewsPageModel): Flowable<NewsPageModel> {
                 val result = ArrayList<News>()
-                val pageStr = page.toString()
-                var lastCachedPageNum: String? = cachedPageNum
+                var lastCachedPageNum: String? = null
                 for (i in 0 until dbResult.newsList.size) {
                     val news = dbResult.newsList[i]
-                    try {
-                        val pageNum = Integer.valueOf(news.context)
-                        if (page == 0 || (page > 0 && pageNum > 0)) {
-                            if (news.context != pageStr) {
-                                news.context = pageStr
-                                newsDao.updateNews(news)
-                            }
-                            lastCachedPageNum = news.context
-                            result.add(news)
-                        } else {
-                            lastCachedPageNum = null
-                            break
-                        }
-                    } catch (e: Exception) {
-                        // ignore
+                    var context = NewsContext.fromJson(news.context)
+                    var portalContext = context?.getPortalContext(portal)
+
+                    if (portalContext == null) {
                         lastCachedPageNum = null
-                        break
+                        portalContext = NewsPortalContext(portal, page)
+                        if (context == null) {
+                            context = NewsContext()
+                        }
+                        context.portalContext.add(portalContext)
+                        news.context = context.toJson()
+                        newsDao.updateNews(news)
+                    } else {
+                        // 页面大于零时遇到页面为空或者为零的表示非连续页面
+                        lastCachedPageNum = if (page > 0 && (portalContext.page == null || portalContext.page == 0)) null else portalContext.page.toString()
+                        if (portalContext.page != page) {
+                            portalContext.page = page
+                            news.context = context?.toJson()
+                            newsDao.updateNews(news)
+                        }
+
                     }
+                    // user interface doesn't need this
+                    news.context = null
+                    result.add(news)
                 }
-                val pageModel = NewsPageModel(result)
+                val pageModel = NewsPageModel(page + 1, result)
                 pageModel.lastCachedPageNum = lastCachedPageNum
                 return Flowable.just(pageModel)
             }
         }.getResultAsFlowable()
 
-        if (page == 0) {
+        if (page == 0 && cachedPageNum == "-1") {
             return cache.concatWith(remoteOrCache)
         } else {
             return remoteOrCache
@@ -171,12 +181,12 @@ class NewsRepository @Inject constructor() : NewsRepo {
         if (portal == null) {
             return getNews(page, count, offset)
                     .map { t ->
-                        NewsPageModel(t)
+                        NewsPageModel(page, t)
                     }
         } else {
             return getNews(page, count, offset, portal)
                     .map { t ->
-                        NewsPageModel(t)
+                        NewsPageModel(page, t)
                     }
         }
     }
