@@ -34,10 +34,13 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
     }
 
     fun getLatestNews(isNext: Boolean, count: Int = NewsModel.PAGE_SIZE) {
+        Timber.d("isNext: $mPortal $isNext")
 
-        val page = if (isNext) mNewsPageModel.page else 0
+        val page = if (isNext) mNewsPageModel.nextPage else 0
 
-        mNewsRepo.get().getLatestNews(page ?: 0, count, mNews.value?.data?.mOffset ?: 0, mPortal, mNewsPageModel.lastCachedPageNum)
+        Timber.d("getLatestedNews $page")
+
+        mNewsRepo.get().getLatestNews(page ?: 0, count, 0, mPortal, mNewsPageModel.lastCachedPageNum)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : DisposableSubscriber<NewsPageModel>() {
@@ -48,12 +51,13 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
                     }
 
                     override fun onNext(t: NewsPageModel) {
+                        Timber.d("onNext $mPortal + ${t.page}")
                         mNewsPageModel = t
                         var newsPage = mNews.value?.data
                         if (newsPage == null) {
                             newsPage = NewsPage()
                         }
-                        if (!isNext) {
+                        if (page == 0) {
                             newsPage.firstPage(t.newsList)
                         } else {
                             newsPage.nextPage(t.newsList)

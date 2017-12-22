@@ -12,5 +12,5 @@ import retrofit2.http.Query
 interface NewsApi {
 
     @GET("/api/v1/news/")
-    fun getNews(@Query("page") page: Int, @Query("count") count: Int): Single<List<ResNews>>
+    fun getNews(@Query("page") page: Int, @Query("count") count: Int, @Query("portal") portal: String? = null): Single<List<ResNews>>
 }

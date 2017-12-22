@@ -44,6 +44,7 @@ class NewsPagerFragment : BaseFragment<FragmentNewsPagerBinding>() {
     class NewsPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
 
         val portals = arrayOf(null, portal_qq, portal_163, portal_ifeng)
+//        val portals = arrayOfNulls<String>(1)
         val portal_names = arrayOf(portal_all_name, portal_qq_name, portal_163_name, portal_ifeng_name)
 
         override fun getItem(position: Int): Fragment {

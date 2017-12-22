@@ -29,6 +29,7 @@ class ResNews {
     var url: String? = null
     var keywords: List<String>? = null
     var images: Array<String>? = null
+    var portal: String? = null
 
     class IdBean {
 
@@ -49,8 +50,9 @@ class ResNews {
         news.url = url
         news.keywords = keywords?.toTypedArray()
         news.images = images?.copyOf()
+        news.portal = portal
 
-        if (url != null) {
+        if (portal == null && url != null) {
             when {
                 url!!.indexOf(portal_163) > 0 -> news.portal = portal_163
                 url!!.indexOf(portal_qq) > 0 -> news.portal = portal_qq

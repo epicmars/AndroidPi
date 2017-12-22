@@ -13,39 +13,40 @@ class NewsPage {
     }
 
     var mPage = 0
-    var mOffset = 0
     var mCoverNews: MutableList<News> = ArrayList()
     var mPreviousPages: MutableList<Any> = ArrayList()
     var mCurrentPage: MutableList<Any> = ArrayList()
+    var mAllNews: MutableList<News> = ArrayList()
 
     fun firstPage(newsList: List<News>) {
         if (newsList.isEmpty())
             return
         mPage = 0
-        mOffset = 0
         mCurrentPage.clear()
         mCoverNews.clear()
         mPreviousPages.clear()
+        mAllNews.clear()
 
+        mAllNews.addAll(newsList)
         val coverSize = Math.min(MAX_COVER_SIZE, newsList.size)
         val coverNewsList = newsList.subList(0, coverSize)
-        for (news in coverNewsList) {
+        val iter = coverNewsList.iterator() as MutableIterator
+        iter.forEach { news ->
             if (news.images != null && news.images!!.isNotEmpty()) {
                 mCoverNews.add(news)
+                iter.remove()
             }
         }
         val coverNews = CoverNews.newInstance(mCoverNews)
         if (coverNews != null) {
             mCurrentPage.add(coverNews)
         }
-        if (coverSize < newsList.size) {
-            val remain = newsList.subList(coverSize, newsList.size)
-            for (t in remain) {
-                if (t.images != null && t.images!!.size > IMAGE_NEWS_SIZE_THRESHOLD) {
-                    mCurrentPage.add(NewsThreeImages(t))
-                } else {
-                    mCurrentPage.add(t)
-                }
+
+        for (t in newsList) {
+            if (t.images != null && t.images!!.size > IMAGE_NEWS_SIZE_THRESHOLD) {
+                mCurrentPage.add(NewsThreeImages(t))
+            } else {
+                mCurrentPage.add(t)
             }
         }
     }
@@ -58,14 +59,11 @@ class NewsPage {
         mPage++
         mPreviousPages.addAll(mCurrentPage)
         val iter = newsList.iterator() as MutableIterator
-        val origin = newsList.size
-        iter.forEach {
-            it ->
-            if (mPreviousPages.contains(it))
+        iter.forEach { it ->
+            if (mAllNews.contains(it))
                 iter.remove()
         }
-        val current = newsList.size
-        mOffset += origin - current
+        mAllNews.addAll(newsList)
         mCurrentPage.clear()
         for (t in newsList) {
             if (t.images != null && t.images!!.size > IMAGE_NEWS_SIZE_THRESHOLD) {

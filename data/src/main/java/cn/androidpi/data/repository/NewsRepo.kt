@@ -20,7 +20,7 @@ interface NewsRepo {
      * @param page   页数，默认为第一页
      * @param count  每页新闻数量，默认大小为12篇
      */
-    fun refreshNews(page: Int = 0, count: Int = PAGE_SIZE): Single<List<News>>
+    fun refreshNews(page: Int = 0, count: Int = PAGE_SIZE, portal: String? = null): Single<List<News>>
 
     /**
      * 获取最新的新闻，首先从服务端更新并保存到本地后，在从本地取出。如果从服务端获取失败了，

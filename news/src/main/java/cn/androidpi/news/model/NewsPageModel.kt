@@ -13,8 +13,11 @@ class NewsPageModel() {
 
     var page: Int? = null
 
-    constructor(page: Int, list: List<News>): this() {
+    var nextPage: Int? = null
+
+    constructor(page: Int, nextPage: Int, list: List<News>): this() {
         this.page = page
+        this.nextPage = nextPage
         this.newsList.addAll(list)
     }
 }

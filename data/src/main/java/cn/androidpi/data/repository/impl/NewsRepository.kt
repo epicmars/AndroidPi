@@ -29,8 +29,8 @@ class NewsRepository @Inject constructor() : NewsRepo {
     @Inject
     lateinit var newsDao: NewsDao
 
-    override fun refreshNews(page: Int, count: Int): Single<List<News>> {
-        return newsApi.getNews(page, count)
+    override fun refreshNews(page: Int, count: Int, portal: String?): Single<List<News>> {
+        return newsApi.getNews(page, count, portal)
                 .toObservable()
                 .flatMap { resNews -> Observable.fromIterable(resNews) }
                 .map { resNews -> resNews.toNews() }
@@ -114,9 +114,9 @@ class NewsRepository @Inject constructor() : NewsRepo {
             }
 
             override fun createCall(): Flowable<NewsPageModel> {
-                return refreshNews(page, count)
+                return refreshNews(page, count, portal)
                         .map { t ->
-                            NewsPageModel(page, t)
+                            NewsPageModel(page, page+1, t)
                         }.toFlowable()
             }
 
@@ -135,7 +135,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
 
             override fun updatedDbResult(dbResult: NewsPageModel): Flowable<NewsPageModel> {
                 val result = ArrayList<News>()
-                var lastCachedPageNum: String? = null
+                var lastCachedPageNum: String? = ""
                 for (i in 0 until dbResult.newsList.size) {
                     val news = dbResult.newsList[i]
                     var context = NewsContext.fromJson(news.context)
@@ -152,19 +152,21 @@ class NewsRepository @Inject constructor() : NewsRepo {
                         newsDao.updateNews(news)
                     } else {
                         // 页面大于零时遇到页面为空或者为零的表示非连续页面
-                        lastCachedPageNum = if (page > 0 && (portalContext.page == null || portalContext.page == 0)) null else portalContext.page.toString()
+                        if (lastCachedPageNum != null) {
+                            lastCachedPageNum = if (page > 0 && (portalContext.page == null || portalContext.page == 0)) null else portalContext.page.toString()
+                        }
+                        // ensure always get latest news
                         if (portalContext.page != page) {
-                            portalContext.page = page
+                            portalContext.page = if (lastCachedPageNum == null) null else page
                             news.context = context?.toJson()
                             newsDao.updateNews(news)
                         }
-
                     }
                     // user interface doesn't need this
                     news.context = null
                     result.add(news)
                 }
-                val pageModel = NewsPageModel(page + 1, result)
+                val pageModel = NewsPageModel(page, page + 1, result)
                 pageModel.lastCachedPageNum = lastCachedPageNum
                 return Flowable.just(pageModel)
             }
@@ -181,12 +183,12 @@ class NewsRepository @Inject constructor() : NewsRepo {
         if (portal == null) {
             return getNews(page, count, offset)
                     .map { t ->
-                        NewsPageModel(page, t)
+                        NewsPageModel(page, page+1, t)
                     }
         } else {
             return getNews(page, count, offset, portal)
                     .map { t ->
-                        NewsPageModel(page, t)
+                        NewsPageModel(page, page+1, t)
                     }
         }
     }
