@@ -40,7 +40,7 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
         Timber.d("getLatestedNews $page")
 
-        mNewsRepo.get().getLatestNews(page ?: 0, count, 0, mPortal, mNewsPageModel.lastCachedPageNum)
+        mNewsRepo.get().getLatestNews(page ?: 0, count, mNewsPageModel.offset, mPortal, mNewsPageModel.lastCachedPageNum)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : DisposableSubscriber<NewsPageModel>() {

@@ -86,8 +86,10 @@ class NewsRepository @Inject constructor() : NewsRepo {
 
         val cache = getNewsPage(page, count, offset, portal).toFlowable()
         val remoteOrCache = object : NetworkBoundFlowable<NewsPageModel>() {
+
+            var newsOffset = if (page == 0) 0 else offset
             override fun loadFromDb(): Flowable<NewsPageModel> {
-                return getNewsPage(page, count, offset, portal).toFlowable()
+                return getNewsPage(page, count, newsOffset, portal).toFlowable()
             }
 
             override fun shouldFetch(dbResult: NewsPageModel): Boolean {
@@ -128,6 +130,11 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 for (news in result.newsList) {
                     val cachedNews = newsDao.findByNewsId(news.newsId!!)
                     if (cachedNews == null) {
+//                        if (page > 0) newsOffset++
+                        val context = NewsContext()
+                        val portalContext = NewsPortalContext(null, page)
+                        context.portalContext.add(portalContext)
+                        news.context = context.toJson()
                         newsDao.insertNews(news)
                     }
                 }
@@ -153,11 +160,12 @@ class NewsRepository @Inject constructor() : NewsRepo {
                     } else {
                         // 页面大于零时遇到页面为空或者为零的表示非连续页面
                         if (lastCachedPageNum != null) {
-                            lastCachedPageNum = if (page > 0 && (portalContext.page == null || portalContext.page == 0)) null else portalContext.page.toString()
+                            lastCachedPageNum = if (page > 0 && portalContext.page == 0) null else portalContext.page.toString()
                         }
                         // ensure always get latest news
                         if (portalContext.page != page) {
-                            portalContext.page = if (lastCachedPageNum == null) null else page
+                            // if returned news page is not fresh set lastCachedPageNum to null
+                            portalContext.page = if (lastCachedPageNum == null) 0 else page
                             news.context = context?.toJson()
                             newsDao.updateNews(news)
                         }
@@ -168,6 +176,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 }
                 val pageModel = NewsPageModel(page, page + 1, result)
                 pageModel.lastCachedPageNum = lastCachedPageNum
+                pageModel.offset = newsOffset
                 return Flowable.just(pageModel)
             }
         }.getResultAsFlowable()

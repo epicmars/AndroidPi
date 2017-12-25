@@ -15,6 +15,8 @@ class NewsPageModel() {
 
     var nextPage: Int? = null
 
+    var offset: Int = 0
+
     constructor(page: Int, nextPage: Int, list: List<News>): this() {
         this.page = page
         this.nextPage = nextPage
