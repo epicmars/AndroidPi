@@ -130,12 +130,29 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 for (news in result.newsList) {
                     val cachedNews = newsDao.findByNewsId(news.newsId!!)
                     if (cachedNews == null) {
-//                        if (page > 0) newsOffset++
                         val context = NewsContext()
                         val portalContext = NewsPortalContext(null, page)
-                        context.portalContext.add(portalContext)
+                        context.addPortalContext(portalContext)
                         news.context = context.toJson()
                         newsDao.insertNews(news)
+                    } else {
+                        var context = NewsContext.fromJson(cachedNews.context)
+                        var portalContext = context?.getPortalContext(portal)
+
+                        if (portalContext == null) {
+                            portalContext = NewsPortalContext(portal, page)
+                            if (context == null) {
+                                context = NewsContext()
+                            }
+                            context.addPortalContext(portalContext)
+                            news.context = context?.toJson()
+                            newsDao.updateNews(news)
+                        } else if (portalContext.page != page) {
+                            portalContext.page = page
+                            news.context = context?.toJson()
+                            newsDao.updateNews(news)
+                        }
+
                     }
                 }
             }
@@ -154,18 +171,18 @@ class NewsRepository @Inject constructor() : NewsRepo {
                         if (context == null) {
                             context = NewsContext()
                         }
-                        context.portalContext.add(portalContext)
-                        news.context = context.toJson()
+                        (context as NewsContext).addPortalContext((portalContext as NewsPortalContext))
+                        news.context = (context as NewsContext).toJson()
                         newsDao.updateNews(news)
                     } else {
-                        // 页面大于零时遇到页面为空或者为零的表示非连续页面
+                        // 页面大于零时遇到页面为零的表示非连续页面
                         if (lastCachedPageNum != null) {
-                            lastCachedPageNum = if (page > 0 && portalContext.page == 0) null else portalContext.page.toString()
+                            lastCachedPageNum = if (page > 0 && (portalContext as NewsPortalContext).page == 0) null else (portalContext as NewsPortalContext).page.toString()
                         }
                         // ensure always get latest news
-                        if (portalContext.page != page) {
+                        if ((portalContext as NewsPortalContext).page != page) {
                             // if returned news page is not fresh set lastCachedPageNum to null
-                            portalContext.page = if (lastCachedPageNum == null) 0 else page
+                            (portalContext as NewsPortalContext).page = if (lastCachedPageNum == null) 0 else page
                             news.context = context?.toJson()
                             newsDao.updateNews(news)
                         }

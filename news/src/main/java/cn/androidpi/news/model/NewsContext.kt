@@ -22,12 +22,17 @@ class NewsContext {
         }
     }
 
-    var portalContext: MutableList<NewsPortalContext> = ArrayList()
+    var portalContextList: MutableList<NewsPortalContext> = ArrayList()
+
+    fun addPortalContext(portalContext: NewsPortalContext) {
+        if (!portalContextList.contains(portalContext))
+            portalContextList.add(portalContext)
+    }
 
     fun getPortalContext(portal: String?): NewsPortalContext? {
-        if (portalContext.isEmpty())
+        if (portalContextList.isEmpty())
             return null
-        for (pc in portalContext) {
+        for (pc in portalContextList) {
             if (pc.portal == portal)
                 return pc
         }
@@ -48,4 +53,24 @@ class NewsPortalContext {
 
     var portal: String? = null
     var page: Int? = null
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as NewsPortalContext
+
+        if (portal != other.portal) return false
+        if (page != other.page) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = portal?.hashCode() ?: 0
+        result = 31 * result + (page ?: 0)
+        return result
+    }
+
+
 }
