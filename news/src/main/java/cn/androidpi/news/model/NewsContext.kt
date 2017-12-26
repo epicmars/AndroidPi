@@ -46,13 +46,13 @@ class NewsContext {
 
 class NewsPortalContext {
 
-    constructor(portal: String?, page: Int?) {
+    constructor(portal: String?, page: Int) {
         this.portal = portal
         this.page = page
     }
 
     var portal: String? = null
-    var page: Int? = null
+    var page: Int = 0
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -68,7 +68,7 @@ class NewsPortalContext {
 
     override fun hashCode(): Int {
         var result = portal?.hashCode() ?: 0
-        result = 31 * result + (page ?: 0)
+        result = 31 * result + (page)
         return result
     }
 

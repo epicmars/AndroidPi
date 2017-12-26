@@ -102,7 +102,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
                     for (news in dbResult.newsList) {
                         val newsContext = NewsContext.fromJson(news.context)
                         val portalContext = newsContext?.getPortalContext(portal)
-                        if (portalContext?.page == null || portalContext.page!! <= 0) {
+                        if (portalContext == null || portalContext.page <= 0) {
                             isContinuous = false
                             break
                         }
@@ -145,14 +145,13 @@ class NewsRepository @Inject constructor() : NewsRepo {
                                 context = NewsContext()
                             }
                             context.addPortalContext(portalContext)
-                            news.context = context?.toJson()
-                            newsDao.updateNews(news)
+                            cachedNews.context = context?.toJson()
+                            newsDao.updateNews(cachedNews)
                         } else if (portalContext.page != page) {
                             portalContext.page = page
-                            news.context = context?.toJson()
-                            newsDao.updateNews(news)
+                            cachedNews.context = context?.toJson()
+                            newsDao.updateNews(cachedNews)
                         }
-
                     }
                 }
             }
