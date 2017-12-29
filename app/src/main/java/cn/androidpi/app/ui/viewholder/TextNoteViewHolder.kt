@@ -3,8 +3,11 @@ package cn.androidpi.app.ui.viewholder
 import android.view.View
 import cn.androidpi.app.R
 import cn.androidpi.app.databinding.ViewHolderTextNoteBinding
+import cn.androidpi.app.ui.activity.TemplateActivity
 import cn.androidpi.app.ui.base.BaseViewHolder
 import cn.androidpi.app.ui.base.BindLayout
+import cn.androidpi.app.ui.fragment.FragmentFactory
+import cn.androidpi.app.ui.fragment.TextNoteFragment
 import cn.androidpi.note.entity.TextNote
 
 /**
@@ -19,7 +22,12 @@ class TextNoteViewHolder(itemView: View) : BaseViewHolder<ViewHolderTextNoteBind
         if (data is TextNote) {
             mBinding.tvContent.text = data.text
             itemView.setOnClickListener {
-
+                TemplateActivity.startWith(it.context, fragmentName = TextNoteFragment::class.java.canonicalName,
+                        factory = object : FragmentFactory<TextNoteFragment>() {
+                            override fun create(): TextNoteFragment {
+                                return TextNoteFragment.newInstance(data)
+                            }
+                        })
             }
         }
     }
