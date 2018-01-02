@@ -5,6 +5,7 @@ import android.net.Uri
 import android.view.View
 import cn.androidpi.app.R
 import cn.androidpi.app.databinding.ViewHolderNewsBinding
+import cn.androidpi.app.ui.activity.HtmlActivity
 import cn.androidpi.app.ui.base.BaseViewHolder
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.common.image.glide.GlideApp
@@ -29,7 +30,7 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
 
         itemView.setOnClickListener {
             v: View? ->
-            val action = Intent(Intent.ACTION_VIEW, Uri.parse(news?.url))
+            val action = Intent(HtmlActivity.ACTION_VIEW, Uri.parse(news?.url))
             if (action.resolveActivity(itemView.context.packageManager) != null) {
                 v?.context?.startActivity(action)
             }

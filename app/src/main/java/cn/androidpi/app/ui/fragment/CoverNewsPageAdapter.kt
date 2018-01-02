@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter
 import android.view.View
 import cn.androidpi.app.R
 import cn.androidpi.app.databinding.FragmentCoverNewsBinding
+import cn.androidpi.app.ui.activity.HtmlActivity
 import cn.androidpi.app.ui.base.BaseFragment
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.common.image.glide.GlideApp
@@ -48,7 +49,7 @@ class CoverNewsFragment : BaseFragment<FragmentCoverNewsBinding>() {
 
         mBinding.tvTitle.text = mNews?.title
         mBinding.ivNewsCover.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(mNews?.url)))
+            startActivity(Intent(HtmlActivity.ACTION_VIEW, Uri.parse(mNews?.url)))
         }
         GlideApp.with(this).load(mNews?.images?.get(0)).into(mBinding.ivNewsCover)
     }
