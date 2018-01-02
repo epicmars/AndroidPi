@@ -59,6 +59,10 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
                         }
                         if (page == 0) {
                             newsPage.firstPage(t.newsList)
+                            if (t.newsList.isEmpty()) {
+                                mNews.value = Resource.error("加载新闻出错", newsPage)
+                                return
+                            }
                         } else {
                             newsPage.nextPage(t.newsList)
                         }

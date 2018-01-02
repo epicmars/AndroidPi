@@ -175,7 +175,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                     return
                 val lastVisibleItem = (recyclerView?.layoutManager as LinearLayoutManager)
                         .findLastVisibleItemPosition()
-                val totalItemCount = recyclerView?.layoutManager.itemCount
+                val totalItemCount = recyclerView.layoutManager.itemCount
                 if (totalItemCount <= lastVisibleItem + THRESHOULD) {
                     footerBehavior.refresh()
                 }
@@ -190,11 +190,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mNewsModel.mNews.observe(this, Observer { t ->
             refreshFinished()
             if (t == null || t.isError()) {
-                var message = if (t != null) t.message else "加载失败"
+                val message = if (t != null) t.message else "加载失败"
                 if (t?.data != null && t.data.isFirstPage()) {
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                } else {
                     mAdapter.setPayloads(ErrorItem(message))
+                } else {
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 }
             } else {
                 val currentPage = t.data?.mCurrentPage
