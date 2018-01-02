@@ -12,7 +12,7 @@ class CoverNews(var mNews: MutableList<News>) {
 
     companion object {
         fun newInstance(newsList: List<News>) : CoverNews? {
-            val now = Date()
+            val now = Calendar.getInstance(Locale.CHINA).time
             val validCoverNews = ArrayList<News>()
             if (newsList.isEmpty()) return null
             for (news in newsList) {
