@@ -82,6 +82,9 @@ dependencies {
     api "$glide"
     kapt "$glide_compiler"
 
+    // jsoup
+    implementation "$jsoup"
+
     // zxing
     // implementation "com.google.zxing:android-core:$zxing_version"
     // implementation "com.google.zxing:core:$zxing_version"

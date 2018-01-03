@@ -5,6 +5,7 @@ import android.app.Application
 import cn.androidpi.app.di.DaggerHelper
 import cn.androidpi.common.log.LogHelper
 import cn.androidpi.common.tools.LeakCanaryHelper
+import cn.androidpi.common.web.WebViewHelper
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -23,6 +24,7 @@ class AndroidPiApp : Application(), HasActivityInjector{
         DaggerHelper.inject(this)
         LogHelper.init(this)
         LeakCanaryHelper.init(this)
+        WebViewHelper.configDebugSettings(this)
     }
 
     override fun activityInjector(): AndroidInjector<Activity> {
