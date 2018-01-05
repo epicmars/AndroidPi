@@ -10,22 +10,27 @@ import android.view.View
 import android.webkit.*
 import cn.androidpi.app.R
 import cn.androidpi.app.ui.fragment.HtmlReaderFragment
+import cn.androidpi.common.libs.readability.Readability
+import cn.androidpi.common.libs.readability.ReaderHelper
 import kotlinx.android.synthetic.main.activity_html.*
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.Reader
+import java.util.concurrent.Executors
 
 class HtmlActivity : AppCompatActivity() {
 
     var mSettings: WebSettings? = null
     var mUrl: String? = null
     var mReadabilityJs: String? = null
-    var mReadJs: String? = null
+    var mReaderJs: String? = null
     var mReadListenerJs: String? = null
-    var mIsReadable = false
+    var mIsReadable: Boolean? = null
     var mReaderModelEnable = true
+    var mReaderLoaded = false
+    var mTemplate: String? = null
 
     companion object {
         val ACTION_VIEW = "cn.androidpi.app.components.activity.HtmlActivity.ACTION_VIEW"
@@ -44,6 +49,13 @@ class HtmlActivity : AppCompatActivity() {
         // load web page
         mUrl = intent?.data?.toString()
         web_view.loadUrl(mUrl)
+
+        Executors.newSingleThreadExecutor().execute({
+            val readability = Readability(mUrl)
+            readability.init()
+            val html = ReaderHelper.replaceTemplateById(mTemplate, "article", readability.textHtml)
+            read(html)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -52,7 +64,7 @@ class HtmlActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.findItem(R.id.action_reader_mode)?.setVisible(mIsReadable)
+        menu?.findItem(R.id.action_reader_mode)?.setVisible(mIsReadable ?: false)
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -78,8 +90,9 @@ class HtmlActivity : AppCompatActivity() {
      */
     fun loadJsFromAssets() {
         try {
+            mTemplate = readFromAssets("web/static/readability/template.html")
             mReadabilityJs = readFromAssets("web/static/readability/js/ipreadability-1.7.1.js")
-            mReadJs = readFromAssets("web/static/readability/js/read.js")
+            mReaderJs = readFromAssets("web/static/readability/js/read.js")
             mReadListenerJs = readFromAssets("web/static/readability/js/readlistener.js")
         } catch (e : IOException) {
             Timber.e(e)
@@ -154,6 +167,7 @@ class HtmlActivity : AppCompatActivity() {
      * Toggle the visibility of reader mode action.
      */
     fun toggleReaderModeVisibility(visible: Boolean) {
+        if (mIsReadable == false) return
         mIsReadable = visible
         invalidateOptionsMenu()
     }
@@ -163,7 +177,7 @@ class HtmlActivity : AppCompatActivity() {
     }
 
     fun readPage(view: WebView?) {
-        evaluateJs(view,mReadabilityJs + mReadJs, null)
+        evaluateJs(view,mReadabilityJs + mReaderJs, null)
     }
 
     fun evaluateJs(view: WebView?, jsCode: String?, valueCallback: ValueCallback<String>?) {
@@ -188,6 +202,8 @@ class HtmlActivity : AppCompatActivity() {
     fun read(html: String?) {
         if (html == null || html.equals("null"))
             return
+        if (mReaderLoaded) return
+        mReaderLoaded = true
         runOnUiThread {
             // hide current web_view
             web_view.visibility = View.GONE
