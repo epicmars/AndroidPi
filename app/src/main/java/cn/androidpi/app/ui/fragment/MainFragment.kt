@@ -17,6 +17,11 @@ import cn.androidpi.app.ui.base.BindLayout
 class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     companion object {
+
+        val NAV_IDS = mapOf(R.id.nav_news to 0,
+                R.id.nav_articles to 1,
+                R.id.nav_book to 2)
+
         fun newInstance(): MainFragment {
             return MainFragment()
         }
@@ -32,8 +37,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             override fun getItem(position: Int): Fragment {
                 return when (position) {
                     0 -> NewsPagerFragment.newInstance()
-                    1 -> TodoListFragment.newInstance()
-                    2 -> NotesFragment.newInstance()
+                    1 -> ArticlePagerFragment.newInstance()
+                    2 -> BookmarkListFragment.newInstance()
                     else -> TempFragment.newInstance("An error occurred.")
                 }
             }
@@ -58,20 +63,12 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         mBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             val itemId = item.itemId
-            when (itemId) {
-                R.id.nav_news -> {
-                    mBinding.pager.currentItem = 0
-                    true
-                }
-                R.id.nav_todo -> {
-                    mBinding.pager.currentItem = 1
-                    true
-                }
-                R.id.nav_notes -> {
-                    mBinding.pager.currentItem = 2
-                    true
-                }
-                else -> false
+            val current : Int? =  NAV_IDS[itemId]
+            if (current == null) {
+                false
+            } else {
+                mBinding.pager.currentItem = current
+                true
             }
         }
     }

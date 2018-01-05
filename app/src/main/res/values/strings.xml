@@ -10,6 +10,8 @@
     <!--新闻-->
     <string name="news">科技动态</string>
     <string name="reader_mode">阅读模式</string>
+    <string name="articles">技术文章</string>
+    <string name="book">收藏</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

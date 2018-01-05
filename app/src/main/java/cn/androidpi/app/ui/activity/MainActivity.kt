@@ -8,7 +8,10 @@ import android.view.MenuItem
 import cn.androidpi.app.R
 import cn.androidpi.app.databinding.ActivityMainBinding
 import cn.androidpi.app.ui.base.BaseActivity
+import cn.androidpi.app.ui.fragment.FragmentFactory
 import cn.androidpi.app.ui.fragment.MainFragment
+import cn.androidpi.app.ui.fragment.NotesFragment
+import cn.androidpi.app.ui.fragment.TodoListFragment
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -46,7 +49,20 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         when(itemId) {
-            // todo
+            R.id.nav_todo -> TemplateActivity.startWith(this,
+                    fragmentName = TodoListFragment.javaClass.canonicalName,
+                    factory = object : FragmentFactory<TodoListFragment>() {
+                        override fun create(): TodoListFragment {
+                            return TodoListFragment.newInstance()
+                        }
+                    })
+            R.id.nav_notes -> TemplateActivity.startWith(this,
+                    fragmentName = NotesFragment.javaClass.canonicalName,
+                    factory = object : FragmentFactory<NotesFragment>() {
+                        override fun create(): NotesFragment {
+                            return NotesFragment.newInstance()
+                        }
+                    })
         }
         binding?.drawer?.closeDrawer(GravityCompat.START)
         return true

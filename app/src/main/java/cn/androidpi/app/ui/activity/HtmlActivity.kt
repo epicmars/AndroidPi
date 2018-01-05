@@ -202,9 +202,10 @@ class HtmlActivity : AppCompatActivity() {
     fun read(html: String?) {
         if (html == null || html.equals("null"))
             return
-        if (mReaderLoaded) return
-        mReaderLoaded = true
         runOnUiThread {
+            if (mReaderLoaded)
+                return@runOnUiThread
+            mReaderLoaded = true
             // hide current web_view
             web_view.visibility = View.GONE
             val ft = supportFragmentManager.beginTransaction()

@@ -119,7 +119,7 @@ public class Readability {
         overlay.attr("id", "readOverlay");
         innerDiv.attr("id", "readInner");
 
-        articleTitle.addClass("instapaper_title");
+        articleTitle.addClass("readability_title");
         document.attr("dir", getSuggestedDirection(articleTitle.html()));
 
         /* Glue the structure of our document together. */
