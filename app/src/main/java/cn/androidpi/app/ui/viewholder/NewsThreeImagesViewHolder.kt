@@ -9,8 +9,8 @@ import cn.androidpi.app.ui.activity.HtmlActivity
 import cn.androidpi.app.ui.base.BaseViewHolder
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.common.image.glide.GlideApp
-import cn.androidpi.news.model.NewsPage.Companion.IMAGE_NEWS_SIZE_THRESHOLD
-import cn.androidpi.news.model.NewsThreeImages
+import cn.androidpi.news.vo.NewsPage.Companion.IMAGE_NEWS_SIZE_THRESHOLD
+import cn.androidpi.news.vo.NewsThreeImages
 
 /**
  * Created by jastrelax on 2017/11/30.

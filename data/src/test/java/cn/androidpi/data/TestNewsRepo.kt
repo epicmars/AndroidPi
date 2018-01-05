@@ -6,7 +6,7 @@ import cn.androidpi.data.remote.dto.ResNews
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.data.repository.impl.NewsRepository
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
+import cn.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable

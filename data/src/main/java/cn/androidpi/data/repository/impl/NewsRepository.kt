@@ -5,9 +5,9 @@ import cn.androidpi.data.remote.api.NewsApi
 import cn.androidpi.data.repository.NetworkBoundFlowable
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.model.NewsContext
-import cn.androidpi.news.model.NewsPageModel
-import cn.androidpi.news.model.NewsPortalContext
+import cn.androidpi.news.vo.NewsContext
+import cn.androidpi.news.vo.NewsPagination
+import cn.androidpi.news.vo.NewsPortalContext
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -72,11 +72,11 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 .onErrorResumeNext(getNews(page, count))
     }
 
-    override fun getLatestNews(page: Int, count: Int, offset: Int): Single<NewsPageModel> {
+    override fun getLatestNews(page: Int, count: Int, offset: Int): Single<NewsPagination> {
         return getLatestNews(page, count, offset, null, null).singleOrError()
     }
 
-    override fun getLatestNews(page: Int, count: Int, offset: Int, portal: String?, cachedPageNum: String?): Flowable<NewsPageModel> {
+    override fun getLatestNews(page: Int, count: Int, offset: Int, portal: String?, cachedPageNum: String?): Flowable<NewsPagination> {
         // 目前的获取策略
         // 第一页总是尝试从服务端获取后保存到本地
         // 第二页及其之后的页面首先从本地获取，然后根据本地页面判断是否请求网络
@@ -85,14 +85,14 @@ class NewsRepository @Inject constructor() : NewsRepo {
         // 2. 是否较为陈旧(obsolete)，如果页面较新鲜(fresh)则不请求网络
 
         val cache = getNewsPage(page, count, offset, portal).toFlowable()
-        val remoteOrCache = object : NetworkBoundFlowable<NewsPageModel>() {
+        val remoteOrCache = object : NetworkBoundFlowable<NewsPagination>() {
 
             var newsOffset = if (page == 0) 0 else offset
-            override fun loadFromDb(): Flowable<NewsPageModel> {
+            override fun loadFromDb(): Flowable<NewsPagination> {
                 return getNewsPage(page, count, newsOffset, portal).toFlowable()
             }
 
-            override fun shouldFetch(dbResult: NewsPageModel): Boolean {
+            override fun shouldFetch(dbResult: NewsPagination): Boolean {
                 // if local page is empty or it's the first page
                 if (dbResult.newsList.isEmpty() || page == 0 || cachedPageNum == null) {
                     return true
@@ -115,14 +115,14 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 return true
             }
 
-            override fun createCall(): Flowable<NewsPageModel> {
+            override fun createCall(): Flowable<NewsPagination> {
                 return refreshNews(page, count, portal)
                         .map { t ->
-                            NewsPageModel(page, page+1, t)
+                            NewsPagination(page, page + 1, t)
                         }.toFlowable()
             }
 
-            override fun saveCallResult(result: NewsPageModel) {
+            override fun saveCallResult(result: NewsPagination) {
                 // if at least one insertion succeed then it's fresh
                 if (result.newsList.isEmpty()) {
                     return
@@ -156,7 +156,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
                 }
             }
 
-            override fun updatedDbResult(dbResult: NewsPageModel): Flowable<NewsPageModel> {
+            override fun updatedDbResult(dbResult: NewsPagination): Flowable<NewsPagination> {
                 val result = ArrayList<News>()
                 var lastCachedPageNum: String? = ""
                 for (i in 0 until dbResult.newsList.size) {
@@ -190,7 +190,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
                     news.context = null
                     result.add(news)
                 }
-                val pageModel = NewsPageModel(page, page + 1, result)
+                val pageModel = NewsPagination(page, page + 1, result)
                 pageModel.lastCachedPageNum = lastCachedPageNum
                 pageModel.offset = newsOffset
                 return Flowable.just(pageModel)
@@ -204,16 +204,16 @@ class NewsRepository @Inject constructor() : NewsRepo {
         }
     }
 
-    override fun getNewsPage(page: Int, count: Int, offset: Int, portal: String?): Single<NewsPageModel> {
+    override fun getNewsPage(page: Int, count: Int, offset: Int, portal: String?): Single<NewsPagination> {
         if (portal == null) {
             return getNews(page, count, offset)
                     .map { t ->
-                        NewsPageModel(page, page+1, t)
+                        NewsPagination(page, page + 1, t)
                     }
         } else {
             return getNews(page, count, offset, portal)
                     .map { t ->
-                        NewsPageModel(page, page+1, t)
+                        NewsPagination(page, page + 1, t)
                     }
         }
     }

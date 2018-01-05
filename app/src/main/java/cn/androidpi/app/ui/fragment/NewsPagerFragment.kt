@@ -9,13 +9,13 @@ import cn.androidpi.app.R
 import cn.androidpi.app.databinding.FragmentNewsPagerBinding
 import cn.androidpi.app.ui.base.BaseFragment
 import cn.androidpi.app.ui.base.BindLayout
-import cn.androidpi.news.model.NewsModel.Companion.portal_163
-import cn.androidpi.news.model.NewsModel.Companion.portal_163_name
-import cn.androidpi.news.model.NewsModel.Companion.portal_all_name
-import cn.androidpi.news.model.NewsModel.Companion.portal_ifeng
-import cn.androidpi.news.model.NewsModel.Companion.portal_ifeng_name
-import cn.androidpi.news.model.NewsModel.Companion.portal_qq
-import cn.androidpi.news.model.NewsModel.Companion.portal_qq_name
+import cn.androidpi.news.model.NewsListModel.Companion.portal_163
+import cn.androidpi.news.model.NewsListModel.Companion.portal_163_name
+import cn.androidpi.news.model.NewsListModel.Companion.portal_all_name
+import cn.androidpi.news.model.NewsListModel.Companion.portal_ifeng
+import cn.androidpi.news.model.NewsListModel.Companion.portal_ifeng_name
+import cn.androidpi.news.model.NewsListModel.Companion.portal_qq
+import cn.androidpi.news.model.NewsListModel.Companion.portal_qq_name
 
 /**
  * Created by jastrelax on 2017/12/15.

@@ -1,4 +1,4 @@
-package cn.androidpi.news.model
+package cn.androidpi.news.vo
 
 import cn.androidpi.common.json.GsonHelper
 import com.google.gson.JsonSyntaxException
@@ -40,7 +40,7 @@ class NewsContext {
     }
 
     fun toJson(): String? {
-        return Companion.toJson(this)
+        return toJson(this)
     }
 }
 

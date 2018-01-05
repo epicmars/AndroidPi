@@ -7,7 +7,7 @@ import android.support.test.runner.AndroidJUnit4
 import cn.androidpi.data.local.NewsDatabase
 import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
+import cn.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before

@@ -1,9 +1,9 @@
 package cn.androidpi.data.remote.dto
 
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.model.NewsModel.Companion.portal_163
-import cn.androidpi.news.model.NewsModel.Companion.portal_ifeng
-import cn.androidpi.news.model.NewsModel.Companion.portal_qq
+import cn.androidpi.news.model.NewsListModel.Companion.portal_163
+import cn.androidpi.news.model.NewsListModel.Companion.portal_ifeng
+import cn.androidpi.news.model.NewsListModel.Companion.portal_qq
 import com.google.gson.annotations.SerializedName
 import java.util.*
 

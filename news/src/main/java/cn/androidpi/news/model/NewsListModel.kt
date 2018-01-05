@@ -3,7 +3,7 @@ package cn.androidpi.news.model
 /**
  * Created by jastrelax on 2017/11/7.
  */
-interface NewsModel {
+interface NewsListModel {
 
     companion object {
         // 新闻页面文章数默认大小

@@ -32,7 +32,8 @@ class DatabaseModule {
         return Room.databaseBuilder(context, NewsDatabase::class.java, NewsDatabase.DATABASE_NAME)
                 .addMigrations(NEWS_MIGRATION_1_2,
                         NEWS_MIGRATION_2_3,
-                        NEWS_MIGRATION_3_4)
+                        NEWS_MIGRATION_3_4,
+                        NEWS_MIGRATION_4_5)
                 .build()
     }
 

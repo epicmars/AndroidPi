@@ -6,7 +6,7 @@ import cn.androidpi.app.databinding.ViewHolderCoverNewsBinding
 import cn.androidpi.app.ui.base.BaseViewHolder
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.app.ui.fragment.CoverNewsPageAdapter
-import cn.androidpi.news.model.CoverNews
+import cn.androidpi.news.vo.CoverNews
 
 /**
  * Created by jastrelax on 2017/11/28.

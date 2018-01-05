@@ -1,8 +1,10 @@
 package cn.androidpi.data.di
 
+import cn.androidpi.data.repository.BookmarkRepo
 import cn.androidpi.data.repository.NewsRepo
 import cn.androidpi.data.repository.TextNoteRepo
 import cn.androidpi.data.repository.TodoRepo
+import cn.androidpi.data.repository.impl.BookmarkRepository
 import cn.androidpi.data.repository.impl.NewsRepository
 import cn.androidpi.data.repository.impl.TextNoteRepository
 import cn.androidpi.data.repository.impl.TodoRepository
@@ -27,4 +29,8 @@ abstract class RepoModule {
     @Binds
     @Singleton
     abstract fun provideTextNoteRepo(textNoteRepo: TextNoteRepository): TextNoteRepo
+
+    @Binds
+    @Singleton
+    abstract fun provideBookmarkRepo(bookmarkRepo: BookmarkRepository): BookmarkRepo
 }

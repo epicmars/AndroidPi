@@ -1,11 +1,11 @@
-package cn.androidpi.news.model
+package cn.androidpi.news.vo
 
 import cn.androidpi.news.entity.News
 
 /**
  * Created by jastrelax on 2017/12/16.
  */
-class NewsPageModel() {
+class NewsPagination() {
 
     var lastCachedPageNum: String? = null
 

@@ -15,7 +15,7 @@ import cn.androidpi.app.ui.base.BaseFragment
 import cn.androidpi.app.ui.base.BindLayout
 import cn.androidpi.common.image.glide.GlideApp
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.model.CoverNews
+import cn.androidpi.news.vo.CoverNews
 
 /**
  * Created by jastrelax on 2017/11/21.

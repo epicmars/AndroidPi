@@ -1,8 +1,8 @@
 package cn.androidpi.data.repository
 
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
-import cn.androidpi.news.model.NewsPageModel
+import cn.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
+import cn.androidpi.news.vo.NewsPagination
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -54,7 +54,7 @@ interface NewsRepo {
      * @param count  每页新闻数量，默认大小为12篇
      * @param offset 服务端与本地不同步所造成的偏移量
      */
-    fun getLatestNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0): Single<NewsPageModel>
+    fun getLatestNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0): Single<NewsPagination>
 
     /**
      * 获取新闻。
@@ -64,7 +64,7 @@ interface NewsRepo {
      * @param offset 服务端与本地不同步所造成的偏移量
      * @param portal 门户站点
      */
-    fun getLatestNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, portal: String?, cachedPageNum: String? = null): Flowable<NewsPageModel>
+    fun getLatestNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, portal: String?, cachedPageNum: String? = null): Flowable<NewsPagination>
 
     /**
      * 从本地获取一个新闻页面
@@ -74,5 +74,5 @@ interface NewsRepo {
      * @param offset 服务端与本地不同步所造成的偏移量
      * @param portal 门户站点
      */
-    fun getNewsPage(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, portal: String?): Single<NewsPageModel>
+    fun getNewsPage(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, portal: String?): Single<NewsPagination>
 }

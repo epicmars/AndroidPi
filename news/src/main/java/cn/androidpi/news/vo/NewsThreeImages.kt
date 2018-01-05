@@ -1,4 +1,4 @@
-package cn.androidpi.news.model
+package cn.androidpi.news.vo
 
 import cn.androidpi.news.entity.News
 

@@ -4,9 +4,9 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import cn.androidpi.app.viewmodel.vo.Resource
 import cn.androidpi.data.repository.NewsRepo
-import cn.androidpi.news.model.NewsModel
-import cn.androidpi.news.model.NewsPage
-import cn.androidpi.news.model.NewsPageModel
+import cn.androidpi.news.model.NewsListModel
+import cn.androidpi.news.vo.NewsPage
+import cn.androidpi.news.vo.NewsPagination
 import dagger.Lazy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by jastrelax on 2017/11/7.
  */
-class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
+class NewsViewModel @Inject constructor() : ViewModel(), NewsListModel {
 
     @Inject
     lateinit var mNewsRepo: Lazy<NewsRepo>
@@ -26,14 +26,14 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
 
     var mPortal: String? = null
 
-    var mNewsPageModel = NewsPageModel()
+    var mNewsPageModel = NewsPagination()
 
     init {
         mNews.value = Resource.loading(NewsPage())
         mNewsPageModel.lastCachedPageNum = "-1"
     }
 
-    fun getLatestNews(isNext: Boolean, count: Int = NewsModel.PAGE_SIZE) {
+    fun getLatestNews(isNext: Boolean, count: Int = NewsListModel.PAGE_SIZE) {
         Timber.d("isNext: $mPortal $isNext")
 
         val page = if (isNext) mNewsPageModel.nextPage else 0
@@ -43,14 +43,14 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsModel {
         mNewsRepo.get().getLatestNews(page ?: 0, count, mNewsPageModel.offset, mPortal, mNewsPageModel.lastCachedPageNum)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : DisposableSubscriber<NewsPageModel>() {
+                .subscribe(object : DisposableSubscriber<NewsPagination>() {
 
                     override fun onError(e: Throwable?) {
                         Timber.e(e)
                         mNews.value = Resource.error("加载新闻失败", null)
                     }
 
-                    override fun onNext(t: NewsPageModel) {
+                    override fun onNext(t: NewsPagination) {
                         Timber.d("onNext $mPortal + ${t.page}")
                         mNewsPageModel = t
                         var newsPage = mNews.value?.data

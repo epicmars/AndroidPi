@@ -2,7 +2,7 @@ package cn.androidpi.data.local.dao
 
 import android.arch.persistence.room.*
 import cn.androidpi.news.entity.News
-import cn.androidpi.news.model.NewsModel.Companion.PAGE_SIZE
+import cn.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import io.reactivex.Single
 
 /**

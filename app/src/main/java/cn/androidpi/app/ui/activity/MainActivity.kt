@@ -24,20 +24,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        setSupportActionBar(binding?.toolbar)
 //        supportActionBar?.setDisplayShowTitleEnabled(false)
 
-//        binding?.drawer?.setStatusBarBackground(R.color.transparent)
-//        val toggle = ActionBarDrawerToggle(this, binding?.drawer, binding?.toolbar,
-//                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-//        binding?.drawer?.addDrawerListener(toggle)
-//        toggle.syncState()
-
         binding?.navigationView?.setNavigationItemSelectedListener(this)
 
         if (null === savedInstanceState) {
             initFragments()
         }
-
-        // Example of a call to a native method
-//        sample_text.text = stringFromJNI()
     }
 
     fun initFragments() {
@@ -67,18 +58,4 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding?.drawer?.closeDrawer(GravityCompat.START)
         return true
     }
-
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-//    external fun stringFromJNI(): String
-
-//    companion object {
-//
-//        // Used to load the 'native-lib' library on application startup.
-//        init {
-//            System.loadLibrary("native-lib")
-//        }
-//    }
 }
