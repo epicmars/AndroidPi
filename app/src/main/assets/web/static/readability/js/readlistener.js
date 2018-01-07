@@ -21,7 +21,7 @@ function render() {
     console.log(this + "reader: render" + count++)
     var readablePage = read();
     console.log(this + "reader-complete: " + readablePage);
-    reader.read(readablePage);
+    reader.read(document.documentElement.outerHTML, readablePage);
     loaded = true;
     console.log(this + "reader: " + readablePage);
 }

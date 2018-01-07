@@ -8,7 +8,15 @@
         android:icon="@drawable/ic_reader_mode"
         android:visible="false"
         android:tooltipText="@string/reader_mode"
-        app:showAsAction="always|withText"
+        app:showAsAction="always"
+        tools:visible="true" />
+
+    <item android:id="@+id/action_bookmark"
+        android:title="@string/book"
+        android:icon="@drawable/ic_star_border_24dp"
+        android:visible="false"
+        android:checkable="true"
+        app:showAsAction="always"
         tools:visible="true" />
 
 </menu>

@@ -1,17 +1,20 @@
 package cn.androidpi.app.ui.activity
 
+import android.arch.lifecycle.Observer
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.*
 import cn.androidpi.app.R
+import cn.androidpi.app.ui.base.BaseActivity
 import cn.androidpi.app.ui.fragment.HtmlReaderFragment
+import cn.androidpi.app.viewmodel.HtmlReaderViewModel
 import cn.androidpi.common.libs.readability.Readability
 import cn.androidpi.common.libs.readability.ReaderHelper
+import cn.androidpi.news.entity.Bookmark
 import kotlinx.android.synthetic.main.activity_html.*
 import timber.log.Timber
 import java.io.BufferedReader
@@ -19,8 +22,9 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.io.Reader
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
-class HtmlActivity : AppCompatActivity() {
+class HtmlActivity : BaseActivity() {
 
     var mSettings: WebSettings? = null
     var mUrl: String? = null
@@ -31,6 +35,12 @@ class HtmlActivity : AppCompatActivity() {
     var mReaderModelEnable = true
     var mReaderLoaded = false
     var mTemplate: String? = null
+    var mHtml: String? = null
+    var mArticltHtml: String? = null
+    var mBookmarked = false
+
+    @Inject
+    lateinit var mHtmlReaderViewModel: HtmlReaderViewModel
 
     companion object {
         val ACTION_VIEW = "cn.androidpi.app.components.activity.HtmlActivity.ACTION_VIEW"
@@ -53,18 +63,39 @@ class HtmlActivity : AppCompatActivity() {
         Executors.newSingleThreadExecutor().execute({
             val readability = Readability(mUrl)
             readability.init()
-            val html = ReaderHelper.replaceTemplateById(mTemplate, "article", readability.textHtml)
-            read(html)
+            val articleHtml = ReaderHelper.replaceTemplateById(mTemplate, "article", readability.articleHtml)
+            read(readability.html, articleHtml)
         })
+
+        mHtmlReaderViewModel.mBookmark.observe(this, object : Observer<Bookmark> {
+            override fun onChanged(t: Bookmark?) {
+                if (t != null) {
+                    mBookmarked = true
+                    invalidateOptionsMenu()
+                }
+            }
+        })
+        mHtmlReaderViewModel.getBookmark(mUrl)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_html_toolbar, menu)
+        val item = menu?.findItem(R.id.action_bookmark)
+        if (item != null && !item.isCheckable) {
+            item.setCheckable(true)
+        }
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.action_reader_mode)?.setVisible(mIsReadable ?: false)
+        if (mIsReadable != null) {
+            menu?.findItem(R.id.action_bookmark)?.setVisible(!mIsReadable!!)
+        }
+        if (mBookmarked) {
+            menu?.findItem(R.id.action_bookmark)?.setChecked(true)
+            menu?.findItem(R.id.action_bookmark)?.setIcon(R.drawable.ic_star_fill_24dp)
+        }
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -72,6 +103,14 @@ class HtmlActivity : AppCompatActivity() {
         return when(item?.itemId) {
             R.id.action_reader_mode -> {
                 readPage(web_view)
+                true
+            }
+            R.id.action_bookmark -> {
+                if (!item.isChecked) {
+                    mHtmlReaderViewModel.saveBookmark(mUrl, mHtml, mArticltHtml)
+                    item.setChecked(true)
+                    item.setIcon(R.drawable.ic_star_fill_24dp)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -199,17 +238,19 @@ class HtmlActivity : AppCompatActivity() {
      * @param html
      */
     @JavascriptInterface
-    fun read(html: String?) {
+    fun read(html: String?, articleHtml: String?) {
         if (html == null || html.equals("null"))
             return
         runOnUiThread {
             if (mReaderLoaded)
                 return@runOnUiThread
+            mHtml = html
+            mArticltHtml = articleHtml
             mReaderLoaded = true
             // hide current web_view
             web_view.visibility = View.GONE
             val ft = supportFragmentManager.beginTransaction()
-            ft.replace(R.id.content, HtmlReaderFragment.newInstance(mUrl, html))
+            ft.replace(R.id.content, HtmlReaderFragment.newInstance(mUrl, articleHtml))
             ft.commitAllowingStateLoss()
             toggleReaderModeVisibility(false)
         }

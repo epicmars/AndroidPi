@@ -13,7 +13,7 @@ import cn.androidpi.news.entity.Bookmark
 interface BookmarkDao {
 
     @Insert
-    fun insert(vararg bookmarks: Bookmark)
+    fun insertOne(bookmark: Bookmark): Long
 
     @Update
     fun update(vararg bookmarks: Bookmark)

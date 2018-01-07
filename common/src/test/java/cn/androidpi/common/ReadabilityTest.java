@@ -32,7 +32,7 @@ public class ReadabilityTest {
         System.out.println("--------------------- body -----------------------");
         System.out.println("--------------------------------------------------");
 
-        System.out.println(readability.getTextHtml());
+        System.out.println(readability.getArticleHtml());
         System.out.println("--------------------------------------------------");
         System.out.println("------------------- textHtml ---------------------");
         System.out.println("--------------------------------------------------");
@@ -44,7 +44,7 @@ public class ReadabilityTest {
         Element article = document.getElementById("article");
 
         Element element = document.createElement("div");
-        element.html(readability.getTextHtml());
+        element.html(readability.getArticleHtml());
 
         article.replaceWith(element);
 

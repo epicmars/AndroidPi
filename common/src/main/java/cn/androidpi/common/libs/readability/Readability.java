@@ -61,7 +61,7 @@ public class Readability {
 
     private boolean fetchMultiplePages = true;
 
-    private String textHtml;
+    private String articleHtml;
 
     public Readability(String url) {
         urlString = url;
@@ -77,7 +77,7 @@ public class Readability {
         try {
             document = Jsoup.connect(urlString).get();
             body = document.body();
-            textHtml = parse(document, body);
+            articleHtml = parse(document, body);
         } catch (IOException e) {
             Timber.e(e);
         }
@@ -1146,8 +1146,11 @@ public class Readability {
         FLAGS = FLAG_CLEAN_CONDITIONALLY | FLAG_WEIGHT_CLASSES | FLAG_STRIP_UNLIKELYS;
     }
 
-    public String getTextHtml() {
-        return textHtml;
+    public String getArticleHtml() {
+        return articleHtml;
     }
 
+    public String getHtml() {
+        return document.outerHtml();
+    }
 }

@@ -56,5 +56,6 @@ object NEWS_MIGRATION_4_5 : Migration(4, 5) {
     val TABLE_NAME = "bookmark"
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `timestamp` INTEGER, `url` TEXT, `html` TEXT, `article_html` TEXT, PRIMARY KEY(`id`))")
+        database.execSQL("CREATE UNIQUE INDEX `index_bookmark_url` ON `${TABLE_NAME}` (`url`)")
     }
 }

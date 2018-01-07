@@ -39,6 +39,8 @@ public class Bookmark implements Parcelable {
     @ColumnInfo(name = "article_html")
     private String articleHtml;
 
+    private String title;
+
     public Long getId() {
         return id;
     }
@@ -80,6 +82,9 @@ public class Bookmark implements Parcelable {
     }
 
 
+    public Bookmark() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -92,9 +97,7 @@ public class Bookmark implements Parcelable {
         dest.writeString(this.url);
         dest.writeString(this.html);
         dest.writeString(this.articleHtml);
-    }
-
-    public Bookmark() {
+        dest.writeString(this.title);
     }
 
     protected Bookmark(Parcel in) {
@@ -104,6 +107,7 @@ public class Bookmark implements Parcelable {
         this.url = in.readString();
         this.html = in.readString();
         this.articleHtml = in.readString();
+        this.title = in.readString();
     }
 
     public static final Creator<Bookmark> CREATOR = new Creator<Bookmark>() {

@@ -4,6 +4,7 @@ import cn.androidpi.data.local.dao.BookmarkDao
 import cn.androidpi.data.repository.BookmarkRepo
 import cn.androidpi.news.entity.Bookmark
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,15 +18,21 @@ class BookmarkRepository @Inject constructor() : BookmarkRepo{
     @Inject
     lateinit var mBookmarkDao: BookmarkDao
 
-    override fun save(bookmark: Bookmark): Completable {
-        return Completable.fromAction {
-            mBookmarkDao.insert(bookmark)
+    override fun save(bookmark: Bookmark): Single<Long> {
+        return Single.fromCallable {
+            mBookmarkDao.insertOne(bookmark)
         }
     }
 
     override fun update(bookmark: Bookmark): Completable {
         return Completable.fromAction {
             mBookmarkDao.update(bookmark)
+        }
+    }
+
+    override fun findByUrl(url: String): Maybe<Bookmark> {
+        return Maybe.fromCallable {
+            mBookmarkDao.findByUrl(url)
         }
     }
 

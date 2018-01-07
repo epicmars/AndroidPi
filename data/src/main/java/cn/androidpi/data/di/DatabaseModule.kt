@@ -3,6 +3,7 @@ package cn.androidpi.data.di
 import android.arch.persistence.room.Room
 import android.content.Context
 import cn.androidpi.data.local.*
+import cn.androidpi.data.local.dao.BookmarkDao
 import cn.androidpi.data.local.dao.NewsDao
 import cn.androidpi.data.local.dao.TextNoteDao
 import cn.androidpi.data.local.dao.TodoDao
@@ -53,5 +54,11 @@ class DatabaseModule {
     @Singleton
     fun provideTextNoteDao(noteDb: NoteDatabase): TextNoteDao {
         return noteDb.textNoteDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookmarkDao(newsDb: NewsDatabase): BookmarkDao {
+        return newsDb.bookmarkDao()
     }
 }

@@ -3,6 +3,7 @@ package cn.androidpi.data.repository
 import cn.androidpi.news.entity.Bookmark
 import cn.androidpi.news.model.BookmarkListModel
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 /**
@@ -13,12 +14,17 @@ interface BookmarkRepo {
     /**
      * 保存一条书签。
      */
-    fun save(bookmark: Bookmark): Completable
+    fun save(bookmark: Bookmark): Single<Long>
 
     /**
      * 更新一条书签。
      */
     fun update(bookmark: Bookmark): Completable
+
+    /**
+     * 查找一条书签。
+     */
+    fun findByUrl(url: String): Maybe<Bookmark>
 
     /**
      * 加载第一页书签。

@@ -75,6 +75,11 @@ class TestBookmarkDao {
 
     }
 
+    @Test
+    fun testInsertNull() {
+        mDao?.insert(null)
+    }
+
     fun insertBookmarks(count: Int) {
         for(i in 0 until count) {
             val bm = Bookmark()

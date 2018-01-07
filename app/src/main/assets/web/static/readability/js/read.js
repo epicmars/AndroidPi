@@ -30,7 +30,7 @@ function read() {
 
 function render() {
     var readablePage = read()
-    reader.read(readablePage);
+    reader.read(document.documentElement.outerHTML, readablePage);
 }
 
 // read before images are loaded

@@ -39,6 +39,11 @@ abstract class ViewModelModule {
     abstract fun provideTextNoteEditViewModel(textNoteEditViewModel: TextNoteEditViewModel): ViewModel
 
     @Binds
+    @IntoMap
+    @ViewModelKey(HtmlReaderViewModel::class)
+    abstract fun provideHtmlReaderViewModel(htmlReaderViewModel: HtmlReaderViewModel): ViewModel
+
+    @Binds
     abstract fun provideViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 
 }
