@@ -14,7 +14,8 @@ public class ReaderHelper {
         return htmlTemplate.replaceAll(regex, replacement);
     }
 
-    public static String replaceTemplateById(String htmlTemplate, String id, String replacement) {
+    public static String replaceTemplateByTagId(String htmlTemplate, String id, String replacement) {
+        if (replacement == null) return null;
         try {
             Document document = Jsoup.parse(htmlTemplate);
             Element article = document.getElementById(id);

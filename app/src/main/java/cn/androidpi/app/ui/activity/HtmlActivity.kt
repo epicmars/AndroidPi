@@ -62,9 +62,10 @@ class HtmlActivity : BaseActivity() {
 
         Executors.newSingleThreadExecutor().execute({
             val readability = Readability(mUrl)
-            readability.init()
-            val articleHtml = ReaderHelper.replaceTemplateById(mTemplate, "article", readability.articleHtml)
-            read(readability.html, articleHtml)
+            if (readability.init()) {
+                val articleHtml = ReaderHelper.replaceTemplateByTagId(mTemplate, "article", readability.articleHtml)
+                read(readability.html, articleHtml)
+            }
         })
 
         mHtmlReaderViewModel.mBookmark.observe(this, object : Observer<Bookmark> {
@@ -239,7 +240,7 @@ class HtmlActivity : BaseActivity() {
      */
     @JavascriptInterface
     fun read(html: String?, articleHtml: String?) {
-        if (html == null || html.equals("null"))
+        if (html == null || html.equals("null") || articleHtml == null)
             return
         runOnUiThread {
             if (mReaderLoaded)

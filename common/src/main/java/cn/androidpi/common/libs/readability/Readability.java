@@ -73,14 +73,16 @@ public class Readability {
     }
 
 
-    public void init() {
+    public boolean init() {
         try {
             document = Jsoup.connect(urlString).get();
-            body = document.body();
-            articleHtml = parse(document, body);
         } catch (IOException e) {
             Timber.e(e);
+            return false;
         }
+        articleHtml = parse(document, body);
+        body = document.body();
+        return true;
     }
 
     /**
