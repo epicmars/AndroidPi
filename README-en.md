@@ -2,7 +2,7 @@ AndroidPi
 ==================
 This project is about experiments and explorations of android application development, targeting at application architecture, test driven development, design pattern, etc. , mainly about software engineering in practice.
 
-[Readme中文版](/README-zh.md)
+[Readme中文版](/README.md)
 
 ## MVP or MVVM，which one to choose？
 So far, the architectures I have used in my work are event bus pattern(with Otto library) and MVP, and I have spend some time on my toy projects using the clean architecture and MVVM.There are also many open source project about android application architecture patterns:
