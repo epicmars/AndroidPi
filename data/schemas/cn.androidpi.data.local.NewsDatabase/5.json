@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "8c15218d8f20f2391ea83900d4ab7417",
+    "identityHash": "0e38e6bb510856ed7bf50345fac3ec29",
     "entities": [
       {
         "tableName": "news",
@@ -107,7 +107,7 @@
       },
       {
         "tableName": "bookmark",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `timestamp` INTEGER, `url` TEXT, `html` TEXT, `article_html` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `timestamp` INTEGER, `url` TEXT, `html` TEXT, `article_html` TEXT, `title` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -138,6 +138,12 @@
             "columnName": "article_html",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -161,7 +167,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8c15218d8f20f2391ea83900d4ab7417\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0e38e6bb510856ed7bf50345fac3ec29\")"
     ]
   }
 }

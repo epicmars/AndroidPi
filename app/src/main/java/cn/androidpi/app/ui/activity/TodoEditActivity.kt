@@ -12,10 +12,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.SeekBar
 import cn.androidpi.app.R
+import cn.androidpi.app.databinding.ActivityTodoEditBinding
 import cn.androidpi.app.ui.base.BaseActivity
 import cn.androidpi.app.ui.fragment.DatePickerFragment
 import cn.androidpi.app.ui.fragment.TimePickerFragment
-import cn.androidpi.app.databinding.ActivityTodoEditBinding
 import cn.androidpi.app.view.TodoEditView
 import cn.androidpi.app.viewmodel.TodoEditViewModel
 import cn.androidpi.app.widget.todo.TodoDateTimeView.Companion.TAG_DEADLINE

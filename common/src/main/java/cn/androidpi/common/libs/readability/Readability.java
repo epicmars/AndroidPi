@@ -80,8 +80,8 @@ public class Readability {
             Timber.e(e);
             return false;
         }
-        articleHtml = parse(document, body);
         body = document.body();
+        articleHtml = parse(document, body);
         return true;
     }
 

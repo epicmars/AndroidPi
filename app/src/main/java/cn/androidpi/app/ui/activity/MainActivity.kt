@@ -58,4 +58,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding?.drawer?.closeDrawer(GravityCompat.START)
         return true
     }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+    }
 }

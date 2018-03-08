@@ -77,6 +77,14 @@ public class Bookmark implements Parcelable {
         return articleHtml;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void setArticleHtml(String articleHtml) {
         this.articleHtml = articleHtml;
     }
