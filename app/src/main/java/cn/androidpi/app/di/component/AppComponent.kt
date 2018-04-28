@@ -4,11 +4,11 @@ import cn.androidpi.app.AndroidPiApp
 import cn.androidpi.app.di.module.ActivityInjectorModule
 import cn.androidpi.app.di.module.AppModule
 import cn.androidpi.app.di.module.FragmentInjectorModule
-import cn.androidpi.data.local.dao.NewsDao
-import cn.androidpi.data.local.dao.TodoDao
-import cn.androidpi.data.remote.api.NewsApi
-import cn.androidpi.data.repository.NewsRepo
-import cn.androidpi.data.repository.TodoRepo
+import cn.androidpi.news.local.dao.NewsDao
+import cn.androidpi.news.remote.api.NewsApi
+import cn.androidpi.news.repo.NewsRepo
+import cn.androidpi.note.local.dao.TodoDao
+import cn.androidpi.note.repo.TodoRepo
 import dagger.Component
 import javax.inject.Singleton
 

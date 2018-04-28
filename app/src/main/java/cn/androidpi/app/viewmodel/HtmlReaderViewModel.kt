@@ -2,7 +2,7 @@ package cn.androidpi.app.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import cn.androidpi.data.repository.BookmarkRepo
+import cn.androidpi.news.repo.BookmarkRepo
 import cn.androidpi.news.entity.Bookmark
 import cn.androidpi.news.model.BookmarkModel
 import io.reactivex.MaybeObserver

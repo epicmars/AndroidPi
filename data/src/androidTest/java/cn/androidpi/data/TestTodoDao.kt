@@ -4,8 +4,7 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.util.Log
-import cn.androidpi.data.local.NoteDatabase
-import cn.androidpi.data.local.dao.TodoDao
+import cn.androidpi.note.local.dao.TodoDao
 import cn.androidpi.note.entity.Todo
 import org.junit.After
 import org.junit.Assert.assertEquals

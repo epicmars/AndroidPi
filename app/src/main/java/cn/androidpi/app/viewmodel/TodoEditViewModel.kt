@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModel
 import cn.androidpi.common.color.ColorModel
 import cn.androidpi.common.color.HSV
 import cn.androidpi.common.datetime.DateTimeUtils
-import cn.androidpi.data.repository.TodoRepo
+import cn.androidpi.note.repo.TodoRepo
 import cn.androidpi.note.entity.Todo
 import cn.androidpi.note.model.TodoEditModel
 import io.reactivex.schedulers.Schedulers

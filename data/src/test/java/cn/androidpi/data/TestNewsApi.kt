@@ -1,8 +1,8 @@
 package cn.androidpi.data
 
 import cn.androidpi.common.networks.http.RetrofitClientFactory
-import cn.androidpi.data.remote.api.NewsApi
-import cn.androidpi.data.remote.dto.ResNews
+import cn.androidpi.news.remote.api.NewsApi
+import cn.androidpi.news.remote.dto.ResNews
 import cn.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable

@@ -3,7 +3,7 @@ package cn.androidpi.app.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import cn.androidpi.app.viewmodel.vo.Resource
-import cn.androidpi.data.repository.TodoRepo
+import cn.androidpi.note.repo.TodoRepo
 import cn.androidpi.note.entity.Todo
 import cn.androidpi.note.model.TodoModel
 import dagger.Lazy

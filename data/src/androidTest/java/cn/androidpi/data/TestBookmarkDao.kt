@@ -3,8 +3,7 @@ package cn.androidpi.data
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import cn.androidpi.data.local.NewsDatabase
-import cn.androidpi.data.local.dao.BookmarkDao
+import cn.androidpi.news.local.dao.BookmarkDao
 import cn.androidpi.news.entity.Bookmark
 import org.junit.After
 import org.junit.Assert.assertEquals

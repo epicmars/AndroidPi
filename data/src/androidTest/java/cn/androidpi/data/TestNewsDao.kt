@@ -4,8 +4,7 @@ import android.arch.persistence.room.Room
 import android.database.sqlite.SQLiteConstraintException
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import cn.androidpi.data.local.NewsDatabase
-import cn.androidpi.data.local.dao.NewsDao
+import cn.androidpi.news.local.dao.NewsDao
 import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import org.junit.After

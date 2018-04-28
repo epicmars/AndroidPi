@@ -1,7 +1,7 @@
 package cn.androidpi.app.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import cn.androidpi.data.repository.TextNoteRepo
+import cn.androidpi.note.repo.TextNoteRepo
 import cn.androidpi.note.entity.TextNote
 import cn.androidpi.note.model.TextNoteEditModel
 import io.reactivex.CompletableObserver

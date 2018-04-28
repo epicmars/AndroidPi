@@ -1,10 +1,10 @@
 package cn.androidpi.data
 
-import cn.androidpi.data.local.dao.NewsDao
-import cn.androidpi.data.remote.api.NewsApi
-import cn.androidpi.data.remote.dto.ResNews
-import cn.androidpi.data.repository.NewsRepo
-import cn.androidpi.data.repository.impl.NewsRepository
+import cn.androidpi.news.local.dao.NewsDao
+import cn.androidpi.news.remote.api.NewsApi
+import cn.androidpi.news.remote.dto.ResNews
+import cn.androidpi.news.repo.NewsRepo
+import cn.androidpi.news.repo.impl.NewsRepository
 import cn.androidpi.news.entity.News
 import cn.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import io.reactivex.Single
