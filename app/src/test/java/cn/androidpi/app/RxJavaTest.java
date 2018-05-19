@@ -16,7 +16,57 @@ public class RxJavaTest {
 
     @Test
     public void testErrorHandling() {
-        Observable.just(null)
+        Observable.just("")
+                .flatMap(new Function<String, ObservableSource<String>>() {
+                    @Override
+                    public ObservableSource<String> apply(String s) throws Exception {
+                        return Observable.just("")
+                                .flatMap(new Function<String, ObservableSource<String>>() {
+                                    @Override
+                                    public ObservableSource<String> apply(String s) throws Exception {
+                                        throw new NullPointerException("exception0-1 for test");
+                                    }
+                                })
+                                .flatMap(new Function<String, ObservableSource<String>>() {
+                                    @Override
+                                    public ObservableSource<String> apply(String s) throws Exception {
+                                        throw new NullPointerException("exception0 for test");
+                                    }
+                                }, true);
+                    }
+                }, true)
+                .flatMap(new Function<String, ObservableSource<String>>() {
+                    @Override
+                    public ObservableSource<String> apply(String s) throws Exception {
+                        return Observable.just("test");
+                    }
+                }, true)
+                .doOnError(new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        System.out.println("doOnError0");
+                        throwable.printStackTrace();
+                    }
+                })
+                .flatMap(new Function<String, ObservableSource<String>>() {
+                    @Override
+                    public ObservableSource<String> apply(String s) throws Exception {
+                        throw new NullPointerException("exception1 for test");
+                    }
+                })
+                .doOnError(new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        System.out.println("doOnError1");
+                        throwable.printStackTrace();
+                    }
+                })
+                .flatMap(new Function<String, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(String s) throws Exception {
+                        throw new NullPointerException("exception2 for test");
+                    }
+                })
                 .flatMap(new Function<Object, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
@@ -26,7 +76,8 @@ public class RxJavaTest {
                 .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        System.out.println(throwable);
+                        System.out.println("doOnError2");
+                        throwable.printStackTrace();
                     }
                 })
                 .onErrorReturn(new Function<Throwable, Object>() {
@@ -48,6 +99,7 @@ public class RxJavaTest {
 
                     @Override
                     public void onError(Throwable e) {
+                        System.out.println("onError");
                         System.out.println(e);
                     }
 
