@@ -1,7 +1,7 @@
 package cn.androidpi.app
 
 import android.app.Activity
-import android.app.Application
+import android.support.multidex.MultiDexApplication
 import cn.androidpi.app.di.DaggerHelper
 import cn.androidpi.common.log.LogHelper
 import cn.androidpi.common.tools.LeakCanaryHelper
@@ -14,7 +14,7 @@ import javax.inject.Inject
 /**
  * Created by jastrelax on 2017/11/7.
  */
-class AndroidPiApp : Application(), HasActivityInjector{
+class AndroidPiApp : MultiDexApplication(), HasActivityInjector{
 
     @Inject
     lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>

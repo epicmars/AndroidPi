@@ -1,12 +1,17 @@
 package cn.androidpi.app.ui.activity
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import cn.androidpi.app.R
 import cn.androidpi.app.databinding.ActivityMainBinding
+import cn.androidpi.app.ui.activity.ReactMainActivity.Companion.OVERLAY_PERMISSION_REQ_CODE
 import cn.androidpi.app.ui.base.BaseActivity
 import cn.androidpi.app.ui.fragment.FragmentFactory
 import cn.androidpi.app.ui.fragment.MainFragment
@@ -29,7 +34,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (null === savedInstanceState) {
             initFragments()
         }
+
     }
+
 
     fun initFragments() {
         val ft = supportFragmentManager?.beginTransaction()
