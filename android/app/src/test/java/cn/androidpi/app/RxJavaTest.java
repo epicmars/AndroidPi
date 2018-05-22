@@ -2,12 +2,17 @@ package cn.androidpi.app;
 
 import org.junit.Test;
 
+import java.util.List;
+
+import io.reactivex.CompletableSource;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by jastrelax on 2018/4/27.
@@ -109,5 +114,46 @@ public class RxJavaTest {
                     }
                 });
 
+    }
+
+    @Test
+    public void testListItemMatch() {
+        Observable<Integer> integers = Observable.fromArray(new Integer[]{1, 2, 3});
+        final Observable<String> strings = Observable.fromArray(new String[]{"hello", "world"})
+                .doOnNext(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        System.out.println(Thread.currentThread().getName());
+                    }
+                });
+
+        integers.flatMap(new Function<Integer, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Integer integer) throws Exception {
+                return strings;
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String value) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }
