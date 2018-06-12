@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion rootProject.ext.android.compile_sdk_version
     defaultConfig {
-        applicationId "cn.androidpi.app"
+        applicationId "com.androidpi.app"
         minSdkVersion rootProject.ext.android.min_sdk_version
         targetSdkVersion rootProject.ext.android.target_sdk_version
         versionCode 1

@@ -6,7 +6,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="cn.androidpi.app.ui.activity.TodoEditActivity">
+        tools:context="com.androidpi.app.ui.activity.TodoEditActivity">
 
         <android.support.v7.widget.CardView
             android:id="@+id/btn_todo_options"
@@ -39,7 +39,7 @@
                     android:visibility="gone"
                     tools:visibility="visible">
 
-                    <cn.androidpi.app.widget.todo.TodoDateTimeView
+                    <com.androidpi.app.widget.todo.TodoDateTimeView
                         android:id="@+id/todo_start_time"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:tag="picker-start" />
 
-                    <cn.androidpi.app.widget.todo.TodoDateTimeView
+                    <com.androidpi.app.widget.todo.TodoDateTimeView
                         android:id="@+id/todo_deadline"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

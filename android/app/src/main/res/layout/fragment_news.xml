@@ -23,7 +23,7 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <cn.androidpi.app.widget.pullrefresh.PullDownHeaderView
+            <com.androidpi.app.widget.pullrefresh.PullDownHeaderView
                 android:id="@+id/scroll_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
