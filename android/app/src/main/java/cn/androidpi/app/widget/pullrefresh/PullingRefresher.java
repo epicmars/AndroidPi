@@ -1,4 +1,4 @@
-package cn.androidpi.app.widget;
+package cn.androidpi.app.widget.pullrefresh;
 
 /**
  * An controller of pulling behaviors.

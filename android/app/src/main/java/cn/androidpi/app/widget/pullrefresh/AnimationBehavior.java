@@ -1,4 +1,4 @@
-package cn.androidpi.app.widget;
+package cn.androidpi.app.widget.pullrefresh;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

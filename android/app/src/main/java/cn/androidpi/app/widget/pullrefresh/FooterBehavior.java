@@ -1,4 +1,4 @@
-package cn.androidpi.app.widget;
+package cn.androidpi.app.widget.pullrefresh;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

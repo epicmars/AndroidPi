@@ -9,8 +9,6 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion rootProject.ext.android.compile_sdk_version
 
-
-
     defaultConfig {
         minSdkVersion rootProject.ext.android.min_sdk_version
         targetSdkVersion rootProject.ext.android.target_sdk_version
@@ -75,7 +73,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 
     implementation project(':domain')
-    implementation project(':news')
-    implementation project(':note')
+    api project(':news')
+    api project(':note')
 }
 

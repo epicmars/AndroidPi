@@ -24,7 +24,7 @@ import cn.androidpi.app.ui.viewholder.NewsViewHolder
 import cn.androidpi.app.ui.viewholder.items.ErrorItem
 import cn.androidpi.app.view.NewsView
 import cn.androidpi.app.viewmodel.NewsViewModel
-import cn.androidpi.app.widget.*
+import cn.androidpi.app.widget.pullrefresh.*
 import cn.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import javax.inject.Inject
 
