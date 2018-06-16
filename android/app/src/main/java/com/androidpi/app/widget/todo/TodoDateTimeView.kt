@@ -8,9 +8,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.androidpi.app.R
-import com.androidpi.app.ui.fragment.DatePickerFragment
-import com.androidpi.app.ui.fragment.TimePickerFragment
 import com.androidpi.app.databinding.ViewTodoDatetimeBinding
+import com.androidpi.app.fragment.DatePickerFragment
+import com.androidpi.app.fragment.TimePickerFragment
 import com.androidpi.common.datetime.DateTimeUtils
 import java.util.*
 

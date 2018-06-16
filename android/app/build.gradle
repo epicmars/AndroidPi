@@ -80,7 +80,8 @@ dependencies {
     // multidex
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation project(':domain')
+    implementation project(':buiness')
+    implementation project(':base')
     implementation project(':data')
     implementation project(':common')
 }

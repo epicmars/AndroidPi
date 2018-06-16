@@ -2,7 +2,7 @@ package com.androidpi.app.di.module
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.androidpi.app.viewmodel.*
+import com.androidpi.app.buiness.viewmodel.*
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

@@ -8,6 +8,10 @@ ext {
             min_sdk_version: 19
     ]
 
+    versions = [
+
+    ]
+
     // android plugin
     android_plugin_version = '3.0.0'
 

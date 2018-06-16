@@ -2,6 +2,7 @@ package com.androidpi.app.widget.pullrefresh;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
@@ -20,7 +21,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
     private List<OnPullingListener> mListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     private AtomicBoolean isRefreshing = new AtomicBoolean(false);
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public PullUpFooterBehavior() {
         this(null, null);

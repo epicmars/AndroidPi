@@ -1,7 +1,7 @@
 package com.androidpi.app.di.module
 
+import com.androidpi.app.activity.*
 import com.androidpi.app.di.scope.ActivityScope
-import com.androidpi.app.ui.activity.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

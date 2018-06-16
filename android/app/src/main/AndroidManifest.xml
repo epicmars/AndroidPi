@@ -12,16 +12,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name="com.androidpi.app.ui.activity.MainActivity">
+        <activity android:name="com.androidpi.app.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.androidpi.app.ui.activity.TodoEditActivity" />
-        <activity android:name="com.androidpi.app.ui.activity.TemplateActivity" />
-        <activity android:name="com.androidpi.app.ui.activity.HtmlActivity">
+        <activity android:name="com.androidpi.app.activity.TodoEditActivity" />
+        <activity android:name="com.androidpi.app.activity.TemplateActivity" />
+        <activity android:name="com.androidpi.app.activity.HtmlActivity">
             <intent-filter>
                 <action android:name="cn.androidpi.app.components.activity.HtmlActivity.ACTION_VIEW" />
 
@@ -35,7 +35,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.androidpi.app.ui.activity.TextNoteEditActivity" />
+        <activity android:name="com.androidpi.app.activity.TextNoteEditActivity" />
     </application>
 
 </manifest>

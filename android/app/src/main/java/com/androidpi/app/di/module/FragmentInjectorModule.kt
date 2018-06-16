@@ -1,7 +1,7 @@
 package com.androidpi.app.di.module
 
 import com.androidpi.app.di.scope.FragmentScope
-import com.androidpi.app.ui.fragment.*
+import com.androidpi.app.fragment.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

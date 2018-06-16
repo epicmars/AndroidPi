@@ -62,5 +62,5 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger2_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 
-    implementation project(":domain")
+    implementation project(':base')
 }
