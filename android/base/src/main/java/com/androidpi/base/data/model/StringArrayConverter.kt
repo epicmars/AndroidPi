@@ -1,4 +1,4 @@
-package com.androidpi.base.model
+package com.androidpi.base.data.model
 
 import android.arch.persistence.room.TypeConverter
 

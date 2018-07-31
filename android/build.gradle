@@ -3,7 +3,7 @@ apply from: 'versions.gradle'
 apply from: 'libraries.gradle'
 
 buildscript {
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.2.51'
     repositories {
         google()
         mavenCentral()
@@ -28,18 +28,6 @@ allprojects {
         }
     }
 }
-
-//subprojects {
-//    configurations.all {
-//        resolutionStrategy {
-//            eachDependency {
-//                if (requested.name == "kotlin-compiler-embeddable") {
-//                    useVersion("1.2.30")
-//                }
-//            }
-//        }
-//    }
-//}
 
 task clean(type: Delete) {
     delete rootProject.buildDir

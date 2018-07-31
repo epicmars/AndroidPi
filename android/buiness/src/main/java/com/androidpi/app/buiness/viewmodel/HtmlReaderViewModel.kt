@@ -29,14 +29,16 @@ class HtmlReaderViewModel @Inject constructor() : ViewModel(), BookmarkModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Long> {
-                    override fun onSubscribe(d: Disposable?) {
+                    override fun onSubscribe(d: Disposable) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
-                    override fun onSuccess(t: Long?) {
+                    override fun onSuccess(t: Long) {
                         mBookmark.value?.id = t
                     }
 
-                    override fun onError(e: Throwable?) {
+                    override fun onError(e: Throwable) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
                 })
     }
@@ -55,14 +57,14 @@ class HtmlReaderViewModel @Inject constructor() : ViewModel(), BookmarkModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : MaybeObserver<Bookmark> {
-                    override fun onSubscribe(d: Disposable?) {
+                    override fun onSubscribe(d: Disposable) {
                     }
 
-                    override fun onSuccess(t: Bookmark?) {
+                    override fun onSuccess(t: Bookmark) {
                         mBookmark.value = t
                     }
 
-                    override fun onError(e: Throwable?) {
+                    override fun onError(e: Throwable) {
                     }
 
                     override fun onComplete() {

@@ -1,4 +1,4 @@
-package com.androidpi.base.model
+package com.androidpi.base.data.model
 
 import android.arch.persistence.room.TypeConverter
 import java.util.*
@@ -19,6 +19,5 @@ class DateConverter {
     fun toTimestamp(date: Date?): Long? {
         return date?.time
     }
-
 
 }

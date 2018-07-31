@@ -28,10 +28,10 @@ class TextNoteEditViewModel @Inject constructor() : ViewModel(), TextNoteEditMod
                     override fun onComplete() {
                     }
 
-                    override fun onSubscribe(d: Disposable?) {
+                    override fun onSubscribe(d: Disposable) {
                     }
 
-                    override fun onError(e: Throwable?) {
+                    override fun onError(e: Throwable) {
                     }
                 })
     }

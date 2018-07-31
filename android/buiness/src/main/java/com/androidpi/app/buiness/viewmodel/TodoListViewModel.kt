@@ -31,18 +31,18 @@ class TodoListViewModel @Inject constructor() : ViewModel(), TodoModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Array<Todo>> {
-                    override fun onSubscribe(d: Disposable?) {
+                    override fun onSubscribe(d: Disposable) {
                     }
 
-                    override fun onSuccess(t: Array<Todo>?) {
-                        if (t == null || t.isEmpty()) {
+                    override fun onSuccess(t: Array<Todo>) {
+                        if (t.isEmpty()) {
                             mTodoList.value = Resource.error("待办事项为空", emptyArray())
                         } else {
                             mTodoList.value = Resource.success(t)
                         }
                     }
 
-                    override fun onError(e: Throwable?) {
+                    override fun onError(e: Throwable) {
                         Timber.e(e)
                         mTodoList.value = Resource.error("加载待办事项错误", null)
                     }
@@ -54,14 +54,14 @@ class TodoListViewModel @Inject constructor() : ViewModel(), TodoModel {
                  .subscribeOn(Schedulers.io())
                  .observeOn(AndroidSchedulers.mainThread())
                  .subscribe(object : SingleObserver<Array<Todo>> {
-                    override fun onSubscribe(d: Disposable?) {
+                    override fun onSubscribe(d: Disposable) {
                     }
 
-                    override fun onSuccess(t: Array<Todo>?) {
+                    override fun onSuccess(t: Array<Todo>) {
                         mTodoToday.value = t
                     }
 
-                    override fun onError(e: Throwable?) {
+                    override fun onError(e: Throwable) {
                     }
                 })
     }

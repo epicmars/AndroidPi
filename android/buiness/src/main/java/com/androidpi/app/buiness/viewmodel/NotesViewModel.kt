@@ -28,18 +28,14 @@ class NotesViewModel @Inject constructor(): ViewModel(), TextNotesModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<TextNote>> {
 
-                    override fun onError(e: Throwable?) {
+                    override fun onError(e: Throwable) {
                         mTextNotes.value = Resource.error("加载笔记失败", null)
                     }
 
-                    override fun onSubscribe(d: Disposable?) {
+                    override fun onSubscribe(d: Disposable) {
                     }
 
-                    override fun onSuccess(t: List<TextNote>?) {
-                        if (t == null) {
-                            mTextNotes.value = Resource.error("笔记数据出错啦！", null)
-                            return
-                        }
+                    override fun onSuccess(t: List<TextNote>) {
                         mTextNotes.value = Resource.success(t)
                     }
                 })
