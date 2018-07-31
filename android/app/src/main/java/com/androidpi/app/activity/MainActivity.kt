@@ -29,7 +29,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (null === savedInstanceState) {
             initFragments()
         }
-
     }
 
 

@@ -72,7 +72,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 
     implementation project(':base')
-    api project(':news')
-    api project(':note')
+    api project(':cNews')
+    api project(':cNote')
 }
 
