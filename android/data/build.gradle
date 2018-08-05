@@ -61,7 +61,7 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:$arch_room_compiler_version"
     implementation "android.arch.persistence.room:rxjava2:$arch_room_version"
 
-    implementation rootProject.ext.kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // dagger2
     api "com.google.dagger:dagger:$dagger2_version"

@@ -17,7 +17,10 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
+public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
+
+    private static final long EXIT_DURATION = 300L;
+    private static final long HOLD_ON_DURATION = 1000L;
 
     public interface HeaderListener {
 
@@ -61,7 +64,7 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
-        super.onLayoutChild(parent, child, layoutDirection);
+        boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (mParent == null) {
             mParent = parent;
         }
@@ -71,9 +74,9 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
         if (DEFAULT_HEIGHT == 0) {
             DEFAULT_HEIGHT = child.getHeight();
         }
-        cancelAnimation();
-        setTopAndBottomOffset(-DEFAULT_HEIGHT);
-        return true;
+//        cancelAnimation();
+//        setTopAndBottomOffset(-DEFAULT_HEIGHT);
+        return handled;
     }
 
     @Override
@@ -132,7 +135,6 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         if (type == TYPE_TOUCH) {
-            int top = child.getTop();
             int height = child.getHeight();
             for (HeaderListener l : mListeners) {
                 l.onStopScroll(coordinatorLayout, child, height + getTopAndBottomOffset(), height);
@@ -161,11 +163,16 @@ public class HeaderBehavior<V extends View> extends AnimationBehavior<V> {
             int height = child.getHeight();
             int top = child.getTop();
             int offset = - (height + top);
-            animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, 0);
+            child.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, EXIT_DURATION);
+                }
+            }, HOLD_ON_DURATION);
         }
     }
 
-    private void animateOffsetDeltaTopAndBottom(CoordinatorLayout coordinatorLayout, final V child, int offset, int duration) {
+    private void animateOffsetDeltaTopAndBottom(CoordinatorLayout coordinatorLayout, final V child, int offset, long duration) {
         animateOffsetWithDuration(coordinatorLayout, child, getTopAndBottomOffset() + offset, duration);
     }
 

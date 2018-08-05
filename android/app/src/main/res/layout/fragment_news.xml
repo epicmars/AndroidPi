@@ -23,17 +23,19 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <com.androidpi.app.widget.pullrefresh.PullDownHeaderView
-                android:id="@+id/scroll_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_news"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/white"
-                tools:listitem="@layout/view_holder_news" />
+                tools:listitem="@layout/view_holder_news"
+                />
+
+            <com.androidpi.app.widget.pullrefresh.PullDownHeaderView
+                android:id="@+id/scroll_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <FrameLayout
                 android:id="@+id/scroll_footer"
@@ -46,6 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
             </FrameLayout>
+
 
         </android.support.design.widget.CoordinatorLayout>
     </LinearLayout>

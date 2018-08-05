@@ -2,14 +2,10 @@ ext {
 
     // android
     android = [
-            compile_sdk_version : 26,
-            build_tools_version : "27.0.0",
-            target_sdk_version : 26,
+            compile_sdk_version : 27,
+            build_tools_version : "28.0.1",
+            target_sdk_version : 27,
             min_sdk_version: 19
-    ]
-
-    versions = [
-
     ]
 
     // android plugin
@@ -69,6 +65,5 @@ ext {
     
     // glide compile 
     glide_compiler_version = '4.3.1'
-
 
 }

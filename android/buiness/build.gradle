@@ -52,7 +52,7 @@ dependencies {
     kapt "android.arch.lifecycle:compiler:$arch_lifecycle_version"
 
     // kotlin
-    implementation rootProject.ext.kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // react
     implementation "com.facebook.react:react-native:+" // From node_modules

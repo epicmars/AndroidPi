@@ -17,7 +17,10 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class FooterBehavior<V extends View> extends AnimationBehavior<V> {
+public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
+
+    private static final long EXIT_DURATION = 300L;
+    private static final long HOLD_ON_DURATION = 1000L;
 
     public interface FooterListener {
         void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max);
@@ -73,8 +76,8 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V> {
         if (BASE_LINE == 0) {
             BASE_LINE = parent.getBottom() - parent.getTop();
         }
-        cancelAnimation();
-        setTopAndBottomOffset(BASE_LINE);
+//        cancelAnimation();
+//        setTopAndBottomOffset(BASE_LINE);
         return handled;
     }
 
@@ -87,7 +90,7 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V> {
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         if (type == TYPE_TOUCH) {
-            if (!isInvisible()) {
+            if (isVisible()) {
                 int bottom = coordinatorLayout.getHeight();
                 int top = child.getTop();
                 int height = child.getHeight();
@@ -154,7 +157,14 @@ public class FooterBehavior<V extends View> extends AnimationBehavior<V> {
     }
 
     void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child) {
-        animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, 0);
+        if (isVisible()) {
+            child.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
+                }
+            }, HOLD_ON_DURATION);
+        }
     }
 
     private void offsetTopAndBottom(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int offset) {

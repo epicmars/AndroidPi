@@ -112,7 +112,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
         // To avoid unnecessary task enqueueing.
         if (isRefreshing())
             return;
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // What if multiple tasks is enqueued, check duplicate callbacks.
@@ -128,7 +128,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void refreshComplete() {
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -142,7 +142,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void refreshTimeout() {
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -156,7 +156,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void refreshCancelled() {
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -170,7 +170,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void refreshException(Exception exception) {
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -182,7 +182,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
         });
     }
 
-    public void runOnUIThread(Runnable runnable) {
+    public void runOnUiThread(Runnable runnable) {
         mHandler.post(runnable);
     }
 }

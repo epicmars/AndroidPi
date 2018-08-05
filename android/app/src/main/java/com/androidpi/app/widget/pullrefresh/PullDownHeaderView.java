@@ -3,6 +3,7 @@ package com.androidpi.app.widget.pullrefresh;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,24 +33,29 @@ public class PullDownHeaderView extends FrameLayout implements OnPullingListener
 
         mProgressBar = findViewById(R.id.progress_bar);
         mTvState = findViewById(R.id.tv_state);
-    }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                try {
+                    CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
+                    PullDownHeaderBehavior behavior = (PullDownHeaderBehavior) params.getBehavior();
+                    if (behavior == null) {
+                        behavior = new PullDownHeaderBehavior();
+                        params.setBehavior(behavior);
+                    }
+                    behavior.addOnPullingListener(PullDownHeaderView.this);
+                    behavior.addOnRefreshListener(PullDownHeaderView.this);
+                } catch (Exception e) {
 
-        try {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
-            PullDownHeaderBehavior behavior = (PullDownHeaderBehavior) params.getBehavior();
-            if (behavior == null) {
-                behavior = new PullDownHeaderBehavior();
-                params.setBehavior(behavior);
+                }
             }
-            behavior.addOnPullingListener(this);
-            behavior.addOnRefreshListener(this);
-        } catch (Exception e) {
 
-        }
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+
+            }
+        });
     }
 
     @Override

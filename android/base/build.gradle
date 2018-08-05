@@ -39,5 +39,5 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:$arch_room_version"
 
     api project(':common')
-    implementation rootProject.ext.kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }

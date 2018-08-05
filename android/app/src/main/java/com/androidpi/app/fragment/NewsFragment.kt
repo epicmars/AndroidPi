@@ -85,11 +85,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         //
         val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        if (lpHeader.behavior == null) {
-            lpHeader.behavior = PullDownHeaderBehavior<View>()
-        }
-        val behavior = lpHeader.behavior as PullDownHeaderBehavior
-        behavior.addOnPullingListener(object : OnPullingListener {
+        val headerBehavior = PullDownHeaderBehavior<View>()
+        headerBehavior.addOnPullingListener(object : OnPullingListener {
 
             override fun onStartPulling(max: Int) {
 //                mBinding.pullingProgress.visibility = View.VISIBLE
@@ -105,7 +102,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
 
         })
-        behavior.addOnRefreshListener(object : OnRefreshListener {
+        headerBehavior.addOnRefreshListener(object : OnRefreshListener {
 
             override fun onRefreshStart() {
             }
@@ -120,7 +117,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             override fun onRefreshComplete() {
             }
         })
-        lpHeader.behavior = behavior
+        lpHeader.behavior = headerBehavior
         mBinding.scrollHeader.layoutParams = lpHeader
 
         val lpFooter = mBinding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams

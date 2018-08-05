@@ -12,7 +12,7 @@ import android.view.View;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class ScrollViewBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
+public class ScrollViewBehavior<V extends View> extends ViewOffsetBehavior<V> {
 
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, V child, View dependency) {
@@ -35,7 +35,10 @@ public class ScrollViewBehavior<V extends View> extends CoordinatorLayout.Behavi
         } else if (behavior instanceof FooterBehavior) {
             offset = dependency.getTop() - child.getBottom();
         }
-        ViewCompat.offsetTopAndBottom(child, offset);
+        if (offset != 0) {
+            setTopAndBottomOffset(getTopAndBottomOffset() + offset);
+            return true;
+        }
         return false;
     }
 }
