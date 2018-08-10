@@ -9,13 +9,7 @@ import com.androidpi.app.R
 import com.androidpi.app.base.BaseFragment
 import com.androidpi.app.base.BindLayout
 import com.androidpi.app.databinding.FragmentNewsPagerBinding
-import com.androidpi.news.model.NewsListModel.Companion.portal_163
-import com.androidpi.news.model.NewsListModel.Companion.portal_163_name
-import com.androidpi.news.model.NewsListModel.Companion.portal_all_name
-import com.androidpi.news.model.NewsListModel.Companion.portal_ifeng
-import com.androidpi.news.model.NewsListModel.Companion.portal_ifeng_name
-import com.androidpi.news.model.NewsListModel.Companion.portal_qq
-import com.androidpi.news.model.NewsListModel.Companion.portal_qq_name
+import com.androidpi.news.model.NewsListModel
 
 /**
  * Created by jastrelax on 2017/12/15.
@@ -41,14 +35,13 @@ class NewsPagerFragment : BaseFragment<FragmentNewsPagerBinding>() {
         mBinding.pagerTabs.tabIndicatorColor = view.resources.getColor(android.R.color.primary_text_dark)
     }
 
-    class NewsPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
+    inner class NewsPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
 
-        val portals = arrayOf(null, portal_qq, portal_163, portal_ifeng)
-//        val portals = arrayOfNulls<String>(1)
-        val portal_names = arrayOf(portal_all_name, portal_qq_name, portal_163_name, portal_ifeng_name)
+        val portals = NewsListModel.categories.keys
+        val portal_names = NewsListModel.categories.values
 
         override fun getItem(position: Int): Fragment {
-            return NewsFragment.newInstance(portals[position])
+            return NewsFragment.newInstance(portals.elementAt(position))
         }
 
         override fun getCount(): Int {
@@ -56,7 +49,7 @@ class NewsPagerFragment : BaseFragment<FragmentNewsPagerBinding>() {
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            return portal_names.get(position)
+            return getString(portal_names.elementAt(position))
         }
 
     }

@@ -64,7 +64,7 @@ class TestNewsRepo {
             fakeNews.add(News())
         }
 
-        Mockito.`when`(mNewsApi!!.getNews(page, count))
+        Mockito.`when`(mNewsApi!!.topHeadlines(page, count))
                 .thenReturn(Single.error(IOException("request failed")))
         Mockito.`when`(mNewsDao!!.getNews(page, count))
                 .thenReturn(fakeNews)

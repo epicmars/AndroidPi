@@ -1,7 +1,6 @@
 package com.androidpi.app.widget.pullrefresh;
 
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 /**

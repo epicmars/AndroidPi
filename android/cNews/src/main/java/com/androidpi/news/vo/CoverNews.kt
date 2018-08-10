@@ -16,9 +16,9 @@ class CoverNews(var mNews: MutableList<News>) {
             val validCoverNews = ArrayList<News>()
             if (newsList.isEmpty()) return null
             for (news in newsList) {
-                if (news.publishTime == null)
+                if (news.publishedAt == null)
                     continue
-                val time = DateTimeUtils.parseDateTime(news.publishTime!!)
+                val time = DateTimeUtils.parseDateTime(news.publishedAt!!)
                 if (time > now)
                     continue
                 validCoverNews.add(news)

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">News</string>
+    <string name="category_general">首页</string>
+    <string name="category_technology">技术</string>
+    <string name="category_business">商业</string>
+    <string name="category_entertainment">娱乐</string>
+    <string name="category_health">健康</string>
+    <string name="category_science">科学</string>
+    <string name="category_sports">体育</string>
 </resources>

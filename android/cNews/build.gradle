@@ -34,11 +34,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "NEWS_BASE_URL", "\"http://www.androidpi.cn:8080\""
+            buildConfigField "String", "NEWS_BASE_URL", "\"https://newsapi.org\""
         }
 
         debug {
-            buildConfigField "String", "NEWS_BASE_URL", "\"http://www.androidpi.cn:8080\""
+            buildConfigField "String", "NEWS_BASE_URL", "\"https://newsapi.org\""
         }
     }
 

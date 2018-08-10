@@ -32,6 +32,10 @@ public class Resource<T> {
         return new Resource<>(Status.ERROR, data, msg);
     }
 
+    public static <T> Resource<T> loading() {
+        return loading(null);
+    }
+
     public static <T> Resource<T> loading(@Nullable T data) {
         return new Resource<>(Status.LOADING, data, null);
     }

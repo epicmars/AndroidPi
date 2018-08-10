@@ -52,7 +52,7 @@ class CoverNewsFragment : BaseFragment<FragmentCoverNewsBinding>() {
         mBinding.ivNewsCover.setOnClickListener {
             startActivity(Intent(HtmlActivity.ACTION_VIEW, Uri.parse(mNews?.url)))
         }
-        GlideApp.with(this).load(mNews?.images?.get(0)).into(mBinding.ivNewsCover)
+        GlideApp.with(this).load(mNews?.urlToImage).into(mBinding.ivNewsCover)
     }
 
     override fun onDestroyView() {
@@ -69,7 +69,7 @@ class CoverNewsPageAdapter(fm: FragmentManager?, news: CoverNews?) : FragmentSta
         if (newsList == null || newsList.isEmpty())
             return
         for (news in newsList) {
-            if (news.images == null || news.images!!.isEmpty())
+            if (news.urlToImage == null)
                 continue
             coverNews.add(news)
         }

@@ -87,15 +87,16 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
         for (OnPullingListener l : mListeners) {
             l.onStopPulling(current, max);
         }
-        if (current >= max * 0.9) {
+        if (current >= max) {
             if (isRefreshing())
                 return;
             for (OnRefreshListener l : mRefreshListeners) {
                 l.onRefresh();
             }
-            setIsRefreshing(true);
+            resetScroll(coordinatorLayout, (V)child);
+            setIsRefreshing(false);
         } else {
-            stopScroll(coordinatorLayout, (V)child);
+            stopScroll(coordinatorLayout, (V)child, false);
         }
     }
 
@@ -131,7 +132,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild());
+                stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
             }
         });
@@ -145,7 +146,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild());
+                stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
             }
         });
@@ -159,7 +160,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild());
+                stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
             }
         });
@@ -173,7 +174,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild());
+                stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
             }
         });

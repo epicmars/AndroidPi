@@ -51,7 +51,7 @@ class TestNewsDao {
         val news = createOneNews()
         news.id = null
         news.newsId = "afbadc01239453920"
-        newsDao!!.insertNews(news, news)
+        newsDao!!.insert(news, news)
     }
 
     @Test
@@ -88,7 +88,7 @@ class TestNewsDao {
             createOneNews()
         })
 
-        newsDao!!.insertNews(*newsItems)
+        newsDao!!.insert(*newsItems)
     }
 
     fun createOneNews(): News {

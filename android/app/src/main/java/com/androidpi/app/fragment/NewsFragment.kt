@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.androidpi.app.R
 import com.androidpi.app.base.BaseFragment
 import com.androidpi.app.base.BindLayout
@@ -19,11 +18,8 @@ import com.androidpi.app.base.RecyclerAdapter
 import com.androidpi.app.buiness.view.NewsView
 import com.androidpi.app.buiness.viewmodel.NewsViewModel
 import com.androidpi.app.databinding.FragmentNewsBinding
-import com.androidpi.app.viewholder.CoverNewsViewHolder
 import com.androidpi.app.viewholder.ErrorViewHolder
-import com.androidpi.app.viewholder.NewsThreeImagesViewHolder
 import com.androidpi.app.viewholder.NewsViewHolder
-import com.androidpi.app.viewholder.items.ErrorItem
 import com.androidpi.app.widget.pullrefresh.*
 import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import javax.inject.Inject
@@ -41,15 +37,19 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     lateinit var mAdapter: RecyclerAdapter
 
-    var mPortal: String? = null
+    var mNewsCategory: String? = null
 
     companion object {
 
-        val KEY_PORTAL = "NewsFragment.KEY_PORTAL"
+        val KEY_CATEGORY = "com.androidpi.app.fragment.NewsFragment.KEY_PORTAL"
 
-        fun newInstance(portal: String?): NewsFragment {
+        fun newInstance(): NewsFragment {
+            return NewsFragment()
+        }
+
+        fun newInstance(category: String?): NewsFragment {
             val args = Bundle()
-            args.putString(KEY_PORTAL, portal)
+            args.putString(KEY_CATEGORY, category)
             val fragment = NewsFragment()
             fragment.arguments = args
             return fragment
@@ -62,8 +62,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         // onCreate will not be called, therefore [NewsViewModel] will not be recreated.
         mNewsModel = ViewModelProviders.of(this, mViewModelFactory)
                 .get(NewsViewModel::class.java)
-        mPortal = arguments?.getString(KEY_PORTAL)
-        mNewsModel.mPortal = mPortal
+        mNewsCategory = arguments?.getString(KEY_CATEGORY)
+        mNewsModel.mCategory = mNewsCategory
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -77,9 +77,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         mAdapter = RecyclerAdapter()
         mAdapter.setFragmentManager(childFragmentManager)
-        mAdapter.register(CoverNewsViewHolder::class.java,
-                NewsViewHolder::class.java,
-                NewsThreeImagesViewHolder::class.java,
+        mAdapter.register(NewsViewHolder::class.java,
                 ErrorViewHolder::class.java)
         mBinding.recyclerNews.adapter = mAdapter
 
@@ -89,16 +87,16 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         headerBehavior.addOnPullingListener(object : OnPullingListener {
 
             override fun onStartPulling(max: Int) {
-//                mBinding.pullingProgress.visibility = View.VISIBLE
-//                mBinding.pullingProgress.max = max
+                mBinding.pullingProgress.visibility = View.VISIBLE
+                mBinding.pullingProgress.max = max
             }
 
             override fun onPulling(current: Int, delta: Int, max: Int) {
-//                mBinding.pullingProgress.setProgress(current)
+                mBinding.pullingProgress.setProgress(current)
             }
 
             override fun onStopPulling(current: Int, max: Int) {
-//                mBinding.pullingProgress.visibility = View.GONE
+                mBinding.pullingProgress.visibility = View.GONE
             }
 
         })
@@ -131,7 +129,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
 
             override fun onRefresh() {
-                loadNextPage()
+//                loadNextPage()
             }
 
             override fun onRefreshComplete() {
@@ -143,7 +141,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
 
             override fun onStartPulling(max: Int) {
-                footerBehavior.refresh()
+//                footerBehavior.refresh()
             }
 
             override fun onStopPulling(current: Int, max: Int) {
@@ -174,7 +172,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                         .findLastVisibleItemPosition()
                 val totalItemCount = recyclerView.layoutManager.itemCount
                 if (totalItemCount <= lastVisibleItem + THRESHOULD) {
-                    footerBehavior.refresh()
+//                    footerBehavior.refresh()
                 }
             }
         })
@@ -186,26 +184,31 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         super.onViewCreated(view, savedInstanceState)
         mNewsModel.mNews.observe(this, Observer { t ->
             refreshFinished()
-            val data = t?.data
-            if (t == null || t.isError()) {
-                val message = if (t != null) t.message else "加载失败"
-                if (data != null && data.isFirstPage()) {
-                    mAdapter.setPayloads(ErrorItem(message))
-                } else {
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                val currentPage = data?.mCurrentPage
-                if (currentPage == null || currentPage.isEmpty())
-                    return@Observer
-                if (data.isFirstPage()) {
-                    mAdapter.setPayloads(currentPage)
-                } else {
-                    mAdapter.appendPayloads(data.mPreviousPages, currentPage)
-                }
+            if (t == null) return@Observer
+
+            if (t.isSuccess) {
+                mAdapter.setPayloads(t.data)
             }
+//            val data = t?.data
+//            if (t == null || t.isError()) {
+//                val message = if (t != null) t.message else "加载失败"
+//                if (data != null && data.isFirstPage()) {
+//                    mAdapter.setPayloads(ErrorItem(message))
+//                } else {
+//                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+//                }
+//            } else {
+//                val currentPage = data?.mCurrentPage
+//                if (currentPage == null || currentPage.isEmpty())
+//                    return@Observer
+//                if (data.isFirstPage()) {
+//                    mAdapter.setPayloads(currentPage)
+//                } else {
+//                    mAdapter.appendPayloads(data.mPreviousPages, currentPage)
+//                }
+//            }
         })
-        if (null == savedInstanceState || mNewsModel.mNews.value == null || mNewsModel.mNews.value!!.data!!.isFirstPage()) {
+        if (null == savedInstanceState || mNewsModel.mNews.value == null) {
             loadFirstPage()
         }
     }

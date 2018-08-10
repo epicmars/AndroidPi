@@ -36,6 +36,7 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     private List<FooterListener> mListeners = new ArrayList<>();
     private CoordinatorLayout mParent;
     private V mChild;
+    private boolean isFirstLayout = true;
 
     public FooterBehavior() {
         this(null, null);
@@ -76,8 +77,12 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         if (BASE_LINE == 0) {
             BASE_LINE = parent.getBottom() - parent.getTop();
         }
-//        cancelAnimation();
-//        setTopAndBottomOffset(BASE_LINE);
+
+        if (isFirstLayout) {
+            cancelAnimation();
+            setTopAndBottomOffset(BASE_LINE);
+            isFirstLayout = false;
+        }
         return handled;
     }
 
@@ -156,14 +161,18 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         return mChild;
     }
 
-    void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child) {
+    void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, boolean holdOn) {
         if (isVisible()) {
-            child.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
-                }
-            }, HOLD_ON_DURATION);
+            if (holdOn) {
+                child.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
+                    }
+                }, HOLD_ON_DURATION);
+            } else {
+                animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
+            }
         }
     }
 

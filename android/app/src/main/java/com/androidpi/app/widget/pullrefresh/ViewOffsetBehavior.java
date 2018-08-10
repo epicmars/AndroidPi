@@ -5,6 +5,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.HashSet;
+
 /**
  * Behavior will automatically sets up a {@link ViewOffsetHelper} on a {@link View}.
  *
@@ -28,6 +30,7 @@ public class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavi
         // First let lay the child out
         layoutChild(parent, child, layoutDirection);
 
+        // Restore current offsets in both direction.
         if (mViewOffsetHelper == null) {
             mViewOffsetHelper = new ViewOffsetHelper(child);
         }
@@ -75,4 +78,42 @@ public class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavi
     public int getLeftAndRightOffset() {
         return mViewOffsetHelper != null ? mViewOffsetHelper.getLeftAndRightOffset() : 0;
     }
+
+    public static class Sample {
+        String name;
+
+        public Sample(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Sample sample = (Sample) o;
+
+            return name != null ? name.equals(sample.name) : sample.name == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return name != null ? name.hashCode() : 0;
+        }
+
+
+        public static void main(String[] args) {
+
+            Sample obj1 = new Sample("obj1");
+            Sample obj2 = new Sample("obj2");
+            HashSet<Sample> hashSet = new HashSet();
+            assert obj1 != obj2 : "obj1和obj2不是同一对象";
+            assert obj1.equals(obj2);
+
+            hashSet.add(obj1);
+            assert hashSet.contains(obj1);
+            assert hashSet.contains(obj2);
+        }
+    }
+
 }

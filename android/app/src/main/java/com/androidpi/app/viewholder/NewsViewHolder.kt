@@ -21,11 +21,11 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
     override fun <T : Any?> onBindView(data: T, position: Int) {
         val news = data as? News
         mBinding.tvTitle.text = news?.title
-        mBinding.tvPublishTime.text = news?.publishTime
+        mBinding.tvPublishTime.text = news?.publishedAt
 
-        if (news != null && news.images != null && news.images!!.isNotEmpty()) {
+        if (news != null && news.urlToImage != null) {
             mBinding.ivImage.visibility = View.VISIBLE
-            GlideApp.with(itemView).load(news.images!![0]).into(mBinding.ivImage)
+            GlideApp.with(itemView).load(news.urlToImage).into(mBinding.ivImage)
         }
 
         itemView.setOnClickListener {

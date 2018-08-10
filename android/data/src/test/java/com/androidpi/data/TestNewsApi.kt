@@ -88,7 +88,7 @@ class TestNewsApi {
 
     @Throws(Exception::class)
     fun getNewsByPage(page: Int) {
-        newsApi?.getNews(page, PAGE_SIZE)
+        newsApi?.topHeadlines(page, PAGE_SIZE)
                 ?.subscribe(object : SingleObserver<List<ResNews>> {
 
                     override fun onError(e: Throwable?) {

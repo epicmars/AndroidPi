@@ -95,7 +95,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
             }
             setIsRefreshing(true);
         } else {
-            stopScroll(coordinatorLayout, (V)child);
+            stopScroll(coordinatorLayout, (V)child, false);
         }
     }
 
@@ -134,7 +134,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild());
+                stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
             }
         });
@@ -148,7 +148,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild());
+                stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
             }
         });
@@ -162,7 +162,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild());
+                stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
             }
         });
@@ -176,7 +176,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild());
+                stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
             }
         });

@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     private static final long EXIT_DURATION = 300L;
     private static final long HOLD_ON_DURATION = 1000L;
+    private DecelerateInterpolator inInterpolator = new DecelerateInterpolator(2f);
 
     public interface HeaderListener {
 
@@ -36,6 +39,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     private V mChild;
 
     private int DEFAULT_HEIGHT;
+    private boolean isFirstLayout = true;
 
     public HeaderBehavior() {
         this(null, null);
@@ -74,8 +78,12 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         if (DEFAULT_HEIGHT == 0) {
             DEFAULT_HEIGHT = child.getHeight();
         }
-//        cancelAnimation();
-//        setTopAndBottomOffset(-DEFAULT_HEIGHT);
+        // Relayout should not change current offset.
+        if (isFirstLayout) {
+            cancelAnimation();
+            setTopAndBottomOffset(-DEFAULT_HEIGHT);
+            isFirstLayout = false;
+        }
         return handled;
     }
 
@@ -93,7 +101,9 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         int top = child.getTop();
+        int bottom = child.getBottom();
         int height = child.getHeight();
+        int parentHeight = coordinatorLayout.getHeight();
         // Scrolling may triggered by a fling, we only care about human touch.
         if (type == TYPE_TOUCH) {
             // If header is visible, it will consume the scroll range until it's invisible.
@@ -101,16 +111,16 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                 int offset = 0;
                 if (dy > 0) {
                     // Pulling up.
-                    offset = MathUtils.clamp(-dy, -(height + top), 0);
+                    offset = MathUtils.clamp(-dy, -bottom, 0);
                 } else if (dy < 0) {
                     // Pulling down.
-                    offset = MathUtils.clamp(-dy, 0, -top);
+                    offset = MathUtils.clamp(-dy, 0, parentHeight - (top + height));
                 }
                 if (offset != 0) {
                     for (HeaderListener l : mListeners) {
-                        l.onPreScroll(coordinatorLayout, child, height);
+                        l.onPreScroll(coordinatorLayout, child, parentHeight);
                     }
-                    offsetTopAndBottom(coordinatorLayout, child, offset);
+                    int consumedOffset = offsetTopAndBottom(coordinatorLayout, child, offset);
                     consumed[1] = -offset;
                 }
             }
@@ -158,17 +168,32 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         return mChild;
     }
 
-    protected void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child) {
+    protected void resetScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child) {
+        if (isVisible()) {
+            int offset = - child.getTop();
+            animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, EXIT_DURATION);
+        }
+    }
+
+    private Runnable offsetCallback;
+
+    protected void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, boolean holdOn) {
         if (isVisible()) {
             int height = child.getHeight();
             int top = child.getTop();
             int offset = - (height + top);
-            child.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, EXIT_DURATION);
-                }
-            }, HOLD_ON_DURATION);
+            if (holdOn) {
+                child.getHandler().removeCallbacks(offsetCallback);
+                offsetCallback = new Runnable() {
+                    @Override
+                    public void run() {
+                        animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, EXIT_DURATION);
+                    }
+                };
+                child.postDelayed(offsetCallback, HOLD_ON_DURATION);
+            } else {
+                animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, EXIT_DURATION);
+            }
         }
     }
 
@@ -176,13 +201,20 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         animateOffsetWithDuration(coordinatorLayout, child, getTopAndBottomOffset() + offset, duration);
     }
 
-    private void offsetTopAndBottom(CoordinatorLayout coordinatorLayout, View child, int offset) {
+    private int offsetTopAndBottom(CoordinatorLayout coordinatorLayout, View child, int offset) {
         int current = getTopAndBottomOffset() + offset;
         int height = child.getHeight();
-        setTopAndBottomOffset(current);
+        int consumed = offset;
+        if (current > 0 && offset > 0) {
+            int parentHeight = coordinatorLayout.getHeight();
+            double x = current / (double) parentHeight;
+            consumed = (int) (1f - inInterpolator.getInterpolation((float) x) * offset);
+        }
+        setTopAndBottomOffset(current + consumed);
         for (HeaderListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, height + current, offset, height);
         }
+        return consumed;
     }
 
     private boolean isCompleteVisible() {

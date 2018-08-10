@@ -4,7 +4,7 @@ import android.arch.persistence.room.TypeConverter
 import java.util.*
 
 /**
- * room数据类型转换，日期到Unix时间戳(毫秒)的转换。
+ * Room数据类型转换，日期到Unix时间戳(毫秒)的转换。
  * Created by jastrelax on 2017/6/25.
  */
 

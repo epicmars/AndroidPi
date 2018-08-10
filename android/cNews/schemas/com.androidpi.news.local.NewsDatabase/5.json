@@ -2,51 +2,21 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "f14fea7a91edd002660da86c811620ca",
+    "identityHash": "e7b23f544293b86fb6cd0b3f1679cd34",
     "entities": [
       {
         "tableName": "news",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `news_id` TEXT, `category` TEXT, `origin_title` TEXT, `publish_time` TEXT, `source_name` TEXT, `source_url` TEXT, `title` TEXT, `url` TEXT, `keywords` TEXT, `images` TEXT, `context` TEXT, `portal` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `author` TEXT, `title` TEXT, `description` TEXT, `url` TEXT, `urlToImage` TEXT, `publishedAt` TEXT, `source_id` TEXT, `source_name` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
-            "fieldPath": "newsId",
-            "columnName": "news_id",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "category",
-            "columnName": "category",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "originTitle",
-            "columnName": "origin_title",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "publishTime",
-            "columnName": "publish_time",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "sourceName",
-            "columnName": "source_name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "sourceUrl",
-            "columnName": "source_url",
+            "fieldPath": "author",
+            "columnName": "author",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -57,32 +27,38 @@
             "notNull": false
           },
           {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "url",
             "columnName": "url",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "keywords",
-            "columnName": "keywords",
+            "fieldPath": "urlToImage",
+            "columnName": "urlToImage",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "images",
-            "columnName": "images",
+            "fieldPath": "publishedAt",
+            "columnName": "publishedAt",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "context",
-            "columnName": "context",
+            "fieldPath": "source.id",
+            "columnName": "source_id",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "portal",
-            "columnName": "portal",
+            "fieldPath": "source.name",
+            "columnName": "source_name",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -91,16 +67,16 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
-            "name": "index_news_news_id",
+            "name": "index_news_url",
             "unique": true,
             "columnNames": [
-              "news_id"
+              "url"
             ],
-            "createSql": "CREATE UNIQUE INDEX `index_news_news_id` ON `${TABLE_NAME}` (`news_id`)"
+            "createSql": "CREATE UNIQUE INDEX `index_news_url` ON `${TABLE_NAME}` (`url`)"
           }
         ],
         "foreignKeys": []
@@ -167,7 +143,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f14fea7a91edd002660da86c811620ca\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e7b23f544293b86fb6cd0b3f1679cd34\")"
     ]
   }
 }
