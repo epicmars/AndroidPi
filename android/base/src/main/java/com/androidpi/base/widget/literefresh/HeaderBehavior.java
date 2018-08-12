@@ -1,6 +1,7 @@
 package com.androidpi.base.widget.literefresh;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
@@ -8,8 +9,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.androidpi.base.R;
 
 import timber.log.Timber;
 
@@ -21,26 +21,9 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
-
-    public interface HeaderListener {
-
-        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max);
-
-        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max);
-
-        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max);
-    }
-
-    private List<HeaderListener> mListeners = new ArrayList<>();
-    private CoordinatorLayout mParent;
-    private V mChild;
-
     private int childHeight;
+    private int parentHeight;
     private boolean isFirstLayout = true;
-
-    public HeaderBehavior() {
-        this(null, null);
-    }
 
     public HeaderBehavior(Context context) {
         this(context, null);
@@ -48,38 +31,28 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     public HeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    protected void addHeaderListener(HeaderListener listener) {
-        if (null == listener)
-            return;
-        mListeners.add(listener);
-    }
-
-    protected void removeHeaderListener(HeaderListener listener) {
-        if (null == listener) {
-            return;
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.HeaderBehavior, 0, 0);
+        if (a.hasValue(R.styleable.HeaderBehavior_maxOffset)) {
+            maxOffset = a.getFloat(R.styleable.HeaderBehavior_maxOffset, 0.618f);
         }
-        mListeners.remove(listener);
+        a.recycle();
     }
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        if (mParent == null) {
-            mParent = parent;
-        }
-        if (mChild == null) {
-            mChild = child;
-        }
-        if (childHeight == 0) {
-            childHeight = child.getHeight();
-        }
+        childHeight = child.getHeight();
+        parentHeight = parent.getHeight();
         // Relayout should not change current offset.
         if (isFirstLayout) {
             cancelAnimation();
             setTopAndBottomOffset(-childHeight);
             isFirstLayout = false;
+        }
+
+        // Compute max offset.
+        if (maxOffset <= 1f) {
+            maxOffset *= parent.getHeight();
         }
         return handled;
     }
@@ -90,6 +63,9 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         boolean started = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (started) {
             cancelAnimation();
+            for (ScrollListener l : mListeners) {
+                l.onStartScroll(coordinatorLayout, child, (int) maxOffset);
+            }
         }
         return started;
     }
@@ -97,25 +73,26 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         int bottom = child.getBottom();
-        int parentHeight = coordinatorLayout.getHeight();
+        // Height of child may have changed.
+        float maxOffset = Math.max(this.maxOffset, child.getHeight());
         // Scrolling may triggered by a fling, we only care about human touch.
         if (type == TYPE_TOUCH) {
             // If header is visible, it will consume the scroll range until it's invisible.
             if (isVisible()) {
-                int offset = 0;
+                float offset = 0;
                 if (dy > 0) {
                     // Pulling up.
                     offset = MathUtils.clamp(-dy, -bottom, 0);
                 } else if (dy < 0) {
                     // Pulling down.
-                    offset = MathUtils.clamp(-dy, 0, parentHeight - bottom);
+                    offset = MathUtils.clamp(-dy, 0, maxOffset - bottom);
                 }
                 if (offset != 0) {
-                    for (HeaderListener l : mListeners) {
-                        l.onPreScroll(coordinatorLayout, child, parentHeight);
+                    for (ScrollListener l : mListeners) {
+                        l.onPreScroll(coordinatorLayout, child, (int) maxOffset);
                     }
-                    consumeOffset(coordinatorLayout, child, offset);
-                    consumed[1] = -offset;
+                    consumeOffset(coordinatorLayout, child, (int) offset);
+                    consumed[1] = - (int) offset;
                 }
             }
         }
@@ -136,6 +113,17 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         }
     }
 
+    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset) {
+        int current = getTopAndBottomOffset();
+        int consumed = onConsumeOffset(current, coordinatorLayout.getHeight(), offset);
+        current += consumed;
+        setTopAndBottomOffset(current);
+        for (ScrollListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, child.getHeight() + current, offset, (int) maxOffset, true);
+        }
+        return consumed;
+    }
+
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
         // If header is visible, consume the fling.
@@ -154,8 +142,8 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         if (type == TYPE_TOUCH) {
             int height = child.getHeight();
-            for (HeaderListener l : mListeners) {
-                l.onStopScroll(coordinatorLayout, child, height + getTopAndBottomOffset(), height);
+            for (ScrollListener l : mListeners) {
+                l.onStopScroll(coordinatorLayout, child, height + getTopAndBottomOffset(), (int) maxOffset);
             }
         }
     }
@@ -166,28 +154,6 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         mListeners.clear();
         mParent = null;
         mChild = null;
-    }
-
-    public CoordinatorLayout getParent() {
-        return mParent;
-    }
-
-    public V getChild() {
-        return mChild;
-    }
-
-    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset) {
-        int current = getTopAndBottomOffset();
-        int height = child.getHeight();
-        int parentHeight = coordinatorLayout.getHeight();
-        int consumed = onConsumeOffset(current, parentHeight, offset);
-        Timber.d("%d %d %d %d", parentHeight, current, offset, consumed);
-        current += consumed;
-        setTopAndBottomOffset(current);
-        for (HeaderListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, height + current, offset, height);
-        }
-        return consumed;
     }
 
     protected int onConsumeOffset(int current, int parentHeight, int offset) {

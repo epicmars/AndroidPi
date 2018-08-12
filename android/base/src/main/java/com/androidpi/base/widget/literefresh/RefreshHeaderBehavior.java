@@ -16,23 +16,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by jastrelax on 2017/11/17.
  */
 
-public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> implements HeaderBehavior.HeaderListener,
+public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> implements AnimationOffsetBehavior.ScrollListener,
         Refresher {
-
-    private DecelerateInterpolator downInterpolator = new DecelerateInterpolator(1.5f);
 
     private static final long EXIT_DURATION = 300L;
     private static final long HOLD_ON_DURATION = 500L;
     private static final long REVEAL_DURATION = 500L;
 
-    private List<OnPullingListener> mListeners = new ArrayList<>();
+    private DecelerateInterpolator downInterpolator = new DecelerateInterpolator(1.5f);
+    private List<OnPullListener> mPullListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     private AtomicBoolean isRefreshing = new AtomicBoolean(false);
     private Handler mHandler = new Handler();
-
-    public RefreshHeaderBehavior() {
-        this(null, null);
-    }
 
     public RefreshHeaderBehavior(Context context) {
         this(context, null);
@@ -40,19 +35,19 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
 
     public RefreshHeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        addHeaderListener(this);
+        addScrollListener(this);
     }
 
-    public void addOnPullingListener(OnPullingListener listener) {
+    public void addOnPullingListener(OnPullListener listener) {
         if (null == listener)
             return;
-        mListeners.add(listener);
+        mPullListeners.add(listener);
     }
 
-    public void removeOnPullingListener(OnPullingListener listener) {
+    public void removeOnPullingListener(OnPullListener listener) {
         if (null == listener)
             return;
-        mListeners.remove(listener);
+        mPullListeners.remove(listener);
     }
 
     public void addOnRefreshListener(OnRefreshListener listener) {
@@ -68,60 +63,75 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
-        for (OnPullingListener l : mListeners) {
+    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
+        for (OnPullListener l : mPullListeners) {
             l.onStartPulling(max);
         }
+    }
+
+    @Override
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
         for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshStart();
         }
     }
 
     @Override
-    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max) {
-        for (OnPullingListener l : mListeners) {
+    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
+        for (OnPullListener l : mPullListeners) {
             l.onPulling(current, delta, max);
         }
-        if (current >= max * 0.9) {
-            for (OnRefreshListener l : mRefreshListeners) {
-                l.onRefreshReady();
+        if (current >= readyRefreshOffset()) {
+            if (isTouch) {
+                for (OnRefreshListener l : mRefreshListeners) {
+                    l.onRefreshReady();
+                }
             }
         }
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
-        for (OnPullingListener l : mListeners) {
+        for (OnPullListener l : mPullListeners) {
             l.onStopPulling(current, max);
         }
-        if (current >= max) {
+        if (current >= readyRefreshOffset()) {
+            startRefreshing();
+        } else {
+            stopScroll((V)child, false);
+        }
+    }
+
+    private void startRefreshing() {
+        if (!mRefreshListeners.isEmpty()) {
             if (isRefreshing())
                 return;
             for (OnRefreshListener l : mRefreshListeners) {
                 l.onRefresh();
             }
-            hide();
             setIsRefreshing(true);
+            reset();
         } else {
-            stopScroll(coordinatorLayout, (V)child, false);
+            hide();
         }
     }
 
     private Runnable offsetCallback;
-    protected void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, boolean holdOn) {
+
+    private void stopScroll(boolean holdOn) {
+        stopScroll(getChild(), holdOn);
+    }
+
+    protected void stopScroll(@NonNull V child, boolean holdOn) {
         if (isVisible()) {
-            if (holdOn) {
-                child.getHandler().removeCallbacks(offsetCallback);
-                offsetCallback = new Runnable() {
-                    @Override
-                    public void run() {
-                        resetOffsetWithDuration(coordinatorLayout, child, EXIT_DURATION);
-                    }
-                };
-                child.postDelayed(offsetCallback, HOLD_ON_DURATION);
-            } else {
-                resetOffsetWithDuration(coordinatorLayout, child, EXIT_DURATION);
-            }
+            child.getHandler().removeCallbacks(offsetCallback);
+            offsetCallback = new Runnable() {
+                @Override
+                public void run() {
+                    hide();
+                }
+            };
+            child.postOnAnimationDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
         }
     }
 
@@ -135,6 +145,10 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         return consumed;
     }
 
+    private int readyRefreshOffset() {
+        return getChild().getHeight();
+    }
+
     protected void reveal() {
         if (!isVisible()) {
             if (getChild() == null) return;
@@ -142,17 +156,17 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         }
     }
 
-    protected void hide() {
+    protected void reset() {
         if (isVisible()) {
             int offset = - getChild().getTop();
             animateOffsetWithDuration(getTopAndBottomOffset() + offset, EXIT_DURATION);
         }
     }
 
-    private void resetOffsetWithDuration(CoordinatorLayout coordinatorLayout, final V child, long duration) {
-        int offset = - (child.getHeight() + child.getTop());
-        if (offset > 0) return;
-        animateOffsetWithDuration(getTopAndBottomOffset() + offset, duration);
+    private void hide() {
+        int offset = - getChild().getBottom();
+        if (offset >= 0) return;
+        animateOffsetWithDuration(getTopAndBottomOffset() + offset, EXIT_DURATION);
     }
 
     public boolean isRefreshing() {
@@ -188,7 +202,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild(), true);
+                stopScroll(true);
                 setIsRefreshing(false);
             }
         });
@@ -202,7 +216,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild(), true);
+                stopScroll(true);
                 setIsRefreshing(false);
             }
         });
@@ -216,7 +230,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild(), true);
+                stopScroll(true);
                 setIsRefreshing(false);
             }
         });
@@ -230,7 +244,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefreshComplete();
                 }
-                stopScroll(getParent(), getChild(), true);
+                stopScroll(true);
                 setIsRefreshing(false);
             }
         });

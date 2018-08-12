@@ -8,9 +8,6 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
@@ -22,20 +19,9 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     private static final long EXIT_DURATION = 300L;
     private static final long HOLD_ON_DURATION = 1000L;
 
-    public interface FooterListener {
-        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max);
-
-        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max);
-
-        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max);
-    }
-
     private int DEFAULT_HEIGHT;
     private int BASE_LINE;
 
-    private List<FooterListener> mListeners = new ArrayList<>();
-    private CoordinatorLayout mParent;
-    private V mChild;
     private boolean isFirstLayout = true;
 
     public FooterBehavior() {
@@ -50,27 +36,9 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         super(context, attrs);
     }
 
-    public void addFooterListener(FooterListener listener) {
-        if (null == listener)
-            return;
-        mListeners.add(listener);
-    }
-
-    public void removeFooterListener(FooterListener listener) {
-        if (null == listener)
-            return;
-        mListeners.remove(listener);
-    }
-
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        if (mParent == null) {
-            mParent = parent;
-        }
-        if (mChild == null) {
-            mChild = child;
-        }
         if (DEFAULT_HEIGHT == 0) {
             DEFAULT_HEIGHT = child.getHeight();
         }
@@ -110,8 +78,8 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                     offset = MathUtils.clamp(-dy, -height + (bottom - top), 0);
                 }
                 if (offset != 0) {
-                    for (FooterListener l : mListeners) {
-                        l.onPreScroll(coordinatorLayout, child, height);
+                    for (ScrollListener l : mListeners) {
+                        l.onStartScroll(coordinatorLayout, child, height);
                     }
                     offsetTopAndBottom(coordinatorLayout, child, offset);
                     consumed[1] = -offset;
@@ -139,7 +107,7 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         if (type == TYPE_TOUCH) {
-            for (FooterListener l : mListeners) {
+            for (ScrollListener l : mListeners) {
                 l.onStopScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset(), child.getHeight());
             }
         }
@@ -151,14 +119,6 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         mListeners.clear();
         mParent = null;
         mChild = null;
-    }
-
-    public CoordinatorLayout getParent() {
-        return mParent;
-    }
-
-    public V getChild() {
-        return mChild;
     }
 
     void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, boolean holdOn) {
@@ -178,8 +138,8 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     private void offsetTopAndBottom(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int offset) {
         setTopAndBottomOffset(getTopAndBottomOffset() + offset);
-        for (FooterListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset() , -offset, child.getHeight());
+        for (ScrollListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset() , -offset, child.getHeight(), true);
         }
     }
 

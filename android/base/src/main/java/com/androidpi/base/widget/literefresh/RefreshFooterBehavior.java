@@ -16,16 +16,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by jastrelax on 2017/11/19.
  */
 
-public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> implements Refresher, FooterBehavior.FooterListener {
+public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> implements Refresher, AnimationOffsetBehavior.ScrollListener {
 
-    private List<OnPullingListener> mListeners = new ArrayList<>();
+    private List<OnPullListener> mListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     private AtomicBoolean isRefreshing = new AtomicBoolean(false);
     private Handler mHandler = new Handler(Looper.getMainLooper());
-
-    public RefreshFooterBehavior() {
-        this(null, null);
-    }
 
     public RefreshFooterBehavior(Context context) {
         this(context, null);
@@ -33,16 +29,16 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
 
     public RefreshFooterBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        addFooterListener(this);
+        addScrollListener(this);
     }
 
-    public void addOnPullingListener(OnPullingListener listener) {
+    public void addOnPullingListener(OnPullListener listener) {
         if (null == listener)
             return;
         mListeners.add(listener);
     }
 
-    public void removeOnPullingListener(OnPullingListener listener) {
+    public void removeOnPullingListener(OnPullListener listener) {
         if (null == listener)
             return;
         mListeners.remove(listener);
@@ -61,18 +57,22 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
-        for (OnPullingListener l : mListeners) {
+    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
+        for (OnPullListener l : mListeners) {
             l.onStartPulling(max);
         }
+    }
+
+    @Override
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
         for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshStart();
         }
     }
 
     @Override
-    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max) {
-        for (OnPullingListener l : mListeners) {
+    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
+        for (OnPullListener l : mListeners) {
             l.onPulling(current, delta, max);
         }
         if (current >= max * 0.9) {
@@ -84,7 +84,7 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
-        for (OnPullingListener l : mListeners) {
+        for (OnPullListener l : mListeners) {
             l.onStopPulling(current, max);
         }
         if (current >= max * 0.9) {

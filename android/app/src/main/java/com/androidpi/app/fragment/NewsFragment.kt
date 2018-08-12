@@ -68,10 +68,10 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mNewsModel.mCategory = mNewsCategory
 
         mNewsModel.mNews.observe(this, Observer { t ->
-            refreshFinished()
             if (t == null) return@Observer
 
             if (t.isSuccess) {
+                refreshFinished()
                 if (t.data == null) {
                     mAdapter.setPayloads(ErrorItem("数据为空"))
                     return@Observer
@@ -82,6 +82,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                     mAdapter.addPayloads(t.data?.newsList)
                 }
             } else if (t.isError) {
+                refreshFinished()
                 mAdapter.setPayloads(ErrorItem("加载失败"))
             } else if (t.isLoading) {
 
@@ -106,8 +107,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         //
         val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        val headerBehavior = RefreshHeaderBehavior<View>()
-        headerBehavior.addOnPullingListener(object : OnPullingListener {
+        val headerBehavior = RefreshHeaderBehavior<View>(context)
+        headerBehavior.addOnPullingListener(object : OnPullListener {
 
             override fun onStartPulling(max: Int) {
                 mBinding.pullingProgress.visibility = View.VISIBLE
@@ -119,7 +120,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
 
             override fun onStopPulling(current: Int, max: Int) {
-                mBinding.pullingProgress.visibility = View.GONE
+                mBinding.pullingProgress.setProgress(current)
+//                mBinding.pullingProgress.visibility = View.GONE
             }
 
         })
@@ -159,7 +161,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
         })
 
-        footerBehavior.addOnPullingListener(object : OnPullingListener {
+        footerBehavior.addOnPullingListener(object : OnPullListener {
             override fun onPulling(current: Int, delta: Int, max: Int) {
             }
 

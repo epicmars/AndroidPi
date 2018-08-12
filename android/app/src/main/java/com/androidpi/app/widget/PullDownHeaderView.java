@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.androidpi.app.R;
-import com.androidpi.base.widget.literefresh.OnPullingListener;
+import com.androidpi.base.widget.literefresh.OnPullListener;
 import com.androidpi.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.base.widget.literefresh.RefreshHeaderBehavior;
 
@@ -17,7 +17,7 @@ import com.androidpi.base.widget.literefresh.RefreshHeaderBehavior;
  * Created by jastrelax on 2017/11/21.
  */
 
-public class PullDownHeaderView extends FrameLayout implements OnPullingListener, OnRefreshListener {
+public class PullDownHeaderView extends FrameLayout implements OnPullListener, OnRefreshListener {
 
     private ProgressBar mProgressBar;
     private TextView mTvState;
@@ -44,7 +44,7 @@ public class PullDownHeaderView extends FrameLayout implements OnPullingListener
                     CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
                     RefreshHeaderBehavior behavior = (RefreshHeaderBehavior) params.getBehavior();
                     if (behavior == null) {
-                        behavior = new RefreshHeaderBehavior();
+                        behavior = new RefreshHeaderBehavior(context);
                         params.setBehavior(behavior);
                     }
                     behavior.addOnPullingListener(PullDownHeaderView.this);

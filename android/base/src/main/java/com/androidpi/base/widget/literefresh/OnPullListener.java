@@ -4,7 +4,7 @@ package com.androidpi.base.widget.literefresh;
  * Created by jastrelax on 2017/11/16.
  */
 
-public interface OnPullingListener {
+public interface OnPullListener {
 
     void onStartPulling(int max);
 
