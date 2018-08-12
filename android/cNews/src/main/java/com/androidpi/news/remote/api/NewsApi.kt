@@ -10,6 +10,9 @@ import retrofit2.http.*
  */
 interface NewsApi {
 
+    /**
+     * https://newsapi.org/docs/endpoints/top-headlines
+     */
     @GET("/v2/top-headlines")
     fun topHeadlines(@Query("country") country: String = "cn",
                      @Query("category") category: String? = null,

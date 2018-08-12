@@ -1,6 +1,8 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
+import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
+import android.util.AttributeSet;
 import android.view.View;
 
 /**
@@ -11,7 +13,14 @@ import android.view.View;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class ScrollViewBehavior<V extends View> extends ViewOffsetBehavior<V> {
+public class RefreshContentBehavior<V extends View> extends ViewOffsetBehavior<V> {
+
+    public RefreshContentBehavior() {
+    }
+
+    public RefreshContentBehavior(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, V child, View dependency) {

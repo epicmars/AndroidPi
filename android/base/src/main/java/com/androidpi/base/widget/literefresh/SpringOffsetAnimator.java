@@ -1,13 +1,9 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
 import android.support.animation.DynamicAnimation;
 import android.support.animation.FloatValueHolder;
 import android.support.animation.SpringAnimation;
 import android.support.animation.SpringForce;
-import android.support.design.widget.CoordinatorLayout;
-import android.view.View;
-
-import static android.support.animation.SpringForce.DAMPING_RATIO_NO_BOUNCY;
 
 /**
  * Created by jastrelax on 2018/8/8.
@@ -24,7 +20,7 @@ public class SpringOffsetAnimator extends OffsetAnimator {
     }
 
     @Override
-    public void animateOffsetWithDuration(CoordinatorLayout coordinatorLayout, View child, int current, int offset, long duration, AnimationOffsetBehavior.AnimationUpdateListener listener) {
+    public void animateOffsetWithDuration(int current, int offset, long duration, AnimationUpdateListener listener) {
         if (null == springAnimation) {
             springAnimation = new SpringAnimation(new FloatValueHolder());
         } else {
@@ -47,7 +43,7 @@ public class SpringOffsetAnimator extends OffsetAnimator {
         });
 
         SpringForce springForce = new SpringForce()
-                .setDampingRatio(DAMPING_RATIO_NO_BOUNCY)
+                .setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
                 .setFinalPosition(offset);
 
         springAnimation

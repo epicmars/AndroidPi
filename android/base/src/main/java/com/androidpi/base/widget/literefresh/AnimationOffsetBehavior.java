@@ -1,11 +1,9 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
 /**
  * Created by jastrelax on 2017/11/20.
@@ -13,9 +11,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<V> {
 
-    public static interface AnimationUpdateListener {
-        void onAnimationUpdate(int value);
-    }
 
     private OffsetAnimator offsetAnimator = new SpringOffsetAnimator();
 
@@ -31,7 +26,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
         offsetAnimator.cancel();
     }
 
-    public void animateOffsetWithDuration(CoordinatorLayout coordinatorLayout, final V child, int offset, long duration) {
+    public void animateOffsetWithDuration(int offset, long duration) {
         int current = getTopAndBottomOffset();
         if (offset == current) {
             if (offsetAnimator != null && offsetAnimator.isRunning()) {
@@ -39,7 +34,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
             }
             return;
         }
-        offsetAnimator.animateOffsetWithDuration(coordinatorLayout, child, current, offset, duration, new AnimationUpdateListener() {
+        offsetAnimator.animateOffsetWithDuration(current, offset, duration, new OffsetAnimator.AnimationUpdateListener() {
             @Override
             public void onAnimationUpdate(int value) {
                 setTopAndBottomOffset(value);

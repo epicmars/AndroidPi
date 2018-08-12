@@ -3,6 +3,7 @@ package com.androidpi.app.fragment
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.View
 import com.androidpi.app.R
@@ -35,7 +36,10 @@ class NewsPagerFragment : BaseFragment<FragmentNewsPagerBinding>() {
         mBinding.pagerTabs.tabIndicatorColor = view.resources.getColor(android.R.color.primary_text_dark)
     }
 
-    inner class NewsPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
+    /**
+     * ViewPager的嵌套，FragmentStatePagerAdapter会导致PullDownRefreshBehavior崩溃
+     */
+    inner class NewsPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
 
         val portals = NewsListModel.categories.keys
         val portal_names = NewsListModel.categories.values

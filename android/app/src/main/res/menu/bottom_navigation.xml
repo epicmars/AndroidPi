@@ -13,4 +13,8 @@
         android:title="@string/book"
         android:icon="@drawable/ic_book_black_24dp"/>
 
+    <item android:id="@+id/nav_me"
+        android:title="@string/me"
+        android:icon="@drawable/ic_person_black_24dp"/>
+
 </menu>

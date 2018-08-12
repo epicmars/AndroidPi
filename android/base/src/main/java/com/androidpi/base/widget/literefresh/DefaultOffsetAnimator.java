@@ -1,9 +1,7 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.support.design.widget.CoordinatorLayout;
-import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 /**
@@ -13,12 +11,7 @@ public class DefaultOffsetAnimator extends OffsetAnimator {
 
     private ValueAnimator mOffsetAnimator;
 
-    public void animateOffsetWithDuration(CoordinatorLayout coordinatorLayout,
-                                          final View child,
-                                          int current,
-                                          int offset,
-                                          long duration,
-                                          AnimationOffsetBehavior.AnimationUpdateListener listener) {
+    public void animateOffsetWithDuration(int current, int offset, long duration, AnimationUpdateListener listener) {
         if (mOffsetAnimator == null) {
             mOffsetAnimator = new ValueAnimator();
             mOffsetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());

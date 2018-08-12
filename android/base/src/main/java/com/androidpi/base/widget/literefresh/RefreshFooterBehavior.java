@@ -1,7 +1,8 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
@@ -12,28 +13,27 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by jastrelax on 2017/11/17.
+ * Created by jastrelax on 2017/11/19.
  */
 
-public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> implements HeaderBehavior.HeaderListener,
-        PullingRefresher {
+public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> implements Refresher, FooterBehavior.FooterListener {
 
     private List<OnPullingListener> mListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     private AtomicBoolean isRefreshing = new AtomicBoolean(false);
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
-    public PullDownHeaderBehavior() {
+    public RefreshFooterBehavior() {
         this(null, null);
     }
 
-    public PullDownHeaderBehavior(Context context) {
+    public RefreshFooterBehavior(Context context) {
         this(context, null);
     }
 
-    public PullDownHeaderBehavior(Context context, AttributeSet attrs) {
+    public RefreshFooterBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        addHeaderListener(this);
+        addFooterListener(this);
     }
 
     public void addOnPullingListener(OnPullingListener listener) {
@@ -87,14 +87,13 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
         for (OnPullingListener l : mListeners) {
             l.onStopPulling(current, max);
         }
-        if (current >= max) {
+        if (current >= max * 0.9) {
             if (isRefreshing())
                 return;
             for (OnRefreshListener l : mRefreshListeners) {
                 l.onRefresh();
             }
-            resetScroll(coordinatorLayout, (V)child);
-            setIsRefreshing(false);
+            setIsRefreshing(true);
         } else {
             stopScroll(coordinatorLayout, (V)child, false);
         }
@@ -113,9 +112,12 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
         // To avoid unnecessary task enqueueing.
         if (isRefreshing())
             return;
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // What if multiple tasks is enqueued, check duplicate callbacks.
+                if (isRefreshing())
+                    return;
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefresh();
                 }
@@ -126,7 +128,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
 
     @Override
     public void refreshComplete() {
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -140,7 +142,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
 
     @Override
     public void refreshTimeout() {
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -154,7 +156,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
 
     @Override
     public void refreshCancelled() {
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -168,7 +170,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
 
     @Override
     public void refreshException(Exception exception) {
-        runOnUIThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -180,7 +182,7 @@ public class PullDownHeaderBehavior<V extends View> extends HeaderBehavior<V> im
         });
     }
 
-    public void runOnUIThread(Runnable runnable) {
+    public void runOnUiThread(Runnable runnable) {
         mHandler.post(runnable);
     }
 }

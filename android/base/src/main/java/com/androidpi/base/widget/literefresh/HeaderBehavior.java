@@ -1,17 +1,17 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
@@ -21,9 +21,6 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
-    private static final long EXIT_DURATION = 300L;
-    private static final long HOLD_ON_DURATION = 1000L;
-    private DecelerateInterpolator inInterpolator = new DecelerateInterpolator(2f);
 
     public interface HeaderListener {
 
@@ -38,7 +35,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     private CoordinatorLayout mParent;
     private V mChild;
 
-    private int DEFAULT_HEIGHT;
+    private int childHeight;
     private boolean isFirstLayout = true;
 
     public HeaderBehavior() {
@@ -75,13 +72,13 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         if (mChild == null) {
             mChild = child;
         }
-        if (DEFAULT_HEIGHT == 0) {
-            DEFAULT_HEIGHT = child.getHeight();
+        if (childHeight == 0) {
+            childHeight = child.getHeight();
         }
         // Relayout should not change current offset.
         if (isFirstLayout) {
             cancelAnimation();
-            setTopAndBottomOffset(-DEFAULT_HEIGHT);
+            setTopAndBottomOffset(-childHeight);
             isFirstLayout = false;
         }
         return handled;
@@ -91,7 +88,6 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
         // The action is pull along vertical axes.
         boolean started = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-        //
         if (started) {
             cancelAnimation();
         }
@@ -100,9 +96,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
-        int top = child.getTop();
         int bottom = child.getBottom();
-        int height = child.getHeight();
         int parentHeight = coordinatorLayout.getHeight();
         // Scrolling may triggered by a fling, we only care about human touch.
         if (type == TYPE_TOUCH) {
@@ -114,13 +108,13 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                     offset = MathUtils.clamp(-dy, -bottom, 0);
                 } else if (dy < 0) {
                     // Pulling down.
-                    offset = MathUtils.clamp(-dy, 0, parentHeight - (top + height));
+                    offset = MathUtils.clamp(-dy, 0, parentHeight - bottom);
                 }
                 if (offset != 0) {
                     for (HeaderListener l : mListeners) {
                         l.onPreScroll(coordinatorLayout, child, parentHeight);
                     }
-                    int consumedOffset = offsetTopAndBottom(coordinatorLayout, child, offset);
+                    consumeOffset(coordinatorLayout, child, offset);
                     consumed[1] = -offset;
                 }
             }
@@ -136,10 +130,24 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
             if (isInvisible()) {
                 if (dyUnconsumed < 0) {
                     int offset = MathUtils.clamp(-dyUnconsumed, 0, -top);
-                    offsetTopAndBottom(coordinatorLayout, child, offset);
+                    consumeOffset(coordinatorLayout, child, offset);
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
+        // If header is visible, consume the fling.
+        if (isVisible()) {
+            return true;
+        }
+        return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
+    }
+
+    @Override
+    public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY, boolean consumed) {
+        return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
     }
 
     @Override
@@ -168,53 +176,22 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         return mChild;
     }
 
-    protected void resetScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child) {
-        if (isVisible()) {
-            int offset = - child.getTop();
-            animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, EXIT_DURATION);
-        }
-    }
-
-    private Runnable offsetCallback;
-
-    protected void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, boolean holdOn) {
-        if (isVisible()) {
-            int height = child.getHeight();
-            int top = child.getTop();
-            int offset = - (height + top);
-            if (holdOn) {
-                child.getHandler().removeCallbacks(offsetCallback);
-                offsetCallback = new Runnable() {
-                    @Override
-                    public void run() {
-                        animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, EXIT_DURATION);
-                    }
-                };
-                child.postDelayed(offsetCallback, HOLD_ON_DURATION);
-            } else {
-                animateOffsetDeltaTopAndBottom(coordinatorLayout, child, offset, EXIT_DURATION);
-            }
-        }
-    }
-
-    private void animateOffsetDeltaTopAndBottom(CoordinatorLayout coordinatorLayout, final V child, int offset, long duration) {
-        animateOffsetWithDuration(coordinatorLayout, child, getTopAndBottomOffset() + offset, duration);
-    }
-
-    private int offsetTopAndBottom(CoordinatorLayout coordinatorLayout, View child, int offset) {
-        int current = getTopAndBottomOffset() + offset;
+    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset) {
+        int current = getTopAndBottomOffset();
         int height = child.getHeight();
-        int consumed = offset;
-        if (current > 0 && offset > 0) {
-            int parentHeight = coordinatorLayout.getHeight();
-            double x = current / (double) parentHeight;
-            consumed = (int) (1f - inInterpolator.getInterpolation((float) x) * offset);
-        }
-        setTopAndBottomOffset(current + consumed);
+        int parentHeight = coordinatorLayout.getHeight();
+        int consumed = onConsumeOffset(current, parentHeight, offset);
+        Timber.d("%d %d %d %d", parentHeight, current, offset, consumed);
+        current += consumed;
+        setTopAndBottomOffset(current);
         for (HeaderListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, height + current, offset, height);
         }
         return consumed;
+    }
+
+    protected int onConsumeOffset(int current, int parentHeight, int offset) {
+        return offset;
     }
 
     private boolean isCompleteVisible() {
@@ -223,14 +200,14 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     private boolean isPartialVisible() {
         int offset = getTopAndBottomOffset();
-        return offset > -DEFAULT_HEIGHT && offset < 0;
+        return offset > -childHeight && offset < 0;
     }
 
-    private boolean isVisible() {
+    protected boolean isVisible() {
         return !isInvisible();
     }
 
-    private boolean isInvisible() {
-        return getTopAndBottomOffset() <= -DEFAULT_HEIGHT;
+    protected boolean isInvisible() {
+        return getTopAndBottomOffset() <= -childHeight;
     }
 }

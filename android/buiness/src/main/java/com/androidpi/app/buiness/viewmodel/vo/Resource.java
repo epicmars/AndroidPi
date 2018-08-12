@@ -3,11 +3,26 @@ package com.androidpi.app.buiness.viewmodel.vo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import static com.androidpi.app.buiness.viewmodel.vo.Resource.Status.*;
+
 /**
  * A generic class that holds a value with its loading status.
+ *
  * @param <T>
  */
 public class Resource<T> {
+
+    /**
+     * Status of a resource that is provided to the UI.
+     * <p>
+     * These are usually created by the Repository classes where they return
+     * {@code LiveData<Resource<T>>} to pass back the latest data to the UI with its fetch status.
+     */
+    public enum Status {
+        SUCCESS,
+        ERROR,
+        LOADING
+    }
 
     @NonNull
     public final Status status;
@@ -18,38 +33,67 @@ public class Resource<T> {
     @Nullable
     public final T data;
 
-    public Resource(@NonNull Status status, @Nullable T data, @Nullable String message) {
+    @Nullable
+    public final Throwable throwable;
+
+    public Resource(@NonNull Status status, @Nullable T data, @Nullable String message, @Nullable Throwable throwable) {
         this.status = status;
         this.data = data;
         this.message = message;
+        this.throwable = throwable;
     }
 
-    public static <T> Resource<T> success(@Nullable T data) {
-        return new Resource<>(Status.SUCCESS, data, null);
-    }
-
-    public static <T> Resource<T> error(String msg, @Nullable T data) {
-        return new Resource<>(Status.ERROR, data, msg);
-    }
 
     public static <T> Resource<T> loading() {
-        return loading(null);
+        return new Resource<>(LOADING, null, null, null);
     }
 
-    public static <T> Resource<T> loading(@Nullable T data) {
-        return new Resource<>(Status.LOADING, data, null);
+    public static <T> Resource<T> loading(T data) {
+        return new Resource<>(LOADING, data, null, null);
+    }
+
+    public static <T> Resource<T> success() {
+        return new Resource<>(SUCCESS, null, null, null);
+    }
+
+    public static <T> Resource<T> success(T data) {
+        return success(data, null);
+    }
+
+    public static <T> Resource<T> success(T data, String message) {
+        return new Resource<>(SUCCESS, data, message, null);
+    }
+
+    public static <T> Resource<T> error() {
+        return new Resource<>(ERROR, null, null, null);
+    }
+
+    public static <T> Resource<T> error(@Nullable String msg, @Nullable T data, @Nullable Throwable throwable) {
+        return new Resource<>(ERROR, data, msg, throwable);
+    }
+
+    public static <T> Resource<T> error(@NonNull String msg) {
+        return error(msg, null, null);
+    }
+
+    public static <T> Resource<T> error(@NonNull T data) {
+        return error(null, data, null);
+    }
+
+    public static <T> Resource<T> error(@NonNull Throwable throwable) {
+        return error(null, null, throwable);
     }
 
     public boolean isError() {
-        return status == Status.ERROR;
+        return status == ERROR;
     }
 
     public boolean isSuccess() {
-        return status == Status.SUCCESS;
+        return status == SUCCESS;
     }
 
     public boolean isLoading() {
-        return status == Status.LOADING;
+        return status == LOADING;
     }
 
     @Override
@@ -69,7 +113,10 @@ public class Resource<T> {
         if (message != null ? !message.equals(resource.message) : resource.message != null) {
             return false;
         }
-        return data != null ? data.equals(resource.data) : resource.data == null;
+        if (data != null ? !data.equals(resource.data) : resource.data != null) {
+            return false;
+        }
+        return throwable != null ? throwable.equals(resource.throwable) : resource.throwable == null;
     }
 
     @Override
@@ -77,6 +124,7 @@ public class Resource<T> {
         int result = status.hashCode();
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + (data != null ? data.hashCode() : 0);
+        result = 31 * result + (throwable != null ? throwable.hashCode() : 0);
         return result;
     }
 

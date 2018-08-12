@@ -1,4 +1,4 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
 /**
  * Created by jastrelax on 2017/11/16.

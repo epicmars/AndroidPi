@@ -7,19 +7,21 @@ import com.androidpi.news.entity.News
  */
 class NewsPagination() {
 
-    var lastCachedPageNum: String? = null
-
     var newsList: MutableList<News> = mutableListOf()
 
-    var page: Int? = null
+    var page: Int = 1
 
-    var nextPage: Int? = null
-
-    var offset: Int = 0
-
-    constructor(page: Int, nextPage: Int, list: List<News>): this() {
+    constructor(page: Int, list: List<News>): this() {
         this.page = page
-        this.nextPage = nextPage
         this.newsList.addAll(list)
+    }
+
+    fun nextPage(isNext: Boolean) : Int {
+        page = if (isNext) page + 1 else 1
+        return  page
+    }
+
+    fun isFirstPage() : Boolean {
+        return page == 1
     }
 }

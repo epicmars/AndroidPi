@@ -1,4 +1,4 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
 /**
  * An controller of pulling behaviors.
@@ -8,7 +8,7 @@ package com.androidpi.app.widget.pullrefresh;
  * </p>
  * Created by jastrelax on 2017/11/16.
  */
-public interface PullingRefresher {
+public interface Refresher {
 
     void refresh();
 

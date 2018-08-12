@@ -20,8 +20,10 @@ import com.androidpi.app.buiness.viewmodel.NewsViewModel
 import com.androidpi.app.databinding.FragmentNewsBinding
 import com.androidpi.app.viewholder.ErrorViewHolder
 import com.androidpi.app.viewholder.NewsViewHolder
-import com.androidpi.app.widget.pullrefresh.*
+import com.androidpi.app.viewholder.items.ErrorItem
+import com.androidpi.base.widget.literefresh.*
 import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
+import com.androidpi.news.vo.NewsPagination
 import javax.inject.Inject
 
 /**
@@ -64,6 +66,27 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 .get(NewsViewModel::class.java)
         mNewsCategory = arguments?.getString(KEY_CATEGORY)
         mNewsModel.mCategory = mNewsCategory
+
+        mNewsModel.mNews.observe(this, Observer { t ->
+            refreshFinished()
+            if (t == null) return@Observer
+
+            if (t.isSuccess) {
+                if (t.data == null) {
+                    mAdapter.setPayloads(ErrorItem("数据为空"))
+                    return@Observer
+                }
+                if ((t.data as NewsPagination).isFirstPage()) {
+                    mAdapter.setPayloads(t.data?.newsList)
+                } else {
+                    mAdapter.addPayloads(t.data?.newsList)
+                }
+            } else if (t.isError) {
+                mAdapter.setPayloads(ErrorItem("加载失败"))
+            } else if (t.isLoading) {
+
+            }
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -83,7 +106,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         //
         val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        val headerBehavior = PullDownHeaderBehavior<View>()
+        val headerBehavior = RefreshHeaderBehavior<View>()
         headerBehavior.addOnPullingListener(object : OnPullingListener {
 
             override fun onStartPulling(max: Int) {
@@ -119,7 +142,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mBinding.scrollHeader.layoutParams = lpHeader
 
         val lpFooter = mBinding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
-        val footerBehavior = PullUpFooterBehavior<View>(context)
+        val footerBehavior = RefreshFooterBehavior<View>(context)
         footerBehavior.addOnRefreshListener(object : OnRefreshListener {
 
             override fun onRefreshStart() {
@@ -129,7 +152,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
 
             override fun onRefresh() {
-//                loadNextPage()
+                loadNextPage()
             }
 
             override fun onRefreshComplete() {
@@ -141,7 +164,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
 
             override fun onStartPulling(max: Int) {
-//                footerBehavior.refresh()
+
             }
 
             override fun onStopPulling(current: Int, max: Int) {
@@ -152,7 +175,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mBinding.scrollFooter.layoutParams = lpFooter
 
         val lpScroll = mBinding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
-        lpScroll.behavior = ScrollViewBehavior<View>()
+        lpScroll.behavior = RefreshContentBehavior<View>()
         mBinding.recyclerNews.layoutParams = lpScroll
 
         // pull up to load more
@@ -182,44 +205,21 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mNewsModel.mNews.observe(this, Observer { t ->
-            refreshFinished()
-            if (t == null) return@Observer
 
-            if (t.isSuccess) {
-                mAdapter.setPayloads(t.data)
-            }
-//            val data = t?.data
-//            if (t == null || t.isError()) {
-//                val message = if (t != null) t.message else "加载失败"
-//                if (data != null && data.isFirstPage()) {
-//                    mAdapter.setPayloads(ErrorItem(message))
-//                } else {
-//                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-//                }
-//            } else {
-//                val currentPage = data?.mCurrentPage
-//                if (currentPage == null || currentPage.isEmpty())
-//                    return@Observer
-//                if (data.isFirstPage()) {
-//                    mAdapter.setPayloads(currentPage)
-//                } else {
-//                    mAdapter.appendPayloads(data.mPreviousPages, currentPage)
-//                }
-//            }
-        })
         if (null == savedInstanceState || mNewsModel.mNews.value == null) {
-            loadFirstPage()
+            val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = lpHeader.behavior as RefreshHeaderBehavior
+            behavior.refresh()
         }
     }
 
     fun refreshFinished() {
         val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = lpHeader.behavior as PullDownHeaderBehavior
+        val behavior = lpHeader.behavior as RefreshHeaderBehavior
         behavior.refreshComplete()
 
         val lpFooter = mBinding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
-        val footerBehavior = lpFooter.behavior as PullUpFooterBehavior
+        val footerBehavior = lpFooter.behavior as RefreshFooterBehavior
         footerBehavior.refreshComplete()
     }
 

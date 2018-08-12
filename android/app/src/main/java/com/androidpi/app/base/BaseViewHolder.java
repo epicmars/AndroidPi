@@ -52,7 +52,7 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
     public static BaseViewHolder instance(Class<? extends BaseViewHolder> clazz, ViewGroup parent) {
         if (null == clazz) {
             throw new NullPointerException("The view holder class to be instantiated is null, it may not be " +
-                    "registered in RecyclerAdapter.");
+                    "registered in RecyclerAdapter or the data types of the objects are not bound with the view holder.");
         }
         BindLayout bindLayout = clazz.getAnnotation(BindLayout.class);
         if (null == bindLayout) {

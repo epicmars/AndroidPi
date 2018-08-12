@@ -1,4 +1,4 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.app.widget;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
@@ -9,6 +9,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.androidpi.app.R;
+import com.androidpi.base.widget.literefresh.OnPullingListener;
+import com.androidpi.base.widget.literefresh.OnRefreshListener;
+import com.androidpi.base.widget.literefresh.RefreshHeaderBehavior;
 
 /**
  * Created by jastrelax on 2017/11/21.
@@ -39,9 +42,9 @@ public class PullDownHeaderView extends FrameLayout implements OnPullingListener
             public void onViewAttachedToWindow(View v) {
                 try {
                     CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
-                    PullDownHeaderBehavior behavior = (PullDownHeaderBehavior) params.getBehavior();
+                    RefreshHeaderBehavior behavior = (RefreshHeaderBehavior) params.getBehavior();
                     if (behavior == null) {
-                        behavior = new PullDownHeaderBehavior();
+                        behavior = new RefreshHeaderBehavior();
                         params.setBehavior(behavior);
                     }
                     behavior.addOnPullingListener(PullDownHeaderView.this);

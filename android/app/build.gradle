@@ -87,6 +87,9 @@ dependencies {
     // multidex
     implementation 'com.android.support:multidex:1.0.3'
 
+    // circle image view
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
     implementation project(':buiness')
     implementation project(':base')
     implementation project(':data')

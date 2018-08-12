@@ -1,4 +1,4 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -167,11 +167,11 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                 child.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
+                        animateOffsetWithDuration(BASE_LINE, EXIT_DURATION);
                     }
                 }, HOLD_ON_DURATION);
             } else {
-                animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
+                animateOffsetWithDuration(BASE_LINE, EXIT_DURATION);
             }
         }
     }

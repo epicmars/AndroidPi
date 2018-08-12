@@ -2,6 +2,8 @@ package com.androidpi.news.repo
 
 import com.androidpi.news.entity.News
 import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
+import com.androidpi.news.vo.NewsPagination
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 /**
@@ -18,7 +20,7 @@ interface NewsRepo {
      * @param page   页数，默认为第一页
      * @param count  每页新闻数量，默认大小为12篇
      */
-    fun refreshNews(page: Int = 0, count: Int = PAGE_SIZE, category: String? = "general"): Single<List<News>>
+    fun refreshNews(page: Int = 1, count: Int = PAGE_SIZE, category: String? = "general"): Single<List<News>>
 
 //    /**
 //     * 获取最新的新闻，首先从服务端更新并保存到本地后，在从本地取出。如果从服务端获取失败了，
@@ -43,7 +45,7 @@ interface NewsRepo {
 //     * @param page   页数，默认为第一页
 //     * @param count  每页新闻数量，默认大小为12篇
 //     */
-//    fun getNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, portal: String): Single<List<News>>
+//    fun getNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, category: String): Single<List<News>>
 //
 //    /**
 //     * 获取新闻。
@@ -60,9 +62,9 @@ interface NewsRepo {
 //     * @param page   页数，默认为第一页
 //     * @param count  每页新闻数量，默认大小为12篇
 //     * @param offset 服务端与本地不同步所造成的偏移量
-//     * @param portal 门户站点
+//     * @param category 门户站点
 //     */
-//    fun getLatestNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, portal: String?, cachedPageNum: String? = null): Flowable<NewsPagination>
+//    fun getLatestNews(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, category: String?, cachedPageNum: String? = null): Flowable<NewsPagination>
 //
 //    /**
 //     * 从本地获取一个新闻页面
@@ -70,7 +72,7 @@ interface NewsRepo {
 //     * @param page   页数，默认为第一页
 //     * @param count  每页新闻数量，默认大小为12篇
 //     * @param offset 服务端与本地不同步所造成的偏移量
-//     * @param portal 门户站点
+//     * @param category 门户站点
 //     */
-//    fun getNewsPage(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, portal: String?): Single<NewsPagination>
+//    fun getNewsPage(page: Int = 0, count: Int = PAGE_SIZE, offset: Int = 0, category: String?): Single<NewsPagination>
 }

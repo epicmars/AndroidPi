@@ -29,7 +29,7 @@ class NotesViewModel @Inject constructor(): ViewModel(), TextNotesModel {
                 .subscribe(object : SingleObserver<List<TextNote>> {
 
                     override fun onError(e: Throwable) {
-                        mTextNotes.value = Resource.error("加载笔记失败", null)
+                        mTextNotes.value = Resource.error("加载笔记失败")
                     }
 
                     override fun onSubscribe(d: Disposable) {

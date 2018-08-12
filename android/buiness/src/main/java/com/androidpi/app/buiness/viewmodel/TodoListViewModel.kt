@@ -36,7 +36,7 @@ class TodoListViewModel @Inject constructor() : ViewModel(), TodoModel {
 
                     override fun onSuccess(t: Array<Todo>) {
                         if (t.isEmpty()) {
-                            mTodoList.value = Resource.error("待办事项为空", emptyArray())
+                            mTodoList.value = Resource.error("待办事项为空")
                         } else {
                             mTodoList.value = Resource.success(t)
                         }
@@ -44,7 +44,7 @@ class TodoListViewModel @Inject constructor() : ViewModel(), TodoModel {
 
                     override fun onError(e: Throwable) {
                         Timber.e(e)
-                        mTodoList.value = Resource.error("加载待办事项错误", null)
+                        mTodoList.value = Resource.error("加载待办事项错误")
                     }
                 })
     }

@@ -42,8 +42,8 @@ class NewsRepository @Inject constructor() : NewsRepo {
 //        return newsDao.getNews(page, count, 0)
 //    }
 //
-//    override fun getNews(page: Int, count: Int, offset: Int, portal: String): Single<List<News>> {
-//        return newsDao.getNews(page, count, 0, portal)
+//    override fun getNews(page: Int, count: Int, offset: Int, category: String): Single<List<News>> {
+//        return newsDao.getNews(page, count, 0, category)
 //    }
 //
 //    override fun getLatestNews(page: Int, count: Int): Single<List<News>> {
@@ -77,7 +77,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
 //        return getLatestNews(page, count, offset, null, null).singleOrError()
 //    }
 //
-//    override fun getLatestNews(page: Int, count: Int, offset: Int, portal: String?, cachedPageNum: String?): Flowable<NewsPagination> {
+//    override fun getLatestNews(page: Int, count: Int, offset: Int, category: String?, cachedPageNum: String?): Flowable<NewsPagination> {
 //        // 目前的获取策略
 //        // 第一页总是尝试从服务端获取后保存到本地
 //        // 第二页及其之后的页面首先从本地获取，然后根据本地页面判断是否请求网络
@@ -85,12 +85,12 @@ class NewsRepository @Inject constructor() : NewsRepo {
 //        // 1. 本地页面是否为空
 //        // 2. 是否较为陈旧(obsolete)，如果页面较新鲜(fresh)则不请求网络
 //
-//        val cache = getNewsPage(page, count, offset, portal).toFlowable()
+//        val cache = getNewsPage(page, count, offset, category).toFlowable()
 //        val remoteOrCache = object : NetworkBoundFlowable<NewsPagination>() {
 //
 //            var newsOffset = if (page == 0) 0 else offset
 //            override fun loadFromDb(): Flowable<NewsPagination> {
-//                return getNewsPage(page, count, newsOffset, portal).toFlowable()
+//                return getNewsPage(page, count, newsOffset, category).toFlowable()
 //            }
 //
 //            override fun shouldFetch(dbResult: NewsPagination): Boolean {
@@ -102,7 +102,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
 //                    var isContinuous = true
 //                    for (news in dbResult.newsList) {
 //                        val newsContext = NewsContext.fromJson(news.context)
-//                        val portalContext = newsContext?.getPortalContext(portal)
+//                        val portalContext = newsContext?.getPortalContext(category)
 //                        if (portalContext == null || portalContext.page <= 0) {
 //                            isContinuous = false
 //                            break
@@ -117,7 +117,7 @@ class NewsRepository @Inject constructor() : NewsRepo {
 //            }
 //
 //            override fun createCall(): Flowable<NewsPagination> {
-//                return refreshNews(page, count, portal)
+//                return refreshNews(page, count, category)
 //                        .map { t ->
 //                            NewsPagination(page, page + 1, t)
 //                        }.toFlowable()
@@ -138,10 +138,10 @@ class NewsRepository @Inject constructor() : NewsRepo {
 //                        newsDao.insertNews(news)
 //                    } else {
 //                        var context = NewsContext.fromJson(cachedNews.context)
-//                        var portalContext = context?.getPortalContext(portal)
+//                        var portalContext = context?.getPortalContext(category)
 //
 //                        if (portalContext == null) {
-//                            portalContext = NewsPortalContext(portal, page)
+//                            portalContext = NewsPortalContext(category, page)
 //                            if (context == null) {
 //                                context = NewsContext()
 //                            }
@@ -163,11 +163,11 @@ class NewsRepository @Inject constructor() : NewsRepo {
 //                for (i in 0 until dbResult.newsList.size) {
 //                    val news = dbResult.newsList[i]
 //                    var context = NewsContext.fromJson(news.context)
-//                    var portalContext = context?.getPortalContext(portal)
+//                    var portalContext = context?.getPortalContext(category)
 //
 //                    if (portalContext == null) {
 //                        lastCachedPageNum = null
-//                        portalContext = NewsPortalContext(portal, page)
+//                        portalContext = NewsPortalContext(category, page)
 //                        if (context == null) {
 //                            context = NewsContext()
 //                        }
@@ -205,14 +205,14 @@ class NewsRepository @Inject constructor() : NewsRepo {
 //        }
 //    }
 //
-//    override fun getNewsPage(page: Int, count: Int, offset: Int, portal: String?): Single<NewsPagination> {
-//        if (portal == null) {
+//    override fun getNewsPage(page: Int, count: Int, offset: Int, category: String?): Single<NewsPagination> {
+//        if (category == null) {
 //            return getNews(page, count, offset)
 //                    .map { t ->
 //                        NewsPagination(page, page + 1, t)
 //                    }
 //        } else {
-//            return getNews(page, count, offset, portal)
+//            return getNews(page, count, offset, category)
 //                    .map { t ->
 //                        NewsPagination(page, page + 1, t)
 //                    }

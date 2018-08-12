@@ -20,7 +20,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         val NAV_IDS = mapOf(R.id.nav_news to 0,
                 R.id.nav_articles to 1,
-                R.id.nav_book to 2)
+                R.id.nav_book to 2,
+                R.id.nav_me to 3)
 
         fun newInstance(): MainFragment {
             return MainFragment()
@@ -32,13 +33,14 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         mBinding.pager.offscreenPageLimit = 2
         mBinding.pager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
 
-            val pageTitles = intArrayOf(R.string.news, R.string.todo, R.string.note)
+            val pageTitles = intArrayOf(R.string.news, R.string.todo, R.string.note, R.string.me)
 
             override fun getItem(position: Int): Fragment {
                 return when (position) {
                     0 -> NewsPagerFragment.newInstance()
                     1 -> ArticlePagerFragment.newInstance()
                     2 -> BookmarkListFragment.newInstance()
+                    3 -> ProfileFragment.newInstance()
                     else -> TempFragment.newInstance("An error occurred.")
                 }
             }

@@ -1,39 +1,46 @@
-package com.androidpi.app.widget.pullrefresh;
+package com.androidpi.base.widget.literefresh;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by jastrelax on 2017/11/19.
+ * Created by jastrelax on 2017/11/17.
  */
 
-public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> implements PullingRefresher, FooterBehavior.FooterListener {
+public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> implements HeaderBehavior.HeaderListener,
+        Refresher {
+
+    private DecelerateInterpolator downInterpolator = new DecelerateInterpolator(1.5f);
+
+    private static final long EXIT_DURATION = 300L;
+    private static final long HOLD_ON_DURATION = 500L;
+    private static final long REVEAL_DURATION = 500L;
 
     private List<OnPullingListener> mListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     private AtomicBoolean isRefreshing = new AtomicBoolean(false);
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private Handler mHandler = new Handler();
 
-    public PullUpFooterBehavior() {
+    public RefreshHeaderBehavior() {
         this(null, null);
     }
 
-    public PullUpFooterBehavior(Context context) {
+    public RefreshHeaderBehavior(Context context) {
         this(context, null);
     }
 
-    public PullUpFooterBehavior(Context context, AttributeSet attrs) {
+    public RefreshHeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        addFooterListener(this);
+        addHeaderListener(this);
     }
 
     public void addOnPullingListener(OnPullingListener listener) {
@@ -87,16 +94,65 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
         for (OnPullingListener l : mListeners) {
             l.onStopPulling(current, max);
         }
-        if (current >= max * 0.9) {
+        if (current >= max) {
             if (isRefreshing())
                 return;
             for (OnRefreshListener l : mRefreshListeners) {
                 l.onRefresh();
             }
+            hide();
             setIsRefreshing(true);
         } else {
             stopScroll(coordinatorLayout, (V)child, false);
         }
+    }
+
+    private Runnable offsetCallback;
+    protected void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, boolean holdOn) {
+        if (isVisible()) {
+            if (holdOn) {
+                child.getHandler().removeCallbacks(offsetCallback);
+                offsetCallback = new Runnable() {
+                    @Override
+                    public void run() {
+                        resetOffsetWithDuration(coordinatorLayout, child, EXIT_DURATION);
+                    }
+                };
+                child.postDelayed(offsetCallback, HOLD_ON_DURATION);
+            } else {
+                resetOffsetWithDuration(coordinatorLayout, child, EXIT_DURATION);
+            }
+        }
+    }
+
+    @Override
+    protected int onConsumeOffset(int current, int parentHeight, int offset) {
+        int consumed = offset;
+        if (current >= 0 && offset > 0) {
+            float y = downInterpolator.getInterpolation(current / (float) parentHeight);
+            consumed = (int) ((1f - y) * offset);
+        }
+        return consumed;
+    }
+
+    protected void reveal() {
+        if (!isVisible()) {
+            if (getChild() == null) return;
+            animateOffsetWithDuration(getTopAndBottomOffset() + getChild().getHeight(), REVEAL_DURATION);
+        }
+    }
+
+    protected void hide() {
+        if (isVisible()) {
+            int offset = - getChild().getTop();
+            animateOffsetWithDuration(getTopAndBottomOffset() + offset, EXIT_DURATION);
+        }
+    }
+
+    private void resetOffsetWithDuration(CoordinatorLayout coordinatorLayout, final V child, long duration) {
+        int offset = - (child.getHeight() + child.getTop());
+        if (offset > 0) return;
+        animateOffsetWithDuration(getTopAndBottomOffset() + offset, duration);
     }
 
     public boolean isRefreshing() {
@@ -112,15 +168,13 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
         // To avoid unnecessary task enqueueing.
         if (isRefreshing())
             return;
-        runOnUiThread(new Runnable() {
+        runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                // What if multiple tasks is enqueued, check duplicate callbacks.
-                if (isRefreshing())
-                    return;
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefresh();
                 }
+                reveal();
                 setIsRefreshing(true);
             }
         });
@@ -128,7 +182,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void refreshComplete() {
-        runOnUiThread(new Runnable() {
+        runOnUIThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -142,7 +196,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void refreshTimeout() {
-        runOnUiThread(new Runnable() {
+        runOnUIThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -156,7 +210,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void refreshCancelled() {
-        runOnUiThread(new Runnable() {
+        runOnUIThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -170,7 +224,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
 
     @Override
     public void refreshException(Exception exception) {
-        runOnUiThread(new Runnable() {
+        runOnUIThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
@@ -182,7 +236,7 @@ public class PullUpFooterBehavior<V extends View> extends FooterBehavior<V> impl
         });
     }
 
-    public void runOnUiThread(Runnable runnable) {
+    public void runOnUIThread(Runnable runnable) {
         mHandler.post(runnable);
     }
 }
