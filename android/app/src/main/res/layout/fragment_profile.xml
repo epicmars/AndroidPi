@@ -37,12 +37,13 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@android:color/holo_red_light"
-            app:layout_behavior="@string/lr_refresh_header_behavior"/>
+            app:layout_behavior="@string/lr_refresh_header_behavior" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:layout_behavior="@string/lr_refresh_footer_behavior"/>
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="100dp"-->
+            <!--app:layout_behavior="@string/lr_refresh_footer_behavior"-->
+            <!--/>-->
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

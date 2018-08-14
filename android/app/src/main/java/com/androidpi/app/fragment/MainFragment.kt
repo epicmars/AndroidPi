@@ -38,8 +38,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             override fun getItem(position: Int): Fragment {
                 return when (position) {
                     0 -> NewsPagerFragment.newInstance()
-                    1 -> ArticlePagerFragment.newInstance()
-                    2 -> BookmarkListFragment.newInstance()
+                    1 -> ImagePagerFragment.newInstance()
+                    2 -> UnsplashFragment.newInstance()
                     3 -> ProfileFragment.newInstance()
                     else -> TempFragment.newInstance("An error occurred.")
                 }

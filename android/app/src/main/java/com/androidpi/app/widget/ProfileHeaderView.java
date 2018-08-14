@@ -56,12 +56,10 @@ public class ProfileHeaderView extends FrameLayout implements OnPullListener {
     @Override
     public void onPulling(int current, int delta, int max) {
         float height = getHeight();
-        if (current >= height) {
-            float scale = current/height;
-            setScaleX(scale);
-            setScaleY(scale);
-            setTranslationY(- (scale - 1f) * height / 2);
-        }
+        float scale = Math.max(current / height, 1);
+        setScaleX(scale);
+        setScaleY(scale);
+        setTranslationY(-(scale - 1f) * height / 2);
     }
 
     @Override

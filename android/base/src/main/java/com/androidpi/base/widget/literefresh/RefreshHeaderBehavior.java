@@ -19,9 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> implements AnimationOffsetBehavior.ScrollListener,
         Refresher {
 
-    private static final long EXIT_DURATION = 300L;
     private static final long HOLD_ON_DURATION = 500L;
-    private static final long REVEAL_DURATION = 500L;
 
     private DecelerateInterpolator downInterpolator = new DecelerateInterpolator(1.5f);
     private List<OnPullListener> mPullListeners = new ArrayList<>();
@@ -149,25 +147,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         return getChild().getHeight();
     }
 
-    protected void reveal() {
-        if (!isVisible()) {
-            if (getChild() == null) return;
-            animateOffsetWithDuration(getTopAndBottomOffset() + getChild().getHeight(), REVEAL_DURATION);
-        }
-    }
 
-    protected void reset() {
-        if (isVisible()) {
-            int offset = - getChild().getTop();
-            animateOffsetWithDuration(getTopAndBottomOffset() + offset, EXIT_DURATION);
-        }
-    }
-
-    private void hide() {
-        int offset = - getChild().getBottom();
-        if (offset >= 0) return;
-        animateOffsetWithDuration(getTopAndBottomOffset() + offset, EXIT_DURATION);
-    }
 
     public boolean isRefreshing() {
         return isRefreshing.get();

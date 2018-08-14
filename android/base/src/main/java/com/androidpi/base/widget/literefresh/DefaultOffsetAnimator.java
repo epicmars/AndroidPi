@@ -3,6 +3,7 @@ package com.androidpi.base.widget.literefresh;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * Created by jastrelax on 2018/8/8.
@@ -14,7 +15,7 @@ public class DefaultOffsetAnimator extends OffsetAnimator {
     public void animateOffsetWithDuration(int current, int offset, long duration, AnimationUpdateListener listener) {
         if (mOffsetAnimator == null) {
             mOffsetAnimator = new ValueAnimator();
-            mOffsetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            mOffsetAnimator.setInterpolator(new DecelerateInterpolator());
             mOffsetAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {

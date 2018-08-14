@@ -10,6 +10,7 @@ public abstract class OffsetAnimator {
 
     public interface AnimationUpdateListener {
         void onAnimationUpdate(int value);
+        void onAnimationEnd();
     }
 
     private boolean isRunning = false;

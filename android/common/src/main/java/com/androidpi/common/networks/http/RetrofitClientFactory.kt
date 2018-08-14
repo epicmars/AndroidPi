@@ -19,24 +19,10 @@ object RetrofitClientFactory {
     }
 
     fun retrofitBuilder(): Retrofit.Builder {
-        val builder = okHttpClientBuilder()
-        if (BuildConfig.DEBUG) {
-            builder.addInterceptor(debugLoggingInterceptor())
-        }
         return Retrofit.Builder()
-                .client(builder.build())
+                .client(RetrofitHttpClient.okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-    }
-
-    fun okHttpClientBuilder(): OkHttpClient.Builder {
-        return OkHttpClient().newBuilder()
-    }
-
-    fun debugLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
-            Timber.v(message)
-        }).setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
 }

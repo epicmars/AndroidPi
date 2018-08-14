@@ -1,17 +1,14 @@
 package com.androidpi.base.widget.literefresh;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.androidpi.base.R;
-
-import timber.log.Timber;
+import android.widget.OverScroller;
+import android.widget.Scroller;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
@@ -21,9 +18,14 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
+    private static final long EXIT_DURATION = 300L;
+    private static final long REVEAL_DURATION = 500L;
+
     private int childHeight;
     private int parentHeight;
     private boolean isFirstLayout = true;
+    private float fixedOffset;
+    private OverScroller scroller;
 
     public HeaderBehavior(Context context) {
         this(context, null);
@@ -31,11 +33,6 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     public HeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.HeaderBehavior, 0, 0);
-        if (a.hasValue(R.styleable.HeaderBehavior_maxOffset)) {
-            maxOffset = a.getFloat(R.styleable.HeaderBehavior_maxOffset, 0.618f);
-        }
-        a.recycle();
     }
 
     @Override
@@ -43,16 +40,13 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         childHeight = child.getHeight();
         parentHeight = parent.getHeight();
+        // Compute fixed offset.
+        fixedOffset = -childHeight + visibleHeight;
         // Relayout should not change current offset.
         if (isFirstLayout) {
             cancelAnimation();
-            setTopAndBottomOffset(-childHeight);
+            setTopAndBottomOffset((int) fixedOffset);
             isFirstLayout = false;
-        }
-
-        // Compute max offset.
-        if (maxOffset <= 1f) {
-            maxOffset *= parent.getHeight();
         }
         return handled;
     }
@@ -77,7 +71,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         float maxOffset = Math.max(this.maxOffset, child.getHeight());
         // Scrolling may triggered by a fling, we only care about human touch.
         if (type == TYPE_TOUCH) {
-            // If header is visible, it will consume the scroll range until it's invisible.
+            // If header is visible, it will consume the scroll range until it's invisible or reach maximum offset.
             if (isVisible()) {
                 float offset = 0;
                 if (dy > 0) {
@@ -92,7 +86,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                         l.onPreScroll(coordinatorLayout, child, (int) maxOffset);
                     }
                     consumeOffset(coordinatorLayout, child, (int) offset);
-                    consumed[1] = - (int) offset;
+                    consumed[1] = -(int) offset;
                 }
             }
         }
@@ -146,6 +140,27 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                 l.onStopScroll(coordinatorLayout, child, height + getTopAndBottomOffset(), (int) maxOffset);
             }
         }
+    }
+
+
+    protected void reveal() {
+        if (!isVisible()) {
+            if (getChild() == null) return;
+            animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + getChild().getHeight(), REVEAL_DURATION);
+        }
+    }
+
+    protected void reset() {
+        if (isVisible()) {
+            float offset = -getChild().getTop();
+            animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, EXIT_DURATION);
+        }
+    }
+
+    protected void hide() {
+        float offset = -getChild().getBottom() + visibleHeight;
+        if (offset >= 0) return;
+        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, EXIT_DURATION);
     }
 
     @Override

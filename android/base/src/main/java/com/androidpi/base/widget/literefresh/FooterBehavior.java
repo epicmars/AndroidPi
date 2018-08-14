@@ -127,11 +127,11 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                 child.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        animateOffsetWithDuration(BASE_LINE, EXIT_DURATION);
+                        animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
                     }
                 }, HOLD_ON_DURATION);
             } else {
-                animateOffsetWithDuration(BASE_LINE, EXIT_DURATION);
+                animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
             }
         }
     }
