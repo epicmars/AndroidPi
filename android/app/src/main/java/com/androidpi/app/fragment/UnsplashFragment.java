@@ -30,9 +30,7 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding>{
     private RecyclerAdapter adapter;
 
     public static UnsplashFragment newInstance() {
-
         Bundle args = new Bundle();
-
         UnsplashFragment fragment = new UnsplashFragment();
         fragment.setArguments(args);
         return fragment;

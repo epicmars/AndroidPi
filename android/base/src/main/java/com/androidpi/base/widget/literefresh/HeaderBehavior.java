@@ -7,25 +7,24 @@ import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.OverScroller;
-import android.widget.Scroller;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
+ * An header behavior that can consume some nested scroll range.
+ *
  * Created by jastrelax on 2017/11/16.
  */
 
 public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     private static final long EXIT_DURATION = 300L;
-    private static final long REVEAL_DURATION = 500L;
+    private static final long RESET_DURATION = 300L;
 
     private int childHeight;
     private int parentHeight;
     private boolean isFirstLayout = true;
     private float fixedOffset;
-    private OverScroller scroller;
 
     public HeaderBehavior(Context context) {
         this(context, null);
@@ -118,6 +117,10 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         return consumed;
     }
 
+    protected int onConsumeOffset(int current, int parentHeight, int offset) {
+        return offset;
+    }
+
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
         // If header is visible, consume the fling.
@@ -142,25 +145,25 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         }
     }
 
-
-    protected void reveal() {
-        if (!isVisible()) {
-            if (getChild() == null) return;
-            animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + getChild().getHeight(), REVEAL_DURATION);
-        }
-    }
-
-    protected void reset() {
-        if (isVisible()) {
-            float offset = -getChild().getTop();
-            animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, EXIT_DURATION);
-        }
-    }
-
+    /**
+     * This will reset the header view to it's original position when it's laid out for the first time.
+     */
     protected void hide() {
         float offset = -getChild().getBottom() + visibleHeight;
         if (offset >= 0) return;
         animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, EXIT_DURATION);
+    }
+
+    /**
+     * Make the header view entirely visible.
+     */
+    protected void show() {
+        show(RESET_DURATION);
+    }
+
+    protected void show(long animateDuration) {
+        float offset = -getChild().getTop();
+        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, animateDuration);
     }
 
     @Override
@@ -171,9 +174,6 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         mChild = null;
     }
 
-    protected int onConsumeOffset(int current, int parentHeight, int offset) {
-        return offset;
-    }
 
     private boolean isCompleteVisible() {
         return getTopAndBottomOffset() >= 0;

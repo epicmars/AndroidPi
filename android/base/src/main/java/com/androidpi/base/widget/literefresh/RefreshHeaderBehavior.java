@@ -108,7 +108,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
                 l.onRefresh();
             }
             setIsRefreshing(true);
-            reset();
+            show();
         } else {
             hide();
         }
@@ -168,7 +168,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
                 for (OnRefreshListener l : mRefreshListeners) {
                     l.onRefresh();
                 }
-                reveal();
+                show();
                 setIsRefreshing(true);
             }
         });
