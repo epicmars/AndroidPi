@@ -11,7 +11,11 @@ import android.view.View;
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
- * An header behavior that can consume some nested scroll range.
+ * The header behavior consume some of the scrolled distance dispatch by the nested scrolling
+ * content base on several rules.It will not consume the distance made by fling.
+ *
+ * With some configuration, the view with which this behavior associated can move following
+ * the nested scrolling content or fix in it's original position.
  *
  * Created by jastrelax on 2017/11/16.
  */
@@ -75,7 +79,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                 float offset = 0;
                 if (dy > 0) {
                     // Pulling up.
-                    offset = MathUtils.clamp(-dy, -bottom, 0);
+                    offset = MathUtils.clamp(-dy, -bottom + visibleHeight, 0);
                 } else if (dy < 0) {
                     // Pulling down.
                     offset = MathUtils.clamp(-dy, 0, maxOffset - bottom);
@@ -93,13 +97,12 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-        int top = child.getTop();
         if (type == TYPE_TOUCH) {
             // If header is invisible and the scrolling content has reached it's top,
             // The pulling down range not consumed by the scrolling view is consumed by the header.
             if (isInvisible()) {
                 if (dyUnconsumed < 0) {
-                    int offset = MathUtils.clamp(-dyUnconsumed, 0, -top);
+                    int offset = MathUtils.clamp(-dyUnconsumed, 0, (int)(maxOffset - child.getBottom()));
                     consumeOffset(coordinatorLayout, child, offset);
                 }
             }
@@ -123,8 +126,9 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
-        // If header is visible, consume the fling.
-        if (isVisible()) {
+        // If header should be hidden, consume the fling.
+        // Otherwise, do nothing.
+        if (isVisible() && visibleHeight == 0) {
             return true;
         }
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
@@ -174,7 +178,6 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         mChild = null;
     }
 
-
     private boolean isCompleteVisible() {
         return getTopAndBottomOffset() >= 0;
     }
@@ -184,11 +187,15 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         return offset > -childHeight && offset < 0;
     }
 
+    /**
+     * Tell if the invisible part of header view is visible.
+     * @return
+     */
     protected boolean isVisible() {
-        return !isInvisible();
+        return getTopAndBottomOffset() > -childHeight + visibleHeight;
     }
 
     protected boolean isInvisible() {
-        return getTopAndBottomOffset() <= -childHeight;
+        return !isVisible();
     }
 }

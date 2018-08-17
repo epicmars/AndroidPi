@@ -5,6 +5,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.List;
+
 /**
  * A behavior for scrollable child of {@link CoordinatorLayout}.
  *
@@ -20,6 +22,17 @@ public class RefreshContentBehavior<V extends View> extends ViewOffsetBehavior<V
 
     public RefreshContentBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    @Override
+    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+        List<View> views = parent.getDependencies(child);
+        HeaderBehavior behavior = findDependencyHeaderBehavior(views);
+        if (behavior != null) {
+            heightUsed += behavior.visibleHeight;
+        }
+        parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
+        return true;
     }
 
     @Override
@@ -48,5 +61,17 @@ public class RefreshContentBehavior<V extends View> extends ViewOffsetBehavior<V
             return true;
         }
         return false;
+    }
+
+    private HeaderBehavior findDependencyHeaderBehavior(List<View> dependencies) {
+        if (dependencies == null)
+            return null;
+        for (View v : dependencies) {
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
+            if (p.getBehavior() instanceof HeaderBehavior) {
+                return (HeaderBehavior) p.getBehavior();
+            }
+        }
+        return null;
     }
 }

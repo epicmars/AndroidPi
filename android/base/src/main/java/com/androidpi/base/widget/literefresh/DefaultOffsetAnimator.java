@@ -29,7 +29,6 @@ public class DefaultOffsetAnimator extends OffsetAnimator {
         }
         mOffsetAnimator.setDuration(duration);
         mOffsetAnimator.setIntValues(current, offset);
-        mOffsetAnimator.start();
         mOffsetAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -51,6 +50,7 @@ public class DefaultOffsetAnimator extends OffsetAnimator {
 
             }
         });
+        mOffsetAnimator.start();
     }
 
 
