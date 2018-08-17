@@ -21,11 +21,18 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
 
     private static final long HOLD_ON_DURATION = 500L;
 
+    private static final int STATE_IDEL = 0;
+    private static final int STATE_START = 1;
+    private static final int STATE_READY = 2;
+    private static final int STATE_REFRESH = 3;
+    private static final int STATE_COMPLETE = 4;
+
     private DecelerateInterpolator downInterpolator = new DecelerateInterpolator(1.5f);
     private List<OnPullListener> mPullListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     private AtomicBoolean isRefreshing = new AtomicBoolean(false);
     private Handler mHandler = new Handler();
+    private int currentState = STATE_IDEL;
 
     public RefreshHeaderBehavior(Context context) {
         this(context, null);
@@ -68,9 +75,9 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
-        for (OnRefreshListener l : mRefreshListeners) {
-            l.onRefreshStart();
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
+        if (current < readyRefreshOffset()) {
+            moveToState(STATE_START);
         }
     }
 
@@ -79,11 +86,11 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         for (OnPullListener l : mPullListeners) {
             l.onPulling(current, delta, max);
         }
-        if (current >= readyRefreshOffset()) {
-            if (isTouch) {
-                for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshReady();
-                }
+        if (isTouch) {
+            if (current >= readyRefreshOffset()) {
+                moveToState(STATE_READY);
+            } else {
+                moveToState(STATE_START);
             }
         }
     }
@@ -104,10 +111,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         if (!mRefreshListeners.isEmpty()) {
             if (isRefreshing())
                 return;
-            for (OnRefreshListener l : mRefreshListeners) {
-                l.onRefresh();
-            }
-            setIsRefreshing(true);
+            moveToState(STATE_REFRESH);
             show();
         } else {
             hide();
@@ -148,7 +152,6 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
     }
 
 
-
     public boolean isRefreshing() {
         return isRefreshing.get();
     }
@@ -165,11 +168,8 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefresh();
-                }
+                moveToState(STATE_REFRESH);
                 show();
-                setIsRefreshing(true);
             }
         });
     }
@@ -179,11 +179,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshComplete();
-                }
-                stopScroll(true);
-                setIsRefreshing(false);
+                refreshCompleted();
             }
         });
     }
@@ -193,11 +189,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshComplete();
-                }
-                stopScroll(true);
-                setIsRefreshing(false);
+                refreshCompleted();
             }
         });
     }
@@ -207,11 +199,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshComplete();
-                }
-                stopScroll(true);
-                setIsRefreshing(false);
+                refreshCompleted();
             }
         });
     }
@@ -221,16 +209,76 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshComplete();
-                }
-                stopScroll(true);
-                setIsRefreshing(false);
+                refreshCompleted();
             }
         });
     }
 
+    private void refreshCompleted() {
+        moveToState(STATE_COMPLETE);
+    }
+
     public void runOnUIThread(Runnable runnable) {
         mHandler.post(runnable);
+    }
+
+    private void moveToState(int state) {
+        switch (currentState) {
+            case STATE_IDEL:
+                if (state == STATE_START) {
+                    currentState = state;
+                    for (OnRefreshListener l : mRefreshListeners) {
+                        l.onRefreshStart();
+                    }
+                } else if (state == STATE_REFRESH) {
+                    currentState = state;
+                    for (OnRefreshListener l : mRefreshListeners) {
+                        l.onRefresh();
+                    }
+                }
+                break;
+            case STATE_START:
+                if (state == STATE_READY) {
+                    currentState = state;
+                    for (OnRefreshListener l : mRefreshListeners) {
+                        l.onRefreshReady();
+                    }
+                }
+                break;
+            case STATE_READY:
+                if (state == STATE_REFRESH) {
+                    currentState = state;
+                    for (OnRefreshListener l : mRefreshListeners) {
+                        l.onRefresh();
+                    }
+                    setIsRefreshing(true);
+                } else if (state == STATE_START) {
+                    currentState = state;
+                    for (OnRefreshListener l : mRefreshListeners) {
+                        l.onRefreshStart();
+                    }
+                }
+                break;
+            case STATE_REFRESH:
+                if (state == STATE_COMPLETE) {
+                    currentState = state;
+                    for (OnRefreshListener l : mRefreshListeners) {
+                        l.onRefreshComplete();
+                    }
+                    stopScroll(true);
+                    setIsRefreshing(false);
+                    moveToState(STATE_IDEL);
+                }
+                break;
+            case STATE_COMPLETE:
+                if (state == STATE_IDEL) {
+                    currentState = state;
+                }
+                break;
+        }
+    }
+
+    private void onRefreshStateChanged() {
+
     }
 }

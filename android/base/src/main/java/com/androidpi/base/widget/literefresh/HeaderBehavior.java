@@ -86,7 +86,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                 }
                 if (offset != 0) {
                     for (ScrollListener l : mListeners) {
-                        l.onPreScroll(coordinatorLayout, child, (int) maxOffset);
+                        l.onPreScroll(coordinatorLayout, child, child.getHeight() + getTopAndBottomOffset(), (int) maxOffset);
                     }
                     consumeOffset(coordinatorLayout, child, (int) offset);
                     consumed[1] = -(int) offset;

@@ -7,4 +7,6 @@
     <color name="transparent">#00000000</color>
     <!-- list item-->
     <color name="listitem_pressed">#dcdcdcdc</color>
+
+    <color name="text_gray">#808080</color>
 </resources>

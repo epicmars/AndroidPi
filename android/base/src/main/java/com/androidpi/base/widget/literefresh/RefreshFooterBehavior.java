@@ -64,7 +64,7 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
         for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshStart();
         }

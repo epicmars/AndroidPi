@@ -23,7 +23,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
 
         void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max);
 
-        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max);
+        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max);
 
         void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch);
 
