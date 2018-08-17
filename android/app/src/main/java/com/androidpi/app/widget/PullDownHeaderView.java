@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.ImageViewCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ public class PullDownHeaderView extends FrameLayout implements OnPullListener, O
     private ImageView ivArrow;
     private ObjectAnimator rotateUpAnimator;
     private ObjectAnimator rotateDownAnimator;
+    private int gravity = Gravity.TOP;
 
     public PullDownHeaderView(Context context) {
         this(context, null);
@@ -70,7 +72,20 @@ public class PullDownHeaderView extends FrameLayout implements OnPullListener, O
 
     @Override
     public void onPulling(int current, int delta, int max) {
-
+        float height = getHeight();
+        if (current <= height) return;
+        float scale = Math.max(current / height, 1);
+        switch (gravity) {
+            case Gravity.CENTER:
+                setTranslationY(-(current - height) / 2);
+                break;
+            case Gravity.TOP:
+                setTranslationY(-(current - height));
+                break;
+            case Gravity.BOTTOM:
+            default:
+                break;
+        }
     }
 
     @Override

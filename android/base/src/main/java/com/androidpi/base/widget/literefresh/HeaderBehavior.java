@@ -84,13 +84,8 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                     // Pulling down.
                     offset = MathUtils.clamp(-dy, 0, maxOffset - bottom);
                 }
-                if (offset != 0) {
-                    for (ScrollListener l : mListeners) {
-                        l.onPreScroll(coordinatorLayout, child, child.getHeight() + getTopAndBottomOffset(), (int) maxOffset);
-                    }
-                    consumeOffset(coordinatorLayout, child, (int) offset);
-                    consumed[1] = -(int) offset;
-                }
+                consumeOffset(coordinatorLayout, child, (int) offset);
+                consumed[1] = -(int) offset;
             }
         }
     }
@@ -110,10 +105,18 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     }
 
     private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset) {
+        if (offset == 0) return offset;
+        // Before child consume the offset.
+        for (ScrollListener l : mListeners) {
+            l.onPreScroll(coordinatorLayout, child, child.getHeight() + getTopAndBottomOffset(), (int) maxOffset);
+        }
         int current = getTopAndBottomOffset();
         int consumed = onConsumeOffset(current, coordinatorLayout.getHeight(), offset);
         current += consumed;
         setTopAndBottomOffset(current);
+        // The header view itself can change position by "setTranslationY".
+        // We need to call "onDependentViewChanged" manually.
+        coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, child.getHeight() + current, offset, (int) maxOffset, true);
         }
