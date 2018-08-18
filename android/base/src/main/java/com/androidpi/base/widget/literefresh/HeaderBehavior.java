@@ -105,17 +105,18 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     }
 
     private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset) {
-        if (offset == 0) return offset;
+        int current = getTopAndBottomOffset();
         // Before child consume the offset.
         for (ScrollListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, child.getHeight() + getTopAndBottomOffset(), (int) maxOffset);
+            l.onPreScroll(coordinatorLayout, child, child.getHeight() + current, (int) maxOffset);
         }
-        int current = getTopAndBottomOffset();
         int consumed = onConsumeOffset(current, coordinatorLayout.getHeight(), offset);
         current += consumed;
         setTopAndBottomOffset(current);
-        // The header view itself can change position by "setTranslationY".
-        // We need to call "onDependentViewChanged" manually.
+        // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
+        // The header view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle.
+        // In this case CoordinatorLayout will not call onDependentViewChanged().
+        // So We need to call onDependentViewChanged() manually.
         coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, child.getHeight() + current, offset, (int) maxOffset, true);

@@ -30,8 +30,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
     private DecelerateInterpolator downInterpolator = new DecelerateInterpolator(1.5f);
     private List<OnPullListener> mPullListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
-    private AtomicBoolean isRefreshing = new AtomicBoolean(false);
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     private int currentState = STATE_IDEL;
 
     public RefreshHeaderBehavior(Context context) {
@@ -107,10 +106,23 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         }
     }
 
+    @Override
+    public void onAttachedToLayoutParams(@NonNull CoordinatorLayout.LayoutParams params) {
+        super.onAttachedToLayoutParams(params);
+
+    }
+
+    @Override
+    public void onDetachedFromLayoutParams() {
+        super.onDetachedFromLayoutParams();
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
+    }
+
     private void startRefreshing() {
         if (!mRefreshListeners.isEmpty()) {
-            if (isRefreshing())
-                return;
             moveToState(STATE_REFRESH);
             show();
         } else {
@@ -126,6 +138,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
 
     protected void stopScroll(@NonNull V child, boolean holdOn) {
         if (isVisible()) {
+            if (child.getHandler() == null) return;
             child.getHandler().removeCallbacks(offsetCallback);
             offsetCallback = new Runnable() {
                 @Override
@@ -151,78 +164,59 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
         return getChild().getHeight();
     }
 
-
-    public boolean isRefreshing() {
-        return isRefreshing.get();
-    }
-
-    private void setIsRefreshing(boolean isRefreshing) {
-        this.isRefreshing.set(isRefreshing);
-    }
-
     @Override
     public void refresh() {
         // To avoid unnecessary task enqueueing.
-        if (isRefreshing())
+        if (currentState == STATE_REFRESH)
             return;
         runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                moveToState(STATE_REFRESH);
-                show();
+                if (moveToState(STATE_REFRESH)) {
+                    show();
+                }
             }
         });
     }
 
     @Override
     public void refreshComplete() {
-        runOnUIThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshCompleted();
-            }
-        });
+        refreshCompleted();
+
     }
 
     @Override
     public void refreshTimeout() {
-        runOnUIThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshCompleted();
-            }
-        });
+        refreshCompleted();
     }
 
     @Override
     public void refreshCancelled() {
-        runOnUIThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshCompleted();
-            }
-        });
+        refreshCompleted();
     }
 
     @Override
     public void refreshException(Exception exception) {
+        refreshCompleted();
+    }
+
+    private void refreshCompleted() {
         runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                refreshCompleted();
+                moveToState(STATE_COMPLETE);
             }
         });
     }
 
-    private void refreshCompleted() {
-        moveToState(STATE_COMPLETE);
-    }
-
     public void runOnUIThread(Runnable runnable) {
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
         mHandler.post(runnable);
     }
 
-    private void moveToState(int state) {
+    private boolean moveToState(int state) {
         switch (currentState) {
             case STATE_IDEL:
                 if (state == STATE_START) {
@@ -230,35 +224,39 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
                     for (OnRefreshListener l : mRefreshListeners) {
                         l.onRefreshStart();
                     }
+                    return true;
                 } else if (state == STATE_REFRESH) {
                     currentState = state;
                     for (OnRefreshListener l : mRefreshListeners) {
                         l.onRefresh();
                     }
+                    return true;
                 }
-                break;
+                return false;
             case STATE_START:
                 if (state == STATE_READY) {
                     currentState = state;
                     for (OnRefreshListener l : mRefreshListeners) {
                         l.onRefreshReady();
                     }
+                    return true;
                 }
-                break;
+                return false;
             case STATE_READY:
                 if (state == STATE_REFRESH) {
                     currentState = state;
                     for (OnRefreshListener l : mRefreshListeners) {
                         l.onRefresh();
                     }
-                    setIsRefreshing(true);
+                    return true;
                 } else if (state == STATE_START) {
                     currentState = state;
                     for (OnRefreshListener l : mRefreshListeners) {
                         l.onRefreshStart();
                     }
+                    return true;
                 }
-                break;
+                return false;
             case STATE_REFRESH:
                 if (state == STATE_COMPLETE) {
                     currentState = state;
@@ -266,19 +264,18 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
                         l.onRefreshComplete();
                     }
                     stopScroll(true);
-                    setIsRefreshing(false);
                     moveToState(STATE_IDEL);
+                    return true;
                 }
-                break;
+                return false;
             case STATE_COMPLETE:
                 if (state == STATE_IDEL) {
                     currentState = state;
+                    return true;
                 }
-                break;
+                return false;
         }
+        return false;
     }
 
-    private void onRefreshStateChanged() {
-
-    }
 }

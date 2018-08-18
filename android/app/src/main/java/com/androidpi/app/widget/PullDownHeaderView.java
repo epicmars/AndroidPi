@@ -28,7 +28,7 @@ public class PullDownHeaderView extends FrameLayout implements OnPullListener, O
     private ImageView ivArrow;
     private ObjectAnimator rotateUpAnimator;
     private ObjectAnimator rotateDownAnimator;
-    private int gravity = Gravity.TOP;
+    private int gravity = Gravity.CENTER;
 
     public PullDownHeaderView(Context context) {
         this(context, null);
