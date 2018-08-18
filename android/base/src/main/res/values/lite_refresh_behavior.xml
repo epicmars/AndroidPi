@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="lr_refresh_header_behavior" translatable="false">com.androidpi.base.widget.literefresh.RefreshHeaderBehavior</string>
-    <string name="lr_refresh_footer_behavior" translatable="false">com.androidpi.base.widget.literefresh.RefreshFooterBehavior</string>
-    <string name="lr_refresh_content_behavior" translatable="false">com.androidpi.base.widget.literefresh.RefreshContentBehavior</string>
+    <string name="lr_refresh_header_behavior" translatable="false">com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior</string>
+    <string name="lr_refresh_footer_behavior" translatable="false">com.androidpi.app.base.widget.literefresh.RefreshFooterBehavior</string>
+    <string name="lr_refresh_content_behavior" translatable="false">com.androidpi.app.base.widget.literefresh.RefreshContentBehavior</string>
 </resources>

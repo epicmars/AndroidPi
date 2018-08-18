@@ -1,4 +1,4 @@
-package com.androidpi.base.widget.literefresh;
+package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
 import android.os.Handler;
@@ -10,7 +10,6 @@ import android.view.animation.DecelerateInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by jastrelax on 2017/11/17.

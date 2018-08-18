@@ -5,8 +5,8 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.arch.persistence.room.migration.Migration
-import com.androidpi.base.data.model.DateConverter
-import com.androidpi.base.data.model.StringArrayConverter
+import com.androidpi.app.base.data.model.DateConverter
+import com.androidpi.app.base.data.model.StringArrayConverter
 import com.androidpi.news.entity.Bookmark
 import com.androidpi.news.entity.News
 import com.androidpi.news.local.dao.BookmarkDao

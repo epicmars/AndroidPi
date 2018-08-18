@@ -7,15 +7,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.ImageViewCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidpi.app.R;
-import com.androidpi.base.widget.literefresh.OnPullListener;
-import com.androidpi.base.widget.literefresh.OnRefreshListener;
-import com.androidpi.base.widget.literefresh.RefreshHeaderBehavior;
+import com.androidpi.app.base.widget.literefresh.OnPullListener;
+import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 
 /**
  * Created by jastrelax on 2017/11/21.

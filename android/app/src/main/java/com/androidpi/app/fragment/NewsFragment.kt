@@ -15,13 +15,14 @@ import com.androidpi.app.R
 import com.androidpi.app.base.BaseFragment
 import com.androidpi.app.base.BindLayout
 import com.androidpi.app.base.RecyclerAdapter
+import com.androidpi.app.base.widget.literefresh.*
 import com.androidpi.app.buiness.view.NewsView
 import com.androidpi.app.buiness.viewmodel.NewsViewModel
 import com.androidpi.app.databinding.FragmentNewsBinding
 import com.androidpi.app.viewholder.ErrorViewHolder
 import com.androidpi.app.viewholder.NewsViewHolder
 import com.androidpi.app.viewholder.items.ErrorItem
-import com.androidpi.base.widget.literefresh.*
+import com.androidpi.app.base.widget.literefresh.*
 import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import com.androidpi.news.vo.NewsPagination
 import javax.inject.Inject

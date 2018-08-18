@@ -6,8 +6,8 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import com.androidpi.app.R;
-import com.androidpi.base.widget.literefresh.OnPullListener;
-import com.androidpi.base.widget.literefresh.RefreshHeaderBehavior;
+import com.androidpi.app.base.widget.literefresh.OnPullListener;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 
 /**
  * Created by jastrelax on 2018/8/12.

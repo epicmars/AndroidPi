@@ -1,11 +1,9 @@
-package com.androidpi.base.widget.literefresh;
+package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
-
-import java.util.HashSet;
 
 /**
  * Behavior will automatically sets up a {@link ViewOffsetHelper} on a {@link View}.

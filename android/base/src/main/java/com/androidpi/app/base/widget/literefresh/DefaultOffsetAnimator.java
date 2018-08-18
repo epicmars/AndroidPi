@@ -1,8 +1,7 @@
-package com.androidpi.base.widget.literefresh;
+package com.androidpi.app.base.widget.literefresh;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 /**

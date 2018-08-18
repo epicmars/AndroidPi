@@ -1,8 +1,7 @@
-package com.androidpi.base.widget.literefresh;
+package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
