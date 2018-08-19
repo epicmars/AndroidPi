@@ -1,4 +1,4 @@
-package com.androidpi.app.base
+package com.androidpi.app.base.ui
 
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
@@ -17,28 +17,28 @@ import dagger.android.support.AndroidSupportInjection
 
 abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
 
-    lateinit var mBinding: VDB
+    lateinit var binding: VDB
 
-    protected var mBindLayout: BindLayout? = null
+    var bindLayout: BindLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mBindLayout = javaClass.getAnnotation(BindLayout::class.java)
-        if (mBindLayout != null && mBindLayout!!.injectable) {
+        bindLayout = javaClass.getAnnotation(BindLayout::class.java)
+        if (bindLayout != null && bindLayout!!.injectable) {
             AndroidSupportInjection.inject(this)
         }
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBindLayout ?: // A fragment without view.
+        bindLayout ?: // A fragment without view.
                 return super.onCreateView(inflater, container, savedInstanceState)
-        mBinding = DataBindingUtil.inflate(inflater, mBindLayout!!.value, container, false)
-        return mBinding.root
+        binding = DataBindingUtil.inflate(inflater, bindLayout!!.value, container, false)
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mBinding.unbind()
+        binding.unbind()
     }
 
     override fun onDestroy() {

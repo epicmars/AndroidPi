@@ -3,8 +3,8 @@ package com.androidpi.app.fragment
 import android.os.Bundle
 import android.view.View
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.databinding.FragmentTextNoteBinding
 import com.androidpi.note.entity.TextNote
 
@@ -31,6 +31,6 @@ class TextNoteFragment : BaseFragment<FragmentTextNoteBinding>() {
         val textNote: TextNote? = arguments?.getParcelable(ARGS_TEXT_NOTE)
         if (textNote == null)
             return
-        mBinding.tvText.text = textNote.text
+        binding.tvText.text = textNote.text
     }
 }

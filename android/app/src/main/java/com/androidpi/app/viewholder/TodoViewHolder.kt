@@ -4,8 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.androidpi.app.R
 import com.androidpi.app.activity.TemplateActivity
-import com.androidpi.app.base.BaseViewHolder
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseViewHolder
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.buiness.viewmodel.TodoEditViewModel
 import com.androidpi.app.databinding.ViewHolderTodoBinding
 import com.androidpi.app.fragment.FragmentFactory

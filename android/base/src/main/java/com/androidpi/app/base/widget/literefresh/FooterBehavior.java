@@ -79,7 +79,7 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                 }
                 if (offset != 0) {
                     for (ScrollListener l : mListeners) {
-                        l.onStartScroll(coordinatorLayout, child, height);
+                        l.onStartScroll(coordinatorLayout, child, height, type == TYPE_TOUCH);
                     }
                     offsetTopAndBottom(coordinatorLayout, child, offset);
                     consumed[1] = -offset;
@@ -108,7 +108,7 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         if (type == TYPE_TOUCH) {
             for (ScrollListener l : mListeners) {
-                l.onStopScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset(), child.getHeight());
+                l.onStopScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset(), child.getHeight(), true);
             }
         }
     }

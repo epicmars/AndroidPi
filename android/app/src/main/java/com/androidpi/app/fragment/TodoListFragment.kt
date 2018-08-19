@@ -6,19 +6,18 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.androidpi.app.R
 import com.androidpi.app.activity.TodoEditActivity
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
-import com.androidpi.app.base.RecyclerAdapter
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
+import com.androidpi.app.base.ui.RecyclerAdapter
 import com.androidpi.app.buiness.view.TodoView
 import com.androidpi.app.buiness.viewmodel.TodoListViewModel
-import com.androidpi.app.buiness.viewmodel.vo.Resource
+import com.androidpi.app.base.vm.vo.Resource
 import com.androidpi.app.databinding.FragmentTodoListBinding
 import com.androidpi.app.viewholder.ErrorViewHolder
 import com.androidpi.app.viewholder.TodoViewHolder
@@ -60,14 +59,14 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding>(), TodoView {
         mAdapter = RecyclerAdapter()
         mAdapter?.register(TodoViewHolder::class.java,
                 ErrorViewHolder::class.java)
-        mBinding.recyclerTodo.setHasFixedSize(true)
-        mBinding.recyclerTodo.layoutManager = GridLayoutManager(context, 2)
-        mBinding.recyclerTodo.adapter = mAdapter
+        binding.recyclerTodo.setHasFixedSize(true)
+        binding.recyclerTodo.layoutManager = GridLayoutManager(context, 2)
+        binding.recyclerTodo.adapter = mAdapter
 
-        mBinding.btnAdd.setOnClickListener {
+        binding.btnAdd.setOnClickListener {
             startActivityForResult(Intent(context, TodoEditActivity::class.java), REQUEST_ADD_TODO_ITEM)
         }
-        return mBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,10 +76,10 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding>(), TodoView {
                 if (t == null || t.isError()) {
                     val errorItem = ErrorItem("oops,出错了!")
                     if (t != null) errorItem.message = t.message
-                    (mBinding.recyclerTodo.layoutManager as GridLayoutManager).spanCount = 1
+                    (binding.recyclerTodo.layoutManager as GridLayoutManager).spanCount = 1
                     mAdapter?.setPayloads(errorItem)
                 } else if (t.isSuccess()) {
-                    (mBinding.recyclerTodo.layoutManager as GridLayoutManager).spanCount = 2
+                    (binding.recyclerTodo.layoutManager as GridLayoutManager).spanCount = 2
                     mAdapter?.setPayloads(t.data?.toList())
                 }
             }

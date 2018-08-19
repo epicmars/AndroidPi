@@ -1,9 +1,9 @@
-package com.androidpi.app.buiness.viewmodel.vo;
+package com.androidpi.app.base.vm.vo;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import static com.androidpi.app.buiness.viewmodel.vo.Resource.Status.*;
+import static com.androidpi.app.base.vm.vo.Resource.Status.*;
 
 /**
  * A generic class that holds a value with its loading status.
@@ -134,6 +134,7 @@ public class Resource<T> {
                 "status=" + status +
                 ", message='" + message + '\'' +
                 ", data=" + data +
+                ", throwable=" + throwable +
                 '}';
     }
 }

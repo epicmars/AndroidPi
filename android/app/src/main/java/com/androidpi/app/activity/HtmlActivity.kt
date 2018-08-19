@@ -9,7 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.*
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseActivity
+import com.androidpi.app.base.ui.BaseActivity
 import com.androidpi.app.buiness.viewmodel.HtmlReaderViewModel
 import com.androidpi.app.fragment.HtmlReaderFragment
 import com.androidpi.common.libs.readability.Readability

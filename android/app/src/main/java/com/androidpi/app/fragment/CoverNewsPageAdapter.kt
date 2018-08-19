@@ -6,13 +6,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import com.androidpi.app.R
 import com.androidpi.app.activity.HtmlActivity
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.databinding.FragmentCoverNewsBinding
 import com.androidpi.common.image.glide.GlideApp
 import com.androidpi.news.entity.News
@@ -48,16 +47,16 @@ class CoverNewsFragment : BaseFragment<FragmentCoverNewsBinding>() {
         mPosition = arguments?.getInt(ARGS_POSITION)
         mNews = arguments?.getParcelable(ARGS_NEWS)
 
-        mBinding.tvTitle.text = mNews?.title
-        mBinding.ivNewsCover.setOnClickListener {
+        binding.tvTitle.text = mNews?.title
+        binding.ivNewsCover.setOnClickListener {
             startActivity(Intent(HtmlActivity.ACTION_VIEW, Uri.parse(mNews?.url)))
         }
-        GlideApp.with(this).load(mNews?.urlToImage).into(mBinding.ivNewsCover)
+        GlideApp.with(this).load(mNews?.urlToImage).into(binding.ivNewsCover)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        GlideApp.with(this).clear(mBinding.ivNewsCover)
+        GlideApp.with(this).clear(binding.ivNewsCover)
     }
 }
 

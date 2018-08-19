@@ -60,8 +60,9 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         boolean started = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (started) {
             cancelAnimation();
+            boolean isTouch = (type == TYPE_TOUCH);
             for (ScrollListener l : mListeners) {
-                l.onStartScroll(coordinatorLayout, child, (int) maxOffset);
+                l.onStartScroll(coordinatorLayout, child, (int) maxOffset, isTouch);
             }
         }
         return started;
@@ -84,7 +85,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
                     // Pulling down.
                     offset = MathUtils.clamp(-dy, 0, maxOffset - bottom);
                 }
-                consumeOffset(coordinatorLayout, child, (int) offset);
+                consumeOffset(coordinatorLayout, child, (int) offset, type);
                 consumed[1] = -(int) offset;
             }
         }
@@ -98,17 +99,17 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
             if (isInvisible()) {
                 if (dyUnconsumed < 0) {
                     int offset = MathUtils.clamp(-dyUnconsumed, 0, (int)(maxOffset - child.getBottom()));
-                    consumeOffset(coordinatorLayout, child, offset);
+                    consumeOffset(coordinatorLayout, child, offset, type);
                 }
             }
         }
     }
 
-    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset) {
+    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset, int type) {
         int current = getTopAndBottomOffset();
         // Before child consume the offset.
         for (ScrollListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, child.getHeight() + current, (int) maxOffset);
+            l.onPreScroll(coordinatorLayout, child, child.getHeight() + current, (int) maxOffset, type == TYPE_TOUCH);
         }
         int consumed = onConsumeOffset(current, coordinatorLayout.getHeight(), offset);
         current += consumed;
@@ -147,8 +148,9 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         if (type == TYPE_TOUCH) {
             int height = child.getHeight();
+            boolean isTouch = (type == TYPE_TOUCH);
             for (ScrollListener l : mListeners) {
-                l.onStopScroll(coordinatorLayout, child, height + getTopAndBottomOffset(), (int) maxOffset);
+                l.onStopScroll(coordinatorLayout, child, height + getTopAndBottomOffset(), (int) maxOffset, isTouch);
             }
         }
     }
@@ -170,6 +172,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     }
 
     protected void show(long animateDuration) {
+        if (null == getChild()) return;
         float offset = -getChild().getTop();
         animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, animateDuration);
     }
@@ -177,6 +180,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     @Override
     public void onDetachedFromLayoutParams() {
         super.onDetachedFromLayoutParams();
+        cancelAnimation();
         mListeners.clear();
         mParent = null;
         mChild = null;

@@ -1,4 +1,4 @@
-package com.androidpi.app.base;
+package com.androidpi.app.base.ui;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;

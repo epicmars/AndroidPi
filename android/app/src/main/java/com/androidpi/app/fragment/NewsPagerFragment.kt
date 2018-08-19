@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.View
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.databinding.FragmentNewsPagerBinding
 import com.androidpi.news.model.NewsListModel
 
@@ -29,11 +28,11 @@ class NewsPagerFragment : BaseFragment<FragmentNewsPagerBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mAdapter = NewsPagerAdapter(childFragmentManager)
-        mBinding.newsPager.adapter = mAdapter
-        mBinding.newsPager.offscreenPageLimit = 2
+        binding.newsPager.adapter = mAdapter
+        binding.newsPager.offscreenPageLimit = 2
 
-        mBinding.pagerTabs.setTextColor(view.resources.getColor(android.R.color.primary_text_dark))
-        mBinding.pagerTabs.tabIndicatorColor = view.resources.getColor(android.R.color.primary_text_dark)
+        binding.pagerTabs.setTextColor(view.resources.getColor(android.R.color.primary_text_dark))
+        binding.pagerTabs.tabIndicatorColor = view.resources.getColor(android.R.color.primary_text_dark)
     }
 
     /**

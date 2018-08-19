@@ -2,7 +2,7 @@ package com.androidpi.app.fragment
 
 import android.os.Bundle
 import android.view.View
-import com.androidpi.app.base.BaseFragment
+import com.androidpi.app.base.ui.BaseFragment
 import com.androidpi.app.databinding.FragmentTempBinding
 
 /**
@@ -25,6 +25,6 @@ class TempFragment : BaseFragment<FragmentTempBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.tvMessage.text = arguments?.getString(KEY_MESSAGE)
+        binding.tvMessage.text = arguments?.getString(KEY_MESSAGE)
     }
 }

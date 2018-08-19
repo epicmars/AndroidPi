@@ -8,7 +8,7 @@ import timber.log.Timber
 /**
  * Created by jastrelax on 2018/8/13.
  */
-object RetrofitHttpClient {
+internal object RetrofitHttpClient {
 
     val okHttpClient = buildClient()
 

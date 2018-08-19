@@ -2,8 +2,8 @@ package com.androidpi.app.viewholder
 
 import android.view.View
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseViewHolder
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseViewHolder
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.databinding.ViewHolderErrorBinding
 import com.androidpi.app.viewholder.items.ErrorItem
 

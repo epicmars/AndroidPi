@@ -9,11 +9,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.androidpi.app.R;
-import com.androidpi.app.base.BaseFragment;
-import com.androidpi.app.base.BindLayout;
-import com.androidpi.app.base.RecyclerAdapter;
+import com.androidpi.app.base.ui.BaseFragment;
+import com.androidpi.app.base.ui.BindLayout;
+import com.androidpi.app.base.ui.RecyclerAdapter;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
-import com.androidpi.app.buiness.viewmodel.vo.Resource;
+import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.databinding.FragmentUnsplashBinding;
 import com.androidpi.app.viewholder.UnsplashImageViewHolder;
 import com.androidpi.data.remote.dto.ResRandomPhotos;
@@ -46,9 +46,9 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding>{
         super.onViewCreated(view, savedInstanceState);
         unsplashViewModel = ViewModelProviders.of(this).get(UnsplashViewModel.class);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mBinding.recyclerView.setLayoutManager(layoutManager);
-        mBinding.recyclerView.setAdapter(adapter);
-        mBinding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
+        binding.recyclerView.setLayoutManager(layoutManager);
+        binding.recyclerView.setAdapter(adapter);
+        binding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
         unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<List<ResRandomPhotos>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<ResRandomPhotos>> listResource) {

@@ -66,14 +66,14 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
     }
 
     @Override
-    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
+    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch) {
         for (OnPullListener l : mPullListeners) {
-            l.onStartPulling(max);
+            l.onStartPulling(max, isTouch);
         }
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
         if (current < readyRefreshOffset()) {
             moveToState(STATE_START);
         }
@@ -82,7 +82,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
         for (OnPullListener l : mPullListeners) {
-            l.onPulling(current, delta, max);
+            l.onPulling(current, delta, max, isTouch);
         }
         if (isTouch) {
             if (current >= readyRefreshOffset()) {
@@ -94,7 +94,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
     }
 
     @Override
-    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
+    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
         for (OnPullListener l : mPullListeners) {
             l.onStopPulling(current, max);
         }

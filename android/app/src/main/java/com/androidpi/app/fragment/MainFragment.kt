@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.databinding.FragmentMainBinding
 
 /**
@@ -30,8 +30,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.pager.offscreenPageLimit = 2
-        mBinding.pager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
+        binding.pager.offscreenPageLimit = 2
+        binding.pager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
 
             val pageTitles = intArrayOf(R.string.news, R.string.todo, R.string.note, R.string.me)
 
@@ -50,7 +50,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             }
         }
 
-        mBinding.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        binding.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             override fun onPageScrollStateChanged(state: Int) {
             }
@@ -59,17 +59,17 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             }
 
             override fun onPageSelected(position: Int) {
-                mBinding.bottomNavigation.menu.getItem(position).isChecked = true
+                binding.bottomNavigation.menu.getItem(position).isChecked = true
             }
         })
 
-        mBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             val itemId = item.itemId
             val current : Int? =  NAV_IDS[itemId]
             if (current == null) {
                 false
             } else {
-                mBinding.pager.currentItem = current
+                binding.pager.currentItem = current
                 true
             }
         }

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidpi.app.R;
+import com.androidpi.app.base.widget.literefresh.LoadingView;
 import com.androidpi.app.base.widget.literefresh.OnPullListener;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
@@ -65,12 +66,12 @@ public class PullDownHeaderView extends FrameLayout implements OnPullListener, O
     }
 
     @Override
-    public void onStartPulling(int max) {
+    public void onStartPulling(int max, boolean isTouch) {
 
     }
 
     @Override
-    public void onPulling(int current, int delta, int max) {
+    public void onPulling(int current, int delta, int max, boolean isTouch) {
         float height = getHeight();
         if (current <= height) return;
         float scale = Math.max(current / height, 1);

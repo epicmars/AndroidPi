@@ -29,7 +29,6 @@ android {
         }
     }
 
-
     buildTypes {
         release {
             minifyEnabled false
@@ -41,7 +40,6 @@ android {
             buildConfigField "String", "NEWS_BASE_URL", "\"https://newsapi.org\""
         }
     }
-
 }
 
 dependencies {
@@ -69,4 +67,5 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 
     implementation project(':base')
+    implementation project(':common')
 }

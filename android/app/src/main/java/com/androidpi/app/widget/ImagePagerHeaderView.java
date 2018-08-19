@@ -64,12 +64,12 @@ public class ImagePagerHeaderView extends FrameLayout implements OnPullListener{
     }
 
     @Override
-    public void onStartPulling(int max) {
+    public void onStartPulling(int max, boolean isTouch) {
 
     }
 
     @Override
-    public void onPulling(int current, int delta, int max) {
+    public void onPulling(int current, int delta, int max, boolean isTouch) {
         float height = getHeight();
         float scale = Math.max(current / height, 1);
         setScaleX(scale);

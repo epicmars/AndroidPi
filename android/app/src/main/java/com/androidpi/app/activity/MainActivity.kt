@@ -6,7 +6,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseActivity
+import com.androidpi.app.base.ui.BaseActivity
 import com.androidpi.app.databinding.ActivityMainBinding
 import com.androidpi.app.fragment.FragmentFactory
 import com.androidpi.app.fragment.MainFragment

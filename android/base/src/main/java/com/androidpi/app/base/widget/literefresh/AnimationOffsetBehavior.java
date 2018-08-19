@@ -7,7 +7,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.androidpi.base.R;
+import com.androidpi.app.pi.base.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +20,13 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
 
     public interface ScrollListener {
 
-        void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max);
+        void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch);
 
-        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max);
+        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch);
 
         void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch);
 
-        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max);
+        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch);
     }
 
     public static final float GOLDEN_RATIO = 0.618F;

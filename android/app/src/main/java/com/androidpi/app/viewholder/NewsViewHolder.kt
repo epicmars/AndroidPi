@@ -5,8 +5,8 @@ import android.net.Uri
 import android.view.View
 import com.androidpi.app.R
 import com.androidpi.app.activity.HtmlActivity
-import com.androidpi.app.base.BaseViewHolder
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseViewHolder
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.databinding.ViewHolderNewsBinding
 import com.androidpi.common.image.glide.GlideApp
 import com.androidpi.news.entity.News

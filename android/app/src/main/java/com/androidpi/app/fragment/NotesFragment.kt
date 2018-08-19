@@ -8,12 +8,12 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
 import com.androidpi.app.R
 import com.androidpi.app.activity.TextNoteEditActivity
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
-import com.androidpi.app.base.RecyclerAdapter
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
+import com.androidpi.app.base.ui.RecyclerAdapter
 import com.androidpi.app.buiness.viewmodel.NotesViewModel
 import com.androidpi.app.buiness.viewmodel.ViewModelFactory
-import com.androidpi.app.buiness.viewmodel.vo.Resource
+import com.androidpi.app.base.vm.vo.Resource
 import com.androidpi.app.databinding.FragmentNotesBinding
 import com.androidpi.app.viewholder.ErrorViewHolder
 import com.androidpi.app.viewholder.TextNoteViewHolder
@@ -53,10 +53,10 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>(), TextNotesModel{
         mAdapter = RecyclerAdapter()
         mAdapter?.register(ErrorViewHolder::class.java,
                 TextNoteViewHolder::class.java)
-        mBinding.recyclerNotes.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        mBinding.recyclerNotes.adapter = mAdapter
+        binding.recyclerNotes.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        binding.recyclerNotes.adapter = mAdapter
 
-        mBinding.btnAdd.setOnClickListener { v ->
+        binding.btnAdd.setOnClickListener { v ->
             startActivityForResult(Intent(activity, TextNoteEditActivity::class.java), REQUEST_CODE_EDIT_TEXT_NOTE)
         }
 
@@ -90,7 +90,7 @@ class NotesFragment : BaseFragment<FragmentNotesBinding>(), TextNotesModel{
     }
 
     fun setGridColumn(count: Int = 2) {
-        (mBinding.recyclerNotes.layoutManager as StaggeredGridLayoutManager).spanCount = count
+        (binding.recyclerNotes.layoutManager as StaggeredGridLayoutManager).spanCount = count
     }
 
     override fun getAllTextNotes() {

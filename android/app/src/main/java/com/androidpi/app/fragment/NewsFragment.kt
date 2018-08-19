@@ -12,9 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
-import com.androidpi.app.base.RecyclerAdapter
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
+import com.androidpi.app.base.ui.RecyclerAdapter
 import com.androidpi.app.base.widget.literefresh.*
 import com.androidpi.app.buiness.view.NewsView
 import com.androidpi.app.buiness.viewmodel.NewsViewModel
@@ -22,7 +22,6 @@ import com.androidpi.app.databinding.FragmentNewsBinding
 import com.androidpi.app.viewholder.ErrorViewHolder
 import com.androidpi.app.viewholder.NewsViewHolder
 import com.androidpi.app.viewholder.items.ErrorItem
-import com.androidpi.app.base.widget.literefresh.*
 import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import com.androidpi.news.vo.NewsPagination
 import javax.inject.Inject
@@ -97,31 +96,31 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         // View state will be restored,
         // thus the referenced obsolete activity context should not be used any more,
         // otherwise a memory leak may occur.
-        mBinding.recyclerNews.layoutManager = LinearLayoutManager(context)
-        mBinding.recyclerNews.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        binding.recyclerNews.layoutManager = LinearLayoutManager(context)
+        binding.recyclerNews.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
         mAdapter = RecyclerAdapter()
         mAdapter.setFragmentManager(childFragmentManager)
         mAdapter.register(NewsViewHolder::class.java,
                 ErrorViewHolder::class.java)
-        mBinding.recyclerNews.adapter = mAdapter
+        binding.recyclerNews.adapter = mAdapter
 
         //
-        val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
+        val lpHeader = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
         val headerBehavior = RefreshHeaderBehavior<View>(context)
         headerBehavior.addOnPullingListener(object : OnPullListener {
 
-            override fun onStartPulling(max: Int) {
-                mBinding.pullingProgress.visibility = View.VISIBLE
-                mBinding.pullingProgress.max = max
+            override fun onStartPulling(max: Int, isTouch: Boolean) {
+                binding.pullingProgress.visibility = View.VISIBLE
+                binding.pullingProgress.max = max
             }
 
-            override fun onPulling(current: Int, delta: Int, max: Int) {
-                mBinding.pullingProgress.setProgress(current)
+            override fun onPulling(current: Int, delta: Int, max: Int, isTouch: Boolean) {
+                binding.pullingProgress.setProgress(current)
             }
 
             override fun onStopPulling(current: Int, max: Int) {
-                mBinding.pullingProgress.setProgress(current)
+                binding.pullingProgress.setProgress(current)
 //                mBinding.pullingProgress.visibility = View.GONE
             }
 
@@ -142,9 +141,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
         })
         lpHeader.behavior = headerBehavior
-        mBinding.scrollHeader.layoutParams = lpHeader
+        binding.scrollHeader.layoutParams = lpHeader
 
-        val lpFooter = mBinding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
+        val lpFooter = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
         val footerBehavior = RefreshFooterBehavior<View>(context)
         footerBehavior.addOnRefreshListener(object : OnRefreshListener {
 
@@ -163,10 +162,10 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         })
 
         footerBehavior.addOnPullingListener(object : OnPullListener {
-            override fun onPulling(current: Int, delta: Int, max: Int) {
+            override fun onPulling(current: Int, delta: Int, max: Int, isTouch: Boolean) {
             }
 
-            override fun onStartPulling(max: Int) {
+            override fun onStartPulling(max: Int, isTouch: Boolean) {
 
             }
 
@@ -175,14 +174,14 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         })
 
         lpFooter.behavior = footerBehavior
-        mBinding.scrollFooter.layoutParams = lpFooter
+        binding.scrollFooter.layoutParams = lpFooter
 
-        val lpScroll = mBinding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
+        val lpScroll = binding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
         lpScroll.behavior = RefreshContentBehavior<View>()
-        mBinding.recyclerNews.layoutParams = lpScroll
+        binding.recyclerNews.layoutParams = lpScroll
 
         // pull up to load more
-        mBinding.recyclerNews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.recyclerNews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             val THRESHOULD = PAGE_SIZE / 2
 
@@ -203,25 +202,25 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
         })
 
-        return mBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (null == savedInstanceState || mNewsModel.mNews.value == null) {
-            val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
+            val lpHeader = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
             val behavior = lpHeader.behavior as RefreshHeaderBehavior
             behavior.refresh()
         }
     }
 
     fun refreshFinished() {
-        val lpHeader = mBinding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
+        val lpHeader = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
         val behavior = lpHeader.behavior as RefreshHeaderBehavior
         behavior.refreshComplete()
 
-        val lpFooter = mBinding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
+        val lpFooter = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
         val footerBehavior = lpFooter.behavior as RefreshFooterBehavior
         footerBehavior.refreshComplete()
     }

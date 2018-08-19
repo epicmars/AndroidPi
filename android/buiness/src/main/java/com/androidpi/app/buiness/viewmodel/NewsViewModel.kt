@@ -2,7 +2,7 @@ package com.androidpi.app.buiness.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.androidpi.app.buiness.viewmodel.vo.Resource
+import com.androidpi.app.base.vm.vo.Resource
 import com.androidpi.news.entity.News
 import com.androidpi.news.repo.NewsRepo
 import com.androidpi.news.model.NewsListModel

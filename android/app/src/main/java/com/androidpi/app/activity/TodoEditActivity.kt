@@ -12,7 +12,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.SeekBar
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseActivity
+import com.androidpi.app.base.ui.BaseActivity
 import com.androidpi.app.buiness.view.TodoEditView
 import com.androidpi.app.buiness.viewmodel.TodoEditViewModel
 import com.androidpi.app.databinding.ActivityTodoEditBinding

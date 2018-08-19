@@ -57,14 +57,14 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
     }
 
     @Override
-    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max) {
+    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch) {
         for (OnPullListener l : mListeners) {
-            l.onStartPulling(max);
+            l.onStartPulling(max, isTouch);
         }
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
         for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshStart();
         }
@@ -73,7 +73,7 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
         for (OnPullListener l : mListeners) {
-            l.onPulling(current, delta, max);
+            l.onPulling(current, delta, max, isTouch);
         }
         if (current >= max * 0.9) {
             for (OnRefreshListener l : mRefreshListeners) {
@@ -83,7 +83,7 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
     }
 
     @Override
-    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max) {
+    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
         for (OnPullListener l : mListeners) {
             l.onStopPulling(current, max);
         }

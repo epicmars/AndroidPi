@@ -6,4 +6,8 @@
         <attr name="lr_visibleHeight" format="reference|dimension"></attr>
         <attr name="lr_visibleHeightRatio" format="reference|float"></attr>
     </declare-styleable>
+
+    <declare-styleable name="LoadingView">
+        <attr name="lr_color" format="reference|color"></attr>
+    </declare-styleable>
 </resources>

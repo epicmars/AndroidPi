@@ -8,8 +8,8 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.databinding.FragmentHtmlReaderBinding
 
 /**
@@ -39,8 +39,8 @@ class HtmlReaderFragment : BaseFragment<FragmentHtmlReaderBinding>() {
         super.onViewCreated(view, savedInstanceState)
         val baseUrl = arguments?.getString(ARGS_BASE_URL)
         val html = arguments?.getString(ARGS_HTML)
-        config(mBinding.webView)
-        mBinding.webView.loadDataWithBaseURL(baseUrl, html, "text/html", "utf-8", null)
+        config(binding.webView)
+        binding.webView.loadDataWithBaseURL(baseUrl, html, "text/html", "utf-8", null)
     }
 
     fun toggleImmersiveMode() {

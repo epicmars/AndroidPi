@@ -3,7 +3,7 @@ package com.androidpi.app.buiness.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 
-import com.androidpi.app.buiness.viewmodel.vo.Resource
+import com.androidpi.app.base.vm.vo.Resource
 import com.androidpi.common.networks.http.RetrofitClientFactory
 import com.androidpi.data.remote.UnsplashApi
 import com.androidpi.data.remote.dto.ResRandomPhotos

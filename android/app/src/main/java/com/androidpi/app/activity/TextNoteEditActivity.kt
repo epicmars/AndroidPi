@@ -7,8 +7,8 @@ import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseActivity
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseActivity
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.buiness.viewmodel.TextNoteEditViewModel
 import com.androidpi.app.buiness.viewmodel.ViewModelFactory
 import com.androidpi.app.databinding.ActivityTextNoteEditBinding

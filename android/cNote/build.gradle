@@ -63,4 +63,5 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 
     implementation project(':base')
+    implementation project(':common')
 }

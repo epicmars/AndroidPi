@@ -12,17 +12,17 @@ import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 /**
  * Created by jastrelax on 2018/8/12.
  */
-public class ProfileHeaderView extends FrameLayout implements OnPullListener {
+public class ScalableHeaderView extends FrameLayout implements OnPullListener {
 
-    public ProfileHeaderView(Context context) {
+    public ScalableHeaderView(Context context) {
         this(context, null);
     }
 
-    public ProfileHeaderView(Context context, AttributeSet attrs) {
+    public ScalableHeaderView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ProfileHeaderView(Context context, AttributeSet attrs, int defStyle) {
+    public ScalableHeaderView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         inflate(context, R.layout.profile_header_view, this);
     }
@@ -49,12 +49,12 @@ public class ProfileHeaderView extends FrameLayout implements OnPullListener {
     }
 
     @Override
-    public void onStartPulling(int max) {
+    public void onStartPulling(int max, boolean isTouch) {
 
     }
 
     @Override
-    public void onPulling(int current, int delta, int max) {
+    public void onPulling(int current, int delta, int max, boolean isTouch) {
         float height = getHeight();
         float scale = Math.max(current / height, 1);
         setScaleX(scale);

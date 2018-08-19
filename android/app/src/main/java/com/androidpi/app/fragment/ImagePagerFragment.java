@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.androidpi.app.R;
-import com.androidpi.app.base.BaseFragment;
-import com.androidpi.app.base.BindLayout;
+import com.androidpi.app.base.ui.BaseFragment;
+import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.databinding.FragmentImagePagerBinding;
 
 /**
@@ -28,6 +28,6 @@ public class ImagePagerFragment extends BaseFragment<FragmentImagePagerBinding> 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mBinding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
+        binding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
     }
 }

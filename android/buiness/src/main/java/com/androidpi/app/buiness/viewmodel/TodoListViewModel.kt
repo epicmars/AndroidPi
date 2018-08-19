@@ -2,7 +2,7 @@ package com.androidpi.app.buiness.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.androidpi.app.buiness.viewmodel.vo.Resource
+import com.androidpi.app.base.vm.vo.Resource
 import com.androidpi.note.repo.TodoRepo
 import com.androidpi.note.entity.Todo
 import com.androidpi.note.model.TodoModel

@@ -4,8 +4,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseFragment
-import com.androidpi.app.base.BindLayout
+import com.androidpi.app.base.ui.BaseFragment
+import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.databinding.FragmentTodoBinding
 import com.androidpi.note.entity.Todo
 
@@ -24,7 +24,7 @@ class TodoFragment : BaseFragment<FragmentTodoBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.tvTodoContent.text = mTodo?.content
+        binding.tvTodoContent.text = mTodo?.content
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity?.supportStartPostponedEnterTransition()
         }

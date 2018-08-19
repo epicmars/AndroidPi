@@ -1,4 +1,4 @@
-package com.androidpi.app.buiness.viewmodel.vo;
+package com.androidpi.app.base.vm.vo;
 
 /**
  * Status of a resource that is provided to the UI.

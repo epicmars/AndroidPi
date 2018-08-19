@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import com.androidpi.app.R
-import com.androidpi.app.base.BaseActivity
+import com.androidpi.app.base.ui.BaseActivity
 import com.androidpi.app.fragment.FragmentFactory
 import com.androidpi.app.fragment.FragmentFactoryMap
 import timber.log.Timber
