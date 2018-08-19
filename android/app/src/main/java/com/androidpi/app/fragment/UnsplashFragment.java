@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by jastrelax on 2018/8/13.
  */
-@BindLayout(value = R.layout.fragment_unsplash, injectable = false)
+@BindLayout(value = R.layout.fragment_unsplash)
 public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding>{
 
     private UnsplashViewModel unsplashViewModel;

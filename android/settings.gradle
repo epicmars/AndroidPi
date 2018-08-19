@@ -1,4 +1,4 @@
 rootProject.name = 'AndroidPi'
 
-include ':app', ':cNews', ':cNote', ':data', ':base', ':common', ':buiness', ':cWeather'
+include ':app', ':cNews', ':cNote', ':appData', ':base', ':common', ':appBuiness', ':cWeather'
 

@@ -8,10 +8,10 @@
     <string name="confirm">确认</string>
 
     <!--新闻-->
-    <string name="news">科技动态</string>
+    <string name="news">新闻</string>
     <string name="reader_mode">阅读模式</string>
     <string name="articles">技术文章</string>
-    <string name="book">收藏</string>
+    <string name="literefresh">LiteRefresh</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

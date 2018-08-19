@@ -13,9 +13,9 @@ import com.androidpi.app.viewholder.items.ErrorItem
 @BindLayout(value = R.layout.view_holder_error, dataTypes = arrayOf(ErrorItem::class))
 class ErrorViewHolder(itemView: View) : BaseViewHolder<ViewHolderErrorBinding>(itemView) {
 
-    override fun <T : Any?> onBindView(data: T, position: Int) {
+    override fun <T : Any?> onBind(data: T, position: Int) {
         if (data is ErrorItem) {
-            mBinding.tvMessage.text = data.message
+            binding.tvMessage.text = data.message
         }
     }
 }

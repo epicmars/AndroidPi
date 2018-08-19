@@ -3,6 +3,7 @@ package com.androidpi.app.base.ui;
 import android.support.annotation.LayoutRes;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -12,6 +13,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Inherited
 public @interface BindLayout {
     /**
      * 布局资源
@@ -24,10 +26,4 @@ public @interface BindLayout {
      * @return
      */
     Class<?>[] dataTypes() default {};
-
-    /**
-     * 是否允许依赖注入。
-     * @return
-     */
-    boolean injectable() default true;
 }

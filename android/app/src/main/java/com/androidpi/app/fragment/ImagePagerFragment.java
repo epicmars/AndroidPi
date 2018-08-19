@@ -13,7 +13,7 @@ import com.androidpi.app.databinding.FragmentImagePagerBinding;
 /**
  * Created by jastrelax on 2018/8/13.
  */
-@BindLayout(value = R.layout.fragment_image_pager, injectable = false)
+@BindLayout(value = R.layout.fragment_image_pager)
 public class ImagePagerFragment extends BaseFragment<FragmentImagePagerBinding> {
 
     public static ImagePagerFragment newInstance() {

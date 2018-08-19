@@ -1,4 +1,4 @@
-package com.androidpi.app.widget.todo
+package com.androidpi.app.widget
 
 import android.content.Context
 import android.databinding.DataBindingUtil

@@ -20,11 +20,11 @@ import java.util.*
 @BindLayout(value = R.layout.view_holder_todo, dataTypes = arrayOf(Todo::class))
 class TodoViewHolder(itemView: View) : BaseViewHolder<ViewHolderTodoBinding>(itemView) {
 
-    override fun <T : Any?> onBindView(data: T, position: Int) {
+    override fun <T : Any?> onBind(data: T, position: Int) {
         val todo = data as? Todo
-        mBinding?.priorityColor?.setBackgroundColor(TodoEditViewModel.priorityColor(todo?.priority))
-        mBinding?.tvTodoContent?.text = todo?.content
-        mBinding?.tvCreatedTime?.text = getElapsedDays(todo?.createdTime)
+        binding?.priorityColor?.setBackgroundColor(TodoEditViewModel.priorityColor(todo?.priority))
+        binding?.tvTodoContent?.text = todo?.content
+        binding?.tvCreatedTime?.text = getElapsedDays(todo?.createdTime)
         itemView.setOnClickListener {
 //            val sharedElementName = it.resources.getString(R.string.transition_todo_content)
 //            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(it.context as Activity, itemView, sharedElementName)

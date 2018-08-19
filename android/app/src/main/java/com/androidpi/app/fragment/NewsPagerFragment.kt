@@ -14,7 +14,7 @@ import com.androidpi.news.model.NewsListModel
 /**
  * Created by jastrelax on 2017/12/15.
  */
-@BindLayout(R.layout.fragment_news_pager, injectable = false)
+@BindLayout(R.layout.fragment_news_pager)
 class NewsPagerFragment : BaseFragment<FragmentNewsPagerBinding>() {
 
     companion object {

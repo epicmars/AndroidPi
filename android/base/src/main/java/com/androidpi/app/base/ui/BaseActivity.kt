@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
+import com.androidpi.app.base.di.Injectable
 import com.androidpi.app.pi.base.R
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -40,10 +41,13 @@ abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity(), HasSup
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bindLayout = javaClass.getAnnotation(BindLayout::class.java)
+        val injectable = javaClass.getAnnotation(Injectable::class.java)
         if (bindLayout != null) {
             binding = DataBindingUtil.setContentView(this, bindLayout.value)
-            if (bindLayout.injectable)
-                AndroidInjection.inject(this)
+        }
+
+        if (injectable != null) {
+            AndroidInjection.inject(this)
         }
 
         val view = window.decorView

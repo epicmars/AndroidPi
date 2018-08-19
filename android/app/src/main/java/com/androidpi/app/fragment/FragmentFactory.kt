@@ -13,7 +13,6 @@ object FragmentFactoryMap {
         factoryMap.remove(key)
         factoryMap[key] = value
     }
-
 }
 
 

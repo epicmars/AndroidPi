@@ -8,7 +8,7 @@ import com.androidpi.app.databinding.FragmentArticlePagerBinding
 /**
  * Created by jastrelax on 2018/1/5.
  */
-@BindLayout(R.layout.fragment_article_pager, injectable = false)
+@BindLayout(R.layout.fragment_article_pager)
 class ArticlePagerFragment : BaseFragment<FragmentArticlePagerBinding>() {
 
     companion object {

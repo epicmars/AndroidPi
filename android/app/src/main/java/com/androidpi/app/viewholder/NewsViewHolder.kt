@@ -18,14 +18,14 @@ import com.androidpi.news.entity.News
 @BindLayout(value = R.layout.view_holder_news, dataTypes = arrayOf(News::class))
 class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(itemView) {
 
-    override fun <T : Any?> onBindView(data: T, position: Int) {
+    override fun <T : Any?> onBind(data: T, position: Int) {
         val news = data as? News
-        mBinding.tvTitle.text = news?.title
-        mBinding.tvPublishTime.text = news?.publishedAt
+        binding.tvTitle.text = news?.title
+        binding.tvPublishTime.text = news?.publishedAt
 
         if (news != null && news.urlToImage != null) {
-            mBinding.ivImage.visibility = View.VISIBLE
-            GlideApp.with(itemView).load(news.urlToImage).into(mBinding.ivImage)
+            binding.ivImage.visibility = View.VISIBLE
+            GlideApp.with(itemView).load(news.urlToImage).into(binding.ivImage)
         }
 
         itemView.setOnClickListener {
@@ -40,7 +40,7 @@ class NewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsBinding>(ite
     override fun onViewRecycled() {
         super.onViewRecycled()
         itemView.setOnClickListener(null)
-        mBinding.ivImage.visibility = View.GONE
-        GlideApp.with(itemView).clear(mBinding.ivImage)
+        binding.ivImage.visibility = View.GONE
+        GlideApp.with(itemView).clear(binding.ivImage)
     }
 }

@@ -8,6 +8,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
 import com.androidpi.app.R
 import com.androidpi.app.activity.TextNoteEditActivity
+import com.androidpi.app.base.di.Injectable
 import com.androidpi.app.base.ui.BaseFragment
 import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.base.ui.RecyclerAdapter
@@ -26,6 +27,7 @@ import javax.inject.Inject
  * Created by jastrelax on 2017/12/7.
  */
 @BindLayout(R.layout.fragment_notes)
+@Injectable
 class NotesFragment : BaseFragment<FragmentNotesBinding>(), TextNotesModel{
 
     companion object {

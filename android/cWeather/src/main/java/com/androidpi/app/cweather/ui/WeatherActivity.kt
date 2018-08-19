@@ -9,7 +9,7 @@ import com.androidpi.app.cweather.databinding.ActivityWeatherBinding
 
 import kotlinx.android.synthetic.main.activity_weather.*
 
-@BindLayout(R.layout.activity_weather, injectable = false)
+@BindLayout(R.layout.activity_weather)
 class WeatherActivity : BaseActivity<ActivityWeatherBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

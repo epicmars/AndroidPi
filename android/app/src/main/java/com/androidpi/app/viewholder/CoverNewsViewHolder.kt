@@ -16,14 +16,14 @@ class CoverNewsViewHolder(itemView: View) : BaseViewHolder<ViewHolderCoverNewsBi
 
     lateinit var mNewsCoverAdapter: CoverNewsPageAdapter
 
-    override fun <T : Any?> onBindView(data: T, position: Int) {
+    override fun <T : Any?> onBind(data: T, position: Int) {
 
         val coverNews = data as CoverNews
 
         // news cover pager
-        mNewsCoverAdapter = CoverNewsPageAdapter(mFragmentManager, coverNews)
-        mBinding.newsPager.adapter = mNewsCoverAdapter
-        mBinding.newsPager.offscreenPageLimit = 2
+        mNewsCoverAdapter = CoverNewsPageAdapter(fragmentManager, coverNews)
+        binding.newsPager.adapter = mNewsCoverAdapter
+        binding.newsPager.offscreenPageLimit = 2
 
         mNewsCoverAdapter.setCoverNews(coverNews.mNews)
     }

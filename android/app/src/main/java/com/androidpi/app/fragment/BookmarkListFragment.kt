@@ -8,7 +8,7 @@ import com.androidpi.app.databinding.FragmentBookmarkListBinding
 /**
  * Created by jastrelax on 2018/1/5.
  */
-@BindLayout(R.layout.fragment_bookmark_list, injectable = false)
+@BindLayout(R.layout.fragment_bookmark_list)
 class BookmarkListFragment : BaseFragment<FragmentBookmarkListBinding>() {
 
     companion object {

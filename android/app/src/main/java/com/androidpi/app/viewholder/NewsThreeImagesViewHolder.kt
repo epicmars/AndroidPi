@@ -18,7 +18,7 @@
 //@BindLayout(value = R.layout.view_holder_news_three_images, dataTypes = arrayOf(NewsThreeImages::class))
 //class NewsThreeImagesViewHolder(itemView: View) : BaseViewHolder<ViewHolderNewsThreeImagesBinding>(itemView){
 //
-//    override fun <T : Any?> onBindView(data: T, position: Int) {
+//    override fun <T : Any?> onBind(data: T, position: Int) {
 //        val newsWithImages = data as? NewsThreeImages
 //        if (newsWithImages == null)
 //            return

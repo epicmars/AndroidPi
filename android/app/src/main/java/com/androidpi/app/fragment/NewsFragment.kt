@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.androidpi.app.R
+import com.androidpi.app.base.di.Injectable
 import com.androidpi.app.base.ui.BaseFragment
 import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.base.ui.RecyclerAdapter
@@ -30,6 +31,7 @@ import javax.inject.Inject
  * Created by jastrelax on 2017/11/7.
  */
 @BindLayout(R.layout.fragment_news)
+@Injectable
 class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     lateinit var mNewsModel: NewsViewModel
@@ -65,6 +67,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         mNewsModel = ViewModelProviders.of(this, mViewModelFactory)
                 .get(NewsViewModel::class.java)
         mNewsCategory = arguments?.getString(KEY_CATEGORY)
+        mNewsCategory = if (mNewsCategory == null) "general" else mNewsCategory
         mNewsModel.mCategory = mNewsCategory
 
         mNewsModel.mNews.observe(this, Observer { t ->

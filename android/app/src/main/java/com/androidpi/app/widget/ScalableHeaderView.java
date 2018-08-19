@@ -24,7 +24,6 @@ public class ScalableHeaderView extends FrameLayout implements OnPullListener {
 
     public ScalableHeaderView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.profile_header_view, this);
     }
 
     @Override

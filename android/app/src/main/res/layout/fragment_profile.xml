@@ -36,7 +36,7 @@
         <com.androidpi.app.widget.ScalableHeaderView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@android:color/holo_red_light"
+            android:background="@mipmap/image2"
             app:layout_behavior="@string/lr_refresh_header_behavior" />
 
         <View

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.androidpi.app.base.di.Injectable
 
 import com.androidpi.common.tools.LeakCanaryHelper
 import dagger.android.support.AndroidSupportInjection
@@ -23,7 +24,8 @@ abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         bindLayout = javaClass.getAnnotation(BindLayout::class.java)
-        if (bindLayout != null && bindLayout!!.injectable) {
+        val injectable = javaClass.getAnnotation(Injectable::class.java)
+        if (injectable != null) {
             AndroidSupportInjection.inject(this)
         }
         super.onCreate(savedInstanceState)

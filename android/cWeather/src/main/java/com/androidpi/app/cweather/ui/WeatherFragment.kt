@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide
 /**
  * Created by jastrelax on 2018/8/18.
  */
-@BindLayout(value = R.layout.fragment_weather, injectable = false)
+@BindLayout(value = R.layout.fragment_weather)
 class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
 
     lateinit var viewModel: WeatherViewModel

@@ -20,10 +20,10 @@ public class UnsplashImageViewHolder extends BaseViewHolder<ViewholderUnsplashIm
     }
 
     @Override
-    public <T> void onBindView(T data, int position) {
+    public <T> void onBind(T data, int position) {
         ResRandomPhotos resRandomPhotos = (ResRandomPhotos) data;
         GlideApp.with(itemView).load(resRandomPhotos.getUrls().getSmall())
-                .into(mBinding.ivImage);
+                .into(binding.ivImage);
     }
 
     @Override

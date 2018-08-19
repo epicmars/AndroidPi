@@ -89,9 +89,9 @@ dependencies {
     // circle image view
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
-    implementation project(':buiness')
+    implementation project(':appBuiness')
     implementation project(':base')
-    implementation project(':data')
+    implementation project(':appData')
     implementation project(':common')
 
     implementation project(':cNews')

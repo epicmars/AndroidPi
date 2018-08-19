@@ -10,7 +10,7 @@ import com.androidpi.app.databinding.FragmentProfileBinding;
 /**
  * Created by jastrelax on 2018/8/11.
  */
-@BindLayout(value = R.layout.fragment_profile, injectable = false)
+@BindLayout(value = R.layout.fragment_profile)
 public class ProfileFragment extends BaseFragment<FragmentProfileBinding>{
 
 

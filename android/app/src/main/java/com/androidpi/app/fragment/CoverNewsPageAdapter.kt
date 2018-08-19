@@ -21,7 +21,7 @@ import com.androidpi.news.vo.CoverNews
  * Created by jastrelax on 2017/11/21.
  */
 
-@BindLayout(R.layout.fragment_cover_news, injectable = false)
+@BindLayout(R.layout.fragment_cover_news)
 class CoverNewsFragment : BaseFragment<FragmentCoverNewsBinding>() {
 
     var mNews: News? = null

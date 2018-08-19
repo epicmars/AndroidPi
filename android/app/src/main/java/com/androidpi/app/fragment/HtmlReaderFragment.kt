@@ -15,7 +15,7 @@ import com.androidpi.app.databinding.FragmentHtmlReaderBinding
 /**
  * Created by jastrelax on 2018/1/1.
  */
-@BindLayout(R.layout.fragment_html_reader, injectable = false)
+@BindLayout(R.layout.fragment_html_reader)
 class HtmlReaderFragment : BaseFragment<FragmentHtmlReaderBinding>() {
 
     var mSettings: WebSettings? = null

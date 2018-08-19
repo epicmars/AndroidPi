@@ -32,11 +32,11 @@ import timber.log.Timber;
 public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends RecyclerView.ViewHolder
         implements LifecycleOwner {
 
-    private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
+    private final LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
 
-    protected VDB mBinding;
-    protected List<Class> mDataType = new ArrayList<>();
-    protected FragmentManager mFragmentManager;
+    protected VDB binding;
+    protected List<Class> dataType = new ArrayList<>();
+    protected FragmentManager fragmentManager;
 
     public BaseViewHolder(View itemView) {
         super(itemView);
@@ -63,8 +63,8 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
         try {
             Constructor<? extends BaseViewHolder> constructor = clazz.getDeclaredConstructor(View.class);
             BaseViewHolder viewHolder = constructor.newInstance(itemView);
-            viewHolder.mBinding = DataBindingUtil.bind(itemView);
-            viewHolder.mDataType = Arrays.asList(bindLayout.dataTypes());
+            viewHolder.binding = DataBindingUtil.bind(itemView);
+            viewHolder.dataType = Arrays.asList(bindLayout.dataTypes());
             return viewHolder;
         } catch (NoSuchMethodException e) {
             logError(clazz, e);
@@ -81,7 +81,7 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
     public static BaseViewHolder instance(Class<? extends BaseViewHolder> clazz, ViewGroup parent, FragmentManager fm) {
         BaseViewHolder holder = instance(clazz, parent);
         if (holder != null)
-            holder.mFragmentManager = fm;
+            holder.fragmentManager = fm;
         return holder;
     }
 
@@ -100,22 +100,22 @@ public abstract class BaseViewHolder<VDB extends ViewDataBinding> extends Recycl
             Timber.w("Data is null!");
             return;
         }
-        if (!mDataType.contains(data.getClass())) {
+        if (!dataType.contains(data.getClass())) {
             Timber.e("Data type doesn't match the contract!");
             return;
         }
-        onBindView(data, position);
+        onBind(data, position);
     }
 
     @Override
     public LifecycleRegistry getLifecycle() {
-        return this.mRegistry;
+        return this.lifecycleRegistry;
     }
 
     /**
      * 展示数据。
      */
-    public abstract <T> void onBindView(T data, int position);
+    public abstract <T> void onBind(T data, int position);
 
     protected void onAttachedToWindow() {
         // empty

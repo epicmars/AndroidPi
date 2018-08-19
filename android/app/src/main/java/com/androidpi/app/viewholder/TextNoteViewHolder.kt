@@ -16,11 +16,11 @@ import com.androidpi.note.entity.TextNote
 @BindLayout(value = R.layout.view_holder_text_note, dataTypes = arrayOf(TextNote::class))
 class TextNoteViewHolder(itemView: View) : BaseViewHolder<ViewHolderTextNoteBinding>(itemView) {
 
-    override fun <T : Any?> onBindView(data: T, position: Int) {
+    override fun <T : Any?> onBind(data: T, position: Int) {
         if (data == null)
             return
         if (data is TextNote) {
-            mBinding.tvContent.text = data.text
+            binding.tvContent.text = data.text
             itemView.setOnClickListener {
                 TemplateActivity.startWith(it.context, fragmentName = TextNoteFragment::class.java.canonicalName,
                         factory = object : FragmentFactory<TextNoteFragment>() {

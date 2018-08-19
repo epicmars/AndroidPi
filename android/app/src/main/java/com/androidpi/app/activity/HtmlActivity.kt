@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -24,7 +25,7 @@ import java.io.Reader
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
-class HtmlActivity : BaseActivity() {
+class HtmlActivity : AppCompatActivity() {
 
     var mSettings: WebSettings? = null
     var mUrl: String? = null

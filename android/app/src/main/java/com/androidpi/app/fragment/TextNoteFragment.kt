@@ -11,7 +11,7 @@ import com.androidpi.note.entity.TextNote
 /**
  * Created by jastrelax on 2017/12/29.
  */
-@BindLayout(R.layout.fragment_text_note, injectable = false)
+@BindLayout(R.layout.fragment_text_note)
 class TextNoteFragment : BaseFragment<FragmentTextNoteBinding>() {
 
     companion object {

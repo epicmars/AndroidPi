@@ -9,12 +9,8 @@
         android:title="@string/articles"
         android:icon="@drawable/ic_whatshot_black_24dp"/>
 
-    <item android:id="@+id/nav_book"
-        android:title="@string/book"
+    <item android:id="@+id/nav_literefresh"
+        android:title="@string/literefresh"
         android:icon="@drawable/ic_book_black_24dp"/>
-
-    <item android:id="@+id/nav_me"
-        android:title="@string/me"
-        android:icon="@drawable/ic_person_black_24dp"/>
 
 </menu>

@@ -24,7 +24,7 @@ import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 /**
  * Created by jastrelax on 2018/8/13.
  */
-public class ImagePagerHeaderView extends FrameLayout implements OnPullListener{
+public class ImagePagerHeaderView extends ScalableHeaderView {
 
     private ViewPager viewPager;
 
@@ -40,22 +40,6 @@ public class ImagePagerHeaderView extends FrameLayout implements OnPullListener{
         super(context, attrs, defStyle);
         inflate(context, R.layout.image_pager_view, this);
         viewPager = findViewById(R.id.view_pager);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        try {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
-            RefreshHeaderBehavior behavior = (RefreshHeaderBehavior) params.getBehavior();
-            if (behavior == null) {
-                behavior = new RefreshHeaderBehavior(getContext());
-                params.setBehavior(behavior);
-            }
-            behavior.addOnPullingListener(this);
-        } catch (Exception e) {
-
-        }
     }
 
     @Override

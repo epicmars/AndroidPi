@@ -39,7 +39,7 @@
                     android:visibility="gone"
                     tools:visibility="visible">
 
-                    <com.androidpi.app.widget.todo.TodoDateTimeView
+                    <com.androidpi.app.widget.TodoDateTimeView
                         android:id="@+id/todo_start_time"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:tag="picker-start" />
 
-                    <com.androidpi.app.widget.todo.TodoDateTimeView
+                    <com.androidpi.app.widget.TodoDateTimeView
                         android:id="@+id/todo_deadline"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
