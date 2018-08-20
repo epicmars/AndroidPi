@@ -36,6 +36,9 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            supportPostponeEnterTransition()
+        }
         val fragmentName = intent.getStringExtra(EXTRA_FRAGMENT_NAME)
         if (fragmentName == null) return
         val factory = FragmentFactoryMap.factoryMap[fragmentName]
@@ -49,7 +52,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>() {
         }
         FragmentFactoryMap.factoryMap.remove(fragmentName)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            supportPostponeEnterTransition()
+            supportStartPostponedEnterTransition()
         }
 
         val view = window.decorView

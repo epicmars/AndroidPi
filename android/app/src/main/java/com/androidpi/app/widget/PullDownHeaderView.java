@@ -3,25 +3,20 @@ package com.androidpi.app.widget;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.ImageViewCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidpi.app.R;
 import com.androidpi.app.base.widget.literefresh.LoadingView;
-import com.androidpi.app.base.widget.literefresh.OnPullListener;
-import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 
 /**
  * Created by jastrelax on 2017/11/21.
  */
 
-public class PullDownHeaderView extends FrameLayout implements OnPullListener, OnRefreshListener {
+public class PullDownHeaderView extends RefreshHeaderLayout {
 
     private TextView mTvState;
     private LoadingView loadingView;
@@ -48,22 +43,6 @@ public class PullDownHeaderView extends FrameLayout implements OnPullListener, O
         loadingView = findViewById(R.id.loading_view);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        try {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
-            RefreshHeaderBehavior behavior = (RefreshHeaderBehavior) params.getBehavior();
-            if (behavior == null) {
-                behavior = new RefreshHeaderBehavior(getContext());
-                params.setBehavior(behavior);
-            }
-            behavior.addOnPullingListener(PullDownHeaderView.this);
-            behavior.addOnRefreshListener(PullDownHeaderView.this);
-        } catch (Exception e) {
-
-        }
-    }
 
     @Override
     public void onStartPulling(int max, boolean isTouch) {

@@ -11,10 +11,8 @@ import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior
 import com.androidpi.app.cweather.R
-import com.androidpi.app.cweather.data.remote.OpenWeatherMapApi
 import com.androidpi.app.cweather.databinding.FragmentWeatherBinding
 import com.androidpi.app.cweather.viewmodel.WeatherViewModel
-import com.bumptech.glide.Glide
 
 /**
  * Created by jastrelax on 2018/8/18.
@@ -30,7 +28,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
 
         val behavior = (binding.refreshHeader.layoutParams as CoordinatorLayout.LayoutParams).behavior as RefreshHeaderBehavior
         behavior.addOnRefreshListener(object : OnRefreshListener {
-            override fun onRefreshComplete() {
+            override fun onRefreshComplete(data: Bundle) {
             }
 
             override fun onRefreshReady() {

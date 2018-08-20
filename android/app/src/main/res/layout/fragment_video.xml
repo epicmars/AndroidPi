@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="@string/transition_header">
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/player_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:use_artwork="true"
+            app:default_artwork="@drawable/ontheway"
+            app:show_timeout="@integer/exoplayer_show_control_timeout_ms"
+            app:fastforward_increment="@integer/exoplayer_playback_fastforward_increment_ms"
+            app:rewind_increment="@integer/exoplayer_playback_rewind_increment_ms"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

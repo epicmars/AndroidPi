@@ -53,11 +53,9 @@ public class LoadingView extends View{
         color = a.getColor(R.styleable.LoadingView_lr_color, context.getResources().getColor(R.color.text_gray));
         a.recycle();
 
-        strokeWidth = dp2px(2f);
         paint = new Paint();
         paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth);
         paint.setAntiAlias(true);
         paint.setStrokeCap(Paint.Cap.ROUND);
     }
@@ -65,11 +63,15 @@ public class LoadingView extends View{
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        float radius = Math.min(getMeasuredWidth(), getMeasuredHeight()) / 2 - strokeWidth;
+        float width = Math.min(getMeasuredWidth(), getMeasuredHeight());
+        strokeWidth = width / 12;
+        float radius = width / 2 - strokeWidth;
         centerX = getMeasuredWidth() / 2;
         centerY = getMeasuredHeight() / 2;
         gapLength = radius * GOLDEN_RATIO;
         lineLength = radius - gapLength;
+
+        paint.setStrokeWidth(strokeWidth);
     }
 
     @Override

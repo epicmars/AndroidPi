@@ -1,6 +1,7 @@
 package com.androidpi.app.cweather.ui;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -90,7 +91,7 @@ public class WeatherHeaderView extends FrameLayout implements OnPullListener, On
     }
 
     @Override
-    public void onRefreshComplete() {
+    public void onRefreshComplete(Bundle data) {
         loadingView.finishLoading();
     }
 }

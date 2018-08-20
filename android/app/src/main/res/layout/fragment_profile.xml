@@ -5,12 +5,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/content"
+        <com.androidpi.app.widget.ScalableHeaderLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/holo_green_light"
-            app:layout_behavior="@string/lr_refresh_content_behavior">
+            android:layout_height="wrap_content"
+            app:lr_visibleHeightRatio="1.0"
+            app:layout_behavior="@string/lr_refresh_header_behavior">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -31,18 +30,27 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
+        </com.androidpi.app.widget.ScalableHeaderLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_green_light"
+            app:layout_behavior="@string/lr_refresh_content_behavior">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
         </android.support.v4.widget.NestedScrollView>
 
-        <com.androidpi.app.widget.ScalableHeaderView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@mipmap/image2"
-            app:layout_behavior="@string/lr_refresh_header_behavior" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+        <!--<View-->
+            <!--android:id="@+id/view_footer"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:background="@color/colorPrimary"-->
+            <!--app:layout_behavior="@string/lr_refresh_footer_behavior" />-->
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

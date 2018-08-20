@@ -7,11 +7,13 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.androidpi.app.R
 import com.androidpi.app.activity.TodoEditActivity
+import com.androidpi.app.base.di.Injectable
 import com.androidpi.app.base.ui.BaseFragment
 import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.base.ui.RecyclerAdapter
@@ -29,6 +31,7 @@ import javax.inject.Inject
  * Created by jastrelax on 2017/11/7.
  */
 @BindLayout(R.layout.fragment_todo_list)
+@Injectable
 class TodoListFragment : BaseFragment<FragmentTodoListBinding>(), TodoView {
 
     companion object {

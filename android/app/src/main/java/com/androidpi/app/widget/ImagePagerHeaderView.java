@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,17 +13,14 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.androidpi.app.R;
-import com.androidpi.app.base.widget.literefresh.OnPullListener;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 
 /**
  * Created by jastrelax on 2018/8/13.
  */
-public class ImagePagerHeaderView extends ScalableHeaderView {
+public class ImagePagerHeaderView extends ScalableHeaderLayout {
 
     private ViewPager viewPager;
 
@@ -40,30 +36,6 @@ public class ImagePagerHeaderView extends ScalableHeaderView {
         super(context, attrs, defStyle);
         inflate(context, R.layout.image_pager_view, this);
         viewPager = findViewById(R.id.view_pager);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
-
-    @Override
-    public void onStartPulling(int max, boolean isTouch) {
-
-    }
-
-    @Override
-    public void onPulling(int current, int delta, int max, boolean isTouch) {
-        float height = getHeight();
-        float scale = Math.max(current / height, 1);
-        setScaleX(scale);
-        setScaleY(scale);
-        setTranslationY(-(scale - 1f) * height / 2);
-    }
-
-    @Override
-    public void onStopPulling(int current, int max) {
-
     }
 
     public void setFragmentManager(FragmentManager fm) {

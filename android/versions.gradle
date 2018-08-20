@@ -66,4 +66,10 @@ ext {
     // glide compile 
     glide_compiler_version = '4.3.1'
 
+    // ExoPlayer version
+    exoplayer_version = '2.8.1'
+
+    // Anko version
+    anko_version = '0.10.4'
+
 }

@@ -9,6 +9,7 @@
     <string name="todo_top_start_later_than_deadline">开始时间晚于截止时间</string>
 
     <string name="transition_todo_content">transition_todo_content</string>
+    <string name="transition_header">transition_header</string>
 
     <!-- 笔记 -->
     <string name="note">笔记</string>

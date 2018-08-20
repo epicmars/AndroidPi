@@ -1,5 +1,8 @@
 package com.androidpi.app.base.ui
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.os.Bundle
@@ -22,13 +25,13 @@ abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
 
     var bindLayout: BindLayout? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onAttach(context: Context?) {
         bindLayout = javaClass.getAnnotation(BindLayout::class.java)
         val injectable = javaClass.getAnnotation(Injectable::class.java)
         if (injectable != null) {
             AndroidSupportInjection.inject(this)
         }
-        super.onCreate(savedInstanceState)
+        super.onAttach(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,5 +49,9 @@ abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         LeakCanaryHelper.refWatcher?.watch(this)
+    }
+
+    protected fun <T : ViewModel> getViewModel(clazz: Class<T>) : T {
+        return ViewModelProviders.of(this).get(clazz)
     }
 }

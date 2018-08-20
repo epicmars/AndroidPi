@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LibMedia</string>
+    <string name="msg_playback_ended">playback ended</string>
+    <string name="msg_playback_started">playback started</string>
+    <string name="msg_playback_paused">playback paused</string>
+
+
+    <string name="media_url_mp4">file:///android_asset/video/ontheway.mp4</string>
+</resources>

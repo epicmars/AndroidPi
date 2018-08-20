@@ -1,21 +1,27 @@
 package com.androidpi.app.activity
 
 import android.arch.lifecycle.Observer
+import android.databinding.DataBindingUtil.setContentView
+import android.databinding.ViewDataBinding
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat.invalidateOptionsMenu
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.*
 import com.androidpi.app.R
+import com.androidpi.app.R.id.*
+import com.androidpi.app.base.di.Injectable
 import com.androidpi.app.base.ui.BaseActivity
 import com.androidpi.app.buiness.viewmodel.HtmlReaderViewModel
 import com.androidpi.app.fragment.HtmlReaderFragment
 import com.androidpi.common.libs.readability.Readability
 import com.androidpi.common.libs.readability.ReaderHelper
 import com.androidpi.news.entity.Bookmark
+import com.facebook.react.bridge.UiThreadUtil.runOnUiThread
 import kotlinx.android.synthetic.main.activity_html.*
 import timber.log.Timber
 import java.io.BufferedReader
@@ -25,7 +31,8 @@ import java.io.Reader
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
-class HtmlActivity : AppCompatActivity() {
+@Injectable
+class HtmlActivity : BaseActivity<ViewDataBinding>() {
 
     var mSettings: WebSettings? = null
     var mUrl: String? = null

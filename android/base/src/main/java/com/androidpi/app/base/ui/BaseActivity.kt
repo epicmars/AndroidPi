@@ -39,15 +39,14 @@ abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity(), HasSup
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         val bindLayout = javaClass.getAnnotation(BindLayout::class.java)
         val injectable = javaClass.getAnnotation(Injectable::class.java)
-        if (bindLayout != null) {
-            binding = DataBindingUtil.setContentView(this, bindLayout.value)
-        }
-
         if (injectable != null) {
             AndroidInjection.inject(this)
+        }
+        super.onCreate(savedInstanceState)
+        if (bindLayout != null) {
+            binding = DataBindingUtil.setContentView(this, bindLayout.value)
         }
 
         val view = window.decorView

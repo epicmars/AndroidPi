@@ -13,7 +13,6 @@ import com.androidpi.app.databinding.FragmentProfileBinding;
 @BindLayout(value = R.layout.fragment_profile)
 public class ProfileFragment extends BaseFragment<FragmentProfileBinding>{
 
-
     public static ProfileFragment newInstance() {
 
         Bundle args = new Bundle();

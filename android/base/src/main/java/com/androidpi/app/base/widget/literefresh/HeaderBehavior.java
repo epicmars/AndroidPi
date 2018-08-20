@@ -26,7 +26,6 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     private static final long RESET_DURATION = 300L;
 
     private int childHeight;
-    private int parentHeight;
     private boolean isFirstLayout = true;
     private float fixedOffset;
 
@@ -42,7 +41,6 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         childHeight = child.getHeight();
-        parentHeight = parent.getHeight();
         // Compute fixed offset.
         fixedOffset = -childHeight + visibleHeight;
         // Relayout should not change current offset.
@@ -58,14 +56,26 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
         // The action is pull along vertical axes.
         boolean started = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-        if (started) {
-            cancelAnimation();
-            boolean isTouch = (type == TYPE_TOUCH);
-            for (ScrollListener l : mListeners) {
-                l.onStartScroll(coordinatorLayout, child, (int) maxOffset, isTouch);
-            }
+        if (!started) return false;
+
+        // If content view cover the header, do not start the nested scroll.
+        RefreshContentBehavior refreshContentBehavior = getRefreshContentBehavior(coordinatorLayout);
+        if (refreshContentBehavior != null) {
+            started = refreshContentBehavior.getTopAndBottomOffset() >= visibleHeight;
         }
-        return started;
+        if (!started) return false;
+
+        cancelAnimation();
+        boolean isTouch = (type == TYPE_TOUCH);
+        for (ScrollListener l : mListeners) {
+            l.onStartScroll(coordinatorLayout, child, (int) maxOffset, isTouch);
+        }
+        return true;
+    }
+
+    @Override
+    public void onNestedScrollAccepted(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
+        super.onNestedScrollAccepted(coordinatorLayout, child, directTargetChild, target, axes, type);
     }
 
     @Override
@@ -193,6 +203,20 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     private boolean isPartialVisible() {
         int offset = getTopAndBottomOffset();
         return offset > -childHeight && offset < 0;
+    }
+
+    private RefreshContentBehavior getRefreshContentBehavior(CoordinatorLayout parent) {
+        int count = parent.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = parent.getChildAt(i);
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
+            CoordinatorLayout.Behavior behavior = params.getBehavior();
+            if (behavior instanceof RefreshContentBehavior) {
+                RefreshContentBehavior refreshContentBehavior = (RefreshContentBehavior) behavior;
+                return refreshContentBehavior;
+            }
+        }
+        return null;
     }
 
     /**

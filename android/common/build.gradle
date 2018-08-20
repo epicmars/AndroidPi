@@ -75,6 +75,9 @@ dependencies {
     // jsoup
     implementation "org.jsoup:jsoup:$jsoup_version"
 
+    // Anko
+    api "org.jetbrains.anko:anko:$anko_version"
+
     // zxing
     // implementation "com.google.zxing:android-core:$zxing_version"
     // implementation "com.google.zxing:core:$zxing_version"
