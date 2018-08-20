@@ -38,10 +38,10 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
     protected float maxOffset = GOLDEN_RATIO;
     private float maxOffsetRatio = GOLDEN_RATIO;
     protected float visibleHeight = 0;
+    protected float invisibleHeight = 0;
     private float visibleHeightRatio = 0;
 
     public AnimationOffsetBehavior() {
-        this(null, null);
     }
 
     public AnimationOffsetBehavior(Context context) {
@@ -72,6 +72,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
 
         // Compute visible height of child.
         visibleHeight = Math.max(visibleHeight, visibleHeightRatio * child.getMeasuredHeight());
+        invisibleHeight = child.getMeasuredHeight() - visibleHeight;
 
         return true;
     }

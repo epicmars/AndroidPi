@@ -25,11 +25,10 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     private boolean isFirstLayout = true;
 
     public FooterBehavior() {
-        this(null, null);
     }
 
     public FooterBehavior(Context context) {
-        this(context, null);
+        super(context);
     }
 
     public FooterBehavior(Context context, AttributeSet attrs) {

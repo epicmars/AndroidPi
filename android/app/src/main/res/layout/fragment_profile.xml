@@ -35,7 +35,7 @@
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/view_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
             android:background="@android:color/holo_green_light"
             app:layout_behavior="@string/lr_refresh_content_behavior">
 

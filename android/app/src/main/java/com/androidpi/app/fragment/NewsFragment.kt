@@ -180,7 +180,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         binding.scrollFooter.layoutParams = lpFooter
 
         val lpScroll = binding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
-        lpScroll.behavior = RefreshContentBehavior<View>()
+        lpScroll.behavior = RefreshContentBehavior<View>(context)
         binding.recyclerNews.layoutParams = lpScroll
 
         // pull up to load more

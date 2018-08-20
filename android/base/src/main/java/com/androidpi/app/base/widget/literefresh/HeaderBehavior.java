@@ -17,6 +17,8 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * With some configuration, the view with which this behavior associated can move following
  * the nested scrolling content or fix in it's original position.
  *
+ * The content view can only nested with the visible part of header view.
+ *
  * Created by jastrelax on 2017/11/16.
  */
 
@@ -29,8 +31,11 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     private boolean isFirstLayout = true;
     private float fixedOffset;
 
+    public HeaderBehavior() {
+    }
+
     public HeaderBehavior(Context context) {
-        this(context, null);
+        super(context);
     }
 
     public HeaderBehavior(Context context, AttributeSet attrs) {
@@ -59,9 +64,9 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         if (!started) return false;
 
         // If content view cover the header, do not start the nested scroll.
-        RefreshContentBehavior refreshContentBehavior = getRefreshContentBehavior(coordinatorLayout);
-        if (refreshContentBehavior != null) {
-            started = refreshContentBehavior.getTopAndBottomOffset() >= visibleHeight;
+        ContentBehavior contentBehavior = getContentBehavior(coordinatorLayout);
+        if (contentBehavior != null) {
+            started = contentBehavior.getTopAndBottomOffset() >= visibleHeight;
         }
         if (!started) return false;
 
@@ -85,14 +90,14 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         float maxOffset = Math.max(this.maxOffset, child.getHeight());
         // Scrolling may triggered by a fling, we only care about human touch.
         if (type == TYPE_TOUCH) {
-            // If header is visible, it will consume the scroll range until it's invisible or reach maximum offset.
+            // If visible, it will consume the scroll range until it's invisible or reach maximum offset.
             if (isVisible()) {
                 float offset = 0;
                 if (dy > 0) {
-                    // Pulling up.
+                    // scroll up
                     offset = MathUtils.clamp(-dy, -bottom + visibleHeight, 0);
                 } else if (dy < 0) {
-                    // Pulling down.
+                    // scroll down
                     offset = MathUtils.clamp(-dy, 0, maxOffset - bottom);
                 }
                 consumeOffset(coordinatorLayout, child, (int) offset, type);
@@ -104,9 +109,12 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         if (type == TYPE_TOUCH) {
-            // If header is invisible and the scrolling content has reached it's top,
+            // If header is invisible and the scrolling content lay below header,
             // The pulling down range not consumed by the scrolling view is consumed by the header.
-            if (isInvisible()) {
+            ContentBehavior contentBehavior = getContentBehavior(coordinatorLayout);
+            if (contentBehavior == null || contentBehavior.getTopAndBottomOffset() < visibleHeight)
+                return;
+            if (!isVisible()) {
                 if (dyUnconsumed < 0) {
                     int offset = MathUtils.clamp(-dyUnconsumed, 0, (int)(maxOffset - child.getBottom()));
                     consumeOffset(coordinatorLayout, child, offset, type);
@@ -141,7 +149,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
-        // If header should be hidden, consume the fling.
+        // If header should be hidden entirely, consume the fling.
         // Otherwise, do nothing.
         if (isVisible() && visibleHeight == 0) {
             return true;
@@ -205,15 +213,15 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         return offset > -childHeight && offset < 0;
     }
 
-    private RefreshContentBehavior getRefreshContentBehavior(CoordinatorLayout parent) {
+    private ContentBehavior getContentBehavior(CoordinatorLayout parent) {
         int count = parent.getChildCount();
         for (int i = 0; i < count; i++) {
             View child = parent.getChildAt(i);
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
             CoordinatorLayout.Behavior behavior = params.getBehavior();
-            if (behavior instanceof RefreshContentBehavior) {
-                RefreshContentBehavior refreshContentBehavior = (RefreshContentBehavior) behavior;
-                return refreshContentBehavior;
+            if (behavior instanceof ContentBehavior) {
+                ContentBehavior contentBehavior = (ContentBehavior) behavior;
+                return contentBehavior;
             }
         }
         return null;
@@ -221,13 +229,13 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
     /**
      * Tell if the invisible part of header view is visible.
-     * @return
+     * If invisible height is zero, it can be considered invisible.
+     *
+     * @return true if invisible part of header view is visible,
+     *         otherwise return false.
      */
     protected boolean isVisible() {
-        return getTopAndBottomOffset() > -childHeight + visibleHeight;
+        return getTopAndBottomOffset() > -invisibleHeight;
     }
 
-    protected boolean isInvisible() {
-        return !isVisible();
-    }
 }
