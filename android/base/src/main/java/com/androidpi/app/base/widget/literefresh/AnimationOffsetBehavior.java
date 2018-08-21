@@ -69,11 +69,9 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
     @Override
     public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
-
         // Compute visible height of child.
         visibleHeight = Math.max(visibleHeight, visibleHeightRatio * child.getMeasuredHeight());
         invisibleHeight = child.getMeasuredHeight() - visibleHeight;
-
         return true;
     }
 
@@ -86,7 +84,6 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
         if (mChild == null) {
             mChild = child;
         }
-
         // Compute max offset, it will not exceed parent height.
         // If maxOffsetRatio is 0, will use child height instead.
         maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
