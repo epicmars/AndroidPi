@@ -37,7 +37,7 @@ public class ResCurrentWeather {
     @SerializedName("clouds")
     private CloudsBean clouds;
     @SerializedName("dt")
-    private int dt;
+    private long dt;
     @SerializedName("sys")
     private SysBean sys;
     @SerializedName("id")
@@ -97,11 +97,11 @@ public class ResCurrentWeather {
         this.clouds = clouds;
     }
 
-    public int getDt() {
+    public long getDt() {
         return dt;
     }
 
-    public void setDt(int dt) {
+    public void setDt(long dt) {
         this.dt = dt;
     }
 
@@ -185,9 +185,9 @@ public class ResCurrentWeather {
         @SerializedName("temp")
         private double temp;
         @SerializedName("pressure")
-        private int pressure;
+        private double pressure;
         @SerializedName("humidity")
-        private int humidity;
+        private double humidity;
         @SerializedName("temp_min")
         private double tempMin;
         @SerializedName("temp_max")
@@ -201,19 +201,19 @@ public class ResCurrentWeather {
             this.temp = temp;
         }
 
-        public int getPressure() {
+        public double getPressure() {
             return pressure;
         }
 
-        public void setPressure(int pressure) {
+        public void setPressure(double pressure) {
             this.pressure = pressure;
         }
 
-        public int getHumidity() {
+        public double getHumidity() {
             return humidity;
         }
 
-        public void setHumidity(int humidity) {
+        public void setHumidity(double humidity) {
             this.humidity = humidity;
         }
 
@@ -298,9 +298,9 @@ public class ResCurrentWeather {
         @SerializedName("country")
         private String country;
         @SerializedName("sunrise")
-        private int sunrise;
+        private long sunrise;
         @SerializedName("sunset")
-        private int sunset;
+        private long sunset;
 
         public int getType() {
             return type;
@@ -334,19 +334,19 @@ public class ResCurrentWeather {
             this.country = country;
         }
 
-        public int getSunrise() {
+        public long getSunrise() {
             return sunrise;
         }
 
-        public void setSunrise(int sunrise) {
+        public void setSunrise(long sunrise) {
             this.sunrise = sunrise;
         }
 
-        public int getSunset() {
+        public long getSunset() {
             return sunset;
         }
 
-        public void setSunset(int sunset) {
+        public void setSunset(long sunset) {
             this.sunset = sunset;
         }
     }

@@ -91,7 +91,7 @@ public class WeatherHeaderView extends FrameLayout implements OnPullListener, On
     }
 
     @Override
-    public void onRefreshComplete(Bundle data) {
+    public void onRefreshComplete() {
         loadingView.finishLoading();
     }
 }

@@ -136,7 +136,7 @@ public class RefreshHeaderBehavior<V extends View> extends HeaderBehavior<V> imp
     }
 
     protected void stopScroll(@NonNull V child, boolean holdOn) {
-        if (isVisible()) {
+        if (isHiddenPartVisible()) {
             if (child.getHandler() == null) return;
             child.getHandler().removeCallbacks(offsetCallback);
             offsetCallback = new Runnable() {

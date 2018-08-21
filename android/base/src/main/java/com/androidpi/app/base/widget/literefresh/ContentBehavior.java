@@ -12,17 +12,21 @@ import java.util.List;
 
 /**
  * A behavior for nested scrollable child of {@link CoordinatorLayout}.
- *
+ * <p>
  * It's attach to the nested scrolling target view, such as {@link android.support.v4.widget.NestedScrollView},
  * {@link android.support.v7.widget.RecyclerView} which implement {@link android.support.v4.view.NestedScrollingChild}.
- *
+ * <p>
  * <p>
  * View with this behavior must be a direct child of {@link CoordinatorLayout}.
  * <p>
- *
+ * <p>
  * Created by jastrelax on 2018/8/21.
  */
-public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V>{
+public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> {
+
+    public static final int MODE_OVERLAP = 0;
+    public static final int MODE_FOLLOW = 1;
+    private int mode = MODE_FOLLOW;
 
     public ContentBehavior() {
 
@@ -72,6 +76,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V>{
 
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
+        if (mode == MODE_FOLLOW) return;
         // When scrolling up, if content view lay below header,
         // then move the content view until it fully overlay header view.
         if (dy > 0) {
@@ -87,6 +92,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V>{
 
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
+        if (mode == MODE_FOLLOW) return;
         // When scrolling down, if there is unconsumed pixels and content view overlap header view.
         // Make use of these pixels to move content view to make header fully visible.
         if (dyUnconsumed < 0) {
@@ -97,6 +103,10 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V>{
                 return;
             setTopAndBottomOffset(getTopAndBottomOffset() + offset);
         }
+    }
+
+    public int getMode() {
+        return mode;
     }
 
     private HeaderBehavior findDependencyHeaderBehavior(CoordinatorLayout parent, View child) {
