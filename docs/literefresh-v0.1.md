@@ -1,5 +1,4 @@
 ## HeaderBehavior
-作为NestedScrollChild，由于NestedScrollView与RecyclerView嵌套滑动分发逻辑不一致，仅允许Header固定。
 ### 效果
 1. 经典模式，头部位于内容上，默认不可见
 
