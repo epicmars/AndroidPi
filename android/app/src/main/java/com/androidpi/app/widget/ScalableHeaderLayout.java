@@ -3,6 +3,8 @@ package com.androidpi.app.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
+
 /**
  * Created by jastrelax on 2018/8/12.
  */
@@ -50,7 +52,7 @@ public class ScalableHeaderLayout extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onRefreshReady() {
+    public void onReleaseToRefresh() {
 
     }
 
@@ -60,7 +62,7 @@ public class ScalableHeaderLayout extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onRefreshComplete() {
+    public void onRefreshEnd() {
 
     }
 }

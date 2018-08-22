@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.androidpi.app.R;
 import com.androidpi.app.base.widget.literefresh.LoadingView;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
 
 /**
  * Created by jastrelax on 2017/11/21.
@@ -81,7 +82,7 @@ public class PullDownHeaderView extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onRefreshReady() {
+    public void onReleaseToRefresh() {
         rotateUp();
         mTvState.setText("释放以更新");
     }
@@ -94,7 +95,7 @@ public class PullDownHeaderView extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onRefreshComplete() {
+    public void onRefreshEnd() {
         mTvState.setText("更新完成");
     }
 

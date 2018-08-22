@@ -14,9 +14,5 @@ public interface Refresher {
 
     void refreshComplete();
 
-    void refreshTimeout();
-
-    void refreshCancelled();
-
-    void refreshException(Exception exception);
+    void refreshError(Exception exception);
 }

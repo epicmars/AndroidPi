@@ -28,10 +28,10 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
 
         val behavior = (binding.refreshHeader.layoutParams as CoordinatorLayout.LayoutParams).behavior as RefreshHeaderBehavior
         behavior.addOnRefreshListener(object : OnRefreshListener {
-            override fun onRefreshComplete() {
+            override fun onRefreshEnd() {
             }
 
-            override fun onRefreshReady() {
+            override fun onReleaseToRefresh() {
             }
 
             override fun onRefreshStart() {

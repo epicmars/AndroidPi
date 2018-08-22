@@ -7,7 +7,9 @@ date: 2018-08-21 19:07:17 +0800
 
 - Header：
     1. 位置偏移（topBottomOffset）
-        + 跟随Content滑动，设定一个跟随程度，范围为[0, 1]，两个端点分别表示不跟随以及完全的跟随
+        + 跟随Content滑动
+        + 不跟随
+        + 偏移模式可以动态地改变
 
     2. 默认可见度
         + 部分可见
@@ -17,8 +19,7 @@ date: 2018-08-21 19:07:17 +0800
     1. 位置偏移（topBottomOffset）
         + 可见度偏移量，用于设定Header和Footer的可见度
         + 最大偏移量，用于设定Content最大偏移量
-        - 保证Header可见，Content在达到可见度偏移时停止偏移量的滑动
-        - 不保证Header可见，Content可以滑动到父布局的最上方
+        + 一个headerHeight偏移量值，Content在达到该偏移量时停止偏移量的滑动，Header的跟随模式决定了是否发生重叠
 
     2. 高度（由于可以添加新的内容，它可以动态地变化）
         + Content的高度大于等于父布局高度
@@ -82,16 +83,16 @@ date: 2018-08-21 19:07:17 +0800
     - 重叠：
         + 根据跟随程度可以达到完全重叠，和部分重叠。如果跟随程度为1那么其效果就是不重叠
     - 不重叠：
-        + 保证Header可见，Content在达到可见度偏移时停止偏移量的滑动
+        + 保证Header可见，Content在达到可见度偏移时停止偏移量的滑动，Header完全的跟随
         + 无需保证Header可见，Content可以滑动到父布局最上方
 
     这里重叠与不重叠之间也存在交集：
 
     1. 无需保证Header可见，Content可以滑动到父布局最上方，只是跟随程度不同而已，跟随程度为1表示不重叠，跟随程度为[0, 1)表示重叠的情况
 
-    因此可以再次进行划分：
+    实际上，保证Header可见与重叠并不冲突，如果Header的跟随程度小于1，那么也是可行的，此时可以发生部分重叠，因此可以再次进行划分：
 
-    - 保证Header可见，Content在达到可见度偏移时停止偏移量的滑动
+    - 保证Header可见，Content在达到可见度偏移时停止偏移量的滑动，Header的跟随程度决定了是否发生重叠
     - 不保证Header可见，Content可以滑动到父布局的最上方，Header的跟随程度决定了是否发生重叠
 
 
@@ -110,3 +111,31 @@ date: 2018-08-21 19:07:17 +0800
 至此，可以发现对于Header是否可见的设置应该由Content负责，而Header仅负责设置一个跟随程度即可。
 
 4. Footer的实现，由于其需求与Header一致，完全可以使用同一个超类进行实现共有的逻辑，具体实现使用坐标系转换即可。
+
+5. 对于Header跟随程度的设定，需要知道Content的滑动距离，而CoordinatorLayout在被依赖的View变化时并没有给出变化的值，如果需要，需要去记录上一次的偏移量，这是可以实现的，因为已经记录了top和bottom的偏移量。但这样做会增加API的使用成本。最重要的一点是，Header与Content这种交错滑动的动态效果使用Transition来实现更为合适。因此跟随程度改回原来的设计，即跟随与不跟随两种。
+
+6. 对于Content的滑动偏移量的最小值限制，采用保证Header可见与不可见两种模式可以合并为一个线性值headerHeight，默认由Header测量完成时获取Content并将该值设置为Header自身的visibleHeight。
+
+## RefreshBehavior状态变化
+目前采用如下接口监听滑动事件，需要注意onStopScroll仅表示滑动触摸操作的结束，可能对应TouchEvent.UP事件，但不表明滑动的结束，随后可能使用延时的动画来更新视图：
+```java
+    public interface ScrollListener {
+
+        void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch);
+
+        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch);
+
+        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch);
+
+        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch);
+    }
+```
+
+根据监听到的滑动事件进行状态转移的设计，目前一个完整的刷新状态集合如下：
+```java
+    private static final int STATE_IDEL = 0;        // 初始状态
+    private static final int STATE_START = 1;       // 开始刷新，发生触摸事件
+    private static final int STATE_READY = 2;       // 达到刷新触发条件
+    private static final int STATE_REFRESH = 3;     // 正在刷新
+    private static final int STATE_COMPLETE = 4;    // 刷新结束
+```

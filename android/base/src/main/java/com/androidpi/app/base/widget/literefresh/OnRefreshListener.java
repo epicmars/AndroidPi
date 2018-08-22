@@ -8,9 +8,9 @@ public interface OnRefreshListener {
 
     void onRefreshStart();
 
-    void onRefreshReady();
+    void onReleaseToRefresh();
 
     void onRefresh();
 
-    void onRefreshComplete();
+    void onRefreshEnd();
 }

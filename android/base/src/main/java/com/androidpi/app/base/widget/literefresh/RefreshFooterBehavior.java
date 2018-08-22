@@ -1,8 +1,6 @@
 package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
@@ -21,7 +19,6 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
     private List<OnPullListener> mListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     private AtomicBoolean isRefreshing = new AtomicBoolean(false);
-    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public RefreshFooterBehavior(Context context) {
         this(context, null);
@@ -77,7 +74,7 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
         }
         if (current >= max * 0.9) {
             for (OnRefreshListener l : mRefreshListeners) {
-                l.onRefreshReady();
+                l.onReleaseToRefresh();
             }
         }
     }
@@ -132,7 +129,7 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshComplete();
+                    l.onRefreshEnd();
                 }
                 stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
@@ -141,12 +138,12 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
     }
 
     @Override
-    public void refreshTimeout() {
+    public void refreshError(Exception exception) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshComplete();
+                    l.onRefreshEnd();
                 }
                 stopScroll(getParent(), getChild(), true);
                 setIsRefreshing(false);
@@ -154,35 +151,4 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
         });
     }
 
-    @Override
-    public void refreshCancelled() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshComplete();
-                }
-                stopScroll(getParent(), getChild(), true);
-                setIsRefreshing(false);
-            }
-        });
-    }
-
-    @Override
-    public void refreshException(Exception exception) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                for (OnRefreshListener l : mRefreshListeners) {
-                    l.onRefreshComplete();
-                }
-                stopScroll(getParent(), getChild(), true);
-                setIsRefreshing(false);
-            }
-        });
-    }
-
-    public void runOnUiThread(Runnable runnable) {
-        mHandler.post(runnable);
-    }
 }

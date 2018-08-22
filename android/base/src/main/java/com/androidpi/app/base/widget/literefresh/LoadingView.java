@@ -23,6 +23,7 @@ public class LoadingView extends View{
     private static final int STATE_IDLE = 0;
     private static final int STATE_ON_PROGRESS = 1;
     private static final int STATE_ON_LOADING = 2;
+    private static final int STATE_FINISH = 3;
 
     private final float GOLDEN_RATIO = 0.618f;
 
@@ -77,7 +78,7 @@ public class LoadingView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (state == STATE_ON_LOADING || state == STATE_IDLE) {
+        if (state == STATE_ON_LOADING || state == STATE_IDLE || state == STATE_FINISH) {
             for (int i = 0; i < 12; i++) {
                 paint.setAlpha(31 + (i + current) % 12 * 224 / 12);
                 canvas.drawLine(centerX, centerY + gapLength, centerX, centerY + gapLength + lineLength, paint);
@@ -96,6 +97,10 @@ public class LoadingView extends View{
         }
     }
 
+    public void startProgress() {
+        state = STATE_IDLE;
+    }
+
     public void setProgress(float percent) {
         if (state < STATE_ON_LOADING) {
             percent = MathUtils.clamp(percent, 0f, 1f);
@@ -111,7 +116,7 @@ public class LoadingView extends View{
     }
 
     public void finishLoading() {
-        state = STATE_IDLE;
+        state = STATE_FINISH;
         invalidate();
     }
 

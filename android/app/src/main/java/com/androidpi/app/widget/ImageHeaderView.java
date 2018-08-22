@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.androidpi.app.R;
 import com.androidpi.app.activity.TemplateActivity;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
 import com.androidpi.app.fragment.FragmentFactory;
 import com.androidpi.app.fragment.ImageFragment;
 import com.androidpi.common.image.glide.GlideApp;
@@ -70,7 +71,7 @@ public class ImageHeaderView extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onRefreshReady() {
+    public void onReleaseToRefresh() {
 
     }
 
@@ -80,7 +81,7 @@ public class ImageHeaderView extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onRefreshComplete() {
+    public void onRefreshEnd() {
     }
 
     public void setUrl(String url) {

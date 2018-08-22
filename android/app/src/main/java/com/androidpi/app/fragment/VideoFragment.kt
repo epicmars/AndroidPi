@@ -154,7 +154,7 @@ class VideoFragment : BaseFragment<FragmentVideoBinding>(), AnkoLogger {
         decorView?.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE
                 // Set the content to appear under the system bars so that the
-                // content doesn't resize when the system bars hide and show.
+                // content doesn't resize when the system bars reset and show.
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN

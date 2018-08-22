@@ -8,7 +8,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.List;
+import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * A behavior for nested scrollable child of {@link CoordinatorLayout}.
@@ -24,9 +24,12 @@ import java.util.List;
  */
 public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
-    public static final int MODE_OVERLAP = 0;
-    public static final int MODE_FOLLOW = 1;
-    private int mode = MODE_FOLLOW;
+    private boolean isFirstLayout = true;
+    private boolean layoutNow = false;
+    // Minimum offset that content can scroll up.
+    private int minOffset;
+    // The header's height.
+    protected int headerHeight = 0;
 
     public ContentBehavior() {
 
@@ -41,84 +44,115 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     }
 
     @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, V child, View dependency) {
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
-        if (null != lp) {
-            CoordinatorLayout.Behavior behavior = lp.getBehavior();
-            return behavior instanceof HeaderBehavior
-                    || behavior instanceof FooterBehavior;
+    public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
+        boolean handled = super.onLayoutChild(parent, child, layoutDirection);
+        if (isFirstLayout || layoutNow) {
+            cancelAnimation();
+            setTopAndBottomOffset(minOffset);
+            isFirstLayout = false;
+            layoutNow = false;
         }
-        return false;
-    }
-
-    @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, V child, View dependency) {
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
-        CoordinatorLayout.Behavior behavior = lp.getBehavior();
-        int offset = 0;
-        if (behavior instanceof HeaderBehavior) {
-            offset = dependency.getBottom() - child.getTop();
-        } else if (behavior instanceof FooterBehavior) {
-            offset = dependency.getTop() - child.getBottom();
-        }
-        if (offset != 0) {
-            setTopAndBottomOffset(getTopAndBottomOffset() + offset);
-            return true;
-        }
-        return false;
+        return handled;
     }
 
     @Override
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
-        boolean started = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-        return started;
+        boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+        if (start) {
+            for (ScrollListener l : mListeners) {
+                l.onStartScroll(coordinatorLayout, child, (int) maxOffset, type == TYPE_TOUCH);
+            }
+        }
+        return start;
     }
 
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
-        if (mode == MODE_FOLLOW) return;
-        // When scrolling up, if content view lay below header,
-        // then move the content view until it fully overlay header view.
         if (dy > 0) {
-            if (child.getTop() <= 0) return;
-            // scroll up
-            int offset = MathUtils.clamp(-dy, -child.getTop(), 0);
-            if (offset == 0)
+            // When scrolling up, compute the top offset which content can reach.
+            int topOffset = minOffset;
+            if (child.getTop() <= topOffset)
                 return;
-            setTopAndBottomOffset(getTopAndBottomOffset() + offset);
-            consumed[1] = -offset;
+            int offset = MathUtils.clamp(-dy, topOffset - child.getTop(), 0);
+            if (offset != 0) {
+                consumeOffset(coordinatorLayout, child, offset, type, true);
+                consumed[1] = -offset;
+            }
         }
     }
 
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-        if (mode == MODE_FOLLOW) return;
-        // When scrolling down, if there is unconsumed pixels and content view overlap header view.
-        // Make use of these pixels to move content view to make header fully visible.
+        // When scrolling down, if there is unconsumed pixels.
+        // Make use of them to move content view to reach maximum offset.
+        // todo: For now only care about human touch.
         if (dyUnconsumed < 0) {
-            HeaderBehavior behavior = findDependencyHeaderBehavior(coordinatorLayout, child);
-            if (behavior == null || getTopAndBottomOffset() >= behavior.visibleHeight) return;
-            int offset = MathUtils.clamp(-dyUnconsumed, 0, (int) behavior.visibleHeight - child.getTop());
-            if (offset == 0)
+            if (child.getTop() >= maxOffset)
                 return;
-            setTopAndBottomOffset(getTopAndBottomOffset() + offset);
-        }
-    }
-
-    public int getMode() {
-        return mode;
-    }
-
-    private HeaderBehavior findDependencyHeaderBehavior(CoordinatorLayout parent, View child) {
-        List<View> dependencies = parent.getDependencies(child);
-        if (dependencies.isEmpty())
-            return null;
-        for (View v : dependencies) {
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
-            if (p.getBehavior() instanceof HeaderBehavior) {
-                return (HeaderBehavior) p.getBehavior();
+            int offset = MathUtils.clamp(-dyUnconsumed, 0, (int) maxOffset - child.getTop());
+            if (offset != 0) {
+                if (child.getTop() >= visibleHeight) {
+                    if (type != TYPE_TOUCH)
+                        return;
+                    consumeOffset(coordinatorLayout, child, offset, type, false);
+                } else {
+                    // Recompute the offset so that the top does not exceed visibleHeight.
+                    offset = MathUtils.clamp(-dyUnconsumed, 0, visibleHeight - child.getTop());
+                    consumeOffset(coordinatorLayout, child, offset, type, true);
+                }
             }
         }
-        return null;
+    }
+
+    @Override
+    public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
+        for (ScrollListener l : mListeners) {
+            l.onStopScroll(coordinatorLayout, child, getTopAndBottomOffset(), (int) maxOffset, type == TYPE_TOUCH);
+        }
+    }
+
+    @Override
+    public void onDetachedFromLayoutParams() {
+        super.onDetachedFromLayoutParams();
+        cancelAnimation();
+        mListeners.clear();
+        mParent = null;
+        mChild = null;
+    }
+
+    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset, int type, boolean comsumeRawOffset) {
+        int current = getTopAndBottomOffset();
+        // Before child consume the offset.
+        for (ScrollListener l : mListeners) {
+            l.onPreScroll(coordinatorLayout, child, current, (int) maxOffset, type == TYPE_TOUCH);
+        }
+        int consumed = comsumeRawOffset ? offset : onConsumeOffset(current, coordinatorLayout.getHeight(), offset);
+        current += consumed;
+        setTopAndBottomOffset(current);
+        // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
+        // The header view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle.
+        // In this case CoordinatorLayout will not call onDependentViewChanged().
+        // So We need to call onDependentViewChanged() manually.
+        coordinatorLayout.dispatchDependentViewsChanged(child);
+        for (ScrollListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, current, offset, (int) maxOffset, type == TYPE_TOUCH);
+        }
+        return consumed;
+    }
+
+    protected int onConsumeOffset(int current, int parentHeight, int offset) {
+        return offset;
+    }
+
+    @Override
+    public void setVisibleHeight(int visibleHeight) {
+        super.setVisibleHeight(visibleHeight);
+        minOffset = 0;
+        layoutNow = true;
+        getChild().requestLayout();
+    }
+
+    public void setHeaderHeight(int headerHeight) {
+        this.headerHeight = headerHeight;
     }
 }

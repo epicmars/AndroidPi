@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="HeaderBehavior">
+    <declare-styleable name="OffsetBehavior">
         <attr name="lr_maxOffset" format="reference|dimension"></attr>
         <attr name="lr_maxOffsetRatio" format="reference|float"></attr>
         <attr name="lr_visibleHeight" format="reference|dimension"></attr>

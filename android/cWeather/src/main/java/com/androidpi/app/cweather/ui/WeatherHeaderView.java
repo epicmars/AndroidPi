@@ -11,12 +11,13 @@ import com.androidpi.app.base.widget.literefresh.LoadingView;
 import com.androidpi.app.base.widget.literefresh.OnPullListener;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
 import com.androidpi.app.cweather.R;
 
 /**
  * Created by jastrelax on 2018/8/18.
  */
-public class WeatherHeaderView extends FrameLayout implements OnPullListener, OnRefreshListener{
+public class WeatherHeaderView extends RefreshHeaderLayout{
 
     private LoadingView loadingView;
     private float offset;
@@ -37,25 +38,9 @@ public class WeatherHeaderView extends FrameLayout implements OnPullListener, On
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        try {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
-            RefreshHeaderBehavior behavior = (RefreshHeaderBehavior) params.getBehavior();
-            if (behavior == null) {
-                behavior = new RefreshHeaderBehavior(getContext());
-                params.setBehavior(behavior);
-            }
-            behavior.addOnPullingListener(this);
-            behavior.addOnRefreshListener(this);
-        } catch (Exception e) {
-
-        }
-    }
-
-    @Override
     public void onStartPulling(int max, boolean isTouch) {
         if (isTouch) {
+            loadingView.startProgress();
             loadingView.setProgress(0);
         }
     }
@@ -81,7 +66,7 @@ public class WeatherHeaderView extends FrameLayout implements OnPullListener, On
     }
 
     @Override
-    public void onRefreshReady() {
+    public void onReleaseToRefresh() {
 
     }
 
@@ -91,7 +76,7 @@ public class WeatherHeaderView extends FrameLayout implements OnPullListener, On
     }
 
     @Override
-    public void onRefreshComplete() {
+    public void onRefreshEnd() {
         loadingView.finishLoading();
     }
 }

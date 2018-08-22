@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 
 import com.androidpi.app.R;
 import com.androidpi.app.activity.VideoActivity;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
 
 /**
  * Created by jastrelax on 2018/8/20.
@@ -56,7 +57,7 @@ public class VideoHeaderView extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onRefreshReady() {
+    public void onReleaseToRefresh() {
 
     }
 
@@ -66,7 +67,7 @@ public class VideoHeaderView extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onRefreshComplete() {
+    public void onRefreshEnd() {
     }
 
     public void setUrl(String url) {
