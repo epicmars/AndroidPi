@@ -18,7 +18,6 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:lr_useDefaultMinOffset="false"
             android:background="@color/colorPrimary"
             android:paddingTop="24dp"
             app:layout_behavior="@string/lr_refresh_content_behavior"

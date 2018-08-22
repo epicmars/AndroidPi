@@ -57,9 +57,8 @@ public class ImagePagerFragment extends BaseFragment<FragmentImagePagerBinding> 
                 if (null == listResource)
                     return;
                 if (listResource.isSuccess()) {
-                    if (listResource.data.size() > 1) {
-                        adapter.addPayloads(listResource.data.subList(0, 2));
-                    }
+                    int max = Math.min(20, listResource.data.size());
+                    adapter.addPayloads(listResource.data.subList(0, max));
                 }
             }
         });

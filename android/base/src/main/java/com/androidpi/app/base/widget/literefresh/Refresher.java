@@ -1,7 +1,7 @@
 package com.androidpi.app.base.widget.literefresh;
 
 /**
- * An controller of pulling behaviors.
+ * An controller of refreshing behaviors.
  *
  * <p>
  *     If using in multiple threads, the implementations should be thread safe.

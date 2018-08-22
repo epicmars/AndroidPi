@@ -109,6 +109,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
         }
         pendingActions.clear();
         mListeners.clear();
+        cancelAnimation();
     }
 
     protected void cancelAnimation() {

@@ -34,9 +34,9 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     private int minOffset;
 
     /**
-     * If set to true, default minimum offset will be {@link #headerVisibleHeight}
+     * If set to true, default minimum offset will be {@link #headerVisibleHeight}.
      */
-    private boolean useDefaultMinOffset = true;
+    private boolean useDefaultMinOffset = false;
 
     /**
      * The header's height.
@@ -62,7 +62,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     public ContentBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ContentBehavior, 0, 0);
-        useDefaultMinOffset = a.getBoolean(R.styleable.ContentBehavior_lr_useDefaultMinOffset, true);
+        useDefaultMinOffset = a.getBoolean(R.styleable.ContentBehavior_lr_useDefaultMinOffset, false);
         minOffset = a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_minOffset, 0);
         a.recycle();
     }
@@ -135,15 +135,6 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         for (ScrollListener l : mListeners) {
             l.onStopScroll(coordinatorLayout, child, getTopAndBottomOffset(), (int) maxOffset, type == TYPE_TOUCH);
         }
-    }
-
-    @Override
-    public void onDetachedFromLayoutParams() {
-        super.onDetachedFromLayoutParams();
-        cancelAnimation();
-        mListeners.clear();
-        mParent = null;
-        mChild = null;
     }
 
     private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset, int type, boolean comsumeRawOffset) {
