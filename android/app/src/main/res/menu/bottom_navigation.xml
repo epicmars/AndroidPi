@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/nav_news"
-        android:title="@string/news"
-        android:icon="@drawable/ic_view_list"/>
-
-    <item android:id="@+id/nav_articles"
-        android:title="@string/articles"
+    <item android:id="@+id/nav_literefresh_pager"
+        android:title="@string/literefresh_pager"
         android:icon="@drawable/ic_whatshot_black_24dp"/>
 
     <item android:id="@+id/nav_literefresh"
         android:title="@string/literefresh"
         android:icon="@drawable/ic_book_black_24dp"/>
+
+    <item android:id="@+id/nav_news"
+        android:title="@string/news"
+        android:icon="@drawable/ic_view_list"/>
 
 </menu>

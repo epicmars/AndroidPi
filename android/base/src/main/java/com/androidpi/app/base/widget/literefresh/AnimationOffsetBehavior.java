@@ -37,16 +37,16 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
 
     public static final float GOLDEN_RATIO = 0.618F;
 
-    protected List<ScrollListener> mListeners = new ArrayList<>();
-    private OffsetAnimator offsetAnimator;
-    protected CoordinatorLayout mParent;
     protected V mChild;
+    protected CoordinatorLayout mParent;
+    private OffsetAnimator offsetAnimator;
     protected float maxOffset = 0;
     private float maxOffsetRatio = GOLDEN_RATIO;
     protected int visibleHeight = 0;
     protected float invisibleHeight = 0;
     private float visibleHeightRatio = 0;
     protected int progressBase = 0;
+    protected List<ScrollListener> mListeners = new ArrayList<>();
     private Handler handler = new Handler(this);
     private Queue<Runnable> pendingActions = new LinkedList<>();
 
@@ -107,6 +107,8 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
+        pendingActions.clear();
+        mListeners.clear();
     }
 
     protected void cancelAnimation() {

@@ -16,7 +16,7 @@ import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.databinding.FragmentUnsplashBinding;
 import com.androidpi.app.viewholder.UnsplashImageViewHolder;
-import com.androidpi.data.remote.dto.ResRandomPhotos;
+import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 import java.util.List;
 
@@ -49,9 +49,9 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding>{
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
         binding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
-        unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<List<ResRandomPhotos>>>() {
+        unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<List<ResUnsplashPhoto>>>() {
             @Override
-            public void onChanged(@Nullable Resource<List<ResRandomPhotos>> listResource) {
+            public void onChanged(@Nullable Resource<List<ResUnsplashPhoto>> listResource) {
                 if (null == listResource) return;
                 if (listResource.isSuccess()) {
                     adapter.addPayloads(listResource.data);

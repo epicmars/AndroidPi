@@ -102,7 +102,7 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
     }
 
     protected void stopScroll(@NonNull V child, boolean holdOn) {
-        if (getTopAndBottomOffset() > visibleHeight) {
+        if (getTopAndBottomOffset() > headerVisibleHeight) {
             if (child.getHandler() == null) return;
             child.getHandler().removeCallbacks(offsetCallback);
             offsetCallback = new Runnable() {
@@ -236,7 +236,7 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
      */
     protected void reset() {
         if (null == getChild()) return;
-        float offset = visibleHeight - getChild().getTop();
+        float offset = headerVisibleHeight - getChild().getTop();
         if (offset >= 0) return;
         animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, EXIT_DURATION);
     }

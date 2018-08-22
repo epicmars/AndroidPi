@@ -5,15 +5,14 @@ import android.view.View;
 import com.androidpi.app.R;
 import com.androidpi.app.base.ui.BaseViewHolder;
 import com.androidpi.app.base.ui.BindLayout;
-import com.androidpi.app.databinding.ViewholderUnsplashImageBinding;
-import com.androidpi.common.image.glide.GlideApp;
-import com.androidpi.data.remote.dto.ResRandomPhotos;
+import com.androidpi.app.databinding.ViewHolderUnsplashImageBinding;
+import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 /**
  * Created by jastrelax on 2018/8/13.
  */
-@BindLayout(value = R.layout.viewholder_unsplash_image, dataTypes = ResRandomPhotos.class)
-public class UnsplashImageViewHolder extends BaseViewHolder<ViewholderUnsplashImageBinding> {
+@BindLayout(value = R.layout.view_holder_unsplash_image, dataTypes = ResUnsplashPhoto.class)
+public class UnsplashImageViewHolder extends BaseViewHolder<ViewHolderUnsplashImageBinding> {
 
     public UnsplashImageViewHolder(View itemView) {
         super(itemView);
@@ -21,9 +20,8 @@ public class UnsplashImageViewHolder extends BaseViewHolder<ViewholderUnsplashIm
 
     @Override
     public <T> void onBind(T data, int position) {
-        ResRandomPhotos resRandomPhotos = (ResRandomPhotos) data;
-        GlideApp.with(itemView).load(resRandomPhotos.getUrls().getSmall())
-                .into(binding.ivImage);
+        ResUnsplashPhoto resUnsplashPhoto = (ResUnsplashPhoto) data;
+        binding.ivImage.loadUnsplashPhoto(resUnsplashPhoto);
     }
 
     @Override

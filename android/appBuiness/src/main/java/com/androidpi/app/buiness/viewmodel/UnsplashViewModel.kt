@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModel
 import com.androidpi.app.base.vm.vo.Resource
 import com.androidpi.common.networks.http.RetrofitClientFactory
 import com.androidpi.data.remote.UnsplashApi
-import com.androidpi.data.remote.dto.ResRandomPhotos
+import com.androidpi.data.remote.dto.ResUnsplashPhoto
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class UnsplashViewModel : ViewModel() {
 
-    val randomPhotosResult = MutableLiveData<Resource<List<ResRandomPhotos>>>()
+    val randomPhotosResult = MutableLiveData<Resource<List<ResUnsplashPhoto>>>()
 
     private val api: UnsplashApi
 
@@ -29,8 +29,8 @@ class UnsplashViewModel : ViewModel() {
         api.randomPhotos(count = count)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<List<ResRandomPhotos>> {
-                    override fun onSuccess(t: List<ResRandomPhotos>) {
+                .subscribe(object : SingleObserver<List<ResUnsplashPhoto>> {
+                    override fun onSuccess(t: List<ResUnsplashPhoto>) {
                         randomPhotosResult.value = Resource.success(t)
                     }
 

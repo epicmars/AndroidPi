@@ -7,19 +7,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.androidpi.app.R;
-import com.androidpi.app.activity.TemplateActivity;
 import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.ui.RecyclerAdapter;
-import com.androidpi.app.databinding.FragmentLitefreshSamplesBinding;
+import com.androidpi.app.databinding.FragmentLiteRefreshSamplesBinding;
 import com.androidpi.app.items.LiteRefreshSamples;
 import com.androidpi.app.viewholder.LiteRefreshSampleViewHolder;
 
 /**
  * Created by jastrelax on 2018/8/19.
  */
-@BindLayout(R.layout.fragment_litefresh_samples)
-public class LiteRefreshSamplesFragment extends BaseFragment<FragmentLitefreshSamplesBinding> {
+@BindLayout(R.layout.fragment_lite_refresh_samples)
+public class LiteRefreshSamplesFragment extends BaseFragment<FragmentLiteRefreshSamplesBinding> {
 
     private RecyclerAdapter adapter;
 

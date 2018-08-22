@@ -1,6 +1,6 @@
 package com.androidpi.data.remote
 
-import com.androidpi.data.remote.dto.ResRandomPhotos
+import com.androidpi.data.remote.dto.ResUnsplashPhoto
 
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -33,6 +33,6 @@ interface UnsplashApi {
                      @Query("w") w: Long? = null,
                      @Query("h") h: Long? = null,
                      @Query("orientation") orientation: String? = null,
-                     @Query("count") count: Int = 1): Single<List<ResRandomPhotos>>
+                     @Query("count") count: Int = 1): Single<List<ResUnsplashPhoto>>
 
 }

@@ -18,9 +18,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     companion object {
 
-        val NAV_IDS = mapOf(R.id.nav_news to 0,
-                R.id.nav_articles to 1,
-                R.id.nav_literefresh to 2)
+        val NAV_IDS = mapOf(R.id.nav_literefresh_pager to 0,
+                R.id.nav_literefresh to 1,
+                R.id.nav_news to 2)
 
         fun newInstance(): MainFragment {
             return MainFragment()
@@ -34,9 +34,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
             override fun getItem(position: Int): Fragment {
                 return when (position) {
-                    0 -> NewsPagerFragment.newInstance()
-                    1 -> ImagePagerFragment.newInstance()
-                    2 -> LiteRefreshSamplesFragment.newInstance()
+                    0 -> LiteRefreshPagerFragment.newInstance()
+                    1 -> LiteRefreshSamplesFragment.newInstance()
+                    2 -> NewsPagerFragment.newInstance()
                     else -> TempFragment.newInstance("An error occurred.")
                 }
             }

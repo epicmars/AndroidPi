@@ -1,11 +1,14 @@
 package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.androidpi.app.pi.base.R;
 
 import java.util.List;
 
@@ -25,28 +28,39 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
-    private static final int MODE_FOLLOW_CONTENT = 0;
-    private static final int MODE_STILL = 1;
+    /**
+     * Follow content view.
+     */
+    private static final int MODE_FOLLOW = 1;
+    /**
+     * Still, does not follow.
+     */
+    private static final int MODE_STILL = 0;
 
-    private int mode = 0;
+    private int mode = MODE_FOLLOW;
     private boolean isFirstLayout = true;
 
     public HeaderBehavior() {
     }
 
     public HeaderBehavior(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public HeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.HeaderBehavior, 0, 0);
+        if (a.hasValue(R.styleable.HeaderBehavior_lr_headerMode)) {
+            mode = a.getInt(R.styleable.HeaderBehavior_lr_headerMode, MODE_FOLLOW);
+        }
+        a.recycle();
     }
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (isFirstLayout) {
-            getContentBehavior().setVisibleHeight(getVisibleHeight());
+            getContentBehavior().setHeaderVisibleHeight(getVisibleHeight());
             getContentBehavior().setHeaderHeight(child.getHeight());
             isFirstLayout = false;
         }
@@ -148,7 +162,7 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     }
 
     protected int onConsumeOffset(int current, int parentHeight, int offset) {
-        return mode == MODE_FOLLOW_CONTENT ? offset : 0;
+        return mode == MODE_FOLLOW ? offset : 0;
     }
 
     /**

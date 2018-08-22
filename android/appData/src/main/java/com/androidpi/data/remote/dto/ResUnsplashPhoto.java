@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by jastrelax on 2018/8/13.
  */
-public class ResRandomPhotos {
+public class ResUnsplashPhoto {
 
 
     /**

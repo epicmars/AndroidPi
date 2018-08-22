@@ -12,6 +12,7 @@
     <string name="reader_mode">阅读模式</string>
     <string name="articles">技术文章</string>
     <string name="literefresh">LiteRefresh</string>
+    <string name="literefresh_pager">LR</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -1,12 +1,16 @@
 package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.androidpi.app.pi.base.R;
+import com.google.gson.TypeAdapter;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
@@ -24,12 +28,28 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  */
 public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
+    /**
+     * Minimum top and bottom offset of content view.
+     */
+    private int minOffset;
+
+    /**
+     * If set to true, default minimum offset will be {@link #headerVisibleHeight}
+     */
+    private boolean useDefaultMinOffset = true;
+
+    /**
+     * The header's height.
+     */
+    protected int headerHeight;
+
+    /**
+     * The header's visible height.
+     */
+    protected int headerVisibleHeight;
+
     private boolean isFirstLayout = true;
     private boolean layoutNow = false;
-    // Minimum offset that content can scroll up.
-    private int minOffset;
-    // The header's height.
-    protected int headerHeight = 0;
 
     public ContentBehavior() {
 
@@ -41,6 +61,10 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
 
     public ContentBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ContentBehavior, 0, 0);
+        useDefaultMinOffset = a.getBoolean(R.styleable.ContentBehavior_lr_useDefaultMinOffset, true);
+        minOffset = a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_minOffset, 0);
+        a.recycle();
     }
 
     @Override
@@ -48,7 +72,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (isFirstLayout || layoutNow) {
             cancelAnimation();
-            setTopAndBottomOffset(minOffset);
+            setTopAndBottomOffset(headerVisibleHeight);
             isFirstLayout = false;
             layoutNow = false;
         }
@@ -84,20 +108,22 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         // When scrolling down, if there is unconsumed pixels.
-        // Make use of them to move content view to reach maximum offset.
         // todo: For now only care about human touch.
         if (dyUnconsumed < 0) {
+            // Can not scroll exceed maximum offset.
             if (child.getTop() >= maxOffset)
                 return;
             int offset = MathUtils.clamp(-dyUnconsumed, 0, (int) maxOffset - child.getTop());
             if (offset != 0) {
-                if (child.getTop() >= visibleHeight) {
+                if (child.getTop() >= headerVisibleHeight) {
+                    // When header is totally visible, do not consume none touch scroll,
+                    // content can scroll to the maximum offset with the touch.
                     if (type != TYPE_TOUCH)
                         return;
                     consumeOffset(coordinatorLayout, child, offset, type, false);
                 } else {
-                    // Recompute the offset so that the top does not exceed visibleHeight.
-                    offset = MathUtils.clamp(-dyUnconsumed, 0, visibleHeight - child.getTop());
+                    // Recompute the offset so that the top does not exceed headerVisibleHeight.
+                    offset = MathUtils.clamp(-dyUnconsumed, 0, headerVisibleHeight - child.getTop());
                     consumeOffset(coordinatorLayout, child, offset, type, true);
                 }
             }
@@ -144,15 +170,21 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         return offset;
     }
 
-    @Override
-    public void setVisibleHeight(int visibleHeight) {
-        super.setVisibleHeight(visibleHeight);
-        minOffset = 0;
-        layoutNow = true;
-        getChild().requestLayout();
-    }
-
     public void setHeaderHeight(int headerHeight) {
         this.headerHeight = headerHeight;
+    }
+
+    public void setHeaderVisibleHeight(int headerVisibleHeight) {
+        this.headerVisibleHeight = headerVisibleHeight;
+        if (useDefaultMinOffset) {
+            this.minOffset = headerVisibleHeight;
+        }
+        runWithView(new Runnable() {
+            @Override
+            public void run() {
+                layoutNow = true;
+                getChild().requestLayout();
+            }
+        });
     }
 }
