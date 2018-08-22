@@ -1,5 +1,6 @@
 package com.androidpi.app.base.ui
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -53,5 +54,9 @@ abstract class BaseFragment<VDB : ViewDataBinding> : Fragment() {
 
     protected fun <T : ViewModel> getViewModel(clazz: Class<T>) : T {
         return ViewModelProviders.of(this).get(clazz)
+    }
+
+    protected fun <T : ViewModel> getViewModelOfActivity(clazz: Class<T>) : T {
+        return ViewModelProviders.of(activity!!).get(clazz)
     }
 }

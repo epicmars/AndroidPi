@@ -15,7 +15,7 @@ import com.androidpi.app.base.ui.RecyclerAdapter;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.databinding.FragmentUnsplashBinding;
-import com.androidpi.app.viewholder.UnsplashImageViewHolder;
+import com.androidpi.app.viewholder.UnsplashPhotoViewHolder;
 import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 import java.util.List;
@@ -38,13 +38,13 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding>{
 
     public UnsplashFragment() {
         adapter = new RecyclerAdapter();
-        adapter.register(UnsplashImageViewHolder.class);
+        adapter.register(UnsplashPhotoViewHolder.class);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unsplashViewModel = ViewModelProviders.of(this).get(UnsplashViewModel.class);
+        unsplashViewModel = getViewModelOfActivity(UnsplashViewModel.class);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);

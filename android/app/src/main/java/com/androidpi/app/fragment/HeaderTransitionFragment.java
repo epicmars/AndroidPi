@@ -30,7 +30,7 @@ public class HeaderTransitionFragment extends BaseFragment<FragmentHeaderTransit
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unsplashViewModel = getViewModel(UnsplashViewModel.class);
+        unsplashViewModel = getViewModelOfActivity(UnsplashViewModel.class);
         unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<List<ResUnsplashPhoto>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<ResUnsplashPhoto>> listResource) {
@@ -46,7 +46,5 @@ public class HeaderTransitionFragment extends BaseFragment<FragmentHeaderTransit
                 }
             }
         });
-
-        unsplashViewModel.getRandomPhotos(1);
     }
 }

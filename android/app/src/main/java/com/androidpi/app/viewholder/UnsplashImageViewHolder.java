@@ -6,10 +6,11 @@ import com.androidpi.app.R;
 import com.androidpi.app.base.ui.BaseViewHolder;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.databinding.ViewHolderUnsplashImageBinding;
+import com.androidpi.common.image.glide.GlideApp;
 import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 /**
- * Created by jastrelax on 2018/8/13.
+ * Created by jastrelax on 2018/8/22.
  */
 @BindLayout(value = R.layout.view_holder_unsplash_image, dataTypes = ResUnsplashPhoto.class)
 public class UnsplashImageViewHolder extends BaseViewHolder<ViewHolderUnsplashImageBinding> {
@@ -20,12 +21,11 @@ public class UnsplashImageViewHolder extends BaseViewHolder<ViewHolderUnsplashIm
 
     @Override
     public <T> void onBind(T data, int position) {
-        ResUnsplashPhoto resUnsplashPhoto = (ResUnsplashPhoto) data;
-        binding.ivImage.loadUnsplashPhoto(resUnsplashPhoto);
-    }
-
-    @Override
-    public void onViewRecycled() {
-        super.onViewRecycled();
+        if (data instanceof ResUnsplashPhoto) {
+            ResUnsplashPhoto resUnsplashPhoto = (ResUnsplashPhoto) data;
+            GlideApp.with(itemView)
+                    .load(resUnsplashPhoto.getUrls().getRegular())
+                    .into(binding.ivImage);
+        }
     }
 }

@@ -24,7 +24,7 @@
             app:layout_behavior="@string/lr_refresh_content_behavior"
             app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
             app:spanCount="2"
-            tools:listitem="@layout/view_holder_unsplash_image">
+            tools:listitem="@layout/view_holder_unsplash_photo">
         </android.support.v7.widget.RecyclerView>
     </android.support.design.widget.CoordinatorLayout>
 </layout>
