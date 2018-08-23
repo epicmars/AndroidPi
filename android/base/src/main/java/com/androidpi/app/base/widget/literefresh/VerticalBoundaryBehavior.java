@@ -1,11 +1,14 @@
 package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.androidpi.app.pi.base.R;
 
 import java.util.List;
 
@@ -14,18 +17,20 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 /**
  * Super class of header and footer behavior.
  * <br>
- * The header and footer behaviors are almost the same, the main difference is
+ * The header and footer behaviors are almost the same, the main difference is that
  * they have different coordinate system when we trace the bottom and top position
- * of the view to which they attached.
+ * of the view to which they attached respectively.
  * view.
  * <br>
- * We have traced the bottom and top offset of the view using the view's default coordinate
- * system, the original point is the left top position of the parent, and when we move to right
- * or bottom from the original point we get positive range, otherwise it's negative.
+ * As we have record the bottom and top offset of the view using the view's default coordinate
+ * system, whose original point is the left top point of the parent view. Relative to that original
+ * point the right and bottom position is positive.
  *
  * <br>
- * The coordinate system of the bottom of the view which header behavior is attached
- * would be a matrix transformation below:
+ * Now we need to trace how much the header has scroll from the top of the parent view.
+ * We need to transform the bottom position of the view to which the header behavior is attached
+ * in the coordinate system of the parent view to another one. This coordinate system would be a
+ * affine matrix transformation below:
  *
  * <pre>
  *      |1 0 height||x|   |         x|
@@ -33,8 +38,9 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  *      |0 0      1||1|   |         1|
  * </pre>
  *
- * then the coordinate system of the top of footer behavior view
- * would be a transformation below:
+ * And we also need to trace how much the footer view has scrolled from the bottom of the parent
+ * view, We use top position of the view as the traced point, the coordinate system would be a
+ * affine transformation below:
  *
  * <pre>
  *      |1   0              0||x|   |                x|
@@ -46,16 +52,36 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  */
 public abstract class VerticalBoundaryBehavior<V extends View> extends AnimationOffsetBehavior<V> {
 
+    protected int visibleHeight = 0;
+    protected float invisibleHeight = 0;
+    private float visibleHeightRatio = 0;
 
     public VerticalBoundaryBehavior() {
     }
 
     public VerticalBoundaryBehavior(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public VerticalBoundaryBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior, 0, 0);
+        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeightRatio)) {
+            visibleHeightRatio = a.getFloat(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 0F);
+        }
+        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeight)) {
+            visibleHeight = Math.round(a.getDimension(R.styleable.OffsetBehavior_lr_visibleHeight, 0));
+        }
+        a.recycle();
+    }
+
+    @Override
+    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+        boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
+        // Compute visible height of child.
+        visibleHeight = (int) Math.max((float) visibleHeight, visibleHeightRatio * child.getMeasuredHeight());
+        invisibleHeight = child.getMeasuredHeight() - visibleHeight;
+        return handled;
     }
 
     @Override
@@ -113,7 +139,7 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         for (ScrollListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, transformOffsetCoordinate(current, height, parentHeight), height, type == TYPE_TOUCH);
         }
-        int consumed = consumeOffsetOnDependentViewChanged(current, parentHeight, offset);
+        int consumed = consumeOffsetOnDependentViewChanged(current, parentHeight, height, offset);
         current += consumed;
         setTopAndBottomOffset(current);
         // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
@@ -130,7 +156,7 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
 
     protected abstract int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior);
 
-    protected abstract int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int offset);
+    protected abstract int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int height, int offset);
 
     protected abstract int transformOffsetCoordinate(int current, int height, int parentHeight);
 
@@ -179,5 +205,13 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         mListeners.clear();
         mParent = null;
         mChild = null;
+    }
+
+    public int getVisibleHeight() {
+        return visibleHeight;
+    }
+
+    public void setVisibleHeight(int visibleHeight) {
+        this.visibleHeight = visibleHeight;
     }
 }

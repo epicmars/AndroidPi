@@ -208,6 +208,10 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         this.minOffset = minOffset;
     }
 
+    public int getMinOffset() {
+        return minOffset;
+    }
+
     public void setFooterVisibleHeight(int footerVisibleHeight) {
         this.footerVisibleHeight = footerVisibleHeight;
     }

@@ -12,6 +12,7 @@
             <enum name="still" value="0"/>
             <enum name="follow" value="1"/>
             <enum name="follow_down" value="2"/>
+            <enum name="follow_up" value="3"/>
         </attr>
     </declare-styleable>
     

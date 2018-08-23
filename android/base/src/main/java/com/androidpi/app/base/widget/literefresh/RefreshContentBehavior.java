@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +30,7 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
     private static final int STATE_REFRESH = 3;
     private static final int STATE_COMPLETE = 4;
 
-    private DecelerateInterpolator downInterpolator = new DecelerateInterpolator(1.5f);
+    private Interpolator downInterpolator = new AccelerateDecelerateInterpolator();
     private List<OnPullListener> mPullListeners = new ArrayList<>();
     private List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     private int currentState = STATE_IDEL;

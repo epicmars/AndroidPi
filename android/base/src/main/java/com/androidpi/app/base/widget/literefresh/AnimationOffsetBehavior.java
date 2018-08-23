@@ -42,9 +42,6 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
     private OffsetAnimator offsetAnimator;
     protected float maxOffset = 0;
     protected float maxOffsetRatio = GOLDEN_RATIO;
-    protected int visibleHeight = 0;
-    protected float invisibleHeight = 0;
-    private float visibleHeightRatio = 0;
     protected int progressBase = 0;
     protected List<ScrollListener> mListeners = new ArrayList<>();
     private Handler handler = new Handler(this);
@@ -66,12 +63,6 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
         if (a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset)) {
             maxOffset = a.getDimension(R.styleable.OffsetBehavior_lr_maxOffset, 0);
         }
-        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeightRatio)) {
-            visibleHeightRatio = a.getFloat(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 0F);
-        }
-        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeight)) {
-            visibleHeight = Math.round(a.getDimension(R.styleable.OffsetBehavior_lr_visibleHeight, 0));
-        }
         a.recycle();
     }
 
@@ -86,9 +77,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
         }
         // Execute pending actions which need view to be initialized.
         handler.sendEmptyMessage(MSG_VIEW_INITIATED);
-        // Compute visible height of child.
-        visibleHeight = (int) Math.max((float) visibleHeight, visibleHeightRatio * child.getMeasuredHeight());
-        invisibleHeight = child.getMeasuredHeight() - visibleHeight;
+
         return true;
     }
 
@@ -155,14 +144,6 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
 
     public V getChild() {
         return mChild;
-    }
-
-    public int getVisibleHeight() {
-        return visibleHeight;
-    }
-
-    public void setVisibleHeight(int visibleHeight) {
-        this.visibleHeight = visibleHeight;
     }
 
     protected void addScrollListener(ScrollListener listener) {

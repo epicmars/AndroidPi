@@ -37,6 +37,11 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
      */
     private static final int MODE_FOLLOW_DOWN = 2;
 
+    /**
+     * Follow when scroll up.
+     */
+    private static final int MODE_FOLLOW_UP = 3;
+
     private int mode = MODE_FOLLOW;
     private boolean isFirstLayout = true;
 
@@ -99,11 +104,17 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
         return current + height;
     }
 
-    protected int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int offset) {
+    protected int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int height, int offset) {
         switch (mode) {
             case MODE_STILL:
                 return 0;
             case MODE_FOLLOW_DOWN:
+                if (offset < 0 && current <= 0) return 0;
+                else return offset;
+            case MODE_FOLLOW_UP:
+                if (offset > 0 && current > 0) return 0;
+                else if (offset < 0 && transformOffsetCoordinate(current, height, parentHeight) <= getContentBehavior().getMinOffset()) return 0;
+                else return offset;
             case MODE_FOLLOW:
             default:
                 return offset;
@@ -112,7 +123,8 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
 
     /**
      * Tell if the hidden part of header view is visible.
-     * If invisible height is zero, it can be considered invisible.
+     * If invisible height is zero, which means visible height equals to view's height,
+     * int that case it's considered to be invisible.
      *
      * @return true if hidden part of header view is visible,
      * otherwise return false.

@@ -5,11 +5,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_green_light"
+            app:lr_minOffset="64dp"
+            app:layout_behavior="@string/lr_refresh_content_behavior">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+
         <com.androidpi.app.widget.ScalableHeaderLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:lr_visibleHeightRatio="1.0"
-            app:lr_headerMode="follow_down"
+            app:lr_visibleHeightRatio="0.8"
+            app:lr_headerMode="follow_up"
             app:layout_behavior="@string/lr_refresh_header_behavior">
 
             <android.support.constraint.ConstraintLayout
@@ -32,19 +47,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
         </com.androidpi.app.widget.ScalableHeaderLayout>
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/view_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/holo_green_light"
-            app:layout_behavior="@string/lr_refresh_content_behavior">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </FrameLayout>
-        </android.support.v4.widget.NestedScrollView>
 
         <View
             android:id="@+id/view_footer"
