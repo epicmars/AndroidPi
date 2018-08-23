@@ -74,8 +74,10 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
         return handled;
     }
 
-
     protected int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior) {
+        // For now we don't care about invisible changes.
+        if (contentBehavior.getTopAndBottomOffset() < 0)
+            return 0;
         if (mode == MODE_FOLLOW_DOWN) {
             int totalHeight = child.getHeight() + dependency.getHeight();
             if (totalHeight <= parent.getHeight()) {

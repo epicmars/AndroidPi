@@ -1,5 +1,6 @@
 package com.androidpi.app.base.ui;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -9,7 +10,11 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 列表适配器，一个列表适配的列表项展示什么内容只与BaseViewHolder的实现类有关。
@@ -25,7 +30,28 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     private final SparseIntArray mDataViewMap = new SparseIntArray();
     private final SparseArray<Class<? extends BaseViewHolder>> mViewHolderMap= new SparseArray<>();
     private final List<Object> mPayloads = new ArrayList<>();
+    private final Set<Object> payloadSet = new HashSet<>();
     private FragmentManager mFragmentManager;
+    private RecyclerView.AdapterDataObserver adapterDataObserver = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            payloadSet.clear();
+            for (Object object : mPayloads) {
+                payloadSet.add(object);
+            }
+        }
+    };
+
+    {
+        registerAdapterDataObserver(adapterDataObserver);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        unregisterAdapterDataObserver(adapterDataObserver);
+    }
 
     /**
      * 注册一个或多个BaseViewHolder以用于数据展示。
@@ -125,10 +151,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
         if (null == payloads || payloads.isEmpty()) {
             return;
         }
+        for (Object obj : payloads) {
+            if (contains(obj))
+                payloads.remove(obj);
+        }
         int positionStart = mPayloads.size();
         int itemCount = payloads.size();
         this.mPayloads.addAll(payloads);
         notifyItemRangeInserted(positionStart, itemCount);
+    }
+
+    public void addSinglePayload(Object payload) {
+        if (payload == null || contains(payload)) return;
+        int positionStart = mPayloads.size();
+        int itemCount = 1;
+        mPayloads.add(payload);
+        notifyItemRangeInserted(positionStart, itemCount);
+    }
+
+    public boolean contains(Object object) {
+        return payloadSet.contains(object);
     }
 
     /**

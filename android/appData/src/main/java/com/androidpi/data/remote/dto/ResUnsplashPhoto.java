@@ -282,6 +282,32 @@ public class ResUnsplashPhoto {
         public void setThumb(String thumb) {
             this.thumb = thumb;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            UrlsBean urlsBean = (UrlsBean) o;
+
+            if (raw != null ? !raw.equals(urlsBean.raw) : urlsBean.raw != null) return false;
+            if (full != null ? !full.equals(urlsBean.full) : urlsBean.full != null) return false;
+            if (regular != null ? !regular.equals(urlsBean.regular) : urlsBean.regular != null)
+                return false;
+            if (small != null ? !small.equals(urlsBean.small) : urlsBean.small != null)
+                return false;
+            return thumb != null ? thumb.equals(urlsBean.thumb) : urlsBean.thumb == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = raw != null ? raw.hashCode() : 0;
+            result = 31 * result + (full != null ? full.hashCode() : 0);
+            result = 31 * result + (regular != null ? regular.hashCode() : 0);
+            result = 31 * result + (small != null ? small.hashCode() : 0);
+            result = 31 * result + (thumb != null ? thumb.hashCode() : 0);
+            return result;
+        }
     }
 
     public static class LinksBean {
@@ -331,6 +357,29 @@ public class ResUnsplashPhoto {
 
         public void setDownloadLocation(String downloadLocation) {
             this.downloadLocation = downloadLocation;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            LinksBean linksBean = (LinksBean) o;
+
+            if (self != null ? !self.equals(linksBean.self) : linksBean.self != null) return false;
+            if (html != null ? !html.equals(linksBean.html) : linksBean.html != null) return false;
+            if (download != null ? !download.equals(linksBean.download) : linksBean.download != null)
+                return false;
+            return downloadLocation != null ? downloadLocation.equals(linksBean.downloadLocation) : linksBean.downloadLocation == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = self != null ? self.hashCode() : 0;
+            result = 31 * result + (html != null ? html.hashCode() : 0);
+            result = 31 * result + (download != null ? download.hashCode() : 0);
+            result = 31 * result + (downloadLocation != null ? downloadLocation.hashCode() : 0);
+            return result;
         }
     }
 
@@ -596,6 +645,37 @@ public class ResUnsplashPhoto {
             public void setFollowers(String followers) {
                 this.followers = followers;
             }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+
+                LinksBeanX that = (LinksBeanX) o;
+
+                if (self != null ? !self.equals(that.self) : that.self != null) return false;
+                if (html != null ? !html.equals(that.html) : that.html != null) return false;
+                if (photos != null ? !photos.equals(that.photos) : that.photos != null)
+                    return false;
+                if (likes != null ? !likes.equals(that.likes) : that.likes != null) return false;
+                if (portfolio != null ? !portfolio.equals(that.portfolio) : that.portfolio != null)
+                    return false;
+                if (following != null ? !following.equals(that.following) : that.following != null)
+                    return false;
+                return followers != null ? followers.equals(that.followers) : that.followers == null;
+            }
+
+            @Override
+            public int hashCode() {
+                int result = self != null ? self.hashCode() : 0;
+                result = 31 * result + (html != null ? html.hashCode() : 0);
+                result = 31 * result + (photos != null ? photos.hashCode() : 0);
+                result = 31 * result + (likes != null ? likes.hashCode() : 0);
+                result = 31 * result + (portfolio != null ? portfolio.hashCode() : 0);
+                result = 31 * result + (following != null ? following.hashCode() : 0);
+                result = 31 * result + (followers != null ? followers.hashCode() : 0);
+                return result;
+            }
         }
 
         public static class ProfileImageBean {
@@ -635,6 +715,82 @@ public class ResUnsplashPhoto {
             public void setLarge(String large) {
                 this.large = large;
             }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+
+                ProfileImageBean that = (ProfileImageBean) o;
+
+                if (small != null ? !small.equals(that.small) : that.small != null) return false;
+                if (medium != null ? !medium.equals(that.medium) : that.medium != null)
+                    return false;
+                return large != null ? large.equals(that.large) : that.large == null;
+            }
+
+            @Override
+            public int hashCode() {
+                int result = small != null ? small.hashCode() : 0;
+                result = 31 * result + (medium != null ? medium.hashCode() : 0);
+                result = 31 * result + (large != null ? large.hashCode() : 0);
+                return result;
+            }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            UserBean userBean = (UserBean) o;
+
+            if (totalCollections != userBean.totalCollections) return false;
+            if (totalLikes != userBean.totalLikes) return false;
+            if (totalPhotos != userBean.totalPhotos) return false;
+            if (id != null ? !id.equals(userBean.id) : userBean.id != null) return false;
+            if (updatedAt != null ? !updatedAt.equals(userBean.updatedAt) : userBean.updatedAt != null)
+                return false;
+            if (username != null ? !username.equals(userBean.username) : userBean.username != null)
+                return false;
+            if (name != null ? !name.equals(userBean.name) : userBean.name != null) return false;
+            if (firstName != null ? !firstName.equals(userBean.firstName) : userBean.firstName != null)
+                return false;
+            if (lastName != null ? !lastName.equals(userBean.lastName) : userBean.lastName != null)
+                return false;
+            if (twitterUsername != null ? !twitterUsername.equals(userBean.twitterUsername) : userBean.twitterUsername != null)
+                return false;
+            if (portfolioUrl != null ? !portfolioUrl.equals(userBean.portfolioUrl) : userBean.portfolioUrl != null)
+                return false;
+            if (bio != null ? !bio.equals(userBean.bio) : userBean.bio != null) return false;
+            if (location != null ? !location.equals(userBean.location) : userBean.location != null)
+                return false;
+            if (links != null ? !links.equals(userBean.links) : userBean.links != null)
+                return false;
+            if (profileImage != null ? !profileImage.equals(userBean.profileImage) : userBean.profileImage != null)
+                return false;
+            return instagramUsername != null ? instagramUsername.equals(userBean.instagramUsername) : userBean.instagramUsername == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+            result = 31 * result + (username != null ? username.hashCode() : 0);
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+            result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+            result = 31 * result + (twitterUsername != null ? twitterUsername.hashCode() : 0);
+            result = 31 * result + (portfolioUrl != null ? portfolioUrl.hashCode() : 0);
+            result = 31 * result + (bio != null ? bio.hashCode() : 0);
+            result = 31 * result + (location != null ? location.hashCode() : 0);
+            result = 31 * result + (links != null ? links.hashCode() : 0);
+            result = 31 * result + (profileImage != null ? profileImage.hashCode() : 0);
+            result = 31 * result + (instagramUsername != null ? instagramUsername.hashCode() : 0);
+            result = 31 * result + totalCollections;
+            result = 31 * result + totalLikes;
+            result = 31 * result + totalPhotos;
+            return result;
         }
     }
 
@@ -708,5 +864,91 @@ public class ResUnsplashPhoto {
         public void setIso(Object iso) {
             this.iso = iso;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ExifBean exifBean = (ExifBean) o;
+
+            if (make != null ? !make.equals(exifBean.make) : exifBean.make != null) return false;
+            if (model != null ? !model.equals(exifBean.model) : exifBean.model != null)
+                return false;
+            if (exposureTime != null ? !exposureTime.equals(exifBean.exposureTime) : exifBean.exposureTime != null)
+                return false;
+            if (aperture != null ? !aperture.equals(exifBean.aperture) : exifBean.aperture != null)
+                return false;
+            if (focalLength != null ? !focalLength.equals(exifBean.focalLength) : exifBean.focalLength != null)
+                return false;
+            return iso != null ? iso.equals(exifBean.iso) : exifBean.iso == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = make != null ? make.hashCode() : 0;
+            result = 31 * result + (model != null ? model.hashCode() : 0);
+            result = 31 * result + (exposureTime != null ? exposureTime.hashCode() : 0);
+            result = 31 * result + (aperture != null ? aperture.hashCode() : 0);
+            result = 31 * result + (focalLength != null ? focalLength.hashCode() : 0);
+            result = 31 * result + (iso != null ? iso.hashCode() : 0);
+            return result;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ResUnsplashPhoto that = (ResUnsplashPhoto) o;
+
+        if (width != that.width) return false;
+        if (height != that.height) return false;
+        if (sponsored != that.sponsored) return false;
+        if (likes != that.likes) return false;
+        if (likedByUser != that.likedByUser) return false;
+        if (views != that.views) return false;
+        if (downloads != that.downloads) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (createdAt != null ? !createdAt.equals(that.createdAt) : that.createdAt != null)
+            return false;
+        if (updatedAt != null ? !updatedAt.equals(that.updatedAt) : that.updatedAt != null)
+            return false;
+        if (color != null ? !color.equals(that.color) : that.color != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null)
+            return false;
+        if (urls != null ? !urls.equals(that.urls) : that.urls != null) return false;
+        if (links != null ? !links.equals(that.links) : that.links != null) return false;
+        if (slug != null ? !slug.equals(that.slug) : that.slug != null) return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        if (exif != null ? !exif.equals(that.exif) : that.exif != null) return false;
+        if (categories != null ? !categories.equals(that.categories) : that.categories != null)
+            return false;
+        return currentUserCollections != null ? currentUserCollections.equals(that.currentUserCollections) : that.currentUserCollections == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+        result = 31 * result + width;
+        result = 31 * result + height;
+        result = 31 * result + (color != null ? color.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (urls != null ? urls.hashCode() : 0);
+        result = 31 * result + (links != null ? links.hashCode() : 0);
+        result = 31 * result + (sponsored ? 1 : 0);
+        result = 31 * result + likes;
+        result = 31 * result + (likedByUser ? 1 : 0);
+        result = 31 * result + (slug != null ? slug.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (exif != null ? exif.hashCode() : 0);
+        result = 31 * result + views;
+        result = 31 * result + downloads;
+        result = 31 * result + (categories != null ? categories.hashCode() : 0);
+        result = 31 * result + (currentUserCollections != null ? currentUserCollections.hashCode() : 0);
+        return result;
     }
 }

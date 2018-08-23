@@ -242,8 +242,14 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
      */
     protected void reset() {
         if (null == getChild() || getParent() == null) return;
+        // Reset footer first, then consider header.
         // Based on a strong contract that headerVisibleHeight is a distance from parent top.
-        int offset = headerVisibleHeight - getTopAndBottomOffset();
+        int offset;
+        if (- getChild().getBottom() + getParent().getHeight() > 0) {
+            offset = getParent().getHeight() - getChild().getBottom();
+        } else {
+            offset = headerVisibleHeight - getTopAndBottomOffset();
+        }
         animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + offset, EXIT_DURATION);
     }
 
