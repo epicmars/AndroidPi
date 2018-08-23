@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import com.androidpi.app.databinding.FragmentNewsBinding
 import com.androidpi.app.viewholder.ErrorViewHolder
 import com.androidpi.app.viewholder.NewsViewHolder
 import com.androidpi.app.viewholder.items.ErrorItem
+import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import com.androidpi.news.vo.NewsPagination
 import javax.inject.Inject
 
@@ -146,39 +148,38 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         binding.scrollHeader.layoutParams = headerParams
 
         // Set footer behavior.
+        val footerParams = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
+        val footerBehavior = RefreshFooterBehavior<View>(context)
+        footerBehavior.addOnRefreshListener(object : OnRefreshListener {
 
-//        val footerParams = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
-//        val footerBehavior = RefreshFooterBehavior<View>(context)
-//        footerBehavior.addOnRefreshListener(object : OnRefreshListener {
-//
-//            override fun onRefreshStart() {
-//            }
-//
-//            override fun onReleaseToRefresh() {
-//            }
-//
-//            override fun onRefresh() {
-//                loadNextPage()
-//            }
-//
-//            override fun onRefreshEnd() {
-//            }
-//        })
-//
-//        footerBehavior.addOnPullingListener(object : OnPullListener {
-//            override fun onPulling(current: Int, delta: Int, max: Int, isTouch: Boolean) {
-//            }
-//
-//            override fun onStartPulling(max: Int, isTouch: Boolean) {
-//
-//            }
-//
-//            override fun onStopPulling(current: Int, max: Int) {
-//            }
-//        })
-//
-//        footerParams.behavior = footerBehavior
-//        binding.scrollFooter.layoutParams = footerParams
+            override fun onRefreshStart() {
+            }
+
+            override fun onReleaseToRefresh() {
+            }
+
+            override fun onRefresh() {
+                loadNextPage()
+            }
+
+            override fun onRefreshEnd() {
+            }
+        })
+
+        footerBehavior.addOnPullingListener(object : OnPullListener {
+            override fun onPulling(current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            }
+
+            override fun onStartPulling(max: Int, isTouch: Boolean) {
+
+            }
+
+            override fun onStopPulling(current: Int, max: Int) {
+            }
+        })
+
+        footerParams.behavior = footerBehavior
+        binding.scrollFooter.layoutParams = footerParams
 
         // Set content behavior.
         val contentParams = binding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
@@ -203,26 +204,26 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         binding.recyclerNews.layoutParams = contentParams
 
 //        // pull up to load more
-//        binding.recyclerNews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//
-//            val THRESHOULD = PAGE_SIZE / 2
-//
-//            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//            }
-//
-//            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                if (dy == 0 || footerBehavior.isRefreshing)
-//                    return
-//                val lastVisibleItem = (recyclerView?.layoutManager as LinearLayoutManager)
-//                        .findLastVisibleItemPosition()
-//                val totalItemCount = recyclerView.layoutManager.itemCount
-//                if (totalItemCount <= lastVisibleItem + THRESHOULD) {
-////                    footerBehavior.refresh()
-//                }
-//            }
-//        })
+        binding.recyclerNews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            val THRESHOULD = PAGE_SIZE / 2
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy == 0)
+                    return
+                val lastVisibleItem = (recyclerView?.layoutManager as LinearLayoutManager)
+                        .findLastVisibleItemPosition()
+                val totalItemCount = recyclerView.layoutManager.itemCount
+                if (totalItemCount <= lastVisibleItem + THRESHOULD) {
+//                    footerBehavior.refresh()
+                }
+            }
+        })
 
         return binding.root
     }
@@ -242,9 +243,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         val behavior = lpHeader.behavior as RefreshHeaderBehavior
         behavior.refreshComplete()
 
-//        val lpFooter = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
-//        val footerBehavior = lpFooter.behavior as RefreshFooterBehavior
-//        footerBehavior.refreshComplete()
+        val lpFooter = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
+        val footerBehavior = lpFooter.behavior as RefreshFooterBehavior
+        footerBehavior.refreshComplete()
     }
 
     override fun loadFirstPage() {

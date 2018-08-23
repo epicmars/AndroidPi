@@ -4,15 +4,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.androidpi.app.pi.base.R;
-
-import java.util.List;
-
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * The header behavior consume some of the scrolled distance dispatch by the nested scrolling
@@ -26,16 +21,21 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
+public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> {
 
     /**
      * Follow content view.
      */
     private static final int MODE_FOLLOW = 1;
     /**
-     * Still, does not follow.
+     * Still, does not follow content view.
      */
     private static final int MODE_STILL = 0;
+
+    /**
+     * Follow when scroll down.
+     */
+    private static final int MODE_FOLLOW_DOWN = 2;
 
     private int mode = MODE_FOLLOW;
     private boolean isFirstLayout = true;
@@ -60,32 +60,13 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (isFirstLayout) {
+            // Compute max offset, it will not exceed parent height.
+            maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
             getContentBehavior().setHeaderVisibleHeight(getVisibleHeight());
             getContentBehavior().setHeaderHeight(child.getHeight());
             isFirstLayout = false;
         }
         return handled;
-    }
-
-    @Override
-    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
-        boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-        if (start) {
-            for (ScrollListener l : mListeners) {
-                l.onStartScroll(coordinatorLayout, child, child.getHeight(), type == TYPE_TOUCH);
-            }
-        }
-        return start;
-    }
-
-    @Override
-    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
-    }
-
-    @Override
-    public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
     }
 
     @Override
@@ -98,71 +79,35 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
     }
 
-    @Override
-    public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
-        int height = child.getHeight();
-        for (ScrollListener l : mListeners) {
-            l.onStopScroll(coordinatorLayout, child, height + getTopAndBottomOffset(), child.getHeight(), type == TYPE_TOUCH);
+
+    protected int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior) {
+        if (mode == MODE_FOLLOW_DOWN) {
+            int totalHeight = child.getHeight() + dependency.getHeight();
+            if (totalHeight <= parent.getHeight()) {
+                // If view doesn't fill parent, content can not scroll up to the parent top.
+                contentBehavior.setMinOffset(child.getHeight());
+            } else {
+                // Otherwise, we expect the content to be fully visible.
+                contentBehavior.resetMinOffset();
+            }
         }
+        return contentBehavior.getTopAndBottomOffset() - child.getBottom();
     }
 
     @Override
-    public void onDetachedFromLayoutParams() {
-        super.onDetachedFromLayoutParams();
-        cancelAnimation();
-        mListeners.clear();
-        mParent = null;
-        mChild = null;
+    protected int transformOffsetCoordinate(int current, int height, int parentHeight) {
+        return current + height;
     }
 
-    @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, V child, View dependency) {
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
-        if (null != lp) {
-            CoordinatorLayout.Behavior behavior = lp.getBehavior();
-            return behavior instanceof ContentBehavior;
+    protected int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int offset) {
+        switch (mode) {
+            case MODE_STILL:
+                return 0;
+            case MODE_FOLLOW_DOWN:
+            case MODE_FOLLOW:
+            default:
+                return offset;
         }
-        return false;
-    }
-
-    @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, V child, View dependency) {
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
-        CoordinatorLayout.Behavior behavior = lp.getBehavior();
-        int offset = 0;
-        if (behavior instanceof ContentBehavior) {
-            offset = ((ContentBehavior) behavior).getTopAndBottomOffset() - child.getBottom();
-        }
-        if (offset != 0) {
-            // todo: use TYPE_TOUCH or not
-            consumeOffset(parent, child, offset, TYPE_TOUCH);
-            return true;
-        }
-        return false;
-    }
-
-    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset, int type) {
-        int current = getTopAndBottomOffset();
-        // Before child consume the offset.
-        for (ScrollListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, child.getHeight() + current, child.getHeight(), type == TYPE_TOUCH);
-        }
-        int consumed = onConsumeOffset(current, coordinatorLayout.getHeight(), offset);
-        current += consumed;
-        setTopAndBottomOffset(current);
-        // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
-        // The header view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle.
-        // In this case CoordinatorLayout will not call onDependentViewChanged().
-        // So We need to call onDependentViewChanged() manually.
-        coordinatorLayout.dispatchDependentViewsChanged(child);
-        for (ScrollListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, child.getHeight() + current, offset, child.getHeight(), type == TYPE_TOUCH);
-        }
-        return consumed;
-    }
-
-    protected int onConsumeOffset(int current, int parentHeight, int offset) {
-        return mode == MODE_FOLLOW ? offset : 0;
     }
 
     /**
@@ -185,41 +130,4 @@ public class HeaderBehavior<V extends View> extends AnimationOffsetBehavior<V> {
         return getTopAndBottomOffset() >= -invisibleHeight;
     }
 
-    private View findDependencyChild(CoordinatorLayout parent, View child) {
-        if (parent == null || child == null)
-            return null;
-        List<View> dependencies = parent.getDependencies(child);
-        if (dependencies.isEmpty())
-            return null;
-        for (View v : dependencies) {
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
-            if (p.getBehavior() instanceof ContentBehavior) {
-                return v;
-            }
-        }
-        return null;
-    }
-
-    private ContentBehavior findDependencyBehavior(CoordinatorLayout parent, View child) {
-        if (parent == null || child == null)
-            return null;
-        List<View> dependencies = parent.getDependencies(child);
-        if (dependencies.isEmpty())
-            return null;
-        for (View v : dependencies) {
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
-            if (p.getBehavior() instanceof ContentBehavior) {
-                return (ContentBehavior) p.getBehavior();
-            }
-        }
-        return null;
-    }
-
-    public ContentBehavior getContentBehavior() {
-        return findDependencyBehavior(getParent(), getChild());
-    }
-
-    public View getContentChild() {
-        return findDependencyChild(getParent(), getChild());
-    }
 }

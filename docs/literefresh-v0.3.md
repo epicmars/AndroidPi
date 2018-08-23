@@ -19,7 +19,7 @@ date: 2018-08-21 19:07:17 +0800
     1. 位置偏移（topBottomOffset）
         + 可见度偏移量，用于设定Header和Footer的可见度
         + 最大偏移量，用于设定Content最大偏移量
-        + 一个headerHeight偏移量值，Content在达到该偏移量时停止偏移量的滑动，Header的跟随模式决定了是否发生重叠
+        + 一个minOffset偏移量值，Content在达到该偏移量时停止偏移量的滑动，Header的跟随模式决定了是否发生重叠
 
     2. 高度（由于可以添加新的内容，它可以动态地变化）
         + Content的高度大于等于父布局高度
@@ -114,7 +114,40 @@ date: 2018-08-21 19:07:17 +0800
 
 5. 对于Header跟随程度的设定，需要知道Content的滑动距离，而CoordinatorLayout在被依赖的View变化时并没有给出变化的值，如果需要，需要去记录上一次的偏移量，这是可以实现的，因为已经记录了top和bottom的偏移量。但这样做会增加API的使用成本。最重要的一点是，Header与Content这种交错滑动的动态效果使用Transition来实现更为合适。因此跟随程度改回原来的设计，即跟随与不跟随两种。
 
-6. 对于Content的滑动偏移量的最小值限制，采用保证Header可见与不可见两种模式可以合并为一个线性值headerHeight，默认由Header测量完成时获取Content并将该值设置为Header自身的visibleHeight。
+6. 对于Content的滑动偏移量的最小值限制，采用保证Header可见与不可见两种模式可以合并为一个线性值minOffset，默认由Header测量完成时获取Content并将该值设置为Header自身的visibleHeight。
+
+7. Header与Footer坐标系
+
+Header与Footer跟随Content移动时需要通过监听器报告其滑动的距离，滑动距离总是正值，因此它们和View的坐标系不一致。但Header和Footer仅滑动方向相反它们两者的坐标系可以通过坐标系的矩阵转换实现。
+
+首先列出滑动点在各自坐标系中的表示，由于仅考虑垂直方向的滑动，只需关心垂直方向上y坐标的变化：
+
+根据ViewOffsetHelper记录的topBottomOffset，由于CoordinatorLayout相当于一个FrameLayout，该偏移量的初始位置位于左上角位置：
+
+y = topBottomOffset
+
+height = child.getHeight()
+
+parentHeight = parent.getHeight()
+
+- Header：滑动点为View的Bottom
+    + Parent坐标系：y
+    + Header坐标系：y + height
+
+- Footer：滑动点为View的Top
+    + Parent坐标系：y
+    + Footer坐标系：parentHeight - y
+
+Parent的向量空间转换为Header的向量空间：
+
+     |1 0 height||x|   |         x|
+     |0 1 height||y| = |y + height|
+     |0 0      1||1|   |         1|
+
+Parent的向量空间转换为Footer向量空间：
+     |1   0              0||x|   |                x|
+     |0   -1  parentHeight||y| = |-y + parentHeight|
+     |0   0              1||1|   |                1|
 
 ## RefreshBehavior状态变化
 目前采用如下接口监听滑动事件，需要注意onStopScroll仅表示滑动触摸操作的结束，可能对应TouchEvent.UP事件，但不表明滑动的结束，随后可能使用延时的动画来更新视图：

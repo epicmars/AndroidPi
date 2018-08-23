@@ -41,7 +41,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
     protected CoordinatorLayout mParent;
     private OffsetAnimator offsetAnimator;
     protected float maxOffset = 0;
-    private float maxOffsetRatio = GOLDEN_RATIO;
+    protected float maxOffsetRatio = GOLDEN_RATIO;
     protected int visibleHeight = 0;
     protected float invisibleHeight = 0;
     private float visibleHeightRatio = 0;
@@ -95,8 +95,6 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        // Compute max offset, it will not exceed parent height.
-        maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
         return handled;
     }
 

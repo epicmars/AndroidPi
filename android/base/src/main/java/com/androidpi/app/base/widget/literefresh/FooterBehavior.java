@@ -1,20 +1,15 @@
 package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.math.MathUtils;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
-
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * Created by jastrelax on 2017/11/16.
  */
 
-public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
+public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> {
 
     private static final long EXIT_DURATION = 300L;
     private static final long HOLD_ON_DURATION = 1000L;
@@ -42,104 +37,34 @@ public class FooterBehavior<V extends View> extends AnimationOffsetBehavior<V> {
             DEFAULT_HEIGHT = child.getHeight();
         }
         if (BASE_LINE == 0) {
-            BASE_LINE = parent.getBottom() - parent.getTop();
+            BASE_LINE = parent.getHeight();
         }
 
         if (isFirstLayout) {
             cancelAnimation();
             setTopAndBottomOffset(BASE_LINE);
+            // Compute max offset, it will not exceed parent height.
+            maxOffset = Math.max(maxOffset, child.getHeight());
+            getContentBehavior().setFooterHeight(child.getHeight());
+            getContentBehavior().setFooterMaxOffset((int) maxOffset);
             isFirstLayout = false;
         }
         return handled;
     }
 
     @Override
-    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
-        boolean started = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-        return started;
+    protected int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior) {
+        return contentBehavior.getTopAndBottomOffset() + dependency.getHeight() - child.getTop();
     }
 
     @Override
-    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
-        if (type == TYPE_TOUCH) {
-            if (isVisible()) {
-                int bottom = coordinatorLayout.getHeight();
-                int top = child.getTop();
-                int height = child.getHeight();
-
-                int offset = 0;
-                // Pull down
-                if (dy < 0) {
-                    offset = MathUtils.clamp(-dy, 0, bottom - top);
-                }
-                // Pull up
-                else if (dy > 0) {
-                    offset = MathUtils.clamp(-dy, -height + (bottom - top), 0);
-                }
-                if (offset != 0) {
-                    for (ScrollListener l : mListeners) {
-                        l.onStartScroll(coordinatorLayout, child, height, type == TYPE_TOUCH);
-                    }
-                    offsetTopAndBottom(coordinatorLayout, child, offset);
-                    consumed[1] = -offset;
-                }
-            }
-        }
+    protected int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int offset) {
+        return offset;
     }
 
     @Override
-    public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-        if (type == TYPE_TOUCH) {
-            if (isInvisible()) {
-                int bottom = coordinatorLayout.getHeight();
-                int top = child.getTop();
-                int height = child.getHeight();
-                // Pulling up unconsumed by scrolling content is consumed by footer.
-                if (dyUnconsumed > 0) {
-                    int offset = MathUtils.clamp(-dyUnconsumed, -height + (bottom - top), 0);
-                    offsetTopAndBottom(coordinatorLayout, child, offset);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
-        if (type == TYPE_TOUCH) {
-            for (ScrollListener l : mListeners) {
-                l.onStopScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset(), child.getHeight(), true);
-            }
-        }
-    }
-
-    @Override
-    public void onDetachedFromLayoutParams() {
-        super.onDetachedFromLayoutParams();
-        mListeners.clear();
-        mParent = null;
-        mChild = null;
-    }
-
-    void stopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, boolean holdOn) {
-        if (isVisible()) {
-            if (holdOn) {
-                child.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
-                    }
-                }, HOLD_ON_DURATION);
-            } else {
-                animateOffsetWithDuration(coordinatorLayout, child, BASE_LINE, EXIT_DURATION);
-            }
-        }
-    }
-
-    private void offsetTopAndBottom(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int offset) {
-        setTopAndBottomOffset(getTopAndBottomOffset() + offset);
-        for (ScrollListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, BASE_LINE - getTopAndBottomOffset() , -offset, child.getHeight(), true);
-        }
+    protected int transformOffsetCoordinate(int current, int height, int parentHeight) {
+        return -current + parentHeight;
     }
 
     private boolean isCompleteVisible() {

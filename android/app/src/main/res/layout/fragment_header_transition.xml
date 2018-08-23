@@ -40,11 +40,11 @@
             android:transitionName="@string/transition_header"
             app:layout_behavior="@string/lr_refresh_header_behavior"/>
 
-        <!--<View-->
-            <!--android:id="@+id/view_footer"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="100dp"-->
-            <!--app:layout_behavior="@string/lr_refresh_footer_behavior" />-->
+        <View
+            android:id="@+id/view_footer"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_behavior="@string/lr_refresh_footer_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

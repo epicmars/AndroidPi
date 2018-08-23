@@ -11,6 +11,7 @@
         <attr name="lr_headerMode" format="enum">
             <enum name="still" value="0"/>
             <enum name="follow" value="1"/>
+            <enum name="follow_down" value="2"/>
         </attr>
     </declare-styleable>
     

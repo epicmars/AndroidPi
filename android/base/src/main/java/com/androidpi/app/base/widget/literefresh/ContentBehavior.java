@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.androidpi.app.pi.base.R;
-import com.google.gson.TypeAdapter;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
@@ -48,6 +47,22 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
      */
     protected int headerVisibleHeight;
 
+    /**
+     * The footer's maximum offset.
+     */
+    private int footerMaxOffset;
+
+    /**
+     * The footer's height.
+     */
+    private int footerHeight;
+
+    /**
+     * The footer's visible height. Maybe not very useful.
+     */
+    private int footerVisibleHeight = 0;
+
+    private int defaultMinOffset;
     private boolean isFirstLayout = true;
     private boolean layoutNow = false;
 
@@ -64,6 +79,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ContentBehavior, 0, 0);
         useDefaultMinOffset = a.getBoolean(R.styleable.ContentBehavior_lr_useDefaultMinOffset, false);
         minOffset = a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_minOffset, 0);
+        defaultMinOffset = minOffset;
         a.recycle();
     }
 
@@ -71,6 +87,8 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (isFirstLayout || layoutNow) {
+            // Compute max offset, it will not exceed parent height.
+            maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
             cancelAnimation();
             setTopAndBottomOffset(headerVisibleHeight);
             isFirstLayout = false;
@@ -102,15 +120,24 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
                 consumeOffset(coordinatorLayout, child, offset, type, true);
                 consumed[1] = -offset;
             }
+        } else if (dy < 0){
+            // When scrolling down, if footer is still visible.
+            // xxx :
+            if (child.getBottom() < coordinatorLayout.getHeight()) {
+                int offset = MathUtils.clamp(-dy, 0, coordinatorLayout.getHeight() - child.getBottom());
+                consumeOffset(coordinatorLayout, child, offset, type, true);
+                consumed[1] = -offset;
+            }
         }
     }
 
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-        // When scrolling down, if there is unconsumed pixels.
+        // If there is unconsumed pixels.
         // todo: For now only care about human touch.
         if (dyUnconsumed < 0) {
-            // Can not scroll exceed maximum offset.
+            // Scrolling down.
+            // If top position of child can not scroll exceed maximum offset.
             if (child.getTop() >= maxOffset)
                 return;
             int offset = MathUtils.clamp(-dyUnconsumed, 0, (int) maxOffset - child.getTop());
@@ -126,6 +153,16 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
                     offset = MathUtils.clamp(-dyUnconsumed, 0, headerVisibleHeight - child.getTop());
                     consumeOffset(coordinatorLayout, child, offset, type, true);
                 }
+            }
+        } else if (dyUnconsumed > 0) {
+            // Scrolling up.
+            // Can not scroll exceed footer maximum offset.
+            int maxFooterTopBottomOffset = coordinatorLayout.getHeight() - footerMaxOffset;
+            if (child.getBottom() <= maxFooterTopBottomOffset)
+                return;
+            int offset = MathUtils.clamp(-dyUnconsumed,  maxFooterTopBottomOffset - child.getBottom(),0);
+            if (offset != 0) {
+                consumeOffset(coordinatorLayout, child, offset, type, true);
             }
         }
     }
@@ -161,6 +198,28 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         return offset;
     }
 
+    void resetMinOffset() {
+        this.minOffset = defaultMinOffset;
+    }
+
+    void setMinOffset(int minOffset) {
+        // todo: set to be minimum of defaultMinOffset and minOffset
+        // this.minOffset = minOffset > defaultMinOffset ? defaultMinOffset : minOffset;
+        this.minOffset = minOffset;
+    }
+
+    public void setFooterVisibleHeight(int footerVisibleHeight) {
+        this.footerVisibleHeight = footerVisibleHeight;
+    }
+
+    public void setFooterMaxOffset(int footerMaxOffset) {
+        this.footerMaxOffset = footerMaxOffset > footerHeight ? footerMaxOffset : footerHeight;
+    }
+
+    public void setFooterHeight(int footerHeight) {
+        this.footerHeight = footerHeight;
+    }
+
     public void setHeaderHeight(int headerHeight) {
         this.headerHeight = headerHeight;
     }
@@ -169,6 +228,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         this.headerVisibleHeight = headerVisibleHeight;
         if (useDefaultMinOffset) {
             this.minOffset = headerVisibleHeight;
+            this.defaultMinOffset = minOffset;
         }
         runWithView(new Runnable() {
             @Override

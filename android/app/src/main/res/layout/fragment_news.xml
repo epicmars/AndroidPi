@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
             android:padding="0dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:background="@color/text_gray"/>
 
         <ProgressBar
             android:id="@+id/content_progress"
@@ -24,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
             android:padding="0dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:background="@color/text_gray"/>
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/pager_content"
@@ -32,31 +34,30 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_news"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/white"
-                tools:listitem="@layout/view_holder_news"
-                />
+                tools:listitem="@layout/view_holder_news" />
 
             <com.androidpi.app.widget.PullDownHeaderView
                 android:id="@+id/scroll_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <!--<FrameLayout-->
-                <!--android:id="@+id/scroll_footer"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/view_holder_two_line_height">-->
+            <FrameLayout
+                android:id="@+id/scroll_footer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_holder_two_line_height"
+                android:background="@color/colorPrimary">
 
-                <!--<ProgressBar-->
-                    <!--android:id="@+id/footer_progress_bar"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="center" />-->
-            <!--</FrameLayout>-->
+                <ProgressBar
+                    android:id="@+id/footer_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
 
         </android.support.design.widget.CoordinatorLayout>
     </LinearLayout>
