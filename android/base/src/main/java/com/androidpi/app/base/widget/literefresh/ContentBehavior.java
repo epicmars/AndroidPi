@@ -122,7 +122,6 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
             }
         } else if (dy < 0){
             // When scrolling down, if footer is still visible.
-            // xxx :
             if (child.getBottom() < coordinatorLayout.getHeight()) {
                 int offset = MathUtils.clamp(-dy, 0, coordinatorLayout.getHeight() - child.getBottom());
                 consumeOffset(coordinatorLayout, child, offset, type, true);
@@ -143,7 +142,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
             int offset = MathUtils.clamp(-dyUnconsumed, 0, (int) maxOffset - child.getTop());
             if (offset != 0) {
                 if (child.getTop() >= headerVisibleHeight) {
-                    // When header is totally visible, do not consume none touch scroll,
+                    // When header's visible part is totally visible, do not consume none touch scroll,
                     // content can scroll to the maximum offset with the touch.
                     if (type != TYPE_TOUCH)
                         return;
@@ -162,7 +161,16 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
                 return;
             int offset = MathUtils.clamp(-dyUnconsumed,  maxFooterTopBottomOffset - child.getBottom(),0);
             if (offset != 0) {
-                consumeOffset(coordinatorLayout, child, offset, type, true);
+                if (coordinatorLayout.getHeight() - child.getBottom() >= footerVisibleHeight) {
+                    // If footer's visible part is totally visible, ignore fling too.
+                    if (type != TYPE_TOUCH)
+                        return;
+                    consumeOffset(coordinatorLayout, child, offset, type, false);
+                } else {
+                    // Recompute it.
+                    offset = MathUtils.clamp(-dyUnconsumed, -(footerVisibleHeight - coordinatorLayout.getHeight() + child.getBottom()), 0);
+                    consumeOffset(coordinatorLayout, child, offset, type, true);
+                }
             }
         }
     }
@@ -174,22 +182,31 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         }
     }
 
-    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset, int type, boolean comsumeRawOffset) {
-        int current = getTopAndBottomOffset();
+    /**
+     *
+     * @param coordinatorLayout
+     * @param child
+     * @param offset
+     * @param type
+     * @param consumeRawOffset consume raw offset or not, eg. for a smooth fling action we may not just keep it.
+     * @return
+     */
+    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset, int type, boolean consumeRawOffset) {
+        int currentOffset = getTopAndBottomOffset();
         // Before child consume the offset.
         for (ScrollListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, current, (int) maxOffset, type == TYPE_TOUCH);
+            l.onPreScroll(coordinatorLayout, child, currentOffset, (int) maxOffset, type == TYPE_TOUCH);
         }
-        int consumed = comsumeRawOffset ? offset : onConsumeOffset(current, coordinatorLayout.getHeight(), offset);
-        current += consumed;
-        setTopAndBottomOffset(current);
+        int consumed = consumeRawOffset ? offset : onConsumeOffset(currentOffset, coordinatorLayout.getHeight(), offset);
+        currentOffset += consumed;
+        setTopAndBottomOffset(currentOffset);
         // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
         // The header view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle.
         // In this case CoordinatorLayout will not call onDependentViewChanged().
         // So We need to call onDependentViewChanged() manually.
         coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, current, offset, (int) maxOffset, type == TYPE_TOUCH);
+            l.onScroll(coordinatorLayout, child, currentOffset, offset, (int) maxOffset, type == TYPE_TOUCH);
         }
         return consumed;
     }

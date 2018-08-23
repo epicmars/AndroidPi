@@ -1,6 +1,7 @@
 package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -58,7 +59,7 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
     }
 
     @Override
-    protected int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int height, int offset) {
+    protected int consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset) {
         return offset;
     }
 
@@ -81,5 +82,10 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
 
     private boolean isVisible() {
         return !isInvisible();
+    }
+
+    @Override
+    protected boolean isHiddenPartVisible() {
+        return -getTopAndBottomOffset() + getParent().getHeight() > visibleHeight;
     }
 }

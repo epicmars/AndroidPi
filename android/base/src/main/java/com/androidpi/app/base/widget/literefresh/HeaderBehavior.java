@@ -74,16 +74,6 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
         return handled;
     }
 
-    @Override
-    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
-        // If header should be hidden entirely, consume the fling.
-        // Otherwise, do nothing.
-        if (isHiddenPartVisible() && visibleHeight == 0) {
-            return true;
-        }
-        return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
-    }
-
 
     protected int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior) {
         if (mode == MODE_FOLLOW_DOWN) {
@@ -104,16 +94,16 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
         return current + height;
     }
 
-    protected int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int height, int offset) {
+    protected int consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset) {
         switch (mode) {
             case MODE_STILL:
                 return 0;
             case MODE_FOLLOW_DOWN:
-                if (offset < 0 && current <= 0) return 0;
+                if (offset < 0 && currentOffset <= 0) return 0;
                 else return offset;
             case MODE_FOLLOW_UP:
-                if (offset > 0 && current > 0) return 0;
-                else if (offset < 0 && transformOffsetCoordinate(current, height, parentHeight) <= getContentBehavior().getMinOffset()) return 0;
+                if (offset > 0 && currentOffset > 0) return 0;
+                else if (offset < 0 && transformOffsetCoordinate(currentOffset, height, parentHeight) <= getContentBehavior().getMinOffset()) return 0;
                 else return offset;
             case MODE_FOLLOW:
             default:
@@ -124,7 +114,7 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
     /**
      * Tell if the hidden part of header view is visible.
      * If invisible height is zero, which means visible height equals to view's height,
-     * int that case it's considered to be invisible.
+     * nt that case it's considered to be invisible.
      *
      * @return true if hidden part of header view is visible,
      * otherwise return false.

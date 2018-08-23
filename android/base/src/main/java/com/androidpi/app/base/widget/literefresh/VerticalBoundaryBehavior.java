@@ -96,6 +96,16 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     }
 
     @Override
+    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
+        // If header should be hidden entirely, and hidden part is visible now consume the fling.
+        // Otherwise, do nothing.
+        if (isHiddenPartVisible() && visibleHeight == 0) {
+            return true;
+        }
+        return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
+    }
+
+    @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         int height = child.getHeight();
         int parentHeight = coordinatorLayout.getHeight();
@@ -132,16 +142,16 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     }
 
     private int consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout, View child, int offset, int type) {
-        int current = getTopAndBottomOffset();
+        int currentOffset = getTopAndBottomOffset();
         int parentHeight = coordinatorLayout.getHeight();
         int height = child.getHeight();
         // Before child consume the offset.
         for (ScrollListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, transformOffsetCoordinate(current, height, parentHeight), height, type == TYPE_TOUCH);
+            l.onPreScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), height, type == TYPE_TOUCH);
         }
-        int consumed = consumeOffsetOnDependentViewChanged(current, parentHeight, height, offset);
-        current += consumed;
-        setTopAndBottomOffset(current);
+        int consumed = consumeOffsetOnDependentViewChanged(currentOffset, parentHeight, height, offset);
+        currentOffset += consumed;
+        setTopAndBottomOffset(currentOffset);
         // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
         // The header view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle.
         // Such as when scroll down, use setTranslationY() with negative value.
@@ -149,14 +159,14 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         // So We need to call onDependentViewChanged() manually.
         // coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, transformOffsetCoordinate(current, height, parentHeight), offset, height, type == TYPE_TOUCH);
+            l.onScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), offset, height, type == TYPE_TOUCH);
         }
         return consumed;
     }
 
     protected abstract int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior);
 
-    protected abstract int consumeOffsetOnDependentViewChanged(int current, int parentHeight, int height, int offset);
+    protected abstract int consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset);
 
     protected abstract int transformOffsetCoordinate(int current, int height, int parentHeight);
 
@@ -214,4 +224,14 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     public void setVisibleHeight(int visibleHeight) {
         this.visibleHeight = visibleHeight;
     }
+
+    /**
+     * Tell if the hidden part of the view is visible.
+     * If invisible height is zero, which means visible height equals to view's height,
+     * in that case it's considered to be invisible.
+     *
+     * @return true if hidden part of view is visible,
+     * otherwise return false.
+     */
+    protected abstract boolean isHiddenPartVisible();
 }

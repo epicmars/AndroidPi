@@ -104,8 +104,12 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
     }
 
     protected void stopScroll(@NonNull V child, boolean holdOn) {
-        if (getTopAndBottomOffset() > headerVisibleHeight) {
+        int currentOffset = getTopAndBottomOffset();
+        // If content offset is large header's visible height or smaller than zero,
+        // which means content has scrolled to a insignificant or invalid position.
+        if (currentOffset > headerVisibleHeight || currentOffset < 0) {
             if (child.getHandler() == null) return;
+            // Remove previous pending callback.
             child.getHandler().removeCallbacks(offsetCallback);
             offsetCallback = new Runnable() {
                 @Override
@@ -234,13 +238,13 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
     }
 
     /**
-     * This will reset the header view to it's original position when it's laid out for the first time.
+     * This will reset the header or footer view to it's original position when it's laid out for the first time.
      */
     protected void reset() {
-        if (null == getChild()) return;
-        float offset = headerVisibleHeight - getChild().getTop();
-        if (offset >= 0) return;
-        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, EXIT_DURATION);
+        if (null == getChild() || getParent() == null) return;
+        // Based on a strong contract that headerVisibleHeight is a distance from parent top.
+        int offset = headerVisibleHeight - getTopAndBottomOffset();
+        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + offset, EXIT_DURATION);
     }
 
     /**
