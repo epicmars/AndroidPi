@@ -9,7 +9,7 @@ import android.view.View;
  * Created by jastrelax on 2017/11/19.
  */
 
-public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> implements Refresher{
+public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> implements Loader{
 
     public RefreshFooterBehavior(Context context) {
         super(context);
@@ -29,23 +29,23 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
 //        mPullListeners.remove(listener);
 //    }
 
-    public void addOnRefreshListener(OnRefreshListener listener) {
-        controller.addOnRefreshListener(listener);
+    public void addOnLoadListener(OnLoadListener listener) {
+        controller.addOnLoadListener(listener);
     }
 
     @Override
-    public void refresh() {
-        controller.refresh();
+    public void load() {
+        controller.load();
     }
 
     @Override
-    public void refreshComplete() {
-        controller.refreshComplete();
+    public void loadComplete() {
+        controller.loadComplete();
     }
 
     @Override
-    public void refreshError(Exception exception) {
-        controller.refreshError(exception);
+    public void loadError(Exception exception) {
+        controller.loadError(exception);
     }
 
 }

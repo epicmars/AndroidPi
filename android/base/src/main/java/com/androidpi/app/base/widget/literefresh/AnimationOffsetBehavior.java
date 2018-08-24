@@ -60,12 +60,15 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
     public AnimationOffsetBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior, 0, 0);
-        if (a.hasValue(R.styleable.OffsetBehavior_lr_maxOffsetRatio)) {
+        boolean hasMaxOffsetRatio = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffsetRatio);
+        boolean hasMaxOffset = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset);
+        if (hasMaxOffsetRatio) {
             maxOffsetRatio = a.getFloat(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 0);
         }
-        if (a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset)) {
+        if (hasMaxOffset) {
             maxOffset = a.getDimension(R.styleable.OffsetBehavior_lr_maxOffset, 0);
-        } else {
+        }
+        if (!hasMaxOffsetRatio && !hasMaxOffset) {
             useDefaultMaxOffset = true;
         }
         a.recycle();
@@ -205,5 +208,9 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
 
     public BehaviorController getController() {
         return controller;
+    }
+
+    public void setMaxOffset(float maxOffset) {
+        this.maxOffset = maxOffset;
     }
 }

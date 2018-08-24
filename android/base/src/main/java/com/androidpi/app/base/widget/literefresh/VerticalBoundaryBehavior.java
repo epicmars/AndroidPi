@@ -56,16 +56,6 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     protected float invisibleHeight = 0;
     private float visibleHeightRatio = 0;
 
-    {
-        controller = new VerticalBoundaryBehaviorController(this);
-        addScrollListener(controller);
-        runWithView(new Runnable() {
-            @Override
-            public void run() {
-                controller.setDelegate(getContentBehavior().getController());
-            }
-        });
-    }
 
     public VerticalBoundaryBehavior() {
     }

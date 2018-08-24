@@ -148,27 +148,3 @@ Parent的向量空间转换为Footer向量空间：
      |1   0              0||x|   |                x|
      |0   -1  parentHeight||y| = |-y + parentHeight|
      |0   0              1||1|   |                1|
-
-## RefreshBehavior状态变化
-目前采用如下接口监听滑动事件，需要注意onStopScroll仅表示滑动触摸操作的结束，可能对应TouchEvent.UP事件，但不表明滑动的结束，随后可能使用延时的动画来更新视图：
-```java
-    public interface ScrollListener {
-
-        void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch);
-
-        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch);
-
-        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch);
-
-        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch);
-    }
-```
-
-根据监听到的滑动事件进行状态转移的设计，目前一个完整的刷新状态集合如下：
-```java
-    private static final int STATE_IDEL = 0;        // 初始状态
-    private static final int STATE_START = 1;       // 开始刷新，发生触摸事件
-    private static final int STATE_READY = 2;       // 达到刷新触发条件
-    private static final int STATE_REFRESH = 3;     // 正在刷新
-    private static final int STATE_COMPLETE = 4;    // 刷新结束
-```

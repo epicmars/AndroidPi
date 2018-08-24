@@ -1,17 +1,11 @@
 package com.androidpi.app.cweather.ui;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 
 import com.androidpi.app.base.ui.UiUtils;
-import com.androidpi.app.base.widget.literefresh.LoadingView;
-import com.androidpi.app.base.widget.literefresh.OnPullListener;
-import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 import com.androidpi.app.cweather.R;
 
 /**

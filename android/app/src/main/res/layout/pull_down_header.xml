@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             app:srcCompat="@drawable/ic_arrow_downward_black_24dp" />
 
-        <com.androidpi.app.base.widget.literefresh.LoadingView
+        <com.androidpi.app.base.widget.literefresh.widgets.LoadingView
             android:id="@+id/loading_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

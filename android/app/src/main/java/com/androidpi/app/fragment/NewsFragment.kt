@@ -150,21 +150,22 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         // Set footer behavior.
         val footerParams = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
         val footerBehavior = RefreshFooterBehavior<View>(context)
-        footerBehavior.addOnRefreshListener(object : OnRefreshListener {
+        footerBehavior.addOnLoadListener(object : OnLoadListener {
+            override fun onLoadStart() {
 
-            override fun onRefreshStart() {
             }
 
-            override fun onReleaseToRefresh() {
+            override fun onReleaseToLoad() {
             }
 
-            override fun onRefresh() {
+            override fun onLoad() {
                 loadNextPage()
             }
 
-            override fun onRefreshEnd() {
+            override fun onLoadEnd() {
             }
         })
+
 
         footerBehavior.addOnPullingListener(object : OnPullListener {
             override fun onPulling(current: Int, delta: Int, max: Int, isTouch: Boolean) {
@@ -245,7 +246,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         val lpFooter = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
         val footerBehavior = lpFooter.behavior as RefreshFooterBehavior
-        footerBehavior.refreshComplete()
+        footerBehavior.loadComplete()
     }
 
     override fun loadFirstPage() {

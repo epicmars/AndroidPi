@@ -22,6 +22,17 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
     private int BASE_LINE;
     private boolean isFirstLayout = true;
 
+    {
+        controller = new FooterBehaviorController(this);
+        addScrollListener(controller);
+        runWithView(new Runnable() {
+            @Override
+            public void run() {
+                controller.setDelegate(getContentBehavior().getController());
+            }
+        });
+    }
+
     public FooterBehavior() {
     }
 
@@ -46,6 +57,7 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
         if (isFirstLayout) {
             cancelAnimation();
             setTopAndBottomOffset(BASE_LINE);
+            // todo: how to decide default max offset
             // Compute max offset, it will not exceed parent height.
             if (useDefaultMaxOffset) {
                 maxOffset = child.getHeight();

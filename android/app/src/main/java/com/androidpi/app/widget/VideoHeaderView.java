@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import com.androidpi.app.R;
 import com.androidpi.app.activity.VideoActivity;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 
 /**
  * Created by jastrelax on 2018/8/20.

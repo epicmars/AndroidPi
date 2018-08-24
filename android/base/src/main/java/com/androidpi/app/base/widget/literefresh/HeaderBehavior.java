@@ -2,7 +2,6 @@ package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -45,6 +44,17 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
     private int mode = MODE_FOLLOW;
     private boolean isFirstLayout = true;
 
+    {
+        controller = new HeaderBehaviorController(this);
+        addScrollListener(controller);
+        runWithView(new Runnable() {
+            @Override
+            public void run() {
+                controller.setDelegate(getContentBehavior().getController());
+            }
+        });
+    }
+
     public HeaderBehavior() {
     }
 
@@ -66,9 +76,14 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (isFirstLayout) {
             // Compute max offset, it will not exceed parent height.
-            maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
+            if (useDefaultMaxOffset) {
+                maxOffset = GOLDEN_RATIO * parent.getHeight();
+            } else {
+                maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
+            }
             getContentBehavior().setHeaderVisibleHeight(getVisibleHeight());
             getContentBehavior().setHeaderHeight(child.getHeight());
+            getContentBehavior().setMaxOffset(maxOffset);
             isFirstLayout = false;
         }
         return handled;

@@ -27,10 +27,10 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsListModel {
 
     var mCategory: String? = null
 
-    var page = 0
+    var page = NewsPagination.FIRST_PAGE
 
     fun getLatestNews(isNext: Boolean, count: Int = NewsListModel.PAGE_SIZE) {
-        val page = if(isNext) this.page + 1 else 0
+        val page = if(isNext) this.page + 1 else NewsPagination.FIRST_PAGE
         Timber.d("getLatestedNews $page")
         mNewsRepo.get().refreshNews(page, count, mCategory)
                 .subscribeOn(Schedulers.io())

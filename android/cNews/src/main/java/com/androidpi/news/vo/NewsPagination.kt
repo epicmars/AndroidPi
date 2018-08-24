@@ -7,6 +7,10 @@ import com.androidpi.news.entity.News
  */
 class NewsPagination() {
 
+    companion object {
+        val FIRST_PAGE = 1
+    }
+
     var newsList: MutableList<News> = mutableListOf()
 
     var page: Int = 1
@@ -22,6 +26,6 @@ class NewsPagination() {
     }
 
     fun isFirstPage() : Boolean {
-        return page == 1
+        return page == FIRST_PAGE
     }
 }

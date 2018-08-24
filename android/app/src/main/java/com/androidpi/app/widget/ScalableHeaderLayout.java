@@ -3,7 +3,7 @@ package com.androidpi.app.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 
 /**
  * Created by jastrelax on 2018/8/12.

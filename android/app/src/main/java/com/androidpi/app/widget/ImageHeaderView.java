@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.androidpi.app.R;
 import com.androidpi.app.activity.TemplateActivity;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 import com.androidpi.app.fragment.FragmentFactory;
 import com.androidpi.app.fragment.ImageFragment;
 import com.androidpi.common.image.glide.GlideApp;

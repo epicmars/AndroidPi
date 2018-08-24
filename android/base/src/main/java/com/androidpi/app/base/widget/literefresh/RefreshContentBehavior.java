@@ -34,6 +34,10 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
         controller.addOnRefreshListener(listener);
     }
 
+    public void addOnLoadListener(OnLoadListener listener) {
+        controller.addOnLoadListener(listener);
+    }
+
 //    public void addOnRefreshListeners(Collection<OnRefreshListener> listeners) {
 //        if (null == listeners || listeners.isEmpty()) return;
 //        mRefreshListeners.addAll(listeners);

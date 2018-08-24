@@ -1,4 +1,4 @@
-package com.androidpi.app.base.widget.literefresh;
+package com.androidpi.app.base.widget.literefresh.widgets;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

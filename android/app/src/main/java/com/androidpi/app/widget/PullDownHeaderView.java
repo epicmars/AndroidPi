@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidpi.app.R;
-import com.androidpi.app.base.widget.literefresh.LoadingView;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 
 /**
  * Created by jastrelax on 2017/11/21.

@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/lr_refresh_header_behavior">
 
-        <com.androidpi.app.base.widget.literefresh.LoadingView
+        <com.androidpi.app.base.widget.literefresh.widgets.LoadingView
             android:id="@+id/loading_view"
             android:layout_width="24dp"
             android:layout_height="24dp"

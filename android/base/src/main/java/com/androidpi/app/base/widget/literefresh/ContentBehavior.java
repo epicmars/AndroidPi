@@ -12,6 +12,8 @@ import android.view.View;
 import com.androidpi.app.pi.base.R;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
+import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.HOLD_ON_DURATION;
+import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.RESET_DURATION;
 
 /**
  * A behavior for nested scrollable child of {@link CoordinatorLayout}.
@@ -92,8 +94,11 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (isFirstLayout || layoutNow) {
-            // Compute max offset, it will not exceed parent height.
-            maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
+            if (isFirstLayout) {
+                // Compute max offset, it will not exceed parent height.
+                maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
+                footerMaxOffset = (int) ((1 - GOLDEN_RATIO) * parent.getHeight());
+            }
             cancelAnimation();
             setTopAndBottomOffset(headerVisibleHeight);
             isFirstLayout = false;
@@ -220,6 +225,57 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         return offset;
     }
 
+    /**
+     * This will reset the header or footer view to it's original position when it's laid out for the first time.
+     */
+    protected void reset(long animateDuration) {
+        if (null == getChild() || getParent() == null) return;
+        // Reset footer first, then consider header.
+        // Based on a strong contract that headerVisibleHeight is a distance from parent top.
+        int offset;
+        if (- getChild().getBottom() + getParent().getHeight() > 0) {
+            offset = getParent().getHeight() - getChild().getBottom();
+        } else {
+            offset = headerVisibleHeight - getTopAndBottomOffset();
+        }
+        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + offset, animateDuration);
+    }
+
+    /**
+     * Make the header view entirely visible.
+     */
+    protected void showHeader(long animateDuration) {
+        if (null == getChild()) return;
+        float offset = getHeaderHeight() - getChild().getTop();
+        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, animateDuration);
+    }
+
+    void showFooter(long animationDuration) {
+        if (null == getChild()) return;
+        float offset = getParent().getHeight() - getFooterHeight() - getChild().getBottom();
+        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, animationDuration);
+    }
+
+    private Runnable offsetCallback;
+    protected void stopScroll(boolean holdOn) {
+        int currentOffset = getTopAndBottomOffset();
+        // If content offset is large header's visible height or smaller than zero,
+        // which means content has scrolled to a insignificant or invalid position.
+        if (currentOffset > headerVisibleHeight || currentOffset < 0) {
+            if (getChild().getHandler() == null) return;
+            // Remove previous pending callback.
+            getChild().getHandler().removeCallbacks(offsetCallback);
+            offsetCallback = new Runnable() {
+                @Override
+                public void run() {
+                    reset(RESET_DURATION);
+                }
+            };
+            getChild().postOnAnimationDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
+        }
+    }
+
+
     void resetMinOffset() {
         this.minOffset = defaultMinOffset;
     }
@@ -246,8 +302,16 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         this.footerHeight = footerHeight;
     }
 
+    public int getFooterHeight() {
+        return footerHeight;
+    }
+
     public void setHeaderHeight(int headerHeight) {
         this.headerHeight = headerHeight;
+    }
+
+    public int getHeaderHeight() {
+        return headerHeight;
     }
 
     public void setHeaderVisibleHeight(int headerVisibleHeight) {
