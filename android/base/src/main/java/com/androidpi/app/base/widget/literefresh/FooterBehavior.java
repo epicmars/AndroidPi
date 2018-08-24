@@ -1,10 +1,13 @@
 package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.androidpi.app.pi.base.R;
 
 /**
  * Created by jastrelax on 2017/11/16.
@@ -17,7 +20,6 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
 
     private int DEFAULT_HEIGHT;
     private int BASE_LINE;
-
     private boolean isFirstLayout = true;
 
     public FooterBehavior() {
@@ -45,7 +47,11 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
             cancelAnimation();
             setTopAndBottomOffset(BASE_LINE);
             // Compute max offset, it will not exceed parent height.
-            maxOffset = Math.max(maxOffset, child.getHeight());
+            if (useDefaultMaxOffset) {
+                maxOffset = child.getHeight();
+            } else {
+                maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
+            }
             getContentBehavior().setFooterHeight(child.getHeight());
             getContentBehavior().setFooterMaxOffset((int) maxOffset);
             isFirstLayout = false;

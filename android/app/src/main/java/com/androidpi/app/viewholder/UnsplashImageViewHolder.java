@@ -23,6 +23,10 @@ public class UnsplashImageViewHolder extends BaseViewHolder<ViewHolderUnsplashIm
     public <T> void onBind(T data, int position) {
         if (data instanceof ResUnsplashPhoto) {
             ResUnsplashPhoto resUnsplashPhoto = (ResUnsplashPhoto) data;
+            binding.tvName.setText(resUnsplashPhoto.getUser().getName());
+            GlideApp.with(itemView)
+                    .load(resUnsplashPhoto.getUrls().getRegular())
+                    .into(binding.ivProfile);
             GlideApp.with(itemView)
                     .load(resUnsplashPhoto.getUrls().getRegular())
                     .into(binding.ivImage);

@@ -1,6 +1,7 @@
 package com.androidpi.app.base.ui;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -12,34 +13,65 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 /**
  * 列表适配器，一个列表适配的列表项展示什么内容只与BaseViewHolder的实现类有关。
- *
+ * <p>
  * 一个BaseViewHolder类包含了所需要的布局信息，数据类型信息，RecyclerAdapter负责将负载数据项
  * 映射到一种BaseViewHolder的子类。
- *
+ * <p>
  * Created by jastrelax on 2017/8/30.
  */
 
-public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
+public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private final SparseIntArray mDataViewMap = new SparseIntArray();
-    private final SparseArray<Class<? extends BaseViewHolder>> mViewHolderMap= new SparseArray<>();
+    private final SparseArray<Class<? extends BaseViewHolder>> mViewHolderMap = new SparseArray<>();
     private final List<Object> mPayloads = new ArrayList<>();
-    private final Set<Object> payloadSet = new HashSet<>();
+    private final HashSet<Object> payloadSet = new LinkedHashSet<>();
     private FragmentManager mFragmentManager;
     private RecyclerView.AdapterDataObserver adapterDataObserver = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
             super.onChanged();
-            payloadSet.clear();
-            for (Object object : mPayloads) {
-                payloadSet.add(object);
-            }
+            payloadSet.addAll(mPayloads);
+            Timber.d("");
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            super.onItemRangeChanged(positionStart, itemCount);
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
+            super.onItemRangeChanged(positionStart, itemCount, payload);
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            super.onItemRangeInserted(positionStart, itemCount);
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            super.onItemRangeRemoved(positionStart, itemCount);
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+            onChanged();
         }
     };
 
@@ -55,6 +87,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     /**
      * 注册一个或多个BaseViewHolder以用于数据展示。
+     *
      * @param clazzArray
      * @return
      */
@@ -124,6 +157,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     /**
      * Set adapter payloads.
+     *
      * @param payloads
      */
     public <T> void setPayloads(T... payloads) {
@@ -132,12 +166,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     /**
      * Set adapter payloads.
+     *
      * @param payloads
      */
     public void setPayloads(Collection<?> payloads) {
         if (null == payloads) {
             return;
         }
+        payloadSet.clear();
         this.mPayloads.clear();
         this.mPayloads.addAll(payloads);
         notifyDataSetChanged();
@@ -145,15 +181,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
     /**
      * Add payload to current payloads.
+     *
      * @param payloads
      */
     public void addPayloads(Collection<?> payloads) {
         if (null == payloads || payloads.isEmpty()) {
             return;
         }
-        for (Object obj : payloads) {
-            if (contains(obj))
-                payloads.remove(obj);
+        Iterator iterator = payloads.iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            if (contains(obj)) {
+                iterator.remove();
+            }
         }
         int positionStart = mPayloads.size();
         int itemCount = payloads.size();

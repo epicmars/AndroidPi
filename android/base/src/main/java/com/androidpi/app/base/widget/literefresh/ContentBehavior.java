@@ -66,6 +66,11 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     private boolean isFirstLayout = true;
     private boolean layoutNow = false;
 
+    {
+        controller = new ContentBehaviorController(this);
+        addScrollListener(controller);
+    }
+
     public ContentBehavior() {
 
     }
@@ -234,7 +239,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     }
 
     public void setFooterMaxOffset(int footerMaxOffset) {
-        this.footerMaxOffset = footerMaxOffset > footerHeight ? footerMaxOffset : footerHeight;
+        this.footerMaxOffset = footerMaxOffset;
     }
 
     public void setFooterHeight(int footerHeight) {

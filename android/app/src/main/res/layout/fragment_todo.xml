@@ -14,8 +14,7 @@
             android:layout_height="match_parent"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="todo content"
-            android:padding="@dimen/editor_padding"
-            />
+            android:padding="@dimen/editor_padding"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

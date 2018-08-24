@@ -183,10 +183,10 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         // Set content behavior.
         val contentParams = binding.recyclerNews.layoutParams as CoordinatorLayout.LayoutParams
-        val refreshHeaderBehavior = RefreshContentBehavior<View>(context)
-        contentParams.behavior = refreshHeaderBehavior
+        val contentBehavior = RefreshContentBehavior<View>(context)
+        contentParams.behavior = contentBehavior
 
-        refreshHeaderBehavior.addOnPullingListener(object : OnPullListener {
+        contentBehavior.addOnPullingListener(object : OnPullListener {
             override fun onStartPulling(max: Int, isTouch: Boolean) {
                 binding.contentProgress.visibility = View.VISIBLE
                 binding.contentProgress.max = max

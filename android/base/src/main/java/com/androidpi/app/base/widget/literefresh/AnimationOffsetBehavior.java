@@ -20,7 +20,7 @@ import java.util.Queue;
  * Created by jastrelax on 2017/11/20.
  */
 
-public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<V> implements Handler.Callback {
+public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<V> implements Handler.Callback {
 
     public interface ScrollListener {
 
@@ -46,8 +46,11 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
     protected List<ScrollListener> mListeners = new ArrayList<>();
     private Handler handler = new Handler(this);
     private Queue<Runnable> pendingActions = new LinkedList<>();
+    protected BehaviorController controller;
+    protected boolean useDefaultMaxOffset = false;
 
     public AnimationOffsetBehavior() {
+
     }
 
     public AnimationOffsetBehavior(Context context) {
@@ -58,10 +61,12 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior, 0, 0);
         if (a.hasValue(R.styleable.OffsetBehavior_lr_maxOffsetRatio)) {
-            maxOffsetRatio = a.getFloat(R.styleable.OffsetBehavior_lr_maxOffsetRatio, GOLDEN_RATIO);
+            maxOffsetRatio = a.getFloat(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 0);
         }
         if (a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset)) {
             maxOffset = a.getDimension(R.styleable.OffsetBehavior_lr_maxOffset, 0);
+        } else {
+            useDefaultMaxOffset = true;
         }
         a.recycle();
     }
@@ -77,7 +82,6 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
         }
         // Execute pending actions which need view to be initialized.
         handler.sendEmptyMessage(MSG_VIEW_INITIATED);
-
         return true;
     }
 
@@ -160,6 +164,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
     }
 
     protected void runWithView(Runnable action) {
+        if (action == null) return;
         if (getParent() == null || getChild() == null) {
             enqueuePendingActions(action);
         } else {
@@ -168,6 +173,7 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
     }
 
     protected void runOnUiThread(Runnable action) {
+        if (action == null) return;
         if (handler == null) {
             handler = new Handler(this);
         }
@@ -195,5 +201,9 @@ public class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<
         while ((action = pendingActions.poll()) != null) {
             runOnUiThread(action);
         }
+    }
+
+    public BehaviorController getController() {
+        return controller;
     }
 }

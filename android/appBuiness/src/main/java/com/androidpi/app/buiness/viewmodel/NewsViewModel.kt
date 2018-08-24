@@ -27,11 +27,10 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsListModel {
 
     var mCategory: String? = null
 
-    var mNewsPagination = NewsPagination()
+    var page = 0
 
     fun getLatestNews(isNext: Boolean, count: Int = NewsListModel.PAGE_SIZE) {
-        val page = mNewsPagination.nextPage(isNext)
-
+        val page = if(isNext) this.page + 1 else 0
         Timber.d("getLatestedNews $page")
         mNewsRepo.get().refreshNews(page, count, mCategory)
                 .subscribeOn(Schedulers.io())
@@ -39,9 +38,7 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsListModel {
                 .subscribe(object : SingleObserver<List<News>> {
 
                     override fun onSuccess(t: List<News>) {
-                        mNewsPagination.newsList.clear()
-                        mNewsPagination.newsList.addAll(t)
-                        mNews.value = Resource.success(mNewsPagination)
+                        mNews.value = Resource.success(NewsPagination(page, t))
                     }
 
                     override fun onSubscribe(d: Disposable) {
