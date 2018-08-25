@@ -255,9 +255,14 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     }
 
     private Runnable offsetCallback;
+
+    /**
+     * If view has scroll to a invalid position, reset it, otherwise do nothing.
+     * @param holdOn
+     */
     protected void stopScroll(boolean holdOn) {
         int currentOffset = getTopAndBottomOffset();
-        // If content offset is large header's visible height or smaller than zero,
+        // If content offset is larger than header's visible height or smaller than zero,
         // which means content has scrolled to a insignificant or invalid position.
         if (currentOffset > headerVisibleHeight || currentOffset < 0) {
             if (getChild().getHandler() == null) return;
@@ -269,7 +274,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
                     reset(RESET_DURATION);
                 }
             };
-            getChild().postOnAnimationDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
+            getChild().postDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
         }
     }
 

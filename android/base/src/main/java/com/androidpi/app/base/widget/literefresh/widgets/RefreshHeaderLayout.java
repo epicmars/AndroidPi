@@ -12,7 +12,7 @@ import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 /**
  * Created by jastrelax on 2018/8/19.
  */
-public abstract class RefreshHeaderLayout extends FrameLayout implements OnPullListener, OnRefreshListener {
+public abstract class RefreshHeaderLayout extends FrameLayout implements OnPullListener {
 
     public RefreshHeaderLayout(Context context) {
         this(context, null);
@@ -37,7 +37,6 @@ public abstract class RefreshHeaderLayout extends FrameLayout implements OnPullL
                 params.setBehavior(behavior);
             }
             behavior.addOnPullingListener(this);
-            behavior.addOnRefreshListener(this);
         } catch (Exception e) {
 
         }

@@ -76,9 +76,9 @@ public class ImagePagerFragment extends BaseFragment<FragmentImagePagerBinding> 
 
             @Override
             public void onPulling(int current, int delta, int max, boolean isTouch) {
-                if (current < binding.imagePagerHeader.getHeight()) {
+                if (current <= binding.imagePagerHeader.getHeight()) {
                     int y = binding.imagePagerHeader.getHeight() - current;
-                    binding.imagePagerHeader.setTranslationY(- y / 2);
+                    binding.imagePagerHeader.setTranslationY(y / 2);
                 }
             }
 

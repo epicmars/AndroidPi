@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by jastrelax on 2018/8/24.
  */
-public abstract class BehaviorController<T extends AnimationOffsetBehavior> implements AnimationOffsetBehavior.ScrollListener, Refresher, Loader {
+public class BehaviorController<T extends AnimationOffsetBehavior> implements AnimationOffsetBehavior.ScrollListener, Loader {
 
     protected BehaviorController delegate;
     protected T behavior;
@@ -51,15 +53,26 @@ public abstract class BehaviorController<T extends AnimationOffsetBehavior> impl
 
     @Override
     public void refresh() {
-        runWithView(new Runnable() {
-            @Override
-            public void run() {
-                if (delegate != null) {
-                    copyRemainListeners();
-                    delegate.refresh();
+        Timber.d("refresh");
+        if (delegate == null) {
+            runWithView(new Runnable() {
+                @Override
+                public void run() {
+                    refresh();
                 }
-            }
-        });
+            });
+        } else {
+            runWithView(new Runnable() {
+                @Override
+                public void run() {
+                    if (delegate != null) {
+                        Timber.d("do refresh");
+                        copyRemainListeners();
+                        delegate.refresh();
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -88,12 +101,21 @@ public abstract class BehaviorController<T extends AnimationOffsetBehavior> impl
 
     @Override
     public void load() {
-        runWithView(() -> {
-            if (delegate != null) {
-                copyRemainListeners();
-                delegate.load();
-            }
-        });
+        if (delegate == null) {
+            runWithView(new Runnable() {
+                @Override
+                public void run() {
+                    load();
+                }
+            });
+        } else {
+            runWithView(() -> {
+                if (delegate != null) {
+                    copyRemainListeners();
+                    delegate.load();
+                }
+            });
+        }
     }
 
     @Override

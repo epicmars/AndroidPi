@@ -23,11 +23,20 @@ public class RefreshFooterBehavior<V extends View> extends FooterBehavior<V> imp
         controller.addOnPullingListener(listener);
     }
 
-//    public void removeOnPullingListener(OnPullListener listener) {
-//        if (null == listener)
-//            return;
-//        mPullListeners.remove(listener);
-//    }
+    @Override
+    public void refresh() {
+
+    }
+
+    @Override
+    public void refreshComplete() {
+
+    }
+
+    @Override
+    public void refreshError(Exception exception) {
+
+    }
 
     public void addOnLoadListener(OnLoadListener listener) {
         controller.addOnLoadListener(listener);

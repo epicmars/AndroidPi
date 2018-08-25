@@ -4,6 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.androidpi.app.base.ui.UiUtils;
+import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
+import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
 import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 import com.androidpi.app.cweather.R;
@@ -11,7 +14,7 @@ import com.androidpi.app.cweather.R;
 /**
  * Created by jastrelax on 2018/8/18.
  */
-public class WeatherHeaderView extends RefreshHeaderLayout{
+public class WeatherHeaderView extends RefreshHeaderLayout implements OnRefreshListener{
 
     private LoadingView loadingView;
     private float offset;
@@ -29,6 +32,15 @@ public class WeatherHeaderView extends RefreshHeaderLayout{
         inflate(context, R.layout.view_weather_header, this);
         loadingView = findViewById(R.id.loading_view);
         offset = UiUtils.getStatusBarHeight(context);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        RefreshHeaderBehavior behavior = LiteRefreshHelper.getAttachedBehavior(this);
+        if (behavior != null) {
+            behavior.addOnRefreshListener(this);
+        }
     }
 
     @Override

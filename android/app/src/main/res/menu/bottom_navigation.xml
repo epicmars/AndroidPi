@@ -9,8 +9,8 @@
         android:title="@string/literefresh"
         android:icon="@drawable/ic_book_black_24dp"/>
 
-    <item android:id="@+id/nav_news"
-        android:title="@string/news"
-        android:icon="@drawable/ic_view_list"/>
+    <!--<item android:id="@+id/nav_news"-->
+        <!--android:title="@string/news"-->
+        <!--android:icon="@drawable/ic_view_list"/>-->
 
 </menu>

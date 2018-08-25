@@ -129,20 +129,20 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     public boolean onDependentViewChanged(CoordinatorLayout parent, V child, View dependency) {
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         CoordinatorLayout.Behavior behavior = lp.getBehavior();
-        int offset = 0;
+        int offsetDelta = 0;
         if (behavior instanceof ContentBehavior) {
             ContentBehavior contentBehavior = (ContentBehavior) behavior;
-            offset = computeOffsetOnDependentViewChanged(parent, child, dependency, contentBehavior);
+            offsetDelta = computeOffsetDeltaOnDependentViewChanged(parent, child, dependency, contentBehavior);
         }
-        if (offset != 0) {
+        if (offsetDelta != 0) {
             // todo: use TYPE_TOUCH or not
-            consumeOffsetOnDependentViewChanged(parent, child, offset, TYPE_TOUCH);
+            consumeOffsetOnDependentViewChanged(parent, child, offsetDelta, TYPE_TOUCH);
             return true;
         }
         return false;
     }
 
-    private void consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout, View child, int offset, int type) {
+    private void consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout, View child, int offsetDelta, int type) {
         int currentOffset = getTopAndBottomOffset();
         int parentHeight = coordinatorLayout.getHeight();
         int height = child.getHeight();
@@ -150,16 +150,16 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         for (ScrollListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), height, type == TYPE_TOUCH);
         }
-        float consumed = consumeOffsetOnDependentViewChanged(currentOffset, parentHeight, height, offset);
+        float consumed = consumeOffsetOnDependentViewChanged(currentOffset, parentHeight, height, offsetDelta);
         currentOffset = Math.round(currentOffset + consumed);
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
         for (ScrollListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), offset, height, type == TYPE_TOUCH);
+            l.onScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), offsetDelta, height, type == TYPE_TOUCH);
         }
     }
 
-    protected abstract int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior);
+    protected abstract int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior);
 
     protected abstract float consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset);
 

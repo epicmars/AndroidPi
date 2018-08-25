@@ -130,7 +130,7 @@ public class LoadingView extends View{
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     current = (Integer) animation.getAnimatedValue();
-                    postInvalidate();
+                    postInvalidateOnAnimation();
                 }
             });
         } else if (valueAnimator.isRunning()){

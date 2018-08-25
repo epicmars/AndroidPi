@@ -8,11 +8,6 @@ package com.androidpi.app.base.widget.literefresh;
  * </p>
  * Created by jastrelax on 2017/11/16.
  */
-public interface Refresher {
+public interface Refresher extends RefreshController{
 
-    void refresh();
-
-    void refreshComplete();
-
-    void refreshError(Exception exception);
 }

@@ -9,7 +9,7 @@ interface NewsListModel {
 
     companion object {
         // 新闻页面文章数默认大小
-        const val PAGE_SIZE = 12
+        const val PAGE_SIZE = 20
 
         val categories = mapOf(
                 Pair("general", R.string.category_general)

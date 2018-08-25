@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidpi.app.R;
+import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
+import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
 import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 
@@ -17,7 +20,7 @@ import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
  * Created by jastrelax on 2017/11/21.
  */
 
-public class PullDownHeaderView extends RefreshHeaderLayout {
+public class PullDownHeaderView extends RefreshHeaderLayout implements OnRefreshListener{
 
     private TextView mTvState;
     private LoadingView loadingView;
@@ -44,6 +47,14 @@ public class PullDownHeaderView extends RefreshHeaderLayout {
         loadingView = findViewById(R.id.loading_view);
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        RefreshHeaderBehavior behavior = LiteRefreshHelper.getAttachedBehavior(this);
+        if (behavior != null) {
+            behavior.addOnRefreshListener(this);
+        }
+    }
 
     @Override
     public void onStartPulling(int max, boolean isTouch) {

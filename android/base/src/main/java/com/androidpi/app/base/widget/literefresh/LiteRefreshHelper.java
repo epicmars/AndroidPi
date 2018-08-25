@@ -14,7 +14,12 @@ public class LiteRefreshHelper {
     public static <T extends AnimationOffsetBehavior> T getAttachedBehavior(View view) {
         try {
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
-            return (T) params.getBehavior();
+            if (params == null) {
+                throw new NullPointerException("You must make sure the view's layout params has been generated." +
+                        "If used in custom view, the onAttachedToWindow() method of View is a good hook point where you can make it right.");
+            } else {
+                return (T) params.getBehavior();
+            }
         } catch (ClassCastException e) {
             return null;
         }

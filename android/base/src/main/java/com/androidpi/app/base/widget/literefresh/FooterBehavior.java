@@ -23,7 +23,7 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
     private boolean isFirstLayout = true;
 
     {
-        controller = new FooterBehaviorController(this);
+        controller = new BehaviorController<>(this);
         addScrollListener(controller);
         runWithView(new Runnable() {
             @Override
@@ -72,7 +72,7 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
     }
 
     @Override
-    protected int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior) {
+    protected int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior) {
         return contentBehavior.getTopAndBottomOffset() + dependency.getHeight() - child.getTop();
     }
 

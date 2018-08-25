@@ -11,7 +11,9 @@ date: 2018-08-24 19:07:17 +0800
         ContentBehavior                      HeaderBehavior            FooterBehavior
     RefreshContentBehavior              RefreshHeaderBehavior      RefreshFooterBehavior
 
-目前RefreshContentBehavior，RefreshHeaderBehavior，RefreshFooterBehavior主要作用是暴露滑动状态和刷新状态，以及作为控制器。这说明其职责实际上可以使用桥接的方式抽象到另一个层级，即和它们的父类一个层级。这样可以在运行时改变其暴露出的行为，这样还可以将部分原来写死在Behavior中与滑动相关性不大的逻辑也让其负责，如行为模式的配置与变化。
+这个继承结构导致类型大量产生，通过分别对ContentBehavior,HeaderBehavior,FooterBehavior进行继承，目前RefreshContentBehavior，RefreshHeaderBehavior，RefreshFooterBehavior主要作用是通过监听器暴露滑动状态和刷新状态，以及作为控制器。这说明这部分职责可以考虑使用桥接的方式抽象到另一个层级，即和它们的父类一个层级。这样可以改用组合的方式在运行时改变其暴露出的行为，这样还可以将部分原来写死在Behavior中与滑动相关性不大的逻辑也让其负责，如行为模式的配置与变化。
+
+为此将实现的部分的滑动转态转移和控制职责抽象为专门的Controller。
 
 ## Behavior的状态设计
 目前采用如下接口监听原始的滑动事件，其中接口传递的是经过坐标系变换后的偏移量。需要注意onStopScroll仅表示滑动触摸操作的结束，可能对应TouchEvent.UP事件，但不表明滑动的结束，随后可能使用延时的动画来更新视图：

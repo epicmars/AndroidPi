@@ -46,24 +46,4 @@ public class ScalableHeaderLayout extends RefreshHeaderLayout {
     public void onStopPulling(int current, int max) {
 
     }
-
-    @Override
-    public void onRefreshStart() {
-
-    }
-
-    @Override
-    public void onReleaseToRefresh() {
-
-    }
-
-    @Override
-    public void onRefresh() {
-
-    }
-
-    @Override
-    public void onRefreshEnd() {
-
-    }
 }
