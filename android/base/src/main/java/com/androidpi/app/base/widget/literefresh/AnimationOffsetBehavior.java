@@ -48,7 +48,7 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
     protected float maxOffsetRatio = GOLDEN_RATIO;
     protected int progressBase = 0;
     protected List<ScrollListener> mListeners = new ArrayList<>();
-    private Handler handler = new Handler(this);
+    protected Handler handler = new Handler(this);
     private Queue<Runnable> pendingActions = new LinkedList<>();
     protected BehaviorController controller;
     protected boolean useDefaultMaxOffset = false;
@@ -114,6 +114,12 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
         if (offsetAnimator != null && offsetAnimator.isRunning()) {
             offsetAnimator.cancel();
         }
+    }
+
+    public void animateOffsetDeltaWithDuration(CoordinatorLayout parent, View child, int offsetDelta, long duration) {
+        if (offsetDelta == 0)
+            return;
+        animateOffsetWithDuration(parent, child, getTopAndBottomOffset() + offsetDelta, duration);
     }
 
     public void animateOffsetWithDuration(CoordinatorLayout parent, View child, int offset, long duration) {

@@ -20,88 +20,30 @@ public class ContentBehaviorController extends BehaviorController<ContentBehavio
     private static final long SHOW_DURATION = 300L;
     private static final long RESET_DURATION = 300L;
 
-    private RefreshStateMachine headerStateMachine = new RefreshStateMachine(new OffsetTransformer() {
+    private final RefreshStateHandler footerStateHandler = new RefreshStateHandler() {
         @Override
         public boolean isValidOffset(int currentOffset) {
-            return currentOffset > 0;
+            return (currentOffset + behavior.getChild().getHeight()) < behavior.getParent().getHeight();
         }
 
         @Override
         public int transform(int currentOffset) {
-            return currentOffset;
+            return -(currentOffset + behavior.getChild().getHeight()) + behavior.getParent().getHeight();
         }
 
         @Override
         public int readyRefreshOffset() {
-            return getBehavior().headerHeight;
-
-        }
-
-        @Override
-        public boolean hasRefreshListeners() {
-            return mRefreshListeners != null && !mRefreshListeners.isEmpty();
-        }
-    });
-
-    private RefreshStateMachine footerStateMachine = new RefreshStateMachine(new OffsetTransformer() {
-        @Override
-        public boolean isValidOffset(int currentOffset) {
-            return (currentOffset + getBehavior().getChild().getHeight()) < getBehavior().getParent().getHeight();
-        }
-
-        @Override
-        public int transform(int currentOffset) {
-            return -(currentOffset + getBehavior().getChild().getHeight()) + getBehavior().getParent().getHeight();
-        }
-
-        @Override
-        public int readyRefreshOffset() {
-            return getBehavior().getFooterHeight();
+            return behavior.getFooterHeight();
         }
 
         @Override
         public boolean hasRefreshListeners() {
             return mLoadListeners != null && !mLoadListeners.isEmpty();
         }
-    });
 
-
-    private RefreshStateListener headerStateListener = new RefreshStateListener() {
         @Override
         public void onStateChanged(int state) {
-            Timber.d("header state: %d", state);
-            switch (state) {
-                case STATE_START:
-                    onRefreshStart();
-                    break;
-                case STATE_READY:
-                    onReleaseToRefresh();
-                    break;
-                case STATE_CANCELLED:
-                    stopScroll(false);
-                    break;
-                case STATE_REFRESH_AND_RESET:
-                    showHeader();
-                    break;
-                case STATE_REFRESH:
-                    onRefresh();
-                    showHeader();
-                    break;
-                case STATE_COMPLETE:
-                    stopScroll(true);
-                    onRefreshEnd();
-                    break;
-                case STATE_IDLE:
-                default:
-                    break;
-            }
-        }
-    };
-
-    private RefreshStateListener footerStateListener = new RefreshStateListener() {
-        @Override
-        public void onStateChanged(int state) {
-            Timber.d("footer state: %d", state);
+//            Timber.d("footer state: %d", state);
             switch (state) {
                 case STATE_START:
                     onLoadStart();
@@ -112,7 +54,10 @@ public class ContentBehaviorController extends BehaviorController<ContentBehavio
                 case STATE_CANCELLED:
                     stopScroll(false);
                     break;
-                case STATE_REFRESH_AND_RESET:
+                case STATE_CANCELLED_RESET:
+                    reset();
+                    break;
+                case STATE_REFRESH_RESET:
                     showFooter();
                     break;
                 case STATE_REFRESH:
@@ -130,15 +75,70 @@ public class ContentBehaviorController extends BehaviorController<ContentBehavio
         }
     };
 
-    private Set<RefreshStateMachine> stateMachines = new LinkedHashSet<>();
+    private RefreshStateHandler headerStateHandler = new RefreshStateHandler() {
+        @Override
+        public boolean isValidOffset(int currentOffset) {
+            return currentOffset > 0;
+        }
 
-    {
-//        headerStateMachine.addRefreshStateListener(headerStateListener);
-//        footerStateMachine.addRefreshStateListener(footerStateListener);
+        @Override
+        public int transform(int currentOffset) {
+            return currentOffset;
+        }
 
-        stateMachines.add(headerStateMachine);
-        stateMachines.add(footerStateMachine);
-    }
+        @Override
+        public int readyRefreshOffset() {
+            return behavior.getHeaderReadyRefreshHeight();
+        }
+
+        @Override
+        public boolean hasRefreshListeners() {
+            return mRefreshListeners != null && !mRefreshListeners.isEmpty();
+        }
+
+        @Override
+        public void onStateChanged(int state) {
+//            Timber.d("header state: %d", state);
+            switch (state) {
+                case STATE_START:
+                    onRefreshStart();
+                    break;
+                case STATE_READY:
+                    onReleaseToRefresh();
+                    break;
+                case STATE_CANCELLED:
+                    stopScroll(false);
+                    break;
+                case STATE_CANCELLED_RESET:
+                    reset();
+                    break;
+                case STATE_REFRESH_RESET:
+                    showHeader();
+                    break;
+                case STATE_REFRESH:
+                    onRefresh();
+                    showHeader();
+                    break;
+                case STATE_COMPLETE:
+                    stopScroll(true);
+                    onRefreshEnd();
+                    break;
+                case STATE_IDLE:
+                default:
+                    break;
+            }
+        }
+    };
+
+    private RefreshStateMachine headerStateMachine = new RefreshStateMachine(headerStateHandler);
+    private RefreshStateMachine footerStateMachine = new RefreshStateMachine(footerStateHandler);
+    private Set<RefreshStateMachine> stateMachines = new LinkedHashSet<RefreshStateMachine>(2) {
+        {
+            add(headerStateMachine);
+            add(footerStateMachine);
+        }
+    };
+
 
     public ContentBehaviorController(ContentBehavior behavior) {
         super(behavior);
@@ -234,6 +234,9 @@ public class ContentBehaviorController extends BehaviorController<ContentBehavio
 
     @Override
     public void refresh() {
+        // Avoid unnecessary task queueing.
+        if (headerStateMachine.isRefreshing())
+            return;
         runWithView(new Runnable() {
             @Override
             public void run() {
@@ -254,6 +257,9 @@ public class ContentBehaviorController extends BehaviorController<ContentBehavio
 
     @Override
     public void load() {
+        // Avoid unnecessary task queueing.
+        if (footerStateMachine.isRefreshing())
+            return;
         runWithView(new Runnable() {
             @Override
             public void run() {

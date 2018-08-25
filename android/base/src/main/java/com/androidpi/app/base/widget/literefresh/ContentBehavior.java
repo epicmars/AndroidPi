@@ -30,12 +30,12 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     /**
      * Minimum top and bottom offset of content view.
      */
-    private int minOffset;
+    protected int minOffset;
 
     /**
      * If set to true, default minimum offset will be {@link #headerVisibleHeight}.
      */
-    private boolean useDefaultMinOffset = false;
+    protected boolean useDefaultMinOffset = false;
 
     /**
      * The header's height.
@@ -50,19 +50,19 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     /**
      * The footer's maximum offset.
      */
-    private int footerMaxOffset;
+    protected int footerMaxOffset;
 
     /**
      * The footer's height.
      */
-    private int footerHeight;
+    protected int footerHeight;
 
     /**
      * The footer's visible height. Maybe not very useful.
      */
-    private int footerVisibleHeight = 0;
+    protected int footerVisibleHeight = 0;
 
-    private int defaultMinOffset;
+    protected int defaultMinOffset;
     private boolean isFirstLayout = true;
     private boolean layoutNow = false;
 
@@ -228,6 +228,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
      */
     protected void reset(long animateDuration) {
         if (null == getChild() || getParent() == null) return;
+
         // Reset footer first, then consider header.
         // Based on a strong contract that headerVisibleHeight is a distance from parent top.
         int offset;
@@ -236,7 +237,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         } else {
             offset = headerVisibleHeight - getTopAndBottomOffset();
         }
-        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + offset, animateDuration);
+        animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animateDuration);
     }
 
     /**
@@ -244,14 +245,14 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
      */
     protected void showHeader(long animateDuration) {
         if (null == getChild()) return;
-        float offset = getHeaderHeight() - getChild().getTop();
-        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, animateDuration);
+        int offset = getHeaderHeight() - getChild().getTop();
+        animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animateDuration);
     }
 
     void showFooter(long animationDuration) {
         if (null == getChild()) return;
-        float offset = getParent().getHeight() - getFooterHeight() - getChild().getBottom();
-        animateOffsetWithDuration(getParent(), getChild(), getTopAndBottomOffset() + (int) offset, animationDuration);
+        int offset = getParent().getHeight() - getFooterHeight() - getChild().getBottom();
+        animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animationDuration);
     }
 
     private Runnable offsetCallback;
@@ -267,14 +268,14 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         if (currentOffset > headerVisibleHeight || currentOffset < 0) {
             if (getChild().getHandler() == null) return;
             // Remove previous pending callback.
-            getChild().getHandler().removeCallbacks(offsetCallback);
+            handler.removeCallbacks(offsetCallback);
             offsetCallback = new Runnable() {
                 @Override
                 public void run() {
                     reset(RESET_DURATION);
                 }
             };
-            getChild().postDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
+            handler.postDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
         }
     }
 
@@ -313,6 +314,10 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         this.headerHeight = headerHeight;
     }
 
+    public int getHeaderVisibleHeight() {
+        return headerVisibleHeight;
+    }
+
     public int getHeaderHeight() {
         return headerHeight;
     }
@@ -330,5 +335,10 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
                 getChild().requestLayout();
             }
         });
+    }
+
+    // todo: set default header visible height
+    int getHeaderReadyRefreshHeight() {
+        return headerVisibleHeight;
     }
 }
