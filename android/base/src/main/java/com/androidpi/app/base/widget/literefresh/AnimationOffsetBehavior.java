@@ -22,6 +22,10 @@ import java.util.Queue;
 
 public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<V> implements Handler.Callback {
 
+    static final long HOLD_ON_DURATION = 500L;
+    static final long SHOW_DURATION = 300L;
+    static final long RESET_DURATION = 300L;
+
     public interface ScrollListener {
 
         void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch);

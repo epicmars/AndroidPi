@@ -12,8 +12,6 @@ import android.view.View;
 import com.androidpi.app.pi.base.R;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
-import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.HOLD_ON_DURATION;
-import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.RESET_DURATION;
 
 /**
  * A behavior for nested scrollable child of {@link CoordinatorLayout}.
@@ -207,21 +205,21 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         for (ScrollListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, currentOffset, (int) maxOffset, type == TYPE_TOUCH);
         }
-        int consumed = consumeRawOffset ? offset : onConsumeOffset(currentOffset, coordinatorLayout.getHeight(), offset);
-        currentOffset += consumed;
+        float consumed = consumeRawOffset ? offset : onConsumeOffset(currentOffset, coordinatorLayout.getHeight(), offset);
+        currentOffset = Math.round(currentOffset + consumed);
         setTopAndBottomOffset(currentOffset);
         // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
-        // The header view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle.
-        // In this case CoordinatorLayout will not call onDependentViewChanged().
+        // The content view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle
+        // unchanged while it's offset has changed. In this case CoordinatorLayout will not call onDependentViewChanged().
         // So We need to call onDependentViewChanged() manually.
         coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, currentOffset, offset, (int) maxOffset, type == TYPE_TOUCH);
         }
-        return consumed;
+        return currentOffset;
     }
 
-    protected int onConsumeOffset(int current, int parentHeight, int offset) {
+    protected float onConsumeOffset(int current, int parentHeight, int offset) {
         return offset;
     }
 

@@ -48,7 +48,7 @@ public class ImageHeaderView extends RefreshHeaderLayout {
     @Override
     public void onPulling(int current, int delta, int max, boolean isTouch) {
         if (!isTouch || data == null || launched) return;
-        if ((current /(float) max) >= 0.85f) {
+        if ((current /(float) max) >= 1f) {
             String sharedElementName = getResources().getString(R.string.transition_header);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) getContext(), this, sharedElementName);
             TemplateActivity.Companion.startWith(options, getContext(), 0, ImageFragment.class.getName(), new FragmentFactory<Fragment>() {
@@ -82,6 +82,7 @@ public class ImageHeaderView extends RefreshHeaderLayout {
 
     @Override
     public void onRefreshEnd() {
+
     }
 
     public void setUrl(String url) {

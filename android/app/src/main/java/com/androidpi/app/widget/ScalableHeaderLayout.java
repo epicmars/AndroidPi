@@ -35,6 +35,7 @@ public class ScalableHeaderLayout extends RefreshHeaderLayout {
     @Override
     public void onPulling(int current, int delta, int max, boolean isTouch) {
         float height = getHeight();
+        if (current < height) return;
         float scale = Math.max(current / height, 1);
         setScaleX(scale);
         setScaleY(scale);

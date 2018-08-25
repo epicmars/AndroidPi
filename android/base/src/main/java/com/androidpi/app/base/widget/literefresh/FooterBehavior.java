@@ -77,7 +77,7 @@ public class FooterBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
     }
 
     @Override
-    protected int consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset) {
+    protected float consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset) {
         return offset;
     }
 

@@ -25,29 +25,29 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * As we have record the bottom and top offset of the view using the view's default coordinate
  * system, whose original point is the left top point of the parent view. Relative to that original
  * point the right and bottom position is positive.
- *
+ * <p>
  * <br>
  * Now we need to trace how much the header has scroll from the top of the parent view.
  * We need to transform the bottom position of the view to which the header behavior is attached
  * in the coordinate system of the parent view to another one. This coordinate system would be a
  * affine matrix transformation below:
- *
+ * <p>
  * <pre>
  *      |1 0 height||x|   |         x|
  *      |0 1 height||y| = |y + height|
  *      |0 0      1||1|   |         1|
  * </pre>
- *
+ * <p>
  * And we also need to trace how much the footer view has scrolled from the bottom of the parent
  * view, We use top position of the view as the traced point, the coordinate system would be a
  * affine transformation below:
- *
+ * <p>
  * <pre>
  *      |1   0              0||x|   |                x|
  *      |0   -1  parentHeight||y| = |-y + parentHeight|
  *      |0   0              1||1|   |                1|
  * </pre>
- *
+ * <p>
  * Created by jastrelax on 2018/8/23.
  */
 public abstract class VerticalBoundaryBehavior<V extends View> extends AnimationOffsetBehavior<V> {
@@ -142,7 +142,7 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         return false;
     }
 
-    private int consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout, View child, int offset, int type) {
+    private void consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout, View child, int offset, int type) {
         int currentOffset = getTopAndBottomOffset();
         int parentHeight = coordinatorLayout.getHeight();
         int height = child.getHeight();
@@ -150,24 +150,18 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         for (ScrollListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), height, type == TYPE_TOUCH);
         }
-        int consumed = consumeOffsetOnDependentViewChanged(currentOffset, parentHeight, height, offset);
-        currentOffset += consumed;
+        float consumed = consumeOffsetOnDependentViewChanged(currentOffset, parentHeight, height, offset);
+        currentOffset = Math.round(currentOffset + consumed);
+        // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
-        // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
-        // The header view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle.
-        // Such as when scroll down, use setTranslationY() with negative value.
-        // In this case CoordinatorLayout will not call onDependentViewChanged().
-        // So We need to call onDependentViewChanged() manually.
-        // coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), offset, height, type == TYPE_TOUCH);
         }
-        return consumed;
     }
 
     protected abstract int computeOffsetOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior);
 
-    protected abstract int consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset);
+    protected abstract float consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset);
 
     protected abstract int transformOffsetCoordinate(int current, int height, int parentHeight);
 

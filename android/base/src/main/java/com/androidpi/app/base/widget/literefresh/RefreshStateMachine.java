@@ -10,9 +10,6 @@ import android.view.View;
 public abstract class RefreshStateMachine implements AnimationOffsetBehavior.ScrollListener, Refresher, Loader {
 
 
-    static final long HOLD_ON_DURATION = 500L;
-    static final long EXIT_DURATION = 300L;
-    static final long RESET_DURATION = 300L;
 
     static final int STATE_IDEL = 0;
     static final int STATE_START = 1;

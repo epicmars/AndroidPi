@@ -12,6 +12,10 @@ import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.ui.RecyclerAdapter;
 import com.androidpi.app.base.vm.vo.Resource;
+import com.androidpi.app.base.widget.literefresh.ContentBehavior;
+import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
+import com.androidpi.app.base.widget.literefresh.OnPullListener;
+import com.androidpi.app.base.widget.literefresh.RefreshContentBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.databinding.FragmentImagePagerBinding;
 import com.androidpi.app.viewholder.UnsplashImageViewHolder;
@@ -62,5 +66,27 @@ public class ImagePagerFragment extends BaseFragment<FragmentImagePagerBinding> 
                 }
             }
         });
+
+        RefreshContentBehavior behavior = LiteRefreshHelper.getAttachedBehavior(binding.recyclerView);
+        behavior.addOnPullingListener(new OnPullListener() {
+            @Override
+            public void onStartPulling(int max, boolean isTouch) {
+
+            }
+
+            @Override
+            public void onPulling(int current, int delta, int max, boolean isTouch) {
+                if (current < binding.imagePagerHeader.getHeight()) {
+                    int y = binding.imagePagerHeader.getHeight() - current;
+                    binding.imagePagerHeader.setTranslationY(- y / 2);
+                }
+            }
+
+            @Override
+            public void onStopPulling(int current, int max) {
+
+            }
+        });
+
     }
 }

@@ -3,8 +3,8 @@ package com.androidpi.app.base.widget.literefresh;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 
 /**
  * Created by jastrelax on 2017/11/16.
@@ -64,13 +64,22 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
         controller.refreshError(exception);
     }
 
-    private Interpolator downInterpolator = new AccelerateDecelerateInterpolator();
+    private float accumulator = 0;
+
+    private Interpolator scrollDownInterpolator = new LinearInterpolator();
     @Override
-    protected int onConsumeOffset(int current, int parentHeight, int offset) {
-        int consumed = offset;
+    protected float onConsumeOffset(int current, int parentHeight, int offset) {
+        float consumed = offset;
         if (current >= 0 && offset > 0) {
-            float y = downInterpolator.getInterpolation(current / (float) parentHeight);
-            consumed = (int) ((1f - y) * offset);
+            float y = scrollDownInterpolator.getInterpolation(current / (float) parentHeight);
+            consumed = (1f - y) * offset;
+            if (consumed < 0.5) {
+                accumulator += 0.2;
+                if (accumulator >= 1) {
+                    consumed += 1;
+                    accumulator = 0;
+                }
+            }
         }
         return consumed;
     }

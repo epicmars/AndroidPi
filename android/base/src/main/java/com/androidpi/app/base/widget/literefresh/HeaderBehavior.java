@@ -77,7 +77,8 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
         if (isFirstLayout) {
             // Compute max offset, it will not exceed parent height.
             if (useDefaultMaxOffset) {
-                maxOffset = GOLDEN_RATIO * parent.getHeight();
+                // We want child can be fully visible by default.
+                maxOffset = Math.max(GOLDEN_RATIO * parent.getHeight(), child.getHeight());
             } else {
                 maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
             }
@@ -111,7 +112,7 @@ public class HeaderBehavior<V extends View> extends VerticalBoundaryBehavior<V> 
         return current + height;
     }
 
-    protected int consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset) {
+    protected float consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset) {
         switch (mode) {
             case MODE_STILL:
                 return 0;

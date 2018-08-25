@@ -28,7 +28,9 @@ date: 2018-08-24 19:07:17 +0800
     }
 ```
 
-目前ScrollerListener接口暴露出的滑动是经过坐标系转换的，也就是可以对Header和Footer采用一致的状态转换设计。
+目前ScrollerListener接口暴露出的滑动是经过坐标系转换的，也就是可以对Header和Footer采用一致的状态转换设计。但Content、Header、Footer仅关心各自身的滑动，并且由于Header和Footer的使用方式，它们可能在静止和跟随之间任意切换，也就是其滑动状态是不确定的，而作为为滑动的中心Content总是移动的并且同时记录头部和脚部的滑动状态，因此所有状态相关的转移和控制由Content来实现，Header和Footer将RefreshListener全都Refresher委托给Content。
+
+采用这种实现需要在Content中区分Header和Footer两者的滑动状态，从而分别进行状态转换和控制。
 
 根据监听到的滑动事件进行状态转移的设计，目前一个完整的刷新状态集合如下：
 ```java
