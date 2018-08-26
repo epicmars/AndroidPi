@@ -46,12 +46,14 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
     private OffsetAnimator offsetAnimator;
     protected float maxOffset = 0;
     protected float maxOffsetRatio = GOLDEN_RATIO;
+    protected float maxOffsetRatioOfParent = 0f;
     protected int progressBase = 0;
     protected List<ScrollListener> mListeners = new ArrayList<>();
     protected Handler handler = new Handler(this);
     private Queue<Runnable> pendingActions = new LinkedList<>();
     protected BehaviorController controller;
     protected boolean useDefaultMaxOffset = false;
+    private boolean isFirstLayout = true;
 
     public AnimationOffsetBehavior() {
 
@@ -67,11 +69,13 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
         boolean hasMaxOffsetRatio = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffsetRatio);
         boolean hasMaxOffset = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset);
         if (hasMaxOffsetRatio) {
-            maxOffsetRatio = a.getFloat(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 0);
+            maxOffsetRatio = a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 1, 0f);
+            maxOffsetRatioOfParent = a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 1, 0f);
         }
         if (hasMaxOffset) {
             maxOffset = a.getDimension(R.styleable.OffsetBehavior_lr_maxOffset, 0);
         }
+        // If maxOffset and maxOffsetRatio is not set then use default.
         if (!hasMaxOffsetRatio && !hasMaxOffset) {
             useDefaultMaxOffset = true;
         }

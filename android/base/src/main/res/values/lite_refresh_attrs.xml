@@ -2,9 +2,10 @@
 <resources>
     <declare-styleable name="OffsetBehavior">
         <attr name="lr_maxOffset" format="reference|dimension"/>
-        <attr name="lr_maxOffsetRatio" format="reference|float"/>
+        <attr name="lr_maxOffsetRatio" format="reference|fraction"/>
         <attr name="lr_visibleHeight" format="reference|dimension"/>
-        <attr name="lr_visibleHeightRatio" format="reference|float"/>
+        <attr name="lr_visibleHeightRatio" format="reference|fraction"/>
+        <attr name="lr_useDefaultMaxOffset" format="reference|boolean"/>
     </declare-styleable>
 
     <declare-styleable name="HeaderBehavior">
@@ -18,7 +19,7 @@
     
     <declare-styleable name="ContentBehavior">
         <attr name="lr_minOffset" format="reference|dimension"/>
-        <attr name="lr_minOffsetRatio" format="reference|float"/>
+        <attr name="lr_minOffsetRatio" format="reference|fraction"/>
         <attr name="lr_useDefaultMinOffset" format="reference|boolean"/>
     </declare-styleable>
     

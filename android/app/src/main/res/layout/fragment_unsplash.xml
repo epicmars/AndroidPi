@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/lr_refresh_header_behavior"
-            app:lr_visibleHeightRatio="0.8">
+            app:lr_visibleHeightRatio="80%">
         </com.androidpi.app.widget.ImagePagerHeaderView>
 
         <android.support.v7.widget.RecyclerView

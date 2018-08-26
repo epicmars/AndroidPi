@@ -54,8 +54,9 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
 
     protected int visibleHeight = 0;
     protected float invisibleHeight = 0;
-    private float visibleHeightRatio = 0;
-
+    private boolean isFirstLayout = true;
+    private float visibleHeightRatio = 0f;
+    private float visibleHeightParentRatio = 0f;
 
     public VerticalBoundaryBehavior() {
     }
@@ -67,21 +68,25 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     public VerticalBoundaryBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior, 0, 0);
-        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeightRatio)) {
-            visibleHeightRatio = a.getFloat(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 0F);
-        }
         if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeight)) {
             visibleHeight = Math.round(a.getDimension(R.styleable.OffsetBehavior_lr_visibleHeight, 0));
+        }
+        if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeightRatio)) {
+            visibleHeightRatio = a.getFraction(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 1, 0f);
+            visibleHeightParentRatio = a.getFraction(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 2, 0f);
         }
         a.recycle();
     }
 
     @Override
-    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
-        boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
-        // Compute visible height of child.
-        visibleHeight = (int) Math.max((float) visibleHeight, visibleHeightRatio * child.getMeasuredHeight());
-        invisibleHeight = child.getMeasuredHeight() - visibleHeight;
+    public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
+        boolean handled = super.onLayoutChild(parent, child, layoutDirection);
+        if (isFirstLayout) {
+            isFirstLayout = false;
+            // Compute visible height of child.
+            visibleHeight = (int) Math.max((float) visibleHeight, visibleHeightParentRatio > visibleHeightRatio ? visibleHeightRatio * parent.getHeight() : visibleHeightRatio * child.getHeight());
+            invisibleHeight = child.getHeight() - visibleHeight;
+        }
         return handled;
     }
 

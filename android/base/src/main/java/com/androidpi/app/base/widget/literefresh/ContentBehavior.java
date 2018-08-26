@@ -33,6 +33,13 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     protected int minOffset;
 
     /**
+     * Minimum top and bottom offset relative to parent height.
+     */
+    protected float minOffsetRatio;
+
+    private float minOffsetOfParent;
+
+    /**
      * If set to true, default minimum offset will be {@link #headerVisibleHeight}.
      */
     protected boolean useDefaultMinOffset = false;
@@ -85,6 +92,9 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         useDefaultMinOffset = a.getBoolean(R.styleable.ContentBehavior_lr_useDefaultMinOffset, false);
         minOffset = a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_minOffset, 0);
         defaultMinOffset = minOffset;
+        if (a.hasValue(R.styleable.ContentBehavior_lr_minOffsetRatio)) {
+            minOffsetRatio = a.getFraction(R.styleable.ContentBehavior_lr_minOffsetRatio, 1, 1, 0f);
+        }
         a.recycle();
     }
 
