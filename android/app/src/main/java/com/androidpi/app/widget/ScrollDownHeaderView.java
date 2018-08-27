@@ -20,7 +20,7 @@ import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
  * Created by jastrelax on 2017/11/21.
  */
 
-public class PullDownHeaderView extends RefreshHeaderLayout implements OnRefreshListener{
+public class ScrollDownHeaderView extends RefreshHeaderLayout implements OnRefreshListener{
 
     private TextView mTvState;
     private LoadingView loadingView;
@@ -29,15 +29,15 @@ public class PullDownHeaderView extends RefreshHeaderLayout implements OnRefresh
     private ObjectAnimator rotateDownAnimator;
     private int gravity = Gravity.CENTER;
 
-    public PullDownHeaderView(Context context) {
+    public ScrollDownHeaderView(Context context) {
         this(context, null);
     }
 
-    public PullDownHeaderView(Context context, AttributeSet attrs) {
+    public ScrollDownHeaderView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PullDownHeaderView(Context context, AttributeSet attrs, int defStyle) {
+    public ScrollDownHeaderView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         inflate(context, R.layout.pull_down_header, this);
 
@@ -57,12 +57,12 @@ public class PullDownHeaderView extends RefreshHeaderLayout implements OnRefresh
     }
 
     @Override
-    public void onStartPulling(int max, boolean isTouch) {
+    public void onStartScroll(int max, boolean isTouch) {
 
     }
 
     @Override
-    public void onPulling(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(int current, int delta, int max, boolean isTouch) {
         float height = getHeight();
         if (current <= height) return;
         float scale = Math.max(current / height, 1);
@@ -80,7 +80,7 @@ public class PullDownHeaderView extends RefreshHeaderLayout implements OnRefresh
     }
 
     @Override
-    public void onStopPulling(int current, int max) {
+    public void onStopScroll(int current, int max) {
 
     }
 

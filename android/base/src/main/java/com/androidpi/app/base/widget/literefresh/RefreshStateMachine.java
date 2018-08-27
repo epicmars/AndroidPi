@@ -7,7 +7,7 @@ import android.view.View;
 /**
  * Created by jastrelax on 2018/8/24.
  */
-public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollListener, Refresher {
+public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingListener, Refresher {
 
     public interface RefreshStateHandler {
 

@@ -28,12 +28,12 @@ public class ScalableHeaderLayout extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onStartPulling(int max, boolean isTouch) {
+    public void onStartScroll(int max, boolean isTouch) {
 
     }
 
     @Override
-    public void onPulling(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(int current, int delta, int max, boolean isTouch) {
         float height = getHeight();
         if (current < height) return;
         float scale = Math.max(current / height, 1);
@@ -43,7 +43,7 @@ public class ScalableHeaderLayout extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onStopPulling(int current, int max) {
+    public void onStopScroll(int current, int max) {
 
     }
 }

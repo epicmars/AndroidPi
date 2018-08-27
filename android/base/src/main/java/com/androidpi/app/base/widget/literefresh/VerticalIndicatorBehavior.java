@@ -50,7 +50,7 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * <p>
  * Created by jastrelax on 2018/8/23.
  */
-public abstract class VerticalBoundaryBehavior<V extends View> extends AnimationOffsetBehavior<V> {
+public abstract class VerticalIndicatorBehavior<V extends View, CTR extends VerticalIndicatorBehaviorController> extends AnimationOffsetBehavior<V, CTR> {
 
     protected int visibleHeight = 0;
     protected float invisibleHeight = 0;
@@ -58,14 +58,14 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     private float visibleHeightRatio = 0f;
     private float visibleHeightParentRatio = 0f;
 
-    public VerticalBoundaryBehavior() {
+    public VerticalIndicatorBehavior() {
     }
 
-    public VerticalBoundaryBehavior(Context context) {
+    public VerticalIndicatorBehavior(Context context) {
         this(context, null);
     }
 
-    public VerticalBoundaryBehavior(Context context, AttributeSet attrs) {
+    public VerticalIndicatorBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior, 0, 0);
         if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeight)) {
@@ -83,6 +83,7 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (isFirstLayout) {
             isFirstLayout = false;
+            cancelAnimation();
             // Compute visible height of child.
             visibleHeight = (int) Math.max((float) visibleHeight, visibleHeightParentRatio > visibleHeightRatio ? visibleHeightRatio * parent.getHeight() : visibleHeightRatio * child.getHeight());
             invisibleHeight = child.getHeight() - visibleHeight;
@@ -94,7 +95,7 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
         boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (start) {
-            for (ScrollListener l : mListeners) {
+            for (ScrollingListener l : mListeners) {
                 l.onStartScroll(coordinatorLayout, child, child.getHeight(), type == TYPE_TOUCH);
             }
         }
@@ -105,7 +106,7 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
         // If header should be hidden entirely, and hidden part is visible now consume the fling.
         // Otherwise, do nothing.
-        if (isHiddenPartVisible() && visibleHeight == 0) {
+        if (controller.isHiddenPartVisible(this) && visibleHeight == 0) {
             return true;
         }
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
@@ -115,8 +116,8 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         int height = child.getHeight();
         int parentHeight = coordinatorLayout.getHeight();
-        for (ScrollListener l : mListeners) {
-            l.onStopScroll(coordinatorLayout, child, transformOffsetCoordinate(getTopAndBottomOffset(), height, parentHeight), height, type == TYPE_TOUCH);
+        for (ScrollingListener l : mListeners) {
+            l.onStopScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(this, getTopAndBottomOffset(), height, parentHeight), height, type == TYPE_TOUCH);
         }
     }
 
@@ -125,7 +126,7 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         if (null != lp) {
             CoordinatorLayout.Behavior behavior = lp.getBehavior();
-            return behavior instanceof ContentBehavior;
+            return behavior instanceof ScrollingContentBehavior;
         }
         return false;
     }
@@ -135,9 +136,9 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         CoordinatorLayout.Behavior behavior = lp.getBehavior();
         int offsetDelta = 0;
-        if (behavior instanceof ContentBehavior) {
-            ContentBehavior contentBehavior = (ContentBehavior) behavior;
-            offsetDelta = computeOffsetDeltaOnDependentViewChanged(parent, child, dependency, contentBehavior);
+        if (behavior instanceof ScrollingContentBehavior) {
+            ScrollingContentBehavior scrollingContentBehavior = (ScrollingContentBehavior) behavior;
+            offsetDelta = controller.computeOffsetDeltaOnDependentViewChanged(this, scrollingContentBehavior, parent, child, dependency);
         }
         if (offsetDelta != 0) {
             // todo: use TYPE_TOUCH or not
@@ -152,23 +153,17 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         int parentHeight = coordinatorLayout.getHeight();
         int height = child.getHeight();
         // Before child consume the offset.
-        for (ScrollListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), height, type == TYPE_TOUCH);
+        for (ScrollingListener l : mListeners) {
+            l.onPreScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(this, currentOffset, height, parentHeight), height, type == TYPE_TOUCH);
         }
-        float consumed = consumeOffsetOnDependentViewChanged(currentOffset, parentHeight, height, offsetDelta);
+        float consumed = controller.consumeOffsetOnDependentViewChanged(this, getContentBehavior(), currentOffset, parentHeight, height, offsetDelta);
         currentOffset = Math.round(currentOffset + consumed);
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
-        for (ScrollListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, transformOffsetCoordinate(currentOffset, height, parentHeight), offsetDelta, height, type == TYPE_TOUCH);
+        for (ScrollingListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(this, currentOffset, height, parentHeight), offsetDelta, height, type == TYPE_TOUCH);
         }
     }
-
-    protected abstract int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, V child, View dependency, ContentBehavior contentBehavior);
-
-    protected abstract float consumeOffsetOnDependentViewChanged(int currentOffset, int parentHeight, int height, int offset);
-
-    protected abstract int transformOffsetCoordinate(int current, int height, int parentHeight);
 
     private View findDependencyChild(CoordinatorLayout parent, View child) {
         if (parent == null || child == null)
@@ -178,14 +173,14 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
             return null;
         for (View v : dependencies) {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
-            if (p.getBehavior() instanceof ContentBehavior) {
+            if (p.getBehavior() instanceof ScrollingContentBehavior) {
                 return v;
             }
         }
         return null;
     }
 
-    private ContentBehavior findDependencyBehavior(CoordinatorLayout parent, View child) {
+    private ScrollingContentBehavior findDependencyBehavior(CoordinatorLayout parent, View child) {
         if (parent == null || child == null)
             return null;
         List<View> dependencies = parent.getDependencies(child);
@@ -193,14 +188,14 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
             return null;
         for (View v : dependencies) {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
-            if (p.getBehavior() instanceof ContentBehavior) {
-                return (ContentBehavior) p.getBehavior();
+            if (p.getBehavior() instanceof ScrollingContentBehavior) {
+                return (ScrollingContentBehavior) p.getBehavior();
             }
         }
         return null;
     }
 
-    public ContentBehavior getContentBehavior() {
+    public ScrollingContentBehavior getContentBehavior() {
         return findDependencyBehavior(getParent(), getChild());
     }
 
@@ -225,13 +220,4 @@ public abstract class VerticalBoundaryBehavior<V extends View> extends Animation
         this.visibleHeight = visibleHeight;
     }
 
-    /**
-     * Tell if the hidden part of the view is visible.
-     * If invisible height is zero, which means visible height equals to view's height,
-     * in that case it's considered to be invisible.
-     *
-     * @return true if hidden part of view is visible,
-     * otherwise return false.
-     */
-    protected abstract boolean isHiddenPartVisible();
 }

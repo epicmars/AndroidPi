@@ -9,4 +9,5 @@
     <color name="listitem_pressed">#dcdcdcdc</color>
 
     <color name="text_gray">#808080</color>
+    <color name="bg_dark">#232333</color>
 </resources>

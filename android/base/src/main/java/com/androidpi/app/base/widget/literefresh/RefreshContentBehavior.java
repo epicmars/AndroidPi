@@ -10,7 +10,7 @@ import android.view.animation.LinearInterpolator;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> implements Refresher{
+public class RefreshContentBehavior<V extends View> extends ScrollingContentBehavior<V> implements Refresher{
 
     public RefreshContentBehavior(Context context) {
         super(context);
@@ -20,15 +20,9 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
         super(context, attrs);
     }
 
-    public void addOnPullingListener(OnPullListener listener) {
+    public void addOnScrollListener(OnScrollListener listener) {
         controller.addOnPullingListener(listener);
     }
-
-//    public void removeOnPullingListener(OnPullListener listener) {
-//        if (null == listener)
-//            return;
-//        mPullListeners.remove(listener);
-//    }
 
     public void addOnRefreshListener(OnRefreshListener listener) {
         controller.addOnRefreshListener(listener);
@@ -37,17 +31,6 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
     public void addOnLoadListener(OnLoadListener listener) {
         controller.addOnLoadListener(listener);
     }
-
-//    public void addOnRefreshListeners(Collection<OnRefreshListener> listeners) {
-//        if (null == listeners || listeners.isEmpty()) return;
-//        mRefreshListeners.addAll(listeners);
-//    }
-//
-//    public void removeRefreshListener(OnRefreshListener listener) {
-//        if (null == listener)
-//            return;
-//        mRefreshListeners.remove(listener);
-//    }
 
     @Override
     public void refresh() {
@@ -68,11 +51,11 @@ public class RefreshContentBehavior<V extends View> extends ContentBehavior<V> i
 
     private Interpolator scrollDownInterpolator = new LinearInterpolator();
     @Override
-    protected float onConsumeOffset(int current, int parentHeight, int offset) {
-        float consumed = offset;
-        if (current >= 0 && offset > 0) {
-            float y = scrollDownInterpolator.getInterpolation(current / (float) parentHeight);
-            consumed = (1f - y) * offset;
+    protected float onConsumeOffset(int current, int max, int delta) {
+        float consumed = delta;
+        if (current >= 0 && delta > 0) {
+            float y = scrollDownInterpolator.getInterpolation(current / (float) max);
+            consumed = (1f - y) * delta;
             if (consumed < 0.5) {
                 accumulator += 0.2;
                 if (accumulator >= 1) {

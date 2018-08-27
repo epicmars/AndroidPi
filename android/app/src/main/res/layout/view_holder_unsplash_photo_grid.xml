@@ -22,7 +22,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@mipmap/image3" />
+                tools:src="@mipmap/photo3" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_profile"

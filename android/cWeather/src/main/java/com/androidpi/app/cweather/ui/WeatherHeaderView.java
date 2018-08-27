@@ -44,7 +44,7 @@ public class WeatherHeaderView extends RefreshHeaderLayout implements OnRefreshL
     }
 
     @Override
-    public void onStartPulling(int max, boolean isTouch) {
+    public void onStartScroll(int max, boolean isTouch) {
         if (isTouch) {
             loadingView.startProgress();
             loadingView.setProgress(0);
@@ -52,7 +52,7 @@ public class WeatherHeaderView extends RefreshHeaderLayout implements OnRefreshL
     }
 
     @Override
-    public void onPulling(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(int current, int delta, int max, boolean isTouch) {
         if (!isTouch) return;
         float height = getHeight();
         if (current > offset) {
@@ -62,7 +62,7 @@ public class WeatherHeaderView extends RefreshHeaderLayout implements OnRefreshL
     }
 
     @Override
-    public void onStopPulling(int current, int max) {
+    public void onStopScroll(int current, int max) {
 
     }
 

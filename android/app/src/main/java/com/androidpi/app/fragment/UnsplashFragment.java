@@ -1,7 +1,6 @@
 package com.androidpi.app.fragment;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +14,7 @@ import com.androidpi.app.base.ui.RecyclerAdapter;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.databinding.FragmentUnsplashBinding;
-import com.androidpi.app.viewholder.UnsplashPhotoViewHolder;
+import com.androidpi.app.viewholder.UnsplashPhotoGridViewHolder;
 import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 import java.util.List;
@@ -38,7 +37,7 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
 
     public UnsplashFragment() {
         adapter = new RecyclerAdapter();
-        adapter.register(UnsplashPhotoViewHolder.class);
+        adapter.register(UnsplashPhotoGridViewHolder.class);
     }
 
     @Override

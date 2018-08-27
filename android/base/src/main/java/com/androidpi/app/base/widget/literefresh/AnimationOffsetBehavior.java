@@ -20,13 +20,13 @@ import java.util.Queue;
  * Created by jastrelax on 2017/11/20.
  */
 
-public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffsetBehavior<V> implements Handler.Callback {
+public abstract class AnimationOffsetBehavior<V extends View, CTR extends BehaviorController> extends ViewOffsetBehavior<V> implements Handler.Callback {
 
     static final long HOLD_ON_DURATION = 500L;
     static final long SHOW_DURATION = 300L;
     static final long RESET_DURATION = 300L;
 
-    public interface ScrollListener {
+    interface ScrollingListener {
 
         void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch);
 
@@ -44,16 +44,15 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
     protected V mChild;
     protected CoordinatorLayout mParent;
     private OffsetAnimator offsetAnimator;
-    protected float maxOffset = 0;
-    protected float maxOffsetRatio = GOLDEN_RATIO;
+    protected float maxOffset = 0f;
+    protected float maxOffsetRatio = 0f;
     protected float maxOffsetRatioOfParent = 0f;
     protected int progressBase = 0;
-    protected List<ScrollListener> mListeners = new ArrayList<>();
+    protected List<ScrollingListener> mListeners = new ArrayList<>();
     protected Handler handler = new Handler(this);
     private Queue<Runnable> pendingActions = new LinkedList<>();
-    protected BehaviorController controller;
+    protected CTR controller;
     protected boolean useDefaultMaxOffset = false;
-    private boolean isFirstLayout = true;
 
     public AnimationOffsetBehavior() {
 
@@ -70,7 +69,7 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
         boolean hasMaxOffset = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset);
         if (hasMaxOffsetRatio) {
             maxOffsetRatio = a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 1, 0f);
-            maxOffsetRatioOfParent = a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 1, 0f);
+            maxOffsetRatioOfParent = a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 2, 0f);
         }
         if (hasMaxOffset) {
             maxOffset = a.getDimension(R.styleable.OffsetBehavior_lr_maxOffset, 0);
@@ -120,13 +119,13 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
         }
     }
 
-    public void animateOffsetDeltaWithDuration(CoordinatorLayout parent, View child, int offsetDelta, long duration) {
+    protected void animateOffsetDeltaWithDuration(CoordinatorLayout parent, View child, int offsetDelta, long duration) {
         if (offsetDelta == 0)
             return;
         animateOffsetWithDuration(parent, child, getTopAndBottomOffset() + offsetDelta, duration);
     }
 
-    public void animateOffsetWithDuration(CoordinatorLayout parent, View child, int offset, long duration) {
+    protected void animateOffsetWithDuration(CoordinatorLayout parent, View child, int offset, long duration) {
         int current = getTopAndBottomOffset();
         if (offset == current) {
             // No need to change offset.
@@ -147,7 +146,7 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
                 if (!offsetChanged) {
                     parent.dispatchDependentViewsChanged(child);
                 }
-                for (ScrollListener l : mListeners) {
+                for (ScrollingListener l : mListeners) {
                     l.onScroll(getParent(), getChild(), progressBase + value, offset, (int) maxOffset, false);
                 }
             }
@@ -167,13 +166,13 @@ public abstract class AnimationOffsetBehavior<V extends View> extends ViewOffset
         return mChild;
     }
 
-    protected void addScrollListener(ScrollListener listener) {
+    protected void addScrollListener(ScrollingListener listener) {
         if (null == listener)
             return;
         mListeners.add(listener);
     }
 
-    protected void removeScrollListener(ScrollListener listener) {
+    protected void removeScrollListener(ScrollingListener listener) {
         if (null == listener) {
             return;
         }

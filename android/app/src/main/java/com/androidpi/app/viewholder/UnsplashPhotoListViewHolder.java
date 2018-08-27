@@ -5,18 +5,19 @@ import android.view.View;
 import com.androidpi.app.R;
 import com.androidpi.app.base.ui.BaseViewHolder;
 import com.androidpi.app.base.ui.BindLayout;
-import com.androidpi.app.databinding.ViewHolderUnsplashImageBinding;
+import com.androidpi.app.databinding.ViewHolderUnsplashPhotoListBinding;
 import com.androidpi.common.image.glide.GlideApp;
 import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 /**
  * Created by jastrelax on 2018/8/22.
  */
-@BindLayout(value = R.layout.view_holder_unsplash_image, dataTypes = ResUnsplashPhoto.class)
-public class UnsplashImageViewHolder extends BaseViewHolder<ViewHolderUnsplashImageBinding> {
+@BindLayout(value = R.layout.view_holder_unsplash_photo_list, dataTypes = ResUnsplashPhoto.class)
+public class UnsplashPhotoListViewHolder extends BaseViewHolder<ViewHolderUnsplashPhotoListBinding> {
 
-    public UnsplashImageViewHolder(View itemView) {
+    public UnsplashPhotoListViewHolder(View itemView) {
         super(itemView);
+        setIsRecyclable(false);
     }
 
     @Override
@@ -28,7 +29,7 @@ public class UnsplashImageViewHolder extends BaseViewHolder<ViewHolderUnsplashIm
                     .load(resUnsplashPhoto.getUser().getProfileImage().getSmall())
                     .into(binding.ivProfile);
             GlideApp.with(itemView)
-                    .load(resUnsplashPhoto.getUrls().getRegular())
+                    .load(resUnsplashPhoto.getUrls().getSmall())
                     .into(binding.ivImage);
         }
     }

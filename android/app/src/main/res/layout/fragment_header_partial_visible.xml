@@ -5,20 +5,26 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/bg_dark">
 
-        <com.androidpi.app.widget.ImagePagerHeaderView
-            android:id="@+id/image_pager_header"
+        <ImageView
+            android:id="@+id/iv_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/lr_refresh_header_behavior"
+            android:src="@mipmap/photo3"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             app:lr_headerMode="follow"
-            app:lr_visibleHeightRatio="100%"/>
+            app:lr_visibleHeightRatio="80%"
+            app:lr_maxOffsetRatio="120%p"/>
 
         <FrameLayout
             android:id="@+id/view_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:lr_minOffset="-10dp"
             app:layout_behavior="@string/lr_refresh_content_behavior">
 
             <fragment

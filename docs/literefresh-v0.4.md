@@ -15,6 +15,13 @@ date: 2018-08-24 19:07:17 +0800
 
 为此将实现的部分的滑动转态转移和控制职责抽象为专门的Controller。
 
+目前的继承层级：
+                                    ViewOffsetBehavior
+                                AnimationOffsetBehavior
+    ScrollingContentBehavior                    VerticalIndicatorBehavior
+RefreshContentBehavior              RefreshHeaderBehavior           RefreshFooterBehavior
+
+
 ## Behavior的状态设计
 目前采用如下接口监听原始的滑动事件，其中接口传递的是经过坐标系变换后的偏移量。需要注意onStopScroll仅表示滑动触摸操作的结束，可能对应TouchEvent.UP事件，但不表明滑动的结束，随后可能使用延时的动画来更新视图：
 ```java
@@ -36,9 +43,12 @@ date: 2018-08-24 19:07:17 +0800
 
 根据监听到的滑动事件进行状态转移的设计，目前一个完整的刷新状态集合如下：
 ```java
-    private static final int STATE_IDEL = 0;        // 初始状态
-    private static final int STATE_START = 1;       // 开始刷新，发生触摸事件
-    private static final int STATE_READY = 2;       // 达到刷新触发条件
-    private static final int STATE_REFRESH = 3;     // 正在刷新
-    private static final int STATE_COMPLETE = 4;    // 刷新结束
+    static final int STATE_IDLE = 0;                     // 初始状态
+    static final int STATE_START = 1;                    // 开始
+    static final int STATE_READY = 2;                    // 准备
+    static final int STATE_CANCELLED = 3;                // 取消
+    static final int STATE_CANCELLED_RESET = 4;          // 取消并重置
+    static final int STATE_REFRESH = 5;                  // 刷新
+    static final int STATE_REFRESH_RESET = 6;            // 刷新中并重置
+    static final int STATE_COMPLETE = 7;                 // 完成
 ```

@@ -41,7 +41,7 @@
                 android:background="@android:color/white"
                 tools:listitem="@layout/view_holder_news" />
 
-            <com.androidpi.app.widget.PullDownHeaderView
+            <com.androidpi.app.widget.ScrollDownHeaderView
                 android:id="@+id/scroll_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

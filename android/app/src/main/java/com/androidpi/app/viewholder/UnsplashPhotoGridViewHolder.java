@@ -5,17 +5,17 @@ import android.view.View;
 import com.androidpi.app.R;
 import com.androidpi.app.base.ui.BaseViewHolder;
 import com.androidpi.app.base.ui.BindLayout;
-import com.androidpi.app.databinding.ViewHolderUnsplashPhotoBinding;
+import com.androidpi.app.databinding.ViewHolderUnsplashPhotoGridBinding;
 import com.androidpi.common.image.glide.GlideApp;
 import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 /**
  * Created by jastrelax on 2018/8/13.
  */
-@BindLayout(value = R.layout.view_holder_unsplash_photo, dataTypes = ResUnsplashPhoto.class)
-public class UnsplashPhotoViewHolder extends BaseViewHolder<ViewHolderUnsplashPhotoBinding> {
+@BindLayout(value = R.layout.view_holder_unsplash_photo_grid, dataTypes = ResUnsplashPhoto.class)
+public class UnsplashPhotoGridViewHolder extends BaseViewHolder<ViewHolderUnsplashPhotoGridBinding> {
 
-    public UnsplashPhotoViewHolder(View itemView) {
+    public UnsplashPhotoGridViewHolder(View itemView) {
         super(itemView);
     }
 

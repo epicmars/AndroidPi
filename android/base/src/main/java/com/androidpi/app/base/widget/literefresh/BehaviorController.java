@@ -13,22 +13,22 @@ import timber.log.Timber;
 /**
  * Created by jastrelax on 2018/8/24.
  */
-public class BehaviorController<T extends AnimationOffsetBehavior> implements AnimationOffsetBehavior.ScrollListener, Loader {
+public class BehaviorController<B extends AnimationOffsetBehavior> implements AnimationOffsetBehavior.ScrollingListener, Loader {
 
-    protected BehaviorController delegate;
-    protected T behavior;
-    protected List<OnPullListener> mPullListeners = new ArrayList<>();
+    protected BehaviorController proxy;
+    protected B behavior;
+    protected List<OnScrollListener> mPullListeners = new ArrayList<>();
     protected List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     protected List<OnLoadListener> mLoadListeners = new ArrayList<>();
 
-    public BehaviorController(T behavior) {
+    public BehaviorController(B behavior) {
         this.behavior = behavior;
     }
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch) {
-        for (OnPullListener l : mPullListeners) {
-            l.onStartPulling(max, isTouch);
+        for (OnScrollListener l : mPullListeners) {
+            l.onStartScroll(max, isTouch);
         }
     }
 
@@ -39,22 +39,22 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
-        for (OnPullListener l : mPullListeners) {
-            l.onPulling(current, delta, max, isTouch);
+        for (OnScrollListener l : mPullListeners) {
+            l.onScroll(current, delta, max, isTouch);
         }
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
-        for (OnPullListener l : mPullListeners) {
-            l.onStopPulling(current, max);
+        for (OnScrollListener l : mPullListeners) {
+            l.onStopScroll(current, max);
         }
     }
 
     @Override
     public void refresh() {
         Timber.d("refresh");
-        if (delegate == null) {
+        if (proxy == null) {
             runWithView(new Runnable() {
                 @Override
                 public void run() {
@@ -65,10 +65,10 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
             runWithView(new Runnable() {
                 @Override
                 public void run() {
-                    if (delegate != null) {
+                    if (proxy != null) {
                         Timber.d("do refresh");
                         copyRemainListeners();
-                        delegate.refresh();
+                        proxy.refresh();
                     }
                 }
             });
@@ -80,8 +80,8 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
         runWithView(new Runnable() {
             @Override
             public void run() {
-                if (delegate != null) {
-                    delegate.refreshComplete();
+                if (proxy != null) {
+                    proxy.refreshComplete();
                 }
             }
         });
@@ -92,8 +92,8 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
         runWithView(new Runnable() {
             @Override
             public void run() {
-                if (delegate != null) {
-                    delegate.refreshError(exception);
+                if (proxy != null) {
+                    proxy.refreshError(exception);
                 }
             }
         });
@@ -101,7 +101,7 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
 
     @Override
     public void load() {
-        if (delegate == null) {
+        if (proxy == null) {
             runWithView(new Runnable() {
                 @Override
                 public void run() {
@@ -110,9 +110,9 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
             });
         } else {
             runWithView(() -> {
-                if (delegate != null) {
+                if (proxy != null) {
                     copyRemainListeners();
-                    delegate.load();
+                    proxy.load();
                 }
             });
         }
@@ -121,8 +121,8 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
     @Override
     public void loadComplete() {
         runWithView(() -> {
-            if (delegate != null) {
-                delegate.loadComplete();
+            if (proxy != null) {
+                proxy.loadComplete();
             }
         });
     }
@@ -130,19 +130,19 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
     @Override
     public void loadError(Exception exception) {
         runWithView(() -> {
-            if (delegate != null) {
-                delegate.loadError(exception);
+            if (proxy != null) {
+                proxy.loadError(exception);
             }
         });
     }
 
-    public BehaviorController getDelegate() {
-        return delegate;
+    public BehaviorController getProxy() {
+        return proxy;
     }
 
-    public void setDelegate(BehaviorController delegate) {
-        this.delegate = delegate;
-        if (delegate != null) {
+    public void setProxy(BehaviorController proxy) {
+        this.proxy = proxy;
+        if (proxy != null) {
             copyRemainListeners();
             behavior.executePendingActions();
         }
@@ -151,26 +151,26 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
     public void copyRemainListeners() {
         Iterator<OnRefreshListener> iterator = mRefreshListeners.iterator();
         while (iterator.hasNext()) {
-            delegate.addOnRefreshListener(iterator.next());
+            proxy.addOnRefreshListener(iterator.next());
             iterator.remove();
         }
 
         Iterator<OnLoadListener> loadListenerIterator = mLoadListeners.iterator();
         while (loadListenerIterator.hasNext()) {
-            delegate.addOnLoadListener(loadListenerIterator.next());
+            proxy.addOnLoadListener(loadListenerIterator.next());
             loadListenerIterator.remove();
         }
     }
 
-    public T getBehavior() {
+    public B getBehavior() {
         return behavior;
     }
 
-    public void setBehavior(T behavior) {
+    public void setBehavior(B behavior) {
         this.behavior = behavior;
     }
 
-    public void addOnPullingListener(OnPullListener listener) {
+    public void addOnPullingListener(OnScrollListener listener) {
         if (null == listener)
             return;
         mPullListeners.add(listener);
@@ -183,8 +183,8 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
         runWithView(new Runnable() {
             @Override
             public void run() {
-                if (delegate != null) {
-                    delegate.addOnRefreshListener(listener);
+                if (proxy != null) {
+                    proxy.addOnRefreshListener(listener);
                 } else {
                     mRefreshListeners.add(listener);
                 }
@@ -199,8 +199,8 @@ public class BehaviorController<T extends AnimationOffsetBehavior> implements An
         runWithView(new Runnable() {
             @Override
             public void run() {
-                if (delegate != null) {
-                    delegate.addOnLoadListener(listener);
+                if (proxy != null) {
+                    proxy.addOnLoadListener(listener);
                 } else {
                     mLoadListeners.add(listener);
                 }

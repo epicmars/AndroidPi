@@ -111,18 +111,18 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         //
         val headerParams = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
         val headerBehavior = RefreshHeaderBehavior<View>(context)
-        headerBehavior.addOnPullingListener(object : OnPullListener {
+        headerBehavior.addOnScrollListener(object : OnScrollListener {
 
-            override fun onStartPulling(max: Int, isTouch: Boolean) {
+            override fun onStartScroll(max: Int, isTouch: Boolean) {
                 binding.headerProgress.visibility = View.VISIBLE
                 binding.headerProgress.max = max
             }
 
-            override fun onPulling(current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            override fun onScroll(current: Int, delta: Int, max: Int, isTouch: Boolean) {
                 binding.headerProgress.progress = current
             }
 
-            override fun onStopPulling(current: Int, max: Int) {
+            override fun onStopScroll(current: Int, max: Int) {
                 binding.headerProgress.progress = current
             }
 
@@ -167,15 +167,15 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         })
 
 
-        footerBehavior.addOnPullingListener(object : OnPullListener {
-            override fun onPulling(current: Int, delta: Int, max: Int, isTouch: Boolean) {
+        footerBehavior.addOnScrollListener(object : OnScrollListener {
+            override fun onScroll(current: Int, delta: Int, max: Int, isTouch: Boolean) {
             }
 
-            override fun onStartPulling(max: Int, isTouch: Boolean) {
+            override fun onStartScroll(max: Int, isTouch: Boolean) {
 
             }
 
-            override fun onStopPulling(current: Int, max: Int) {
+            override fun onStopScroll(current: Int, max: Int) {
             }
         })
 
@@ -187,17 +187,17 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         val contentBehavior = RefreshContentBehavior<View>(context)
         contentParams.behavior = contentBehavior
 
-        contentBehavior.addOnPullingListener(object : OnPullListener {
-            override fun onStartPulling(max: Int, isTouch: Boolean) {
+        contentBehavior.addOnScrollListener(object : OnScrollListener {
+            override fun onStartScroll(max: Int, isTouch: Boolean) {
                 binding.contentProgress.visibility = View.VISIBLE
                 binding.contentProgress.max = max
             }
 
-            override fun onPulling(current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            override fun onScroll(current: Int, delta: Int, max: Int, isTouch: Boolean) {
                 binding.contentProgress.progress = current
             }
 
-            override fun onStopPulling(current: Int, max: Int) {
+            override fun onStopScroll(current: Int, max: Int) {
                 binding.contentProgress.progress = current
             }
         })

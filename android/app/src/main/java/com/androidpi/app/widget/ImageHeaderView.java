@@ -39,14 +39,14 @@ public class ImageHeaderView extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onStartPulling(int max, boolean isTouch) {
+    public void onStartScroll(int max, boolean isTouch) {
         if (isTouch) {
             launched = false;
         }
     }
 
     @Override
-    public void onPulling(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(int current, int delta, int max, boolean isTouch) {
         if (!isTouch || data == null || launched) return;
         if ((current /(float) max) >= 1f) {
             String sharedElementName = getResources().getString(R.string.transition_header);
@@ -62,7 +62,7 @@ public class ImageHeaderView extends RefreshHeaderLayout {
     }
 
     @Override
-    public void onStopPulling(int current, int max) {
+    public void onStopScroll(int current, int max) {
     }
 
     public void setUrl(String url) {

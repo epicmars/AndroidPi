@@ -5,14 +5,13 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.androidpi.app.base.widget.literefresh.OnPullListener;
-import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
+import com.androidpi.app.base.widget.literefresh.OnScrollListener;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 
 /**
  * Created by jastrelax on 2018/8/19.
  */
-public abstract class RefreshHeaderLayout extends FrameLayout implements OnPullListener {
+public abstract class RefreshHeaderLayout extends FrameLayout implements OnScrollListener {
 
     public RefreshHeaderLayout(Context context) {
         this(context, null);
@@ -36,7 +35,7 @@ public abstract class RefreshHeaderLayout extends FrameLayout implements OnPullL
                 behavior = new RefreshHeaderBehavior(getContext());
                 params.setBehavior(behavior);
             }
-            behavior.addOnPullingListener(this);
+            behavior.addOnScrollListener(this);
         } catch (Exception e) {
 
         }

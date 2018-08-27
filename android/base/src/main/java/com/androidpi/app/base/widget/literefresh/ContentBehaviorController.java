@@ -7,14 +7,12 @@ import android.view.View;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import timber.log.Timber;
-
 import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.*;
 
 /**
  * Created by jastrelax on 2018/8/24.
  */
-public class ContentBehaviorController extends BehaviorController<ContentBehavior> implements OnRefreshListener, OnLoadListener {
+public class ContentBehaviorController extends BehaviorController<ScrollingContentBehavior> implements OnRefreshListener, OnLoadListener {
 
     private static final long HOLD_ON_DURATION = 500L;
     private static final long SHOW_DURATION = 300L;
@@ -139,8 +137,7 @@ public class ContentBehaviorController extends BehaviorController<ContentBehavio
         }
     };
 
-
-    public ContentBehaviorController(ContentBehavior behavior) {
+    public ContentBehaviorController(ScrollingContentBehavior behavior) {
         super(behavior);
     }
 

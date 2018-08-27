@@ -44,7 +44,7 @@ public class ImagePagerHeaderView extends ScalableHeaderLayout {
 
     public class ImagePagerAdapter extends FragmentPagerAdapter {
 
-        private final int[] images = new int[]{R.mipmap.image1, R.mipmap.image2, R.mipmap.image3};
+        private final int[] images = new int[]{R.mipmap.photo1, R.mipmap.photo2, R.mipmap.photo3};
 
         public ImagePagerAdapter(FragmentManager fm) {
             super(fm);

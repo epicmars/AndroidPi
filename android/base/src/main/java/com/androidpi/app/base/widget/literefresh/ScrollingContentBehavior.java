@@ -25,7 +25,7 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * <p>
  * Created by jastrelax on 2018/8/21.
  */
-public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> {
+public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBehavior<V, ContentBehaviorController> {
 
     /**
      * Minimum top and bottom offset of content view.
@@ -37,7 +37,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
      */
     protected float minOffsetRatio;
 
-    private float minOffsetOfParent;
+    private float minOffsetRatioOfParent;
 
     /**
      * If set to true, default minimum offset will be {@link #headerVisibleHeight}.
@@ -78,22 +78,30 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         addScrollListener(controller);
     }
 
-    public ContentBehavior() {
+    public ScrollingContentBehavior() {
 
     }
 
-    public ContentBehavior(Context context) {
+    public ScrollingContentBehavior(Context context) {
         super(context);
     }
 
-    public ContentBehavior(Context context, AttributeSet attrs) {
+    public ScrollingContentBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ContentBehavior, 0, 0);
-        useDefaultMinOffset = a.getBoolean(R.styleable.ContentBehavior_lr_useDefaultMinOffset, false);
-        minOffset = a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_minOffset, 0);
-        defaultMinOffset = minOffset;
-        if (a.hasValue(R.styleable.ContentBehavior_lr_minOffsetRatio)) {
+        boolean hasMinOffset = a.hasValue(R.styleable.ContentBehavior_lr_minOffset);
+        if (hasMinOffset) {
+            minOffset = a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_minOffset, 0);
+            defaultMinOffset = minOffset;
+        }
+
+        boolean hasMinOffsetRatio = a.hasValue(R.styleable.ContentBehavior_lr_minOffsetRatio);
+        if (hasMinOffsetRatio) {
             minOffsetRatio = a.getFraction(R.styleable.ContentBehavior_lr_minOffsetRatio, 1, 1, 0f);
+            minOffsetRatioOfParent = a.getFraction(R.styleable.ContentBehavior_lr_minOffsetRatio, 1, 2, 0f);
+        }
+        if (!hasMinOffset && !hasMinOffsetRatio) {
+            useDefaultMinOffset = true;
         }
         a.recycle();
     }
@@ -102,15 +110,21 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (isFirstLayout || layoutNow) {
+            layoutNow = false;
             if (isFirstLayout) {
                 // Compute max offset, it will not exceed parent height.
-                maxOffset = Math.max(maxOffset, maxOffsetRatio * parent.getHeight());
                 footerMaxOffset = (int) ((1 - GOLDEN_RATIO) * parent.getHeight());
+
+                if (!useDefaultMinOffset) {
+                    minOffset = (int) Math.max(minOffset, minOffsetRatioOfParent > minOffsetRatio ? minOffsetRatio * parent.getHeight() : minOffsetRatio * child.getHeight());
+                    defaultMinOffset = minOffset;
+                } else {
+                    maxOffset = Math.max(maxOffset, GOLDEN_RATIO * parent.getHeight());
+                }
             }
             cancelAnimation();
             setTopAndBottomOffset(headerVisibleHeight);
             isFirstLayout = false;
-            layoutNow = false;
         }
         return handled;
     }
@@ -119,7 +133,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
         boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (start) {
-            for (ScrollListener l : mListeners) {
+            for (ScrollingListener l : mListeners) {
                 l.onStartScroll(coordinatorLayout, child, (int) maxOffset, type == TYPE_TOUCH);
             }
         }
@@ -151,7 +165,6 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         // If there is unconsumed pixels.
-        // todo: For now only care about human touch.
         if (dyUnconsumed < 0) {
             // Scrolling down.
             // If top position of child can not scroll exceed maximum offset.
@@ -195,7 +208,7 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
 
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
-        for (ScrollListener l : mListeners) {
+        for (ScrollingListener l : mListeners) {
             l.onStopScroll(coordinatorLayout, child, getTopAndBottomOffset(), (int) maxOffset, type == TYPE_TOUCH);
         }
     }
@@ -204,18 +217,18 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
      *
      * @param coordinatorLayout
      * @param child
-     * @param offset
+     * @param offsetDelta
      * @param type
      * @param consumeRawOffset consume raw offset or not, eg. for a smooth fling action we may not just keep it.
      * @return
      */
-    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offset, int type, boolean consumeRawOffset) {
+    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offsetDelta, int type, boolean consumeRawOffset) {
         int currentOffset = getTopAndBottomOffset();
         // Before child consume the offset.
-        for (ScrollListener l : mListeners) {
+        for (ScrollingListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, currentOffset, (int) maxOffset, type == TYPE_TOUCH);
         }
-        float consumed = consumeRawOffset ? offset : onConsumeOffset(currentOffset, coordinatorLayout.getHeight(), offset);
+        float consumed = consumeRawOffset ? offsetDelta : onConsumeOffset(currentOffset, (int) maxOffset, offsetDelta);
         currentOffset = Math.round(currentOffset + consumed);
         setTopAndBottomOffset(currentOffset);
         // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
@@ -223,14 +236,14 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         // unchanged while it's offset has changed. In this case CoordinatorLayout will not call onDependentViewChanged().
         // So We need to call onDependentViewChanged() manually.
         coordinatorLayout.dispatchDependentViewsChanged(child);
-        for (ScrollListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, currentOffset, offset, (int) maxOffset, type == TYPE_TOUCH);
+        for (ScrollingListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, currentOffset, offsetDelta, (int) maxOffset, type == TYPE_TOUCH);
         }
         return currentOffset;
     }
 
-    protected float onConsumeOffset(int current, int parentHeight, int offset) {
-        return offset;
+    protected float onConsumeOffset(int current, int max, int delta) {
+        return delta;
     }
 
     /**
@@ -295,8 +308,6 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
     }
 
     void setMinOffset(int minOffset) {
-        // todo: set to be minimum of defaultMinOffset and minOffset
-        // this.minOffset = minOffset > defaultMinOffset ? defaultMinOffset : minOffset;
         this.minOffset = minOffset;
     }
 
@@ -334,10 +345,6 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
 
     public void setHeaderVisibleHeight(int headerVisibleHeight) {
         this.headerVisibleHeight = headerVisibleHeight;
-        if (useDefaultMinOffset) {
-            this.minOffset = headerVisibleHeight;
-            this.defaultMinOffset = minOffset;
-        }
         runWithView(new Runnable() {
             @Override
             public void run() {
@@ -347,7 +354,6 @@ public class ContentBehavior<V extends View> extends AnimationOffsetBehavior<V> 
         });
     }
 
-    // todo: set default header visible height
     int getHeaderReadyRefreshHeight() {
         return headerVisibleHeight;
     }

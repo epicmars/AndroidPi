@@ -42,6 +42,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_profile"
-            tools:src="@mipmap/image2" />
+            tools:src="@mipmap/photo2" />
     </android.support.constraint.ConstraintLayout>
 </layout>

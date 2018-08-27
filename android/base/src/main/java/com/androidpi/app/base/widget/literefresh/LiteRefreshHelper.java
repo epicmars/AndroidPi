@@ -24,19 +24,19 @@ public class LiteRefreshHelper {
             return null;
         }
     }
-
-    @Nullable
-    public static ContentBehavior getContentBehavior(View view) {
-        return getAttachedBehavior(view);
-    }
-
-    @Nullable
-    public static HeaderBehavior getHeaderBehavior(View view) {
-        return getAttachedBehavior(view);
-    }
-
-    @Nullable
-    public static FooterBehavior getFooterBehavior(View view) {
-        return getAttachedBehavior(view);
-    }
+//
+//    @Nullable
+//    public static ContentBehavior getContentBehavior(View view) {
+//        return getAttachedBehavior(view);
+//    }
+//
+//    @Nullable
+//    public static HeaderBehavior getHeaderBehavior(View view) {
+//        return getAttachedBehavior(view);
+//    }
+//
+//    @Nullable
+//    public static FooterBehavior getFooterBehavior(View view) {
+//        return getAttachedBehavior(view);
+//    }
 }
