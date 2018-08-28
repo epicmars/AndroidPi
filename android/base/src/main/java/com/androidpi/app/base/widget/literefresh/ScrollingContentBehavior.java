@@ -19,9 +19,7 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  * It's attach to the nested scrolling target view, such as {@link android.support.v4.widget.NestedScrollView},
  * {@link android.support.v7.widget.RecyclerView} which implement {@link android.support.v4.view.NestedScrollingChild}.
  * <p>
- * <p>
  * View with this behavior must be a direct child of {@link CoordinatorLayout}.
- * <p>
  * <p>
  * Created by jastrelax on 2018/8/21.
  */
@@ -102,6 +100,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         }
         if (!hasMinOffset && !hasMinOffsetRatio) {
             useDefaultMinOffset = true;
+        }
+        if (a.hasValue(R.styleable.ContentBehavior_lr_headerVisibleHeight)) {
+            headerVisibleHeight = a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_headerVisibleHeight, 0);
         }
         a.recycle();
     }

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.androidpi.app.R;
 import com.androidpi.app.activity.TemplateActivity;
-import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 import com.androidpi.app.fragment.FragmentFactory;
 import com.androidpi.app.fragment.ImageFragment;
 import com.androidpi.common.image.glide.GlideApp;
@@ -18,7 +18,7 @@ import com.androidpi.common.image.glide.GlideApp;
 /**
  * Created by jastrelax on 2018/8/19.
  */
-public class ImageHeaderView extends RefreshHeaderLayout {
+public class ImageHeaderView extends ScrollingHeaderLayout {
 
     private Bundle data;
     private ImageView ivImage;

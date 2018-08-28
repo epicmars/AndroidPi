@@ -90,6 +90,7 @@ dependencies {
     // circle image view
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
+    implementation 'jp.wasabeef:blurry:2.1.1'
 
     implementation project(':appBuiness')
     implementation project(':base')

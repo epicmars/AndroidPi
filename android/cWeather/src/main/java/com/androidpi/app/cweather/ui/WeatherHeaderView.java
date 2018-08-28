@@ -8,13 +8,13 @@ import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
-import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 import com.androidpi.app.cweather.R;
 
 /**
  * Created by jastrelax on 2018/8/18.
  */
-public class WeatherHeaderView extends RefreshHeaderLayout implements OnRefreshListener{
+public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefreshListener{
 
     private LoadingView loadingView;
     private float offset;

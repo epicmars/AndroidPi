@@ -11,17 +11,17 @@ import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 /**
  * Created by jastrelax on 2018/8/19.
  */
-public abstract class RefreshHeaderLayout extends FrameLayout implements OnScrollListener {
+public abstract class ScrollingHeaderLayout extends FrameLayout implements OnScrollListener {
 
-    public RefreshHeaderLayout(Context context) {
+    public ScrollingHeaderLayout(Context context) {
         this(context, null);
     }
 
-    public RefreshHeaderLayout(Context context, AttributeSet attrs) {
+    public ScrollingHeaderLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RefreshHeaderLayout(Context context, AttributeSet attrs, int defStyle) {
+    public ScrollingHeaderLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

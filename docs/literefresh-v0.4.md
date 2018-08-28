@@ -5,11 +5,11 @@ date: 2018-08-24 19:07:17 +0800
 ## 模式设计
 目前的做法使用继承来完成滑动的暴露和刷新状态的转换，然后Behavior子类，实现并设置改监听器，然后再根据监听器传入的值向外暴露出滑动距离，并根据一个状态机的转换规则暴露刷新状态，同时向外暴露一个Refresher作为状态的控制器。
 
-                                        ViewOffsetBehavior
-                                        AnimationOffsetBehavior
-                                                   VerticalBoundaryBehavior
-        ContentBehavior                      HeaderBehavior            FooterBehavior
-    RefreshContentBehavior              RefreshHeaderBehavior      RefreshFooterBehavior
+                                   ViewOffsetBehavior
+                                AnimationOffsetBehavior
+                                                VerticalBoundaryBehavior
+        ContentBehavior                   HeaderBehavior            FooterBehavior
+    RefreshContentBehavior            RefreshHeaderBehavior      RefreshFooterBehavior
 
 这个继承结构导致类型大量产生，通过分别对ContentBehavior,HeaderBehavior,FooterBehavior进行继承，目前RefreshContentBehavior，RefreshHeaderBehavior，RefreshFooterBehavior主要作用是通过监听器暴露滑动状态和刷新状态，以及作为控制器。这说明这部分职责可以考虑使用桥接的方式抽象到另一个层级，即和它们的父类一个层级。这样可以改用组合的方式在运行时改变其暴露出的行为，这样还可以将部分原来写死在Behavior中与滑动相关性不大的逻辑也让其负责，如行为模式的配置与变化。
 

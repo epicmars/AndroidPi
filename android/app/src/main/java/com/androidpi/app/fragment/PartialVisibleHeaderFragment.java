@@ -11,7 +11,7 @@ import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
-import com.androidpi.app.databinding.FragmentHeaderPartialVisibleBinding;
+import com.androidpi.app.databinding.FragmentPartialVisibleHeaderBinding;
 import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 import java.util.List;
@@ -19,8 +19,8 @@ import java.util.List;
 /**
  * Created by jastrelax on 2018/8/26.
  */
-@BindLayout(R.layout.fragment_header_partial_visible)
-public class HeaderPartialVisibleFragment extends BaseFragment<FragmentHeaderPartialVisibleBinding>{
+@BindLayout(R.layout.fragment_partial_visible_header)
+public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVisibleHeaderBinding>{
 
     UnsplashViewModel unsplashViewModel;
     UnsplashPhotoListFragment photoListFragment;

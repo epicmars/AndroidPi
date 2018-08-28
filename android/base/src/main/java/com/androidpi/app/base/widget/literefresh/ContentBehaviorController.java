@@ -7,6 +7,8 @@ import android.view.View;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import timber.log.Timber;
+
 import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.*;
 
 /**
@@ -41,7 +43,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public void onStateChanged(int state) {
-//            Timber.d("footer state: %d", state);
+            Timber.d("footer state: %d", state);
             switch (state) {
                 case STATE_START:
                     onLoadStart();
@@ -96,7 +98,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public void onStateChanged(int state) {
-//            Timber.d("header state: %d", state);
+            Timber.d("header state: %d", state);
             switch (state) {
                 case STATE_START:
                     onRefreshStart();

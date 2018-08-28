@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.androidpi.app.widget.NestedScrollPhotoListView
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_green_light"
+            app:layout_behavior="@string/lr_refresh_content_behavior">
+        </com.androidpi.app.widget.NestedScrollPhotoListView>
+
+        <com.androidpi.app.widget.ScalableHeaderLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:lr_visibleHeightRatio="100%"
+            app:lr_headerMode="follow_up"
+            app:layout_behavior="@string/lr_refresh_header_behavior">
+
+            <com.androidpi.app.widget.ProfileHeaderView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.androidpi.app.widget.ScalableHeaderLayout>
+
+        <View
+            android:id="@+id/view_footer"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/colorPrimary"
+            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

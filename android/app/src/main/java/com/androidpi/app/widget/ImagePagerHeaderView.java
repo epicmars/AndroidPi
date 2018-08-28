@@ -34,7 +34,7 @@ public class ImagePagerHeaderView extends ScalableHeaderLayout {
 
     public ImagePagerHeaderView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.image_pager_view, this);
+        inflate(context, R.layout.view_image_pager, this);
         viewPager = findViewById(R.id.view_pager);
     }
 

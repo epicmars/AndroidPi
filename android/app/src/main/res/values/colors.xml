@@ -10,4 +10,6 @@
 
     <color name="text_gray">#808080</color>
     <color name="bg_dark">#232333</color>
+    <color name="translucent_black">#88000000</color>
+    <color name="black">#000000</color>
 </resources>

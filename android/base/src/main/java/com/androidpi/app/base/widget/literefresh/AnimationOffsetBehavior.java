@@ -120,15 +120,13 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
     }
 
     protected void animateOffsetDeltaWithDuration(CoordinatorLayout parent, View child, int offsetDelta, long duration) {
-        if (offsetDelta == 0)
-            return;
         animateOffsetWithDuration(parent, child, getTopAndBottomOffset() + offsetDelta, duration);
     }
 
     protected void animateOffsetWithDuration(CoordinatorLayout parent, View child, int offset, long duration) {
         int current = getTopAndBottomOffset();
+        // No need to change offset.
         if (offset == current) {
-            // No need to change offset.
             if (offsetAnimator != null && offsetAnimator.isRunning()) {
                 offsetAnimator.cancel();
             }
@@ -144,6 +142,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
             public void onAnimationUpdate(int value) {
                 boolean offsetChanged = setTopAndBottomOffset(value);
                 if (!offsetChanged) {
+                    //
                     parent.dispatchDependentViewsChanged(child);
                 }
                 for (ScrollingListener l : mListeners) {

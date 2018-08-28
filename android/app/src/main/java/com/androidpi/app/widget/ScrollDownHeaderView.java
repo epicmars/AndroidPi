@@ -14,13 +14,13 @@ import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
-import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 
 /**
  * Created by jastrelax on 2017/11/21.
  */
 
-public class ScrollDownHeaderView extends RefreshHeaderLayout implements OnRefreshListener{
+public class ScrollDownHeaderView extends ScrollingHeaderLayout implements OnRefreshListener{
 
     private TextView mTvState;
     private LoadingView loadingView;
@@ -39,7 +39,7 @@ public class ScrollDownHeaderView extends RefreshHeaderLayout implements OnRefre
 
     public ScrollDownHeaderView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.pull_down_header, this);
+        inflate(context, R.layout.view_scrolling_down_header, this);
 
         mTvState = findViewById(R.id.tv_state);
         ivArrow = findViewById(R.id.iv_arrow);

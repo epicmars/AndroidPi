@@ -1,6 +1,8 @@
 package com.androidpi.app.fragment;
 
 import android.arch.lifecycle.Observer;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +16,7 @@ import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
 import com.androidpi.app.base.widget.literefresh.OnScrollListener;
 import com.androidpi.app.base.widget.literefresh.RefreshContentBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
-import com.androidpi.app.databinding.FragmentImagePagerBinding;
+import com.androidpi.app.databinding.FragmentFadingHeaderBinding;
 import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 import java.util.List;
@@ -22,15 +24,15 @@ import java.util.List;
 /**
  * Created by jastrelax on 2018/8/13.
  */
-@BindLayout(value = R.layout.fragment_image_pager)
-public class ImagePagerFragment extends BaseFragment<FragmentImagePagerBinding> {
+@BindLayout(value = R.layout.fragment_fading_header)
+public class FadingHeaderFragment extends BaseFragment<FragmentFadingHeaderBinding> {
 
     UnsplashViewModel unsplashViewModel;
     UnsplashPhotoListFragment listFragment;
 
-    public static ImagePagerFragment newInstance() {
+    public static FadingHeaderFragment newInstance() {
         Bundle args = new Bundle();
-        ImagePagerFragment fragment = new ImagePagerFragment();
+        FadingHeaderFragment fragment = new FadingHeaderFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,6 +63,9 @@ public class ImagePagerFragment extends BaseFragment<FragmentImagePagerBinding> 
         RefreshContentBehavior behavior = LiteRefreshHelper.getAttachedBehavior(binding.viewContent);
         if (behavior != null) {
             behavior.addOnScrollListener(new OnScrollListener() {
+
+                ColorDrawable drawable = new ColorDrawable(Color.BLACK);
+
                 @Override
                 public void onStartScroll(int max, boolean isTouch) {
 
@@ -69,8 +74,11 @@ public class ImagePagerFragment extends BaseFragment<FragmentImagePagerBinding> 
                 @Override
                 public void onScroll(int current, int delta, int max, boolean isTouch) {
                     if (current <= binding.imagePagerHeader.getHeight()) {
-                        int y = binding.imagePagerHeader.getHeight() - current;
+                        float y = binding.imagePagerHeader.getHeight() - current;
                         binding.imagePagerHeader.setTranslationY(y / 2);
+                        float alpha = 1 - (float) current / binding.imagePagerHeader.getHeight();
+                        drawable.setAlpha((int) (alpha * 196));
+                        binding.imagePagerHeader.setForeground(drawable);
                     }
                 }
 

@@ -11,14 +11,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/lr_refresh_header_behavior"
-            app:lr_visibleHeightRatio="80%">
+            app:lr_visibleHeightRatio="100%"
+            app:lr_maxOffsetRatio="100%p">
         </com.androidpi.app.widget.ImagePagerHeaderView>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
             android:paddingTop="24dp"
             app:layout_behavior="@string/lr_refresh_content_behavior"
             app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
@@ -27,6 +27,7 @@
         </android.support.v7.widget.RecyclerView>
 
         <View
+            android:id="@+id/view_footer"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:background="@color/colorAccent"
