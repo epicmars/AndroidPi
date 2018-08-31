@@ -5,6 +5,7 @@
         <attr name="lr_maxOffsetRatio" format="reference|fraction"/>
         <attr name="lr_visibleHeight" format="reference|dimension"/>
         <attr name="lr_visibleHeightRatio" format="reference|fraction"/>
+        <attr name="lr_refreshTriggerRange" format="reference|dimension"/>
     </declare-styleable>
 
     <declare-styleable name="HeaderBehavior">

@@ -10,12 +10,11 @@
             android:layout_height="wrap_content"
             app:lr_visibleHeightRatio="100%"
             app:lr_headerMode="still"
+            app:lr_maxOffsetRatio="100%p"
             app:layout_behavior="@string/lr_refresh_header_behavior">
-
             <com.androidpi.app.widget.ProfileHeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
         </com.androidpi.app.widget.ScalableHeaderLayout>
 
         <com.androidpi.app.widget.NestedScrollPhotoListView
@@ -32,6 +31,5 @@
             android:layout_height="100dp"
             android:background="@color/colorPrimary"
             app:layout_behavior="@string/lr_refresh_footer_behavior" />
-
     </android.support.design.widget.CoordinatorLayout>
 </layout>

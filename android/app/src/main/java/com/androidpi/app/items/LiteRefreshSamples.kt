@@ -13,14 +13,15 @@ object LiteRefreshSamples {
         init {
             add(LiteRefreshSample("News", "A news feed.", NewsFragment::class.java))
             add(LiteRefreshSample("Unsplash", "An gallery of photos from unsplash.", UnsplashFragment::class.java))
-            add(LiteRefreshSample("Partial visible list.", "List with a partial visible header.", PartialVisibleListFragment::class.java))
-            add(LiteRefreshSample("Header partial visible.", "A list with a partial visible header.", PartialVisibleHeaderFragment::class.java))
-            add(LiteRefreshSample("Fade in and out header.", "A scrollable list with a fade in and out collapsible header.", FadingHeaderFragment::class.java))
+            add(LiteRefreshSample("Collapsible header.", "A scrollable list with a collapsible header.", CollapsibleHeaderFragment::class.java))
+            add(LiteRefreshSample("Partial visible RecyclerView.", "A recycler view that is partial visible.", PartialVisibleListFragment::class.java))
+            add(LiteRefreshSample("Partial visible header.", "A recycler view with a partial visible header.", PartialVisibleHeaderFragment::class.java))
+            add(LiteRefreshSample("Header follow with content.", "Header can follow up and down with content.", HeaderFollowFragment::class.java))
             add(LiteRefreshSample("Header follow up.", "Header can follow up with content but not down.", HeaderFollowUpFragment::class.java))
             add(LiteRefreshSample("Header follow down.", "Header can follow down with content but not up", HeaderFollowDownFragment::class.java))
-            add(LiteRefreshSample("Header stays sill.", "Header doesn't follow down or up with content.", HeaderStillFragment::class.java))
-            add(LiteRefreshSample("Header Transition", "Header transition.", HeaderTransitionFragment::class.java))
-            add(LiteRefreshSample("Second Floor", "Second floor like taobao home page.", SecondFloorFragment::class.java))
+            add(LiteRefreshSample("Header stays still.", "Header doesn't follow down or up with content.", HeaderStillFragment::class.java))
+//            add(LiteRefreshSample("Header Transition", "Header transition.", HeaderTransitionFragment::class.java))
+//            add(LiteRefreshSample("Second Floor", "Second floor like taobao home page.", SecondFloorFragment::class.java))
         }
     }
 }

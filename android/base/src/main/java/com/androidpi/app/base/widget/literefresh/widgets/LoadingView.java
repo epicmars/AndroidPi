@@ -20,8 +20,9 @@ public class LoadingView extends View{
 
     private static final int STATE_IDLE = 0;
     private static final int STATE_ON_PROGRESS = 1;
-    private static final int STATE_ON_LOADING = 2;
-    private static final int STATE_FINISH = 3;
+    private static final int STATE_READY = 2;
+    private static final int STATE_ON_LOADING = 3;
+    private static final int STATE_FINISH = 4;
 
     private final float GOLDEN_RATIO = 0.618f;
 
@@ -36,6 +37,7 @@ public class LoadingView extends View{
     private ValueAnimator valueAnimator;
     private int progress;
     private int state = STATE_IDLE;
+    private float angle;
 
     public LoadingView(Context context) {
         this(context, null);
@@ -83,8 +85,9 @@ public class LoadingView extends View{
                 canvas.rotate(-30, centerX, centerY);
             }
         } else if (state == STATE_ON_PROGRESS) {
-            for (int i = 11; i >= 0; i--) {
-                if (i < 11 - progress) {
+            // i is the index of segment
+            for (int i = 12; i >= 1; i--) {
+                if (i <= 12 - progress) {
                     paint.setAlpha(0);
                 } else {
                     paint.setAlpha(31 + 11 * 224 / 12);
@@ -92,17 +95,27 @@ public class LoadingView extends View{
                 canvas.drawLine(centerX, centerY + gapLength, centerX, centerY + gapLength + lineLength, paint);
                 canvas.rotate(30, centerX, centerY);
             }
+        } else if (state == STATE_READY) {
+            // do the rotation
+            angle += 5;
+            canvas.rotate(angle , centerX, centerY);
+            for (int i = 0; i < 12; i++) {
+                paint.setAlpha(31 + 11 * 224 / 12);
+                canvas.drawLine(centerX, centerY + gapLength, centerX, centerY + gapLength + lineLength, paint);
+                canvas.rotate(-30, centerX, centerY);
+            }
         }
     }
 
     public void startProgress() {
         state = STATE_IDLE;
+        invalidate();
     }
 
     public void setProgress(float percent) {
-        if (state < STATE_ON_LOADING) {
+        if (state < STATE_READY) {
             percent = MathUtils.clamp(percent, 0f, 1f);
-            progress = Math.round(percent * 11);
+            progress = (int)(percent * 12);
             state = STATE_ON_PROGRESS;
             invalidate();
         }
@@ -113,9 +126,18 @@ public class LoadingView extends View{
         invalidate();
     }
 
+    public void readyToLoad() {
+        state = STATE_READY;
+        invalidate();
+    }
+
     public void finishLoading() {
         state = STATE_FINISH;
         invalidate();
+    }
+
+    public boolean isLoading() {
+        return state == STATE_ON_LOADING;
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.support.v4.widget.ImageViewCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +21,7 @@ import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
  * Created by jastrelax on 2017/11/21.
  */
 
-public class ScrollDownHeaderView extends ScrollingHeaderLayout implements OnRefreshListener{
+public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRefreshListener{
 
     private TextView mTvState;
     private LoadingView loadingView;
@@ -29,15 +30,15 @@ public class ScrollDownHeaderView extends ScrollingHeaderLayout implements OnRef
     private ObjectAnimator rotateDownAnimator;
     private int gravity = Gravity.CENTER;
 
-    public ScrollDownHeaderView(Context context) {
+    public RefreshingHeaderView(Context context) {
         this(context, null);
     }
 
-    public ScrollDownHeaderView(Context context, AttributeSet attrs) {
+    public RefreshingHeaderView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ScrollDownHeaderView(Context context, AttributeSet attrs, int defStyle) {
+    public RefreshingHeaderView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         inflate(context, R.layout.view_scrolling_down_header, this);
 
@@ -57,12 +58,12 @@ public class ScrollDownHeaderView extends ScrollingHeaderLayout implements OnRef
     }
 
     @Override
-    public void onStartScroll(int max, boolean isTouch) {
+    public void onStartScroll(View view, int max, boolean isTouch) {
 
     }
 
     @Override
-    public void onScroll(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
         float height = getHeight();
         if (current <= height) return;
         float scale = Math.max(current / height, 1);
@@ -80,7 +81,7 @@ public class ScrollDownHeaderView extends ScrollingHeaderLayout implements OnRef
     }
 
     @Override
-    public void onStopScroll(int current, int max) {
+    public void onStopScroll(View view, int current, int max, boolean isTouch) {
 
     }
 
@@ -94,6 +95,8 @@ public class ScrollDownHeaderView extends ScrollingHeaderLayout implements OnRef
 
     @Override
     public void onReleaseToRefresh() {
+        loadingView.setVisibility(GONE);
+        ivArrow.setVisibility(VISIBLE);
         rotateUp();
         mTvState.setText("释放以更新");
     }
@@ -106,7 +109,7 @@ public class ScrollDownHeaderView extends ScrollingHeaderLayout implements OnRef
     }
 
     @Override
-    public void onRefreshEnd() {
+    public void onRefreshEnd(Throwable throwable) {
         mTvState.setText("更新完成");
     }
 

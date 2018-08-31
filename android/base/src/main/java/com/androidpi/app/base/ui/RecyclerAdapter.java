@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -160,7 +161,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      *
      * @param payloads
      */
-    public <T> void setPayloads(T... payloads) {
+    public void setPayloads(Object... payloads) {
         setPayloads(Arrays.asList(payloads));
     }
 
@@ -188,17 +189,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         if (null == payloads || payloads.isEmpty()) {
             return;
         }
-        Iterator iterator = payloads.iterator();
-        while (iterator.hasNext()) {
-            Object obj = iterator.next();
-            if (contains(obj)) {
-                iterator.remove();
+        int added = 0;
+        int positionStart = mPayloads.size();
+        for (Object obj : payloads) {
+            if (!contains(obj)) {
+                this.mPayloads.add(obj);
+                added++;
             }
         }
-        int positionStart = mPayloads.size();
-        int itemCount = payloads.size();
-        this.mPayloads.addAll(payloads);
-        notifyItemRangeInserted(positionStart, itemCount);
+        notifyItemRangeInserted(positionStart, added);
     }
 
     public void addSinglePayload(Object payload) {

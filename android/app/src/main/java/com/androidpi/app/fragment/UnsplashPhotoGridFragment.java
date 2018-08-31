@@ -3,53 +3,41 @@ package com.androidpi.app.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.androidpi.app.R;
 import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.ui.RecyclerAdapter;
-import com.androidpi.app.databinding.FragmentUnsplashPhotoListBinding;
+import com.androidpi.app.databinding.FragmentUnsplashPhotoGridBinding;
 import com.androidpi.app.viewholder.ErrorViewHolder;
-import com.androidpi.app.viewholder.UnsplashPhotoListViewHolder;
+import com.androidpi.app.viewholder.UnsplashPhotoGridViewHolder;
 import com.androidpi.app.viewholder.items.ErrorItem;
 
 import java.util.Collection;
 
 /**
- * Created by jastrelax on 2018/8/26.
+ * Created by jastrelax on 2018/8/31.
  */
-@BindLayout(R.layout.fragment_unsplash_photo_list)
-public class UnsplashPhotoListFragment extends BaseFragment<FragmentUnsplashPhotoListBinding> {
+@BindLayout(R.layout.fragment_unsplash_photo_grid)
+public class UnsplashPhotoGridFragment extends BaseFragment<FragmentUnsplashPhotoGridBinding> {
 
-    private RecyclerAdapter adapter;
-
-    public static UnsplashPhotoListFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        UnsplashPhotoListFragment fragment = new UnsplashPhotoListFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    RecyclerAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new RecyclerAdapter();
-        adapter.register(UnsplashPhotoListViewHolder.class, ErrorViewHolder.class);
+        adapter.register(UnsplashPhotoGridViewHolder.class, ErrorViewHolder.class);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
-    }
-
-    public void refreshError(Throwable throwable) {
-        adapter.setPayloads(new ErrorItem(throwable.getMessage()));
     }
 
     public void setPayloads(Collection<?> payloads) {
@@ -58,5 +46,9 @@ public class UnsplashPhotoListFragment extends BaseFragment<FragmentUnsplashPhot
 
     public void addPayloads(Collection<?> payloads) {
         adapter.addPayloads(payloads);
+    }
+
+    public void refreshError(Throwable throwable) {
+        adapter.setPayloads(new ErrorItem(throwable.getMessage()));
     }
 }

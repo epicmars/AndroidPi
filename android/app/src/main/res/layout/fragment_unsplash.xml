@@ -12,19 +12,17 @@
             android:layout_height="wrap_content"
             app:layout_behavior="@string/lr_refresh_header_behavior"
             app:lr_visibleHeightRatio="100%"
-            app:lr_maxOffsetRatio="100%p">
+            app:lr_maxOffsetRatio="100%p"
+            app:lr_refreshTriggerRange="96dp">
         </com.androidpi.app.widget.ImagePagerHeaderView>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <fragment
+            android:id="@+id/fragment"
+            android:name="com.androidpi.app.fragment.UnsplashPhotoListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="24dp"
-            app:layout_behavior="@string/lr_refresh_content_behavior"
-            app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
-            app:spanCount="2"
-            tools:listitem="@layout/view_holder_unsplash_photo_grid">
-        </android.support.v7.widget.RecyclerView>
+            app:layout_behavior="@string/lr_refresh_content_behavior" />
 
         <View
             android:id="@+id/view_footer"
@@ -32,5 +30,16 @@
             android:layout_height="100dp"
             android:background="@color/colorAccent"
             app:layout_behavior="@string/lr_refresh_footer_behavior"/>
+
+
+        <com.androidpi.app.base.widget.literefresh.widgets.LoadingView
+            android:id="@+id/loading_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="-24dp"
+            app:lr_color="@android:color/white" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>

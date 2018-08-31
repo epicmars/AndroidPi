@@ -23,17 +23,18 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     private final RefreshStateHandler footerStateHandler = new RefreshStateHandler() {
         @Override
         public boolean isValidOffset(int currentOffset) {
-            return (currentOffset + behavior.getChild().getHeight()) < behavior.getParent().getHeight();
+            return transform(currentOffset) > 0;
         }
 
         @Override
         public int transform(int currentOffset) {
+            // The current offset here is the content's top and bottom offset.
             return -(currentOffset + behavior.getChild().getHeight()) + behavior.getParent().getHeight();
         }
 
         @Override
         public int readyRefreshOffset() {
-            return behavior.getFooterHeight();
+            return behavior.getFooterConfig().getHeight();
         }
 
         @Override
@@ -42,7 +43,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         }
 
         @Override
-        public void onStateChanged(int state) {
+        public void onStateChanged(int state, Throwable throwable) {
             Timber.d("footer state: %d", state);
             switch (state) {
                 case STATE_START:
@@ -65,7 +66,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
                     showFooter();
                     break;
                 case STATE_COMPLETE:
-                    onLoadEnd();
+                    onLoadEnd(throwable);
                     stopScroll(true);
                     break;
                 case STATE_IDLE:
@@ -76,19 +77,22 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     };
 
     private RefreshStateHandler headerStateHandler = new RefreshStateHandler() {
+
         @Override
         public boolean isValidOffset(int currentOffset) {
-            return currentOffset > 0;
+            return transform(currentOffset) > behavior.getHeaderConfig().getVisibleHeight();
         }
 
         @Override
         public int transform(int currentOffset) {
+            // The current offset here is the content's top and bottom offset.
             return currentOffset;
         }
 
         @Override
         public int readyRefreshOffset() {
-            return behavior.getHeaderReadyRefreshHeight();
+            BehaviorConfiguration headerConfig = behavior.getHeaderConfig();
+            return headerConfig.getRefreshTriggerRange() + headerConfig.getVisibleHeight();
         }
 
         @Override
@@ -97,7 +101,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         }
 
         @Override
-        public void onStateChanged(int state) {
+        public void onStateChanged(int state, Throwable throwable) {
             Timber.d("header state: %d", state);
             switch (state) {
                 case STATE_START:
@@ -121,7 +125,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
                     break;
                 case STATE_COMPLETE:
                     stopScroll(true);
-                    onRefreshEnd();
+                    onRefreshEnd(throwable);
                     break;
                 case STATE_IDLE:
                 default:
@@ -145,34 +149,34 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch) {
-        super.onStartScroll(coordinatorLayout, child, max, isTouch);
         for (RefreshStateMachine stateMachine : stateMachines) {
             stateMachine.onStartScroll(coordinatorLayout, child, max, isTouch);
         }
+        super.onStartScroll(coordinatorLayout, child, max, isTouch);
     }
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
-        super.onPreScroll(coordinatorLayout, child, current, max, isTouch);
         for (RefreshStateMachine stateMachine : stateMachines) {
             stateMachine.onPreScroll(coordinatorLayout, child, current, max, isTouch);
         }
+        super.onPreScroll(coordinatorLayout, child, current, max, isTouch);
     }
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
-        super.onScroll(coordinatorLayout, child, current, delta, max, isTouch);
         for (RefreshStateMachine stateMachine : stateMachines) {
             stateMachine.onScroll(coordinatorLayout, child, current, delta, max, isTouch);
         }
+        super.onScroll(coordinatorLayout, child, current, delta, max, isTouch);
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
-        super.onStopScroll(coordinatorLayout, child, current, max, isTouch);
         for (RefreshStateMachine stateMachine : stateMachines) {
             stateMachine.onStopScroll(coordinatorLayout, child, current, max, isTouch);
         }
+        super.onStopScroll(coordinatorLayout, child, current, max, isTouch);
     }
 
     @Override
@@ -197,9 +201,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     }
 
     @Override
-    public void onLoadEnd() {
+    public void onLoadEnd(Throwable throwable) {
         for (OnLoadListener l : mLoadListeners) {
-            l.onLoadEnd();
+            l.onLoadEnd(throwable);
         }
     }
 
@@ -225,9 +229,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     }
 
     @Override
-    public void onRefreshEnd() {
+    public void onRefreshEnd(Throwable throwable) {
         for (OnRefreshListener l : mRefreshListeners) {
-            l.onRefreshEnd();
+            l.onRefreshEnd(throwable);
         }
     }
 
@@ -250,8 +254,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     }
 
     @Override
-    public void refreshError(Exception exception) {
-        headerStateMachine.refreshError(exception);
+    public void refreshError(Throwable throwable) {
+        headerStateMachine.refreshError(throwable);
     }
 
     @Override
@@ -275,6 +279,14 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     @Override
     public void loadError(Exception exception) {
         footerStateMachine.refreshError(exception);
+    }
+
+    public boolean isRefreshing() {
+        return headerStateMachine.isRefreshing();
+    }
+
+    public boolean isLoading() {
+        return footerStateMachine.isRefreshing();
     }
 
     void showHeader() {

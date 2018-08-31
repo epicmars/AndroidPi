@@ -39,7 +39,11 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsListModel {
                 .subscribe(object : SingleObserver<List<News>> {
 
                     override fun onSuccess(t: List<News>) {
-                        mNews.value = Resource.success(NewsPagination(page, t))
+                        if (t.isEmpty()) {
+                            mNews.value = Resource.error(null, NewsPagination(page, t), Exception("No more data."))
+                        } else {
+                            mNews.value = Resource.success(NewsPagination(page, t))
+                        }
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -47,7 +51,7 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsListModel {
                     }
 
                     override fun onError(e: Throwable) {
-                        mNews.value = Resource.error()
+                        mNews.value = Resource.error(NewsPagination(page, null))
                     }
                 })
     }

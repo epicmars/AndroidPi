@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.androidpi.app.R;
 import com.androidpi.app.activity.VideoActivity;
@@ -30,14 +31,14 @@ public class VideoHeaderView extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStartScroll(int max, boolean isTouch) {
+    public void onStartScroll(View view, int max, boolean isTouch) {
         if (isTouch) {
             launched = false;
         }
     }
 
     @Override
-    public void onScroll(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
         if (!isTouch || launched) return;
         if ((current /(float) max) >= 0.85f) {
             String sharedElementName = getResources().getString(R.string.transition_header);
@@ -48,7 +49,7 @@ public class VideoHeaderView extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStopScroll(int current, int max) {
+    public void onStopScroll(View view, int current, int max, boolean isTouch) {
     }
 
 }

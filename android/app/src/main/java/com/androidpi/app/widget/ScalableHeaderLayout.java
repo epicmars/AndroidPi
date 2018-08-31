@@ -2,6 +2,7 @@ package com.androidpi.app.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 
@@ -25,17 +26,12 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
-
-    @Override
-    public void onStartScroll(int max, boolean isTouch) {
+    public void onStartScroll(View view, int max, boolean isTouch) {
 
     }
 
     @Override
-    public void onScroll(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
         int height = getHeight();
         if (current <= height) {
             // Because the view can scroll down and then back. And it will not always reach a position
@@ -47,14 +43,13 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
             return;
         }
         float scale = Math.max(current / (float) height, 1f);
-        Timber.d("scale: %f", scale);
         setScaleX(scale);
         setScaleY(scale);
         setTranslationY(-(scale - 1f) * height / 2f);
     }
 
     @Override
-    public void onStopScroll(int current, int max) {
+    public void onStopScroll(View view, int current, int max, boolean isTouch) {
 
     }
 }

@@ -12,7 +12,13 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:lr_headerVisibleHeight="-64dp"
+            app:lr_headerVisibleHeight="-192dp"
             app:layout_behavior="@string/lr_refresh_content_behavior"/>
+
+        <com.androidpi.app.widget.CircularLoadingView
+            android:id="@+id/circle_progress"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="-48dp"/>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

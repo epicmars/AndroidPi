@@ -1,31 +1,42 @@
 package com.androidpi.app.fragment;
 
 import android.arch.lifecycle.Observer;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Toast;
 
 import com.androidpi.app.R;
 import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
+import com.androidpi.app.base.widget.literefresh.BehaviorConfiguration;
 import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.OnScrollListener;
+import com.androidpi.app.base.widget.literefresh.RefreshContentBehavior;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
-import com.androidpi.app.databinding.FragmentPartialVisibleHeaderBinding;
+import com.androidpi.app.databinding.FragmentCollapsibleHeaderBinding;
 
 /**
- * Created by jastrelax on 2018/8/26.
+ * Created by jastrelax on 2018/8/13.
  */
-@BindLayout(R.layout.fragment_partial_visible_header)
-public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVisibleHeaderBinding>{
+@BindLayout(value = R.layout.fragment_collapsible_header)
+public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleHeaderBinding> {
 
     UnsplashViewModel unsplashViewModel;
-    UnsplashPhotoListFragment photoListFragment;
+
+    public static CollapsibleHeaderFragment newInstance() {
+        Bundle args = new Bundle();
+        CollapsibleHeaderFragment fragment = new CollapsibleHeaderFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,46 +47,72 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RefreshHeaderBehavior headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewHeader);
-        photoListFragment = ((UnsplashPhotoListFragment) getChildFragmentManager().findFragmentById(R.id.fragment_list));
+        RefreshHeaderBehavior headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.imagePagerHeader);
+        RefreshContentBehavior contentBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewContent);
+
+        binding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
+        UnsplashPhotoGridFragment fragment = ((UnsplashPhotoGridFragment) getChildFragmentManager().findFragmentById(R.id.fragment));
         unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<UnsplashPhotoPage>>() {
             @Override
             public void onChanged(@Nullable Resource<UnsplashPhotoPage> listResource) {
-                if (listResource == null)
+                if (null == listResource)
                     return;
                 if (listResource.data == null)
                     return;
                 if (listResource.isSuccess()) {
                     if (listResource.data.isFirstPage()) {
-                        photoListFragment.setPayloads(listResource.data.getPhotos());
+                        fragment.setPayloads(listResource.data.getPhotos());
                     } else {
-                        photoListFragment.addPayloads(listResource.data.getPhotos());
+                        fragment.addPayloads(listResource.data.getPhotos());
                     }
                     headerBehavior.refreshComplete();
                 } else if (listResource.isError()) {
                     if (listResource.data.isFirstPage()) {
-                        photoListFragment.refreshError(listResource.throwable);
+                        fragment.refreshError(listResource.throwable);
                     }
                     headerBehavior.refreshError(listResource.throwable);
                 }
             }
         });
 
+        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Toolbar navigation button clicked.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         if (headerBehavior != null) {
+            BehaviorConfiguration config = headerBehavior.getConfiguration();
             headerBehavior.addOnScrollListener(new OnScrollListener() {
+
+                ColorDrawable drawable = new ColorDrawable(Color.BLACK);
+
                 @Override
                 public void onStartScroll(View view, int max, boolean isTouch) {
-//                    binding.circleProgress.setVisibility(View.VISIBLE);
-//                    circularProgressDrawable.start();
+
                 }
 
                 @Override
                 public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
-                    if (current >= headerBehavior.getConfiguration().getVisibleHeight()) {
-                        float distance = current - headerBehavior.getConfiguration().getVisibleHeight();
-                        binding.circleProgress.setProgress(distance/headerBehavior.getConfiguration().getRefreshTriggerRange());
-                    } else {
-                        binding.circleProgress.setProgress(0f);
+                    if (current <= binding.imagePagerHeader.getHeight()) {
+                        float y = binding.imagePagerHeader.getHeight() - current;
+                        binding.imagePagerHeader.setTranslationY(y / 2);
+                        float alpha = 1 - (float) current / binding.imagePagerHeader.getHeight();
+                        drawable.setAlpha((int) (alpha * 196));
+                        binding.imagePagerHeader.setForeground(drawable);
+                    }
+
+                    if (current >= config.getHeight()) {
+                        binding.circleProgress.setProgress((float) (current - config.getHeight()) / config.getRefreshTriggerRange());
+                    }
+
+                    if (current >= contentBehavior.getConfiguration().getMinOffset()) {
+                        float range = config.getHeight() - contentBehavior.getConfiguration().getMinOffset();
+                        float distance = current - contentBehavior.getConfiguration().getMinOffset();
+                        float alpha = 1 - distance / range;
+                        binding.appBar.setAlpha(alpha);
+                        binding.appBar.setTranslationY(alpha * contentBehavior.getConfiguration().getMinOffset());
                     }
                 }
 
@@ -84,6 +121,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
 
                 }
             });
+
 
             headerBehavior.addOnRefreshListener(new OnRefreshListener() {
                 @Override
@@ -110,5 +148,6 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
             });
         }
+
     }
 }

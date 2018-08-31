@@ -51,4 +51,5 @@ RefreshContentBehavior              RefreshHeaderBehavior           RefreshFoote
     static final int STATE_REFRESH = 5;                  // 刷新
     static final int STATE_REFRESH_RESET = 6;            // 刷新中并重置
     static final int STATE_COMPLETE = 7;                 // 完成
+    static final int STATE_IDLE_RESET = 8;               // 初始并重置
 ```

@@ -38,41 +38,39 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
     @Override
     public int computeOffsetDeltaOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, CoordinatorLayout parent, View child, View dependency) {
         // For now we don't care about invisible changes.
-        if (scrollingContentBehavior.getTopAndBottomOffset() < 0)
+        // And when content has reached minimum offset, we should not changed with it.
+        // If content has reach it's minimum offset, header may have not changed yet.
+        if (scrollingContentBehavior.isMinOffsetReached() && behavior.getChild().getBottom() <= scrollingContentBehavior.getConfiguration().getMinOffset())
             return 0;
-        if (mode == MODE_FOLLOW_DOWN) {
-            int totalHeight = child.getHeight() + dependency.getHeight();
-            if (totalHeight <= parent.getHeight()) {
-                // If view doesn't fill parent, content can not scroll up to the parent top.
-                scrollingContentBehavior.setMinOffset(child.getHeight());
-            } else {
-                // Otherwise, we expect the content to be fully visible.
-                scrollingContentBehavior.resetMinOffset();
-            }
-        }
         return scrollingContentBehavior.getTopAndBottomOffset() - child.getBottom();
     }
 
     @Override
-    public int transformOffsetCoordinate(VerticalIndicatorBehavior behavior, int current, int height, int parentHeight) {
-        return current + height;
+    public int transformOffsetCoordinate(VerticalIndicatorBehavior behavior, int currentOffset, int height, int parentHeight) {
+        return currentOffset + height;
     }
 
     @Override
-    public float consumeOffsetOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int currentOffset, int parentHeight, int height, int offset) {
+    public float consumeOffsetOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int parentHeight, int height, int currentOffset, int offsetDelta) {
         switch (mode) {
             case MODE_STILL:
                 return 0;
             case MODE_FOLLOW_DOWN:
-                if (offset < 0 && currentOffset <= 0) return 0;
-                else return offset;
+                if (offsetDelta < 0 && currentOffset <= 0) return 0;
+                else return offsetDelta;
             case MODE_FOLLOW_UP:
-                if (offset > 0 && currentOffset > 0) return 0;
-                else if (offset < 0 && transformOffsetCoordinate(behavior, currentOffset, height, parentHeight) <= scrollingContentBehavior.getMinOffset()) return 0;
-                else return offset;
+                if (offsetDelta > 0 && currentOffset >= 0) {
+                    return 0;
+                }
+                else if (offsetDelta < 0 && transformOffsetCoordinate(behavior, currentOffset, height, parentHeight) <= scrollingContentBehavior.getConfiguration().getMinOffset()) {
+                    return 0;
+                }
+                else {
+                    return offsetDelta;
+                }
             case MODE_FOLLOW:
             default:
-                return offset;
+                return offsetDelta;
         }
     }
 
@@ -86,6 +84,6 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
      */
     @Override
     public boolean isHiddenPartVisible(VerticalIndicatorBehavior behavior) {
-        return behavior.getTopAndBottomOffset() > -behavior.invisibleHeight;
+        return behavior.getTopAndBottomOffset() > -behavior.getConfiguration().getInvisibleHeight();
     }
 }

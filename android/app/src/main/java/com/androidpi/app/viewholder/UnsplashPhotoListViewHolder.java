@@ -17,7 +17,6 @@ public class UnsplashPhotoListViewHolder extends BaseViewHolder<ViewHolderUnspla
 
     public UnsplashPhotoListViewHolder(View itemView) {
         super(itemView);
-        setIsRecyclable(false);
     }
 
     @Override

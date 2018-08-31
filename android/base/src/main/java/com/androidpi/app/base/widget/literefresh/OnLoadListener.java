@@ -1,5 +1,7 @@
 package com.androidpi.app.base.widget.literefresh;
 
+import android.support.annotation.Nullable;
+
 /**
  * Created by jastrelax on 2018/8/24.
  */
@@ -11,5 +13,5 @@ public interface OnLoadListener {
 
     void onLoad();
 
-    void onLoadEnd();
+    void onLoadEnd(@Nullable Throwable throwable);
 }

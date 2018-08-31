@@ -14,8 +14,6 @@ import com.androidpi.app.pi.base.R;
 
 public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBehavior<V, HeaderBehaviorController> implements Refresher{
 
-    private boolean isFirstLayout = true;
-
     {
         controller = new HeaderBehaviorController(this);
         addScrollListener(controller);
@@ -44,18 +42,17 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        if (isFirstLayout) {
-            isFirstLayout = false;
+        if (!configuration.isSettled()) {
             // Compute max offset, it will not exceed parent height.
-            if (useDefaultMaxOffset) {
+            if (configuration.isUseDefaultMaxOffset()) {
                 // We want child can be fully visible by default.
-                maxOffset = Math.max(GOLDEN_RATIO * parent.getHeight(), child.getHeight());
+                configuration.setMaxOffset((int) Math.max(GOLDEN_RATIO * parent.getHeight(), child.getHeight()));
             } else {
-                maxOffset = Math.max(maxOffset, maxOffsetRatioOfParent > maxOffsetRatio? maxOffsetRatio * parent.getHeight() : maxOffsetRatio * child.getHeight());
+                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(), configuration.getMaxOffsetRatioOfParent() > configuration.getMaxOffsetRatio()? configuration.getMaxOffsetRatio() * parent.getHeight() : configuration.getMaxOffsetRatio() * child.getHeight()));
             }
-            getContentBehavior().setHeaderVisibleHeight(getVisibleHeight());
-            getContentBehavior().setHeaderHeight(child.getHeight());
-            getContentBehavior().setMaxOffset(maxOffset);
+            configuration.setHeight(child.getHeight());
+            configuration.setSettled(true);
+            getContentBehavior().setHeaderConfig(configuration);
         }
         return handled;
     }
@@ -69,6 +66,11 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
     }
 
     @Override
+    public HeaderBehaviorController getController() {
+        return super.getController();
+    }
+
+    @Override
     public void refresh() {
         controller.refresh();
     }
@@ -79,7 +81,7 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
     }
 
     @Override
-    public void refreshError(Exception exception) {
-        controller.refreshError(exception);
+    public void refreshError(Throwable throwable) {
+        controller.refreshError(throwable);
     }
 }

@@ -12,8 +12,6 @@ import android.view.View;
 
 public class RefreshFooterBehavior<V extends View> extends VerticalIndicatorBehavior<V, FooterBehaviorController> implements Loader{
 
-    private boolean isFirstLayout = true;
-
     {
         controller = new FooterBehaviorController(this);
         addScrollListener(controller);
@@ -26,7 +24,7 @@ public class RefreshFooterBehavior<V extends View> extends VerticalIndicatorBeha
     }
 
     public RefreshFooterBehavior(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public RefreshFooterBehavior(Context context, AttributeSet attrs) {
@@ -36,18 +34,17 @@ public class RefreshFooterBehavior<V extends View> extends VerticalIndicatorBeha
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        if (isFirstLayout) {
+        if (!configuration.isSettled()) {
             // Compute max offset, it will not exceed parent height.
-            if (useDefaultMaxOffset) {
+            if (configuration.isUseDefaultMaxOffset()) {
                 // We want footer can be just fully visible by default.
-                maxOffset = child.getHeight();
+                configuration.setMaxOffset(child.getHeight());
             } else {
-                maxOffset = Math.max(maxOffset, maxOffsetRatioOfParent > maxOffsetRatio ? maxOffsetRatio * parent.getHeight() : maxOffsetRatio * child.getHeight());
+                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(), configuration.getMaxOffsetRatioOfParent() > configuration.getMaxOffsetRatio() ? configuration.getMaxOffsetRatio() * parent.getHeight() : configuration.getMaxOffsetRatio() * child.getHeight()));
             }
-            getContentBehavior().setFooterVisibleHeight(getVisibleHeight());
-            getContentBehavior().setFooterHeight(child.getHeight());
-            getContentBehavior().setFooterMaxOffset((int) maxOffset);
-            isFirstLayout = false;
+            configuration.setHeight(child.getHeight());
+            configuration.setSettled(true);
+            getContentBehavior().setFooterConfig(configuration);
         }
         return handled;
     }
@@ -67,7 +64,7 @@ public class RefreshFooterBehavior<V extends View> extends VerticalIndicatorBeha
     }
 
     @Override
-    public void refreshError(Exception exception) {
+    public void refreshError(Throwable throwable) {
 
     }
 
@@ -90,4 +87,8 @@ public class RefreshFooterBehavior<V extends View> extends VerticalIndicatorBeha
         controller.loadError(exception);
     }
 
+    @Override
+    public FooterBehaviorController getController() {
+        return super.getController();
+    }
 }

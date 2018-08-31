@@ -11,10 +11,9 @@ import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
+import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentHeaderTransitionBinding;
 import com.androidpi.data.remote.dto.ResUnsplashPhoto;
-
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -31,13 +30,13 @@ public class HeaderTransitionFragment extends BaseFragment<FragmentHeaderTransit
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unsplashViewModel = getViewModelOfActivity(UnsplashViewModel.class);
-        unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<List<ResUnsplashPhoto>>>() {
+        unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<UnsplashPhotoPage>>() {
             @Override
-            public void onChanged(@Nullable Resource<List<ResUnsplashPhoto>> listResource) {
+            public void onChanged(@Nullable Resource<UnsplashPhotoPage> listResource) {
                 if (listResource == null) return;
                 if (listResource.isSuccess()) {
                     try {
-                        ResUnsplashPhoto resUnsplashPhoto = listResource.data.get(0);
+                        ResUnsplashPhoto resUnsplashPhoto = listResource.data.getPhotos().get(0);
                         url = resUnsplashPhoto.getUrls().getRegular();
                         binding.viewHeader.setUrl(url);
                     } catch (Exception e) {

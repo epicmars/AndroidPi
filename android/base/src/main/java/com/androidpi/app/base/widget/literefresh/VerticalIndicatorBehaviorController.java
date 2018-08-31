@@ -19,9 +19,9 @@ public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndi
 
     public abstract int computeOffsetDeltaOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, CoordinatorLayout parent, View child, View dependency);
 
-    public abstract float consumeOffsetOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int currentOffset, int parentHeight, int height, int offset);
+    public abstract float consumeOffsetOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int parentHeight, int height, int currentOffset, int offsetDelta);
 
-    public abstract int transformOffsetCoordinate(VerticalIndicatorBehavior behavior, int current, int height, int parentHeight);
+    public abstract int transformOffsetCoordinate(VerticalIndicatorBehavior behavior, int currentOffset, int height, int parentHeight);
 
     /**
      * Tell if the hidden part of the view is visible.

@@ -18,17 +18,18 @@ public class FooterBehaviorController extends VerticalIndicatorBehaviorControlle
     }
 
     @Override
-    public float consumeOffsetOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int currentOffset, int parentHeight, int height, int offset) {
-        return offset;
+    public float consumeOffsetOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int parentHeight, int height, int currentOffset, int offsetDelta) {
+        return offsetDelta;
     }
 
     @Override
-    public int transformOffsetCoordinate(VerticalIndicatorBehavior behavior, int current, int height, int parentHeight) {
-        return -current + parentHeight;
+    public int transformOffsetCoordinate(VerticalIndicatorBehavior behavior, int currentOffset, int height, int parentHeight) {
+        // The current offset is the footer's top and bottom offset.
+        return -currentOffset + parentHeight;
     }
 
     @Override
     public boolean isHiddenPartVisible(VerticalIndicatorBehavior behavior) {
-        return -behavior.getTopAndBottomOffset() + behavior.getParent().getHeight() > behavior.visibleHeight;
+        return -behavior.getTopAndBottomOffset() + behavior.getParent().getHeight() > behavior.getConfiguration().getVisibleHeight();
     }
 }

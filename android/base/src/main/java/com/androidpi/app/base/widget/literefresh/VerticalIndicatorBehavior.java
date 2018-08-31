@@ -16,17 +16,16 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * Super class of header and footer behavior.
- * <br>
+ * <p>
  * The header and footer behaviors are almost the same, the main difference is that
  * they have different coordinate system when we trace the bottom and top position
  * of the view to which they attached respectively.
  * view.
- * <br>
+ * <p>
  * As we have record the bottom and top offset of the view using the view's default coordinate
  * system, whose original point is the left top point of the parent view. Relative to that original
  * point the right and bottom position is positive.
  * <p>
- * <br>
  * Now we need to trace how much the header has scroll from the top of the parent view.
  * We need to transform the bottom position of the view to which the header behavior is attached
  * in the coordinate system of the parent view to another one. This coordinate system would be a
@@ -52,15 +51,6 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  */
 public abstract class VerticalIndicatorBehavior<V extends View, CTR extends VerticalIndicatorBehaviorController> extends AnimationOffsetBehavior<V, CTR> {
 
-    protected int visibleHeight = 0;
-    protected float invisibleHeight = 0;
-    private boolean isFirstLayout = true;
-    private float visibleHeightRatio = 0f;
-    private float visibleHeightParentRatio = 0f;
-
-    public VerticalIndicatorBehavior() {
-    }
-
     public VerticalIndicatorBehavior(Context context) {
         this(context, null);
     }
@@ -69,24 +59,38 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior, 0, 0);
         if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeight)) {
-            visibleHeight = Math.round(a.getDimension(R.styleable.OffsetBehavior_lr_visibleHeight, 0));
+            configuration.setVisibleHeight(Math.round(a.getDimension(R.styleable.OffsetBehavior_lr_visibleHeight, 0)));
         }
         if (a.hasValue(R.styleable.OffsetBehavior_lr_visibleHeightRatio)) {
-            visibleHeightRatio = a.getFraction(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 1, 0f);
-            visibleHeightParentRatio = a.getFraction(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 2, 0f);
+            configuration.setVisibleHeightRatio(a.getFraction(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 1, 0f));
+            configuration.setVisibleHeightParentRatio(a.getFraction(R.styleable.OffsetBehavior_lr_visibleHeightRatio, 1, 2, 0f));
         }
+
+        configuration.setUseDefinedRefreshTriggerRange(a.hasValue(R.styleable.OffsetBehavior_lr_refreshTriggerRange));
+        configuration.setRefreshTriggerRange(a.getDimensionPixelOffset(R.styleable.OffsetBehavior_lr_refreshTriggerRange, 0));
         a.recycle();
     }
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        if (isFirstLayout) {
-            isFirstLayout = false;
+        if (!configuration.isSettled()) {
             cancelAnimation();
             // Compute visible height of child.
-            visibleHeight = (int) Math.max((float) visibleHeight, visibleHeightParentRatio > visibleHeightRatio ? visibleHeightRatio * parent.getHeight() : visibleHeightRatio * child.getHeight());
-            invisibleHeight = child.getHeight() - visibleHeight;
+            int visibleHeight = (int) Math.max((float) configuration.getVisibleHeight(), configuration.getVisibleHeightParentRatio() > configuration.getVisibleHeightRatio() ? configuration.getVisibleHeightRatio() * parent.getHeight() : configuration.getVisibleHeightRatio() * child.getHeight());
+            int invisibleHeight = child.getHeight() - visibleHeight;
+            // Compute refresh trigger range.
+            if (configuration.getRefreshTriggerRange() < 0) {
+                // User define a invalid trigger range, use the default.
+                configuration.setRefreshTriggerRange(configuration.getDefaultRefreshTriggerRange());
+            } else if (!configuration.isUseDefinedRefreshTriggerRange()){
+                // User doesn't predefined one, we need to ensure the refreshing is triggered when indicator is
+                // totally visible. No matter whether child height is zero or not. If child is already visible,
+                // the invisible height will be non-positive, in this case we use the default .
+                configuration.setRefreshTriggerRange(Math.max(invisibleHeight, configuration.getDefaultRefreshTriggerRange()));
+            } // Otherwise we use predefined trigger range.
+            configuration.setVisibleHeight(visibleHeight);
+            configuration.setInvisibleHeight(invisibleHeight);
         }
         return handled;
     }
@@ -106,7 +110,7 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
         // If header should be hidden entirely, and hidden part is visible now consume the fling.
         // Otherwise, do nothing.
-        if (controller.isHiddenPartVisible(this) && visibleHeight == 0) {
+        if (controller.isHiddenPartVisible(this) && configuration.getVisibleHeight() == 0) {
             return true;
         }
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
@@ -156,7 +160,7 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         for (ScrollingListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(this, currentOffset, height, parentHeight), height, type == TYPE_TOUCH);
         }
-        float consumed = controller.consumeOffsetOnDependentViewChanged(this, getContentBehavior(), currentOffset, parentHeight, height, offsetDelta);
+        float consumed = controller.consumeOffsetOnDependentViewChanged(this, getContentBehavior(), parentHeight, height, currentOffset, offsetDelta);
         currentOffset = Math.round(currentOffset + consumed);
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
@@ -211,13 +215,4 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         mParent = null;
         mChild = null;
     }
-
-    public int getVisibleHeight() {
-        return visibleHeight;
-    }
-
-    public void setVisibleHeight(int visibleHeight) {
-        this.visibleHeight = visibleHeight;
-    }
-
 }

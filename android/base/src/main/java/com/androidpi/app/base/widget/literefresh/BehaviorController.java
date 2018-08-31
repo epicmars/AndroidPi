@@ -17,7 +17,7 @@ public class BehaviorController<B extends AnimationOffsetBehavior> implements An
 
     protected BehaviorController proxy;
     protected B behavior;
-    protected List<OnScrollListener> mPullListeners = new ArrayList<>();
+    protected List<OnScrollListener> mScrollListeners = new ArrayList<>();
     protected List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
     protected List<OnLoadListener> mLoadListeners = new ArrayList<>();
 
@@ -27,8 +27,8 @@ public class BehaviorController<B extends AnimationOffsetBehavior> implements An
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch) {
-        for (OnScrollListener l : mPullListeners) {
-            l.onStartScroll(max, isTouch);
+        for (OnScrollListener l : mScrollListeners) {
+            l.onStartScroll(child, max, isTouch);
         }
     }
 
@@ -39,15 +39,15 @@ public class BehaviorController<B extends AnimationOffsetBehavior> implements An
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
-        for (OnScrollListener l : mPullListeners) {
-            l.onScroll(current, delta, max, isTouch);
+        for (OnScrollListener l : mScrollListeners) {
+            l.onScroll(child, current, delta, max, isTouch);
         }
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
-        for (OnScrollListener l : mPullListeners) {
-            l.onStopScroll(current, max);
+        for (OnScrollListener l : mScrollListeners) {
+            l.onStopScroll(child, current, max, isTouch);
         }
     }
 
@@ -88,12 +88,12 @@ public class BehaviorController<B extends AnimationOffsetBehavior> implements An
     }
 
     @Override
-    public void refreshError(Exception exception) {
+    public void refreshError(Throwable throwable) {
         runWithView(new Runnable() {
             @Override
             public void run() {
                 if (proxy != null) {
-                    proxy.refreshError(exception);
+                    proxy.refreshError(throwable);
                 }
             }
         });
@@ -173,7 +173,7 @@ public class BehaviorController<B extends AnimationOffsetBehavior> implements An
     public void addOnPullingListener(OnScrollListener listener) {
         if (null == listener)
             return;
-        mPullListeners.add(listener);
+        mScrollListeners.add(listener);
     }
 
     public void addOnRefreshListener(OnRefreshListener listener) {

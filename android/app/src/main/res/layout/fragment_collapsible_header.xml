@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.androidpi.app.widget.ImagePagerHeaderView
+            android:id="@+id/image_pager_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/lr_refresh_header_behavior"
+            app:lr_maxOffsetRatio="100%p"
+            app:lr_visibleHeightRatio="100%" />
+
+        <FrameLayout
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/lr_refresh_content_behavior"
+            app:lr_minOffset="72dp">
+
+            <fragment
+                android:id="@+id/fragment"
+                android:name="com.androidpi.app.fragment.UnsplashPhotoGridFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:background="@color/colorAccent"
+            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+
+        <com.androidpi.app.widget.CircularLoadingView
+            android:id="@+id/circle_progress"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="64dp" />
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginTop="-72dp"
+            android:paddingTop="16dp"
+            android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:background="?colorPrimary"
+                app:navigationIcon="?homeAsUpIndicator"
+                app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
+                app:title="Photos on Unsplash">
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

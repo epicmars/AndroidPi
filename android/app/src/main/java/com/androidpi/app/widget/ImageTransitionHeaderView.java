@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.androidpi.app.R;
@@ -18,35 +19,35 @@ import com.androidpi.common.image.glide.GlideApp;
 /**
  * Created by jastrelax on 2018/8/19.
  */
-public class ImageHeaderView extends ScrollingHeaderLayout {
+public class ImageTransitionHeaderView extends ScrollingHeaderLayout {
 
     private Bundle data;
     private ImageView ivImage;
     private boolean launched = false;
 
-    public ImageHeaderView(Context context) {
+    public ImageTransitionHeaderView(Context context) {
         this(context, null);
     }
 
-    public ImageHeaderView(Context context, AttributeSet attrs) {
+    public ImageTransitionHeaderView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ImageHeaderView(Context context, AttributeSet attrs, int defStyle) {
+    public ImageTransitionHeaderView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         inflate(context, R.layout.view_image_header, this);
         ivImage = findViewById(R.id.iv_image);
     }
 
     @Override
-    public void onStartScroll(int max, boolean isTouch) {
+    public void onStartScroll(View view, int max, boolean isTouch) {
         if (isTouch) {
             launched = false;
         }
     }
 
     @Override
-    public void onScroll(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
         if (!isTouch || data == null || launched) return;
         if ((current /(float) max) >= 1f) {
             String sharedElementName = getResources().getString(R.string.transition_header);
@@ -62,7 +63,7 @@ public class ImageHeaderView extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStopScroll(int current, int max) {
+    public void onStopScroll(View view, int current, int max, boolean isTouch) {
     }
 
     public void setUrl(String url) {

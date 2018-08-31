@@ -1,14 +1,16 @@
 package com.androidpi.app.base.widget.literefresh;
 
+import android.view.View;
+
 /**
  * Created by jastrelax on 2017/11/16.
  */
 
 public interface OnScrollListener {
 
-    void onStartScroll(int max, boolean isTouch);
+    void onStartScroll(View view, int max, boolean isTouch);
 
-    void onScroll(int current, int delta, int max, boolean isTouch);
+    void onScroll(View view, int current, int delta, int max, boolean isTouch);
 
-    void onStopScroll(int current, int max);
+    void onStopScroll(View view, int current, int max, boolean isTouch);
 }

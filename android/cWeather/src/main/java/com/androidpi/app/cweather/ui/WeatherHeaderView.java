@@ -2,6 +2,7 @@ package com.androidpi.app.cweather.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.androidpi.app.base.ui.UiUtils;
 import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
@@ -44,7 +45,7 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
     }
 
     @Override
-    public void onStartScroll(int max, boolean isTouch) {
+    public void onStartScroll(View view, int max, boolean isTouch) {
         if (isTouch) {
             loadingView.startProgress();
             loadingView.setProgress(0);
@@ -52,7 +53,7 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
     }
 
     @Override
-    public void onScroll(int current, int delta, int max, boolean isTouch) {
+    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
         if (!isTouch) return;
         float height = getHeight();
         if (current > offset) {
@@ -62,18 +63,18 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
     }
 
     @Override
-    public void onStopScroll(int current, int max) {
+    public void onStopScroll(View view, int current, int max, boolean isTouch) {
 
     }
 
     @Override
     public void onRefreshStart() {
-
+        loadingView.startProgress();
     }
 
     @Override
     public void onReleaseToRefresh() {
-
+        loadingView.readyToLoad();
     }
 
     @Override
@@ -82,7 +83,7 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
     }
 
     @Override
-    public void onRefreshEnd() {
+    public void onRefreshEnd(Throwable throwable) {
         loadingView.finishLoading();
     }
 }

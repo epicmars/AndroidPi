@@ -10,7 +10,6 @@ import io.reactivex.annotations.Nullable;
  */
 public class LiteRefreshHelper {
 
-    @Nullable
     public static <T extends AnimationOffsetBehavior> T getAttachedBehavior(View view) {
         try {
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();

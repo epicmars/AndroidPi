@@ -41,23 +41,16 @@
                 android:background="@android:color/white"
                 tools:listitem="@layout/view_holder_news" />
 
-            <com.androidpi.app.widget.ScrollDownHeaderView
+            <com.androidpi.app.widget.RefreshingHeaderView
                 android:id="@+id/scroll_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <FrameLayout
+            <com.androidpi.app.widget.LoadingFooterView
                 android:id="@+id/scroll_footer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/view_holder_two_line_height"
-                android:background="@color/colorPrimary">
-
-                <ProgressBar
-                    android:id="@+id/footer_progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
-            </FrameLayout>
+                android:layout_height="wrap_content">
+            </com.androidpi.app.widget.LoadingFooterView>
 
         </android.support.design.widget.CoordinatorLayout>
     </LinearLayout>

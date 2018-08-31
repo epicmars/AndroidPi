@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.androidpi.app.R;
@@ -12,15 +13,18 @@ import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.ui.RecyclerAdapter;
 import com.androidpi.app.base.vm.vo.Resource;
+import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
+import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
+import com.androidpi.app.base.widget.literefresh.OnScrollListener;
+import com.androidpi.app.base.widget.literefresh.RefreshContentBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
+import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentPartialVisibleListBinding;
 import com.androidpi.app.items.HeaderUnsplashPhoto;
+import com.androidpi.app.viewholder.ErrorViewHolder;
 import com.androidpi.app.viewholder.UnsplashPhotoHeaderViewHolder;
 import com.androidpi.app.viewholder.UnsplashPhotoListViewHolder;
-import com.androidpi.data.remote.dto.ResUnsplashPhoto;
-
-import java.util.Collection;
-import java.util.List;
+import com.androidpi.app.viewholder.items.ErrorItem;
 
 /**
  * Created by jastrelax on 2018/8/28.
@@ -29,6 +33,7 @@ import java.util.List;
 public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisibleListBinding> {
     private UnsplashViewModel unsplashViewModel;
     private RecyclerAdapter adapter;
+    private HeaderUnsplashPhoto headerUnsplashPhoto = new HeaderUnsplashPhoto(null);
 
     public static UnsplashPhotoListFragment newInstance() {
 
@@ -44,31 +49,93 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
         super.onCreate(savedInstanceState);
         unsplashViewModel = getViewModelOfActivity(UnsplashViewModel.class);
         adapter = new RecyclerAdapter();
-        adapter.register(UnsplashPhotoHeaderViewHolder.class);
-        adapter.register(UnsplashPhotoListViewHolder.class);
-        adapter.addSinglePayload(new HeaderUnsplashPhoto(null));
+        adapter.register(UnsplashPhotoHeaderViewHolder.class, UnsplashPhotoListViewHolder.class, ErrorViewHolder.class);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        RefreshContentBehavior behavior = LiteRefreshHelper.getAttachedBehavior(binding.recyclerView);
+
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(adapter);
-        unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<List<ResUnsplashPhoto>>>() {
+        unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<UnsplashPhotoPage>>() {
             @Override
-            public void onChanged(@Nullable Resource<List<ResUnsplashPhoto>> listResource) {
+            public void onChanged(@Nullable Resource<UnsplashPhotoPage> listResource) {
                 if (listResource == null)
                     return;
-                adapter.addPayloads(listResource.data);
+                UnsplashPhotoPage page = listResource.data;
+                if (page == null)
+                    return;
+                if (listResource.isSuccess()) {
+                    behavior.refreshComplete();
+                    if (page.isFirstPage()) {
+                        adapter.setPayloads(headerUnsplashPhoto);
+                        adapter.addPayloads(page.getPhotos());
+                    } else {
+                        adapter.addPayloads(page.getPhotos());
+                    }
+                } else if (listResource.isError()){
+                    if (page.isFirstPage()) {
+                        behavior.refreshError(listResource.throwable);
+                        adapter.setPayloads(new ErrorItem(listResource.throwable.getMessage()));
+                    }
+                }
             }
         });
-    }
 
-    public void setPayloads(Collection<?> payloads) {
-        adapter.setPayloads(payloads);
-    }
 
-    public void addPayloads(Collection<?> payloads) {
-        adapter.addPayloads(payloads);
+        float translationDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 128, view.getResources().getDisplayMetrics());
+
+        if (behavior != null) {
+            behavior.addOnScrollListener(new OnScrollListener() {
+                @Override
+                public void onStartScroll(View view, int max, boolean isTouch) {
+
+                }
+
+                @Override
+                public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+//                    float offset = current - behavior.getHeaderConfig().getVisibleHeight();
+//                    binding.circleProgress.setProgress(offset / behavior.getHeaderConfig().getRefreshTriggerRange());
+                }
+
+                @Override
+                public void onStopScroll(View view, int current, int max, boolean isTouch) {
+                    if (!behavior.getController().isRefreshing()) {
+                        binding.circleProgress.setProgress(1f);
+                        binding.circleProgress.animate().translationY(0);
+                    }
+                }
+            });
+
+            behavior.addOnRefreshListener(new OnRefreshListener() {
+                @Override
+                public void onRefreshStart() {
+                    binding.circleProgress.start();
+                    binding.circleProgress.setProgress(1f);
+                }
+
+                @Override
+                public void onReleaseToRefresh() {
+                    binding.circleProgress.ready();
+                    binding.circleProgress.animate()
+                            .translationY(translationDistance);
+                }
+
+                @Override
+                public void onRefresh() {
+                    binding.circleProgress.refresh();
+                    unsplashViewModel.firstPage();
+                }
+
+                @Override
+                public void onRefreshEnd(@Nullable Throwable throwable) {
+                    binding.circleProgress.stop();
+                    binding.circleProgress.setProgress(1f);
+                    binding.circleProgress.animate().translationY(0);
+                }
+            });
+        }
     }
 }

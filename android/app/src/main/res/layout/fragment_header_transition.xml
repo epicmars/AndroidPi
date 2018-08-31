@@ -33,7 +33,7 @@
             </android.support.constraint.ConstraintLayout>
         </android.support.v4.widget.NestedScrollView>
 
-        <com.androidpi.app.widget.ImageHeaderView
+        <com.androidpi.app.widget.ImageTransitionHeaderView
             android:id="@+id/view_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

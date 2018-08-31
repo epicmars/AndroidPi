@@ -9,5 +9,5 @@ public interface RefreshController {
 
     void refreshComplete();
 
-    void refreshError(Exception exception);
+    void refreshError(Throwable throwable);
 }

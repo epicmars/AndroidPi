@@ -15,9 +15,11 @@ class NewsPagination() {
 
     var page: Int = 1
 
-    constructor(page: Int, list: List<News>): this() {
+    constructor(page: Int, list: List<News>?): this() {
         this.page = page
-        this.newsList.addAll(list)
+        if (list != null) {
+            this.newsList.addAll(list)
+        }
     }
 
     fun nextPage(isNext: Boolean) : Int {

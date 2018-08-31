@@ -44,19 +44,12 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
     protected V mChild;
     protected CoordinatorLayout mParent;
     private OffsetAnimator offsetAnimator;
-    protected float maxOffset = 0f;
-    protected float maxOffsetRatio = 0f;
-    protected float maxOffsetRatioOfParent = 0f;
     protected int progressBase = 0;
     protected List<ScrollingListener> mListeners = new ArrayList<>();
     protected Handler handler = new Handler(this);
     private Queue<Runnable> pendingActions = new LinkedList<>();
     protected CTR controller;
-    protected boolean useDefaultMaxOffset = false;
-
-    public AnimationOffsetBehavior() {
-
-    }
+    protected BehaviorConfiguration configuration;
 
     public AnimationOffsetBehavior(Context context) {
         this(context, null);
@@ -64,20 +57,22 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
 
     public AnimationOffsetBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+        if (configuration == null) {
+            configuration = new BehaviorConfiguration();
+        }
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior, 0, 0);
         boolean hasMaxOffsetRatio = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffsetRatio);
         boolean hasMaxOffset = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset);
         if (hasMaxOffsetRatio) {
-            maxOffsetRatio = a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 1, 0f);
-            maxOffsetRatioOfParent = a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 2, 0f);
+            configuration.setMaxOffsetRatio(a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 1, 0f));
+            configuration.setMaxOffsetRatioOfParent(a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 2, 0f));
         }
         if (hasMaxOffset) {
-            maxOffset = a.getDimension(R.styleable.OffsetBehavior_lr_maxOffset, 0);
+            configuration.setMaxOffset(a.getDimensionPixelOffset(R.styleable.OffsetBehavior_lr_maxOffset, 0));
         }
         // If maxOffset and maxOffsetRatio is not set then use default.
-        if (!hasMaxOffsetRatio && !hasMaxOffset) {
-            useDefaultMaxOffset = true;
-        }
+        configuration.setUseDefaultMaxOffset(!hasMaxOffsetRatio && !hasMaxOffset);
+        configuration.setDefaultRefreshTriggerRange(context.getResources().getDimensionPixelOffset(R.dimen.defaultRefreshTriggerRange));
         a.recycle();
     }
 
@@ -93,12 +88,6 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         // Execute pending actions which need view to be initialized.
         handler.sendEmptyMessage(MSG_VIEW_INITIATED);
         return true;
-    }
-
-    @Override
-    public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
-        boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        return handled;
     }
 
     @Override
@@ -146,7 +135,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
                     parent.dispatchDependentViewsChanged(child);
                 }
                 for (ScrollingListener l : mListeners) {
-                    l.onScroll(getParent(), getChild(), progressBase + value, offset, (int) maxOffset, false);
+                    l.onScroll(getParent(), getChild(), progressBase + value, offset, configuration.getMaxOffset(), false);
                 }
             }
 
@@ -218,11 +207,25 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         }
     }
 
-    public BehaviorController getController() {
+    public void requestLayout() {
+        runWithView(new Runnable() {
+            @Override
+            public void run() {
+                getChild().requestLayout();
+            }
+        });
+    }
+
+    public CTR getController() {
         return controller;
     }
 
-    public void setMaxOffset(float maxOffset) {
-        this.maxOffset = maxOffset;
+    public BehaviorConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(BehaviorConfiguration configuration) {
+        this.configuration = configuration;
+        requestLayout();
     }
 }

@@ -25,6 +25,7 @@ import com.androidpi.app.viewholder.NewsViewHolder
 import com.androidpi.app.viewholder.items.ErrorItem
 import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import com.androidpi.news.vo.NewsPagination
+import kotlinx.android.synthetic.main.fragment_main.*
 import javax.inject.Inject
 
 /**
@@ -42,6 +43,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
     lateinit var mAdapter: RecyclerAdapter
 
     var mNewsCategory: String? = null
+
+    lateinit var headerBehavior: RefreshHeaderBehavior<View>
+
+    lateinit var footerBehavior: RefreshFooterBehavior<View>
+
 
     companion object {
 
@@ -72,23 +78,29 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         mNewsModel.mNews.observe(this, Observer { t ->
             if (t == null) return@Observer
-
+            val pagination : NewsPagination? = t.data
             if (t.isSuccess) {
-                refreshFinished()
-                if (t.data == null) {
+                if (pagination == null) {
                     mAdapter.setPayloads(ErrorItem("数据为空"))
                     return@Observer
                 }
-                if ((t.data as NewsPagination).isFirstPage()) {
-                    mAdapter.setPayloads(t.data?.newsList)
+                if (pagination.isFirstPage()) {
+                    refreshFinished()
+                    mAdapter.setPayloads(pagination.newsList)
                 } else {
-                    mAdapter.addPayloads(t.data?.newsList)
+                    loadFinished(null)
+                    mAdapter.addPayloads(pagination.newsList)
                 }
             } else if (t.isError) {
-                refreshFinished()
-                mAdapter.setPayloads(ErrorItem("加载失败"))
-            } else if (t.isLoading) {
-
+                if (pagination == null) {
+                    return@Observer
+                }
+                if (pagination.isFirstPage()) {
+                    refreshFinished()
+                    mAdapter.setPayloads(ErrorItem("加载失败"))
+                } else {
+                    loadFinished(t.throwable as Exception)
+                }
             }
         })
     }
@@ -110,19 +122,19 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         //
         val headerParams = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        val headerBehavior = RefreshHeaderBehavior<View>(context)
+        headerBehavior  = RefreshHeaderBehavior<View>(context)
         headerBehavior.addOnScrollListener(object : OnScrollListener {
 
-            override fun onStartScroll(max: Int, isTouch: Boolean) {
+            override fun onStartScroll(view: View, max: Int, isTouch: Boolean) {
                 binding.headerProgress.visibility = View.VISIBLE
                 binding.headerProgress.max = max
             }
 
-            override fun onScroll(current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            override fun onScroll(view: View, current: Int, delta: Int, max: Int, isTouch: Boolean) {
                 binding.headerProgress.progress = current
             }
 
-            override fun onStopScroll(current: Int, max: Int) {
+            override fun onStopScroll(view: View, current: Int, max: Int, isTouch: Boolean) {
                 binding.headerProgress.progress = current
             }
 
@@ -140,7 +152,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 loadFirstPage()
             }
 
-            override fun onRefreshEnd() {
+            override fun onRefreshEnd(throwable: Throwable?) {
             }
         })
 
@@ -149,7 +161,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         // Set footer behavior.
         val footerParams = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
-        val footerBehavior = RefreshFooterBehavior<View>(context)
+        footerBehavior = RefreshFooterBehavior<View>(context)
         footerBehavior.addOnLoadListener(object : OnLoadListener {
             override fun onLoadStart() {
 
@@ -162,20 +174,20 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 loadNextPage()
             }
 
-            override fun onLoadEnd() {
+            override fun onLoadEnd(throwable: Throwable?) {
             }
         })
 
 
         footerBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onScroll(current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            override fun onScroll(view: View, current: Int, delta: Int, max: Int, isTouch: Boolean) {
             }
 
-            override fun onStartScroll(max: Int, isTouch: Boolean) {
+            override fun onStartScroll(view: View, max: Int, isTouch: Boolean) {
 
             }
 
-            override fun onStopScroll(current: Int, max: Int) {
+            override fun onStopScroll(view: View, current: Int, max: Int, isTouch: Boolean) {
             }
         })
 
@@ -188,16 +200,16 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         contentParams.behavior = contentBehavior
 
         contentBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onStartScroll(max: Int, isTouch: Boolean) {
+            override fun onStartScroll(view: View, max: Int, isTouch: Boolean) {
                 binding.contentProgress.visibility = View.VISIBLE
                 binding.contentProgress.max = max
             }
 
-            override fun onScroll(current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            override fun onScroll(view: View, current: Int, delta: Int, max: Int, isTouch: Boolean) {
                 binding.contentProgress.progress = current
             }
 
-            override fun onStopScroll(current: Int, max: Int) {
+            override fun onStopScroll(view: View, current: Int, max: Int, isTouch: Boolean) {
                 binding.contentProgress.progress = current
             }
         })
@@ -231,22 +243,21 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         if (null == savedInstanceState || mNewsModel.mNews.value == null) {
-            val lpHeader = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-            val behavior = lpHeader.behavior as RefreshHeaderBehavior
-            behavior.refresh()
+            headerBehavior.refresh()
         }
     }
 
     fun refreshFinished() {
-        val lpHeader = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = lpHeader.behavior as RefreshHeaderBehavior
-        behavior.refreshComplete()
+        headerBehavior.refreshComplete()
+    }
 
-        val lpFooter = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
-        val footerBehavior = lpFooter.behavior as RefreshFooterBehavior
-        footerBehavior.loadComplete()
+    fun loadFinished(exception: Exception?) {
+        if (exception == null) {
+            footerBehavior.loadComplete()
+        } else {
+            footerBehavior.loadError(exception)
+        }
     }
 
     override fun loadFirstPage() {
