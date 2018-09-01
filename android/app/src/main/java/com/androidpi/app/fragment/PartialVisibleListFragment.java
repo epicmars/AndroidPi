@@ -75,7 +75,7 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
                     } else {
                         adapter.addPayloads(page.getPhotos());
                     }
-                } else if (listResource.isError()){
+                } else if (listResource.isError()) {
                     if (page.isFirstPage()) {
                         behavior.refreshError(listResource.throwable);
                         adapter.setPayloads(new ErrorItem(listResource.throwable.getMessage()));
@@ -86,6 +86,7 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
 
 
         float translationDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 128, view.getResources().getDisplayMetrics());
+        binding.circleProgress.setProgress(1f);
 
         if (behavior != null) {
             behavior.addOnScrollListener(new OnScrollListener() {
@@ -96,14 +97,11 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
 
                 @Override
                 public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
-//                    float offset = current - behavior.getHeaderConfig().getVisibleHeight();
-//                    binding.circleProgress.setProgress(offset / behavior.getHeaderConfig().getRefreshTriggerRange());
                 }
 
                 @Override
                 public void onStopScroll(View view, int current, int max, boolean isTouch) {
                     if (!behavior.getController().isRefreshing()) {
-                        binding.circleProgress.setProgress(1f);
                         binding.circleProgress.animate().translationY(0);
                     }
                 }
@@ -112,27 +110,25 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
             behavior.addOnRefreshListener(new OnRefreshListener() {
                 @Override
                 public void onRefreshStart() {
-                    binding.circleProgress.start();
+                    binding.circleProgress.resetStyle();
                     binding.circleProgress.setProgress(1f);
+                    binding.circleProgress.showCircle();
                 }
 
                 @Override
                 public void onReleaseToRefresh() {
-                    binding.circleProgress.ready();
-                    binding.circleProgress.animate()
-                            .translationY(translationDistance);
+                    binding.circleProgress.animate().translationY(translationDistance);
                 }
 
                 @Override
                 public void onRefresh() {
-                    binding.circleProgress.refresh();
+                    binding.circleProgress.startLoading();
                     unsplashViewModel.firstPage();
                 }
 
                 @Override
                 public void onRefreshEnd(@Nullable Throwable throwable) {
-                    binding.circleProgress.stop();
-                    binding.circleProgress.setProgress(1f);
+                    binding.circleProgress.stopLoading();
                     binding.circleProgress.animate().translationY(0);
                 }
             });

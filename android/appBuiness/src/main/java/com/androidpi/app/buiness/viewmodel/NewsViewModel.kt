@@ -51,7 +51,7 @@ class NewsViewModel @Inject constructor() : ViewModel(), NewsListModel {
                     }
 
                     override fun onError(e: Throwable) {
-                        mNews.value = Resource.error(NewsPagination(page, null))
+                        mNews.value = Resource.error(null, NewsPagination(page, null), e)
                     }
                 })
     }

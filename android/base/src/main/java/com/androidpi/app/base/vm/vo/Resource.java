@@ -76,10 +76,6 @@ public class Resource<T> {
         return error(msg, null, null);
     }
 
-    public static <T> Resource<T> error(@NonNull T data) {
-        return error(null, data, null);
-    }
-
     public static <T> Resource<T> error(@NonNull Throwable throwable) {
         return error(null, null, throwable);
     }

@@ -127,23 +127,23 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                 @Override
                 public void onRefreshStart() {
                     binding.circleProgress.setVisibility(View.VISIBLE);
-                    binding.circleProgress.start();
+                    binding.circleProgress.resetStyle();
                 }
 
                 @Override
                 public void onReleaseToRefresh() {
-                    binding.circleProgress.ready();
+                    binding.circleProgress.showCircle();
                 }
 
                 @Override
                 public void onRefresh() {
-                    binding.circleProgress.refresh();
+                    binding.circleProgress.startLoading();
                     unsplashViewModel.firstPage();
                 }
 
                 @Override
                 public void onRefreshEnd(@Nullable Throwable throwable) {
-                    binding.circleProgress.stop();
+                    binding.circleProgress.stopLoading();
                     binding.circleProgress.setVisibility(View.GONE);
                 }
             });

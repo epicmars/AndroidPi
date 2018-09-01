@@ -42,7 +42,7 @@ class UnsplashViewModel : ViewModel() {
                     }
 
                     override fun onError(e: Throwable) {
-                        randomPhotosResult.value = Resource.error(UnsplashPhotoPage(page, null))
+                        randomPhotosResult.value = Resource.error(null, UnsplashPhotoPage(page, null), e)
                     }
                 })
     }

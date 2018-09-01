@@ -44,7 +44,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public void onStateChanged(int state, Throwable throwable) {
-            Timber.d("footer state: %d", state);
+//            Timber.d("footer state: %d", state);
             switch (state) {
                 case STATE_START:
                     onLoadStart();
@@ -102,7 +102,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public void onStateChanged(int state, Throwable throwable) {
-            Timber.d("header state: %d", state);
+//            Timber.d("header state: %d", state);
             switch (state) {
                 case STATE_START:
                     onRefreshStart();
