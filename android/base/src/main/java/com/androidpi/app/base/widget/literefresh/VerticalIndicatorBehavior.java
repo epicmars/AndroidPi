@@ -108,9 +108,9 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
 
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
-        // If header should be hidden entirely, and hidden part is visible now consume the fling.
+        // If indicator should be hidden entirely, and hidden part is visible now consume the fling.
         // Otherwise, do nothing.
-        if (controller.isHiddenPartVisible(this) && configuration.getVisibleHeight() == 0) {
+        if (controller.isHiddenPartVisible(this)) {
             return true;
         }
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
@@ -145,7 +145,7 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
             offsetDelta = controller.computeOffsetDeltaOnDependentViewChanged(this, scrollingContentBehavior, parent, child, dependency);
         }
         if (offsetDelta != 0) {
-            // todo: use TYPE_TOUCH or not
+            // todo: use TYPE_TOUCH or not, may
             consumeOffsetOnDependentViewChanged(parent, child, offsetDelta, TYPE_TOUCH);
             return true;
         }

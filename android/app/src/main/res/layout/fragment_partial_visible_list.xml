@@ -19,6 +19,6 @@
             android:id="@+id/circle_progress"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginTop="-48dp"/>
+            android:layout_marginTop="80dp"/>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

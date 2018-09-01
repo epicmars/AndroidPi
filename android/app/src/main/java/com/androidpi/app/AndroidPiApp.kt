@@ -23,7 +23,7 @@ class AndroidPiApp : MultiDexApplication(), HasActivityInjector{
         super.onCreate()
         DaggerHelper.inject(this)
         LogHelper.init(this)
-        LeakCanaryHelper.init(this)
+//        LeakCanaryHelper.init(this)
         WebViewHelper.configDebugSettings(this)
     }
 

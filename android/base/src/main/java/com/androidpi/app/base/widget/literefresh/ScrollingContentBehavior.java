@@ -214,6 +214,14 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         }
     }
 
+    @Override
+    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
+        // If header or footer's hidden part is visible, do not fling.
+        if (getTopAndBottomOffset() > headerConfig.getVisibleHeight() || (-child.getBottom() + getParent().getHeight()) > footerConfig.getVisibleHeight())
+            return true;
+        return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
+    }
+
     /**
      * @param coordinatorLayout
      * @param child

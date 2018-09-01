@@ -26,6 +26,8 @@ import com.androidpi.app.viewholder.UnsplashPhotoHeaderViewHolder;
 import com.androidpi.app.viewholder.UnsplashPhotoListViewHolder;
 import com.androidpi.app.viewholder.items.ErrorItem;
 
+import timber.log.Timber;
+
 /**
  * Created by jastrelax on 2018/8/28.
  */
@@ -85,24 +87,30 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
         });
 
 
-        float translationDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 128, view.getResources().getDisplayMetrics());
+        final float translationDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 128, view.getResources().getDisplayMetrics());
+        binding.circleProgress.resetStyle();
         binding.circleProgress.setProgress(1f);
+        binding.circleProgress.setTranslationY(-translationDistance);
 
         if (behavior != null) {
             behavior.addOnScrollListener(new OnScrollListener() {
                 @Override
                 public void onStartScroll(View view, int max, boolean isTouch) {
-
+//                    Timber.d("onStartScroll: isTouch %b", isTouch);
                 }
 
                 @Override
                 public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+//                    Timber.d("onScroll: isTouch %b", isTouch);
                 }
 
                 @Override
                 public void onStopScroll(View view, int current, int max, boolean isTouch) {
-                    if (!behavior.getController().isRefreshing()) {
-                        binding.circleProgress.animate().translationY(0);
+//                    Timber.d("onStopScroll: isTouch %b", isTouch);
+                    if (isTouch && !behavior.getController().isRefreshing()) {
+                        binding.circleProgress.resetStyle();
+                        binding.circleProgress.setProgress(1f);
+                        binding.circleProgress.animate().translationY(-translationDistance);
                     }
                 }
             });
@@ -110,26 +118,35 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
             behavior.addOnRefreshListener(new OnRefreshListener() {
                 @Override
                 public void onRefreshStart() {
+//                    Timber.d("onRefreshStart");
                     binding.circleProgress.resetStyle();
                     binding.circleProgress.setProgress(1f);
-                    binding.circleProgress.showCircle();
                 }
 
                 @Override
                 public void onReleaseToRefresh() {
-                    binding.circleProgress.animate().translationY(translationDistance);
+//                    Timber.d("onReleaseToRefresh");
+                    binding.circleProgress.resetStyle();
+                    binding.circleProgress.setProgress(1f);
+                    binding.circleProgress.showCircle();
+                    binding.circleProgress.animate().translationY(0);
                 }
 
                 @Override
                 public void onRefresh() {
+//                    Timber.d("onRefresh");
+                    binding.circleProgress.resetStyle();
                     binding.circleProgress.startLoading();
                     unsplashViewModel.firstPage();
                 }
 
                 @Override
                 public void onRefreshEnd(@Nullable Throwable throwable) {
+//                    Timber.d("onRefreshEnd");
                     binding.circleProgress.stopLoading();
-                    binding.circleProgress.animate().translationY(0);
+                    binding.circleProgress.resetStyle();
+                    binding.circleProgress.setProgress(1f);
+                    binding.circleProgress.animate().translationY(-translationDistance);
                 }
             });
         }

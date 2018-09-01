@@ -33,7 +33,7 @@
                 android:id="@+id/circle_progress"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="182dp"
                 android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

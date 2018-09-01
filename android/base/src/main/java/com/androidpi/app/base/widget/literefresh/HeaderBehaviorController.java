@@ -77,7 +77,7 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
     /**
      * Tell if the hidden part of header view is visible.
      * If invisible height is zero, which means visible height equals to view's height,
-     * nt that case it's considered to be invisible.
+     * in that case it's considered to be invisible.
      *
      * @return true if hidden part of header view is visible,
      * otherwise return false.

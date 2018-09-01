@@ -46,17 +46,17 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 if (listResource.data == null)
                     return;
                 if (listResource.isSuccess()) {
+                    headerBehavior.refreshComplete();
                     if (listResource.data.isFirstPage()) {
                         photoListFragment.setPayloads(listResource.data.getPhotos());
                     } else {
                         photoListFragment.addPayloads(listResource.data.getPhotos());
                     }
-                    headerBehavior.refreshComplete();
                 } else if (listResource.isError()) {
+                    headerBehavior.refreshError(listResource.throwable);
                     if (listResource.data.isFirstPage()) {
                         photoListFragment.refreshError(listResource.throwable);
                     }
-                    headerBehavior.refreshError(listResource.throwable);
                 }
             }
         });
@@ -99,6 +99,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
 
                 @Override
                 public void onRefresh() {
+                    binding.circleProgress.resetStyle();
                     binding.circleProgress.startLoading();
                     unsplashViewModel.firstPage();
                 }
