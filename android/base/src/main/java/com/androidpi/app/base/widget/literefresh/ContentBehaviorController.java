@@ -7,8 +7,6 @@ import android.view.View;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import timber.log.Timber;
-
 import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.*;
 
 /**
@@ -59,11 +57,11 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
                     reset();
                     break;
                 case STATE_REFRESH_RESET:
-                    showFooter();
+                    refreshFooter();
                     break;
                 case STATE_REFRESH:
                     onLoad();
-                    showFooter();
+                    refreshFooter();
                     break;
                 case STATE_COMPLETE:
                     onLoadEnd(throwable);
@@ -117,11 +115,11 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
                     reset();
                     break;
                 case STATE_REFRESH_RESET:
-                    showHeader();
+                    refreshHeader();
                     break;
                 case STATE_REFRESH:
                     onRefresh();
-                    showHeader();
+                    refreshHeader();
                     break;
                 case STATE_COMPLETE:
                     stopScroll(true);
@@ -295,6 +293,14 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     void showFooter() {
         behavior.showFooter(SHOW_DURATION);
+    }
+
+    void refreshFooter() {
+        behavior.refreshFooter(SHOW_DURATION);
+    }
+
+    void refreshHeader() {
+        behavior.refreshHeader(SHOW_DURATION);
     }
 
     void reset() {

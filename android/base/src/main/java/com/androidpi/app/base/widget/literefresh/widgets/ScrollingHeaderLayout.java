@@ -9,6 +9,7 @@ import com.androidpi.app.base.widget.literefresh.OnScrollListener;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 
 /**
+ * A scrolling header layout that add a {@link RefreshHeaderBehavior} to itself.
  * Created by jastrelax on 2018/8/19.
  */
 public abstract class ScrollingHeaderLayout extends FrameLayout implements OnScrollListener {

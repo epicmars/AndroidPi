@@ -90,7 +90,11 @@ dependencies {
     // circle image view
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
+    // blurry
     implementation 'jp.wasabeef:blurry:2.1.1'
+
+    // circle indicator
+    implementation 'me.relex:circleindicator:1.2.2@aar'
 
     implementation project(':appBuiness')
     implementation project(':base')

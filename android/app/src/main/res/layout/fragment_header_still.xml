@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.androidpi.app.widget.ScalableHeaderLayout
+        <com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:lr_visibleHeightRatio="100%"
@@ -15,7 +15,7 @@
             <com.androidpi.app.widget.ProfileHeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </com.androidpi.app.widget.ScalableHeaderLayout>
+        </com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout>
 
         <com.androidpi.app.widget.NestedScrollPhotoListView
             android:id="@+id/view_content"

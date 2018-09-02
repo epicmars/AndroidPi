@@ -5,10 +5,11 @@
         <attr name="lr_maxOffsetRatio" format="reference|fraction"/>
         <attr name="lr_visibleHeight" format="reference|dimension"/>
         <attr name="lr_visibleHeightRatio" format="reference|fraction"/>
-        <attr name="lr_refreshTriggerRange" format="reference|dimension"/>
+        <attr name="lr_triggerRange" format="reference|dimension"/>
+        <attr name="lr_showUpWhenRefresh" format="reference|boolean"/>
     </declare-styleable>
 
-    <declare-styleable name="HeaderBehavior">
+    <declare-styleable name="IndicatorBehavior">
         <attr name="lr_headerMode" format="enum">
             <enum name="follow" value="0"/>
             <enum name="still" value="1"/>

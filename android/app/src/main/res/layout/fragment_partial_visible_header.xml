@@ -14,8 +14,9 @@
             android:layout_height="wrap_content"
             app:lr_visibleHeight="182dp"
             app:lr_maxOffsetRatio="120%p"
-            app:lr_refreshTriggerRange="96dp"
-            app:layout_behavior="@string/lr_refresh_header_behavior">
+            app:lr_triggerRange="96dp"
+            app:layout_behavior="@string/lr_refresh_header_behavior"
+            android:transitionName="@string/transition_header">
 
             <ImageView
                 android:id="@+id/iv_photo"
@@ -34,17 +35,17 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginBottom="182dp"
-                android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
+
         <FrameLayout
             android:id="@+id/view_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:lr_minOffset="-10dp"
+            app:lr_minOffset="-32dp"
             app:layout_behavior="@string/lr_refresh_content_behavior">
 
             <fragment

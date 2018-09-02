@@ -7,11 +7,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.androidpi.app.widget.CircularLoadingView
+            android:id="@+id/circle_progress"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            app:layout_anchor="@id/view_content"
+            app:layout_anchorGravity="top|center_horizontal"/>
+
         <com.androidpi.app.widget.ImagePagerHeaderView
             android:id="@+id/image_pager_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/lr_refresh_header_behavior"
+            app:lr_headerMode="follow_up"
             app:lr_maxOffsetRatio="100%p"
             app:lr_visibleHeightRatio="100%" />
 
@@ -35,13 +44,6 @@
             android:background="@color/colorAccent"
             app:layout_behavior="@string/lr_refresh_footer_behavior" />
 
-        <com.androidpi.app.widget.CircularLoadingView
-            android:id="@+id/circle_progress"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="64dp" />
-
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
@@ -57,8 +59,7 @@
                 android:background="?colorPrimary"
                 app:navigationIcon="?homeAsUpIndicator"
                 app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
-                app:title="Photos on Unsplash">
-            </android.support.v7.widget.Toolbar>
+                app:title="Photos on Unsplash"></android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

@@ -6,15 +6,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.androidpi.app.widget.ImagePagerHeaderView
-            android:id="@+id/image_pager_header"
+        <com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout
+            android:id="@+id/scaleableHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/lr_refresh_header_behavior"
             app:lr_visibleHeightRatio="100%"
             app:lr_maxOffsetRatio="100%p"
-            app:lr_refreshTriggerRange="96dp">
-        </com.androidpi.app.widget.ImagePagerHeaderView>
+            app:lr_triggerRange="96dp">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_pager_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:foreground="@drawable/bg_gradient"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/photo2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="3:2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
+        </com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout>
 
         <fragment
             android:id="@+id/fragment"

@@ -21,7 +21,7 @@ public class RefreshContentBehavior<V extends View> extends ScrollingContentBeha
     }
 
     public void addOnScrollListener(OnScrollListener listener) {
-        controller.addOnPullingListener(listener);
+        controller.addOnScrollListener(listener);
     }
 
     public void addOnRefreshListener(OnRefreshListener listener) {

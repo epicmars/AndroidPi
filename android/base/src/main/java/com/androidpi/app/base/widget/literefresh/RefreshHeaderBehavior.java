@@ -31,9 +31,9 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
 
     public RefreshHeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.HeaderBehavior, 0, 0);
-        if (a.hasValue(R.styleable.HeaderBehavior_lr_headerMode)) {
-            int mode = a.getInt(R.styleable.HeaderBehavior_lr_headerMode, HeaderBehaviorController.MODE_FOLLOW);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndicatorBehavior, 0, 0);
+        if (a.hasValue(R.styleable.IndicatorBehavior_lr_headerMode)) {
+            int mode = a.getInt(R.styleable.IndicatorBehavior_lr_headerMode, HeaderBehaviorController.MODE_FOLLOW);
             controller.setMode(mode);
         }
         a.recycle();
@@ -58,7 +58,7 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
     }
 
     public void addOnScrollListener(OnScrollListener listener) {
-        controller.addOnPullingListener(listener);
+        controller.addOnScrollListener(listener);
     }
 
     public void addOnRefreshListener(OnRefreshListener listener) {

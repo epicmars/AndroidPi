@@ -8,22 +8,25 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.androidpi.app.R;
 
+import me.relex.circleindicator.CircleIndicator;
+
 /**
  * Created by jastrelax on 2018/8/13.
  */
-public class ImagePagerHeaderView extends ScalableHeaderLayout {
+public class ImagePagerHeaderView extends FrameLayout {
 
     private ViewPager viewPager;
+    private CircleIndicator circleIndicator;
 
     public ImagePagerHeaderView(Context context) {
         this(context, null);
@@ -37,10 +40,12 @@ public class ImagePagerHeaderView extends ScalableHeaderLayout {
         super(context, attrs, defStyle);
         inflate(context, R.layout.view_image_pager, this);
         viewPager = findViewById(R.id.view_pager);
+        circleIndicator = findViewById(R.id.circle_indicator);
     }
 
     public void setFragmentManager(FragmentManager fm) {
         viewPager.setAdapter(new ImagePagerAdapter(fm));
+        circleIndicator.setViewPager(viewPager);
     }
 
     public class ImagePagerAdapter extends FragmentPagerAdapter {

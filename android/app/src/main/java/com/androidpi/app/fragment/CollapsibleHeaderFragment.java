@@ -50,6 +50,7 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
         RefreshHeaderBehavior headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.imagePagerHeader);
         RefreshContentBehavior contentBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewContent);
 
+        binding.circleProgress.setColor(getResources().getColor(R.color.colorPrimary));
         binding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
         UnsplashPhotoGridFragment fragment = ((UnsplashPhotoGridFragment) getChildFragmentManager().findFragmentById(R.id.fragment));
         unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<UnsplashPhotoPage>>() {
@@ -84,7 +85,7 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
 
         if (headerBehavior != null) {
             BehaviorConfiguration config = headerBehavior.getConfiguration();
-            headerBehavior.addOnScrollListener(new OnScrollListener() {
+            contentBehavior.addOnScrollListener(new OnScrollListener() {
 
                 ColorDrawable drawable = new ColorDrawable(Color.BLACK);
 
@@ -95,17 +96,15 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
 
                 @Override
                 public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
-                    if (current <= binding.imagePagerHeader.getHeight()) {
-                        float y = binding.imagePagerHeader.getHeight() - current;
+                    if (current <= config.getHeight()) {
+                        float y = config.getHeight() - current;
                         binding.imagePagerHeader.setTranslationY(y / 2);
-                        float alpha = 1 - (float) current / binding.imagePagerHeader.getHeight();
+                        float alpha = 1 - (float) current / config.getHeight();
                         drawable.setAlpha((int) (alpha * 196));
                         binding.imagePagerHeader.setForeground(drawable);
                     }
 
-                    if (current >= config.getHeight()) {
-                        binding.circleProgress.setProgress((float) (current - config.getHeight()) / config.getRefreshTriggerRange());
-                    }
+                    binding.circleProgress.setProgress(Math.max(0f, (float) (current - config.getHeight())) / config.getRefreshTriggerRange());
 
                     if (current >= contentBehavior.getConfiguration().getMinOffset()) {
                         float range = config.getHeight() - contentBehavior.getConfiguration().getMinOffset();
@@ -137,6 +136,7 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
 
                 @Override
                 public void onRefresh() {
+                    binding.circleProgress.resetStyle();
                     binding.circleProgress.startLoading();
                     unsplashViewModel.firstPage();
                 }

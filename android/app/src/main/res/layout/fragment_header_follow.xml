@@ -6,6 +6,7 @@
         android:layout_height="match_parent">
 
         <FrameLayout
+            android:id="@+id/view_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:lr_visibleHeightRatio="100%"

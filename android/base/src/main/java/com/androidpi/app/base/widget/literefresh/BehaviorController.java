@@ -170,7 +170,7 @@ public class BehaviorController<B extends AnimationOffsetBehavior> implements An
         this.behavior = behavior;
     }
 
-    public void addOnPullingListener(OnScrollListener listener) {
+    public void addOnScrollListener(OnScrollListener listener) {
         if (null == listener)
             return;
         mScrollListeners.add(listener);

@@ -72,7 +72,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         }
         // If maxOffset and maxOffsetRatio is not set then use default.
         configuration.setUseDefaultMaxOffset(!hasMaxOffsetRatio && !hasMaxOffset);
-        configuration.setDefaultRefreshTriggerRange(context.getResources().getDimensionPixelOffset(R.dimen.defaultRefreshTriggerRange));
+        configuration.setDefaultRefreshTriggerRange(context.getResources().getDimensionPixelOffset(R.dimen.defaultTriggerRange));
         a.recycle();
     }
 

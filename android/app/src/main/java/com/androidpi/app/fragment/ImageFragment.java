@@ -38,6 +38,7 @@ public class ImageFragment extends BaseFragment<FragmentImageBinding>{
         super.onViewCreated(view, savedInstanceState);
         if (getArguments() != null) {
             String imageUrl = getArguments().getString(ARGS_IMAGE_URL);
+            if (imageUrl == null) return;
             GlideApp.with(view)
                     .load(imageUrl)
                     .into(binding.ivImage);

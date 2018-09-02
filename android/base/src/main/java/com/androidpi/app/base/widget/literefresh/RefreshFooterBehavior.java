@@ -50,7 +50,7 @@ public class RefreshFooterBehavior<V extends View> extends VerticalIndicatorBeha
     }
 
     public void addOnScrollListener(OnScrollListener listener) {
-        controller.addOnPullingListener(listener);
+        controller.addOnScrollListener(listener);
     }
 
     @Override

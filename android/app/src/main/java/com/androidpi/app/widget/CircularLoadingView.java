@@ -51,4 +51,8 @@ public class CircularLoadingView extends AppCompatImageView {
         drawable.stop();
     }
 
+    public void setColor(int color) {
+        drawable.setColorSchemeColors(color);
+    }
+
 }

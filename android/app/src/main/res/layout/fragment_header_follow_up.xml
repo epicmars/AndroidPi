@@ -13,7 +13,7 @@
             app:layout_behavior="@string/lr_refresh_content_behavior">
         </com.androidpi.app.widget.NestedScrollPhotoListView>
 
-        <com.androidpi.app.widget.ScalableHeaderLayout
+        <com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:lr_visibleHeightRatio="100%"
@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </com.androidpi.app.widget.ScalableHeaderLayout>
+        </com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout>
 
         <View
             android:id="@+id/view_footer"

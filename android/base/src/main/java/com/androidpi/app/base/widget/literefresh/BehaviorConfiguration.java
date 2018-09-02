@@ -22,6 +22,7 @@ public class BehaviorConfiguration {
     private boolean useDefinedRefreshTriggerRange = false;
     private int defaultRefreshTriggerRange;
     private int refreshTriggerRange;
+    private Boolean showUpWhenRefresh;
 
     // content settings
     /**
@@ -56,6 +57,7 @@ public class BehaviorConfiguration {
         this.useDefinedRefreshTriggerRange = builder.useDefinedRefreshTriggerRange;
         this.defaultRefreshTriggerRange = builder.defaultRefreshTriggerRange;
         this.refreshTriggerRange = builder.refreshTriggerRange;
+        this.showUpWhenRefresh = builder.showUpWhenRefresh;
 
         this.minOffset = builder.minOffset;
         this.cachedMinOffset = builder.cachedMinOffset;
@@ -217,6 +219,14 @@ public class BehaviorConfiguration {
         this.useDefaultMinOffset = useDefaultMinOffset;
     }
 
+    public Boolean getShowUpWhenRefresh() {
+        return showUpWhenRefresh;
+    }
+
+    public void setShowUpWhenRefresh(Boolean showUpWhenRefresh) {
+        this.showUpWhenRefresh = showUpWhenRefresh;
+    }
+
     public static class Builder {
 
         // common settings
@@ -236,6 +246,7 @@ public class BehaviorConfiguration {
         private boolean useDefinedRefreshTriggerRange = false;
         private int defaultRefreshTriggerRange;
         private int refreshTriggerRange;
+        private Boolean showUpWhenRefresh;
 
         // content settings
 
@@ -255,29 +266,31 @@ public class BehaviorConfiguration {
         public Builder() {
         }
 
-        public Builder(BehaviorConfiguration settings) {
-            if (settings == null) return;
-            this.maxOffset = settings.maxOffset;
-            this.maxOffsetRatio = settings.maxOffsetRatio;
-            this.maxOffsetRatioOfParent = settings.maxOffsetRatioOfParent;
-            this.useDefaultMaxOffset = settings.useDefaultMaxOffset;
-            this.height = settings.height;
-            this.parentHeight = settings.parentHeight;
+        public Builder(BehaviorConfiguration configuration) {
+            if (configuration == null) return;
+            this.maxOffset = configuration.maxOffset;
+            this.maxOffsetRatio = configuration.maxOffsetRatio;
+            this.maxOffsetRatioOfParent = configuration.maxOffsetRatioOfParent;
+            this.useDefaultMaxOffset = configuration.useDefaultMaxOffset;
+            this.height = configuration.height;
+            this.parentHeight = configuration.parentHeight;
 
-            this.isSettled = settings.isSettled;
-            this.visibleHeight = settings.visibleHeight;
-            this.invisibleHeight = settings.invisibleHeight;
-            this.visibleHeightRatio = settings.visibleHeightRatio;
-            this.visibleHeightParentRatio = settings.visibleHeightParentRatio;
-            this.useDefinedRefreshTriggerRange = settings.useDefinedRefreshTriggerRange;
-            this.defaultRefreshTriggerRange = settings.defaultRefreshTriggerRange;
-            this.refreshTriggerRange = settings.refreshTriggerRange;
+            this.isSettled = configuration.isSettled;
+            this.visibleHeight = configuration.visibleHeight;
+            this.invisibleHeight = configuration.invisibleHeight;
+            this.visibleHeightRatio = configuration.visibleHeightRatio;
+            this.visibleHeightParentRatio = configuration.visibleHeightParentRatio;
+            this.useDefinedRefreshTriggerRange = configuration.useDefinedRefreshTriggerRange;
+            this.defaultRefreshTriggerRange = configuration.defaultRefreshTriggerRange;
+            this.refreshTriggerRange = configuration.refreshTriggerRange;
+            this.showUpWhenRefresh = configuration.showUpWhenRefresh;
 
-            this.minOffset = settings.minOffset;
-            this.cachedMinOffset = settings.cachedMinOffset;
-            this.minOffsetRatio = settings.minOffsetRatio;
-            this.minOffsetRatioOfParent = settings.minOffsetRatioOfParent;
-            this.useDefaultMinOffset = settings.useDefaultMinOffset;
+
+            this.minOffset = configuration.minOffset;
+            this.cachedMinOffset = configuration.cachedMinOffset;
+            this.minOffsetRatio = configuration.minOffsetRatio;
+            this.minOffsetRatioOfParent = configuration.minOffsetRatioOfParent;
+            this.useDefaultMinOffset = configuration.useDefaultMinOffset;
         }
 
         public Builder setMaxOffset(int maxOffset) {
@@ -347,6 +360,11 @@ public class BehaviorConfiguration {
 
         public Builder setRefreshTriggerRange(int refreshTriggerRange) {
             this.refreshTriggerRange = refreshTriggerRange;
+            return this;
+        }
+
+        public Builder setShowUpWhenRefresh(Boolean showUpWhenRefresh) {
+            this.showUpWhenRefresh = showUpWhenRefresh;
             return this;
         }
 
@@ -429,6 +447,10 @@ public class BehaviorConfiguration {
 
         public int getRefreshTriggerRange() {
             return refreshTriggerRange;
+        }
+
+        public Boolean getShowUpWhenRefresh() {
+            return showUpWhenRefresh;
         }
 
         public int getMinOffset() {

@@ -1,4 +1,4 @@
-package com.androidpi.app.widget;
+package com.androidpi.app.base.widget.literefresh.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,6 +9,16 @@ import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 import timber.log.Timber;
 
 /**
+ * A simple scalable header layout.
+ *
+ * Generally you should use this layout as a parent view.
+ *
+ * If you implement a custom view that extends this view directly
+ * and add a {@link com.androidpi.app.base.widget.literefresh.OnScrollListener} to it's
+ * attached behavior, the order of which the listeners are added may be out of order.
+ * In that case when you make scale or translation to your view, it may be conflict with
+ * the changes that have been make here.
+ *
  * Created by jastrelax on 2018/8/12.
  */
 public class ScalableHeaderLayout extends ScrollingHeaderLayout {
@@ -35,17 +45,19 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
         int height = getHeight();
         if (current <= height) {
             // Because the view can scroll down and then back. And it will not always reach a position
-            // where current equals height so that the scale and translation can be reset.
-            // So we need to reset it to original scale and translation, especially when scroll back.
+            // where current offset equals height exactly so that the scale and translation can be reset.
+            // Therefore we need to reset it to original scale and translation, especially when scroll back.
             setScaleX(1f);
             setScaleY(1f);
             setTranslationY(0f);
             return;
         }
-        float scale = Math.max(current / (float) height, 1f);
-        setScaleX(scale);
-        setScaleY(scale);
-        setTranslationY(-(scale - 1f) * height / 2f);
+        if (current > height) {
+            float scale = Math.max(current / (float) height, 1f);
+            setScaleX(scale);
+            setScaleY(scale);
+            setTranslationY(-(scale - 1f) * height / 2f);
+        }
     }
 
     @Override

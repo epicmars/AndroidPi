@@ -279,15 +279,54 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animateDuration);
     }
 
+    void refreshHeader(long animateDuration) {
+        if (null == getChild() || null == getParent()) return;
+        int offset = 0;
+        if (headerConfig.getShowUpWhenRefresh() == null) {
+            // Show up to the trigger range.
+            offset = headerConfig.getVisibleHeight() + headerConfig.getRefreshTriggerRange() - getChild().getTop();
+        } else {
+            if (headerConfig.getShowUpWhenRefresh()) {
+                // Show entire header.
+                offset = headerConfig.getHeight() - getChild().getTop();
+            } else {
+                // Show the visible part only.
+                offset = headerConfig.getVisibleHeight() - getChild().getTop();
+            }
+        }
+        animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animateDuration);
+    }
+
+
     /**
      * Make the header view entirely visible.
      */
-    protected void showHeader(long animateDuration) {
+    void showHeader(long animateDuration) {
         if (null == getChild() || null == getParent()) return;
         int offset = headerConfig.getHeight() - getChild().getTop();
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animateDuration);
     }
 
+
+    void refreshFooter(long animationDuration) {
+        if (null == getChild() || getParent() == null) return;
+        int offset = 0;
+        if (footerConfig.getShowUpWhenRefresh() == null) {
+            offset = - (footerConfig.getVisibleHeight() + footerConfig.getRefreshTriggerRange()) + getParent().getHeight() - getChild().getBottom();
+        } else {
+            if (footerConfig.getShowUpWhenRefresh()) {
+                offset = getParent().getHeight() - footerConfig.getHeight() - getChild().getBottom();
+            } else {
+                offset = -footerConfig.getVisibleHeight() + getParent().getHeight() - getChild().getBottom();
+            }
+        }
+        animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animationDuration);
+    }
+
+    /**
+     * Make the footer entirely visible.
+     * @param animationDuration
+     */
     void showFooter(long animationDuration) {
         if (null == getChild() || getParent() == null) return;
         int offset = getParent().getHeight() - footerConfig.getHeight() - getChild().getBottom();
@@ -317,6 +356,12 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             };
             handler.postDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
         }
+    }
+
+    public void revealHeader() {
+        if (null == getChild() || null == getParent()) return;
+        int offset = getParent().getHeight() - getChild().getTop();
+        animateOffsetDeltaWithDuration(getParent(), getChild(), offset, SHOW_DURATION);
     }
 
     boolean isMinOffsetReached() {
