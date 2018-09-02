@@ -10,8 +10,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/view_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:lr_visibleHeight="182dp"
             app:lr_maxOffsetRatio="120%p"
             app:lr_triggerRange="96dp"
@@ -21,9 +21,8 @@
             <ImageView
                 android:id="@+id/iv_photo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 android:src="@mipmap/photo4"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

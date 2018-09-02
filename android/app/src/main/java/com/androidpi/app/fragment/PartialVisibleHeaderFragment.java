@@ -125,7 +125,11 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 public void onRefresh() {
                     binding.circleProgress.resetStyle();
                     binding.circleProgress.startLoading();
-                    unsplashViewModel.firstPage();
+                    if (!isLaunched) {
+                        unsplashViewModel.firstPage();
+                    } else {
+                        headerBehavior.refreshComplete();
+                    }
                 }
 
                 @Override
@@ -140,5 +144,6 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
     @Override
     public void onResume() {
         super.onResume();
+        isLaunched = false;
     }
 }
