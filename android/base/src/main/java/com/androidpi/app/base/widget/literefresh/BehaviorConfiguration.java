@@ -34,8 +34,8 @@ public class BehaviorConfiguration {
     /**
      * Minimum top and bottom offset relative to parent height.
      */
-    private float minOffsetRatio;
-    private float minOffsetRatioOfParent;
+    private Float minOffsetRatio;
+    private Float minOffsetRatioOfParent;
     private boolean useDefaultMinOffset;
 
     public BehaviorConfiguration() {
@@ -131,11 +131,11 @@ public class BehaviorConfiguration {
         return cachedMinOffset;
     }
 
-    public float getMinOffsetRatio() {
+    public Float getMinOffsetRatio() {
         return minOffsetRatio;
     }
 
-    public float getMinOffsetRatioOfParent() {
+    public Float getMinOffsetRatioOfParent() {
         return minOffsetRatioOfParent;
     }
 
@@ -207,11 +207,11 @@ public class BehaviorConfiguration {
         this.cachedMinOffset = cachedMinOffset;
     }
 
-    public void setMinOffsetRatio(float minOffsetRatio) {
+    public void setMinOffsetRatio(Float minOffsetRatio) {
         this.minOffsetRatio = minOffsetRatio;
     }
 
-    public void setMinOffsetRatioOfParent(float minOffsetRatioOfParent) {
+    public void setMinOffsetRatioOfParent(Float minOffsetRatioOfParent) {
         this.minOffsetRatioOfParent = minOffsetRatioOfParent;
     }
 
@@ -259,8 +259,8 @@ public class BehaviorConfiguration {
         /**
          * Minimum top and bottom offset relative to parent height.
          */
-        private float minOffsetRatio;
-        private float minOffsetRatioOfParent;
+        private Float minOffsetRatio;
+        private Float minOffsetRatioOfParent;
         private boolean useDefaultMinOffset;
 
         public Builder() {
@@ -378,12 +378,12 @@ public class BehaviorConfiguration {
             return this;
         }
 
-        public Builder setMinOffsetRatio(float minOffsetRatio) {
+        public Builder setMinOffsetRatio(Float minOffsetRatio) {
             this.minOffsetRatio = minOffsetRatio;
             return this;
         }
 
-        public Builder setMinOffsetRatioOfParent(float minOffsetRatioOfParent) {
+        public Builder setMinOffsetRatioOfParent(Float minOffsetRatioOfParent) {
             this.minOffsetRatioOfParent = minOffsetRatioOfParent;
             return this;
         }
@@ -461,11 +461,11 @@ public class BehaviorConfiguration {
             return cachedMinOffset;
         }
 
-        public float getMinOffsetRatio() {
+        public Float getMinOffsetRatio() {
             return minOffsetRatio;
         }
 
-        public float getMinOffsetRatioOfParent() {
+        public Float getMinOffsetRatioOfParent() {
             return minOffsetRatioOfParent;
         }
 

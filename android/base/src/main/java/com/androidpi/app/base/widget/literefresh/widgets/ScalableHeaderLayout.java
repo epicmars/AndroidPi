@@ -45,8 +45,8 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
         int height = getHeight();
         if (current <= height) {
             // Because the view can scroll down and then back. And it will not always reach a position
-            // where current offset equals height exactly so that the scale and translation can be reset.
-            // Therefore we need to reset it to original scale and translation, especially when scroll back.
+            // where current offset equals to height exactly so that the scale and translation can be reset.
+            // Therefore we need to reset it to original scale and translation manually, especially when scroll back.
             setScaleX(1f);
             setScaleY(1f);
             setTranslationY(0f);

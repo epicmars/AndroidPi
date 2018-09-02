@@ -50,7 +50,7 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
         RefreshHeaderBehavior headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.imagePagerHeader);
         RefreshContentBehavior contentBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewContent);
 
-        binding.circleProgress.setColor(getResources().getColor(R.color.colorPrimary));
+        binding.circleProgress.setColor(getResources().getColor(R.color.colorAccent));
         binding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
         UnsplashPhotoGridFragment fragment = ((UnsplashPhotoGridFragment) getChildFragmentManager().findFragmentById(R.id.fragment));
         unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<UnsplashPhotoPage>>() {
