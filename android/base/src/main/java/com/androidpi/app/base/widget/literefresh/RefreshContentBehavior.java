@@ -49,7 +49,7 @@ public class RefreshContentBehavior<V extends View> extends ScrollingContentBeha
 
     private float accumulator = 0;
 
-    private Interpolator scrollDownInterpolator = new LinearInterpolator();
+    private Interpolator scrollDownInterpolator = new ViscousFluidInterpolator();
     @Override
     protected float onConsumeOffset(int current, int max, int delta) {
         float consumed = delta;

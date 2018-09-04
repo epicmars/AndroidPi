@@ -21,7 +21,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     private final RefreshStateHandler footerStateHandler = new RefreshStateHandler() {
         @Override
         public boolean isValidOffset(int currentOffset) {
-            return transform(currentOffset) > 0;
+            return transform(currentOffset) > behavior.getFooterConfig().getInitialVisibleHeight();
         }
 
         @Override
@@ -32,7 +32,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public int readyRefreshOffset() {
-            return behavior.getFooterConfig().getHeight();
+            return behavior.getFooterConfig().getRefreshTriggerRange() + behavior.getFooterConfig().getInitialVisibleHeight();
         }
 
         @Override
@@ -78,7 +78,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public boolean isValidOffset(int currentOffset) {
-            return transform(currentOffset) > behavior.getHeaderConfig().getVisibleHeight();
+            return transform(currentOffset) > behavior.getHeaderConfig().getInitialVisibleHeight();
         }
 
         @Override
@@ -89,8 +89,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public int readyRefreshOffset() {
-            BehaviorConfiguration headerConfig = behavior.getHeaderConfig();
-            return headerConfig.getRefreshTriggerRange() + headerConfig.getVisibleHeight();
+            return behavior.getHeaderConfig().getRefreshTriggerRange() + behavior.getHeaderConfig().getInitialVisibleHeight();
         }
 
         @Override
@@ -275,8 +274,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     }
 
     @Override
-    public void loadError(Exception exception) {
-        footerStateMachine.refreshError(exception);
+    public void loadError(Throwable throwable) {
+        footerStateMachine.refreshError(throwable);
     }
 
     public boolean isRefreshing() {

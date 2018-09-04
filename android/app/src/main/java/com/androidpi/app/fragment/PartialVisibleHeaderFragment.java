@@ -14,8 +14,10 @@ import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
+import com.androidpi.app.base.widget.literefresh.OnLoadListener;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.OnScrollListener;
+import com.androidpi.app.base.widget.literefresh.RefreshFooterBehavior;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
@@ -31,6 +33,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
     UnsplashPhotoListFragment photoListFragment;
     private boolean isLaunched = false;
     RefreshHeaderBehavior headerBehavior;
+    RefreshFooterBehavior footerBehavior;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewHeader);
+        footerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewFooter);
         photoListFragment = ((UnsplashPhotoListFragment) getChildFragmentManager().findFragmentById(R.id.fragment_list));
         unsplashViewModel.getRandomPhotosResult().observe(this, new Observer<Resource<UnsplashPhotoPage>>() {
             @Override
@@ -53,7 +57,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 if (listResource.isSuccess()) {
                     headerBehavior.refreshComplete();
                     if (listResource.data.isFirstPage()) {
-                        photoListFragment.setPayloads(listResource.data.getPhotos());
+                        photoListFragment.setPayloads(listResource.data.getPhotos().subList(0,1));
                     } else {
                         photoListFragment.addPayloads(listResource.data.getPhotos());
                     }
@@ -139,6 +143,59 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
             });
         }
+
+        if (footerBehavior != null) {
+            footerBehavior.addOnScrollListener(new OnScrollListener() {
+                @Override
+                public void onStartScroll(View view, int max, boolean isTouch) {
+
+                }
+
+                @Override
+                public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+                    float distance = current;
+                    binding.footerCircleProgress.setProgress(distance/footerBehavior.getConfiguration().getRefreshTriggerRange());
+                }
+
+                @Override
+                public void onStopScroll(View view, int current, int max, boolean isTouch) {
+
+                }
+            });
+
+            footerBehavior.addOnLoadListener(new OnLoadListener() {
+                @Override
+                public void onLoadStart() {
+                    binding.footerCircleProgress.setVisibility(View.VISIBLE);
+                    binding.footerCircleProgress.resetStyle();
+                }
+
+                @Override
+                public void onReleaseToLoad() {
+                    binding.footerCircleProgress.showCircle();
+                }
+
+                @Override
+                public void onLoad() {
+                    binding.footerCircleProgress.resetStyle();
+                    binding.footerCircleProgress.startLoading();
+                    binding.footerCircleProgress.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            footerBehavior.refreshComplete();
+                        }
+                    }, 2000L);
+                }
+
+                @Override
+                public void onLoadEnd(@Nullable Throwable throwable) {
+                    binding.footerCircleProgress.stopLoading();
+                    binding.footerCircleProgress.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        unsplashViewModel.firstPage();
     }
 
     @Override

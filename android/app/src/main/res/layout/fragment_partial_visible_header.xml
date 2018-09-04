@@ -43,7 +43,7 @@
         <FrameLayout
             android:id="@+id/view_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:lr_minOffset="-32dp"
             app:layout_behavior="@string/lr_refresh_content_behavior">
 
@@ -55,11 +55,19 @@
 
         </FrameLayout>
 
-        <View
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/view_footer"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/colorAccent"
-            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+            app:layout_behavior="@string/lr_refresh_footer_behavior" >
+
+            <com.androidpi.app.widget.CircularLoadingView
+                android:id="@+id/footer_circle_progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center" />
+        </FrameLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_photo"

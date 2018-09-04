@@ -9,6 +9,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
             app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
             app:spanCount="2"
             tools:listitem="@layout/view_holder_unsplash_photo_grid"/>

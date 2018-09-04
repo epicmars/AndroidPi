@@ -146,6 +146,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             }
 
             override fun onReleaseToRefresh() {
+
             }
 
             override fun onRefresh() {
@@ -254,9 +255,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     fun loadFinished(exception: Exception?) {
         if (exception == null) {
-            footerBehavior.loadComplete()
+            footerBehavior.refreshComplete()
         } else {
-            footerBehavior.loadError(exception)
+            footerBehavior.refreshError(exception)
         }
     }
 

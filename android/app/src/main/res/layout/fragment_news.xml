@@ -44,7 +44,8 @@
             <com.androidpi.app.widget.RefreshingHeaderView
                 android:id="@+id/scroll_header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"/>
 
             <com.androidpi.app.widget.LoadingFooterView
                 android:id="@+id/scroll_footer"

@@ -9,7 +9,7 @@ import android.view.animation.Interpolator;
 public class ViscousFluidInterpolator implements Interpolator{
 
     /** Controls the viscous fluid effect (how much of it). */
-    private static final float VISCOUS_FLUID_SCALE = 8.0f;
+    private static final float VISCOUS_FLUID_SCALE = 2.0f;
 
     private static final float VISCOUS_FLUID_NORMALIZE;
     private static final float VISCOUS_FLUID_OFFSET;

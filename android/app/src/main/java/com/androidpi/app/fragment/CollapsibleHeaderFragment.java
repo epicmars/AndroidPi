@@ -96,10 +96,11 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
 
                 @Override
                 public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
-                    if (current <= config.getHeight()) {
-                        float y = config.getHeight() - current;
+                    int visibleHeight = config.getInitialVisibleHeight();
+                    if (current <= visibleHeight) {
+                        float y = visibleHeight - current;
                         binding.imagePagerHeader.setTranslationY(y / 2);
-                        float alpha = 1 - (float) current / config.getHeight();
+                        float alpha = 1 - (float) current / visibleHeight;
                         drawable.setAlpha((int) (alpha * 196));
                         binding.imagePagerHeader.setForeground(drawable);
                     }
@@ -107,9 +108,9 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                     binding.circleProgress.setProgress(Math.max(0f, (float) (current - config.getHeight())) / config.getRefreshTriggerRange());
 
                     if (current >= contentBehavior.getConfiguration().getMinOffset()) {
-                        float range = config.getHeight() - contentBehavior.getConfiguration().getMinOffset();
+                        float rangeMax = visibleHeight - contentBehavior.getConfiguration().getMinOffset();
                         float distance = current - contentBehavior.getConfiguration().getMinOffset();
-                        float alpha = 1 - distance / range;
+                        float alpha = 1 - distance / rangeMax;
                         binding.appBar.setAlpha(alpha);
                         binding.appBar.setTranslationY(alpha * contentBehavior.getConfiguration().getMinOffset());
                     }

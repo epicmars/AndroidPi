@@ -9,5 +9,5 @@ public interface Loader extends RefreshController{
 
     void loadComplete();
 
-    void loadError(Exception exception);
+    void loadError(Throwable throwable);
 }

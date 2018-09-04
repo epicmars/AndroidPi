@@ -12,6 +12,8 @@ public class BehaviorConfiguration {
     private boolean useDefaultMaxOffset = false;
     private int height;
     private int parentHeight;
+    private int topMargin;
+    private int bottomMargin;
 
     // indicators settings
     private boolean isSettled;
@@ -23,6 +25,7 @@ public class BehaviorConfiguration {
     private int defaultRefreshTriggerRange;
     private int refreshTriggerRange;
     private Boolean showUpWhenRefresh;
+    private int initialVisibleHeight;
 
     // content settings
     /**
@@ -48,6 +51,8 @@ public class BehaviorConfiguration {
         this.useDefaultMaxOffset = builder.useDefaultMaxOffset;
         this.height = builder.height;
         this.parentHeight = builder.parentHeight;
+        this.topMargin = builder.topMargin;
+        this.bottomMargin = builder.bottomMargin;
 
         this.isSettled = builder.isSettled;
         this.visibleHeight = builder.visibleHeight;
@@ -58,6 +63,7 @@ public class BehaviorConfiguration {
         this.defaultRefreshTriggerRange = builder.defaultRefreshTriggerRange;
         this.refreshTriggerRange = builder.refreshTriggerRange;
         this.showUpWhenRefresh = builder.showUpWhenRefresh;
+        this.initialVisibleHeight = builder.initialVisibleHeight;
 
         this.minOffset = builder.minOffset;
         this.cachedMinOffset = builder.cachedMinOffset;
@@ -227,6 +233,30 @@ public class BehaviorConfiguration {
         this.showUpWhenRefresh = showUpWhenRefresh;
     }
 
+    public int getTopMargin() {
+        return topMargin;
+    }
+
+    public void setTopMargin(int topMargin) {
+        this.topMargin = topMargin;
+    }
+
+    public int getBottomMargin() {
+        return bottomMargin;
+    }
+
+    public void setBottomMargin(int bottomMargin) {
+        this.bottomMargin = bottomMargin;
+    }
+
+    public int getInitialVisibleHeight() {
+        return initialVisibleHeight;
+    }
+
+    public void setInitialVisibleHeight(int initialVisibleHeight) {
+        this.initialVisibleHeight = initialVisibleHeight;
+    }
+
     public static class Builder {
 
         // common settings
@@ -236,6 +266,8 @@ public class BehaviorConfiguration {
         private boolean useDefaultMaxOffset = false;
         private int height;
         private int parentHeight;
+        private int topMargin;
+        private int bottomMargin;
 
         // indicators settings
         private int visibleHeight = 0;
@@ -247,6 +279,7 @@ public class BehaviorConfiguration {
         private int defaultRefreshTriggerRange;
         private int refreshTriggerRange;
         private Boolean showUpWhenRefresh;
+        private int initialVisibleHeight;
 
         // content settings
 
@@ -274,6 +307,8 @@ public class BehaviorConfiguration {
             this.useDefaultMaxOffset = configuration.useDefaultMaxOffset;
             this.height = configuration.height;
             this.parentHeight = configuration.parentHeight;
+            this.topMargin = configuration.topMargin;
+            this.bottomMargin = configuration.bottomMargin;
 
             this.isSettled = configuration.isSettled;
             this.visibleHeight = configuration.visibleHeight;
@@ -284,6 +319,7 @@ public class BehaviorConfiguration {
             this.defaultRefreshTriggerRange = configuration.defaultRefreshTriggerRange;
             this.refreshTriggerRange = configuration.refreshTriggerRange;
             this.showUpWhenRefresh = configuration.showUpWhenRefresh;
+            this.initialVisibleHeight = configuration.initialVisibleHeight;
 
 
             this.minOffset = configuration.minOffset;

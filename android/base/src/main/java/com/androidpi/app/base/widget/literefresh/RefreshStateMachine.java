@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
-import timber.log.Timber;
-
 /**
  * Created by jastrelax on 2018/8/24.
  */
@@ -14,35 +12,38 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
     public interface RefreshStateHandler {
 
         /**
-         * Offset that can makes an indicator's invisible part visible.
-         * @param currentOffset
-         * @return
+         * Offset that can makes an indicator's hidden part visible.
+         *
+         * @param currentOffset  the current offset of content
+         * @return   true if current offset can make the indicator's hidden part visible, false otherwise
          */
         boolean isValidOffset(int currentOffset);
 
         /**
          * Transform content's offset coordinate to indicator's coordinate system.
+         *
          * @param currentOffset current vertical offset of content view.
          * @return transformed offset in indicator's coordinate system.
          */
         int transform(int currentOffset);
 
         /**
-         * A positive offset range in indicator's coordinate system, if content's vertical
-         * offset has reach this point then it can trigger a refresh state.
+         * A positive offset in content's coordinate system, if content's vertical
+         * offset has reach this point then it can move to a ready or releasing to refresh state.
          */
         int readyRefreshOffset();
 
         /**
          * If a controller has any refresh state listeners.
-         * @return
+         *
+         * @return true if the controller has refresh listeners set, false otherwise
          */
         boolean hasRefreshListeners();
 
         /**
          * A callback method when refresh state has changed.
-         * @param state
-         * @param throwable
+         * @param state      current state
+         * @param throwable  throwable when a state has changed if exists
          */
         void onStateChanged(int state, Throwable throwable);
     }
@@ -71,7 +72,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
         // If current state is ready, when touch event is MotionEvent.ACTION_UP, may trigger a fling that start another scroll immediately.
         if (!isTouch && currentState == STATE_READY)
             return;
-        moveToState(STATE_START);
+        tryMoveToState(STATE_START);
     }
 
     @Override
@@ -80,9 +81,9 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
         if (!stateHandler.isValidOffset(current))
             return;
         if (stateHandler.transform(current) >= stateHandler.readyRefreshOffset()) {
-            moveToState(STATE_READY);
+            tryMoveToState(STATE_READY);
         } else {
-            moveToState(STATE_START);
+            tryMoveToState(STATE_START);
         }
     }
 
@@ -95,11 +96,11 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
         }
         // todo: what if transformed offset is already larger than or equal to ready offset.
         if (stateHandler.transform(current) >= stateHandler.readyRefreshOffset()) {
-            if (!moveToState(STATE_READY)) {
-                moveToState(STATE_IDLE_RESET);
+            if (!tryMoveToState(STATE_READY)) {
+                tryMoveToState(STATE_IDLE_RESET);
             }
         } else {
-            moveToState(STATE_START);
+            tryMoveToState(STATE_START);
         }
     }
 
@@ -111,19 +112,19 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
             return;
         }
         if (stateHandler.transform(current) < stateHandler.readyRefreshOffset()) {
-            moveToState(STATE_CANCELLED);
+            tryMoveToState(STATE_CANCELLED);
             return;
         }
         // If there are refresh listeners and we have reach beyond the trigger point.
-        if (!(stateHandler.hasRefreshListeners() && moveToState(STATE_REFRESH))) {
+        if (!(stateHandler.hasRefreshListeners() && tryMoveToState(STATE_REFRESH))) {
             // If not refresh, then reset.
-            if (!moveToState(STATE_REFRESH_RESET)) {
-                moveToState(STATE_CANCELLED_RESET);
+            if (!tryMoveToState(STATE_REFRESH_RESET)) {
+                tryMoveToState(STATE_CANCELLED_RESET);
             }
         }
     }
 
-    protected boolean moveToState(int state, Throwable throwable) {
+    protected boolean tryMoveToState(int state, Throwable throwable) {
         switch (state) {
             case STATE_IDLE:
                 if (currentState == STATE_COMPLETE
@@ -152,7 +153,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
                 if (currentState == STATE_START || currentState == STATE_READY) {
                     currentState = state;
                     onStateChanged(currentState, throwable);
-                    moveToState(STATE_IDLE);
+                    tryMoveToState(STATE_IDLE);
                     return true;
                 }
                 return false;
@@ -160,7 +161,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
                 if (currentState == STATE_START || currentState == STATE_READY || currentState == STATE_IDLE_RESET) {
                     currentState = state;
                     onStateChanged(currentState, throwable);
-                    moveToState(STATE_IDLE);
+                    tryMoveToState(STATE_IDLE);
                     return true;
                 }
                 return false;
@@ -182,7 +183,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
                 if (currentState == STATE_REFRESH || currentState == STATE_REFRESH_RESET) {
                     currentState = state;
                     onStateChanged(currentState, throwable);
-                    moveToState(STATE_IDLE);
+                    tryMoveToState(STATE_IDLE);
                     return true;
                 }
                 return false;
@@ -201,11 +202,11 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
     /**
      * Try to move to another state.
      *
-     * @param state
-     * @return
+     * @param state the new state to which we are trying to move
+     * @return true if state change succeed, false otherwise
      */
-    protected boolean moveToState(int state) {
-        return moveToState(state, null);
+    protected boolean tryMoveToState(int state) {
+        return tryMoveToState(state, null);
     }
 
     void onStateChanged(int state, Throwable throwable) {
@@ -219,7 +220,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
 
     @Override
     public void refresh() {
-        moveToState(STATE_REFRESH);
+        tryMoveToState(STATE_REFRESH);
     }
 
     @Override
@@ -233,7 +234,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
     }
 
     private void refreshCompleted(Throwable throwable) {
-        moveToState(STATE_COMPLETE, throwable);
+        tryMoveToState(STATE_COMPLETE, throwable);
     }
 
 }

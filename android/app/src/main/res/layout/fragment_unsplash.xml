@@ -13,7 +13,8 @@
             app:layout_behavior="@string/lr_refresh_header_behavior"
             app:lr_visibleHeightRatio="100%"
             app:lr_maxOffsetRatio="100%p"
-            app:lr_triggerRange="96dp">
+            app:lr_triggerRange="96dp"
+            android:layout_marginBottom="24dp">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

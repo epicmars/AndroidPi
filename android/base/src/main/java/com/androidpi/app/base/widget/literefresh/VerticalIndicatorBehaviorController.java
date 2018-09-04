@@ -8,7 +8,27 @@ import android.view.View;
  */
 public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndicatorBehavior> extends BehaviorController<B> {
 
-    protected int mode = -1;
+    /**
+     * Follow content view.
+     */
+    public static final int MODE_FOLLOW = 0;
+    /**
+     * Still, does not follow content view.
+     */
+    public static final int MODE_STILL = 1;
+
+    /**
+     * Follow when scroll down.
+     */
+    public static final int MODE_FOLLOW_DOWN = 2;
+
+    /**
+     * Follow when scroll up.
+     */
+    public static final int MODE_FOLLOW_UP = 3;
+
+    protected int mode = MODE_FOLLOW;
+
     public void setMode(int mode) {
         this.mode = mode;
     }
@@ -17,11 +37,11 @@ public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndi
         super(behavior);
     }
 
-    public abstract int computeOffsetDeltaOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, CoordinatorLayout parent, View child, View dependency);
+    public abstract int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, View child, View dependency, VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior);
 
-    public abstract float consumeOffsetOnDependentViewChanged(VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int parentHeight, int height, int currentOffset, int offsetDelta);
+    public abstract float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int currentOffset, int offsetDelta);
 
-    public abstract int transformOffsetCoordinate(VerticalIndicatorBehavior behavior, int currentOffset, int height, int parentHeight);
+    public abstract int transformOffsetCoordinate(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior, int currentOffset);
 
     /**
      * Tell if the hidden part of the view is visible.
@@ -31,5 +51,5 @@ public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndi
      * @return true if hidden part of view is visible,
      * otherwise return false.
      */
-    public abstract boolean isHiddenPartVisible(VerticalIndicatorBehavior behavior);
+    public abstract boolean isHiddenPartVisible(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior);
 }

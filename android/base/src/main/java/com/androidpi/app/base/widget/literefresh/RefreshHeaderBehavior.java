@@ -43,6 +43,7 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (!configuration.isSettled()) {
+            CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
             // Compute max offset, it will not exceed parent height.
             if (configuration.isUseDefaultMaxOffset()) {
                 // We want child can be fully visible by default.
@@ -51,6 +52,10 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
                 configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(), configuration.getMaxOffsetRatioOfParent() > configuration.getMaxOffsetRatio()? configuration.getMaxOffsetRatio() * parent.getHeight() : configuration.getMaxOffsetRatio() * child.getHeight()));
             }
             configuration.setHeight(child.getHeight());
+            configuration.setInitialVisibleHeight(getInitialVisibleHeight());
+            if (configuration.getInitialVisibleHeight() <= 0) {
+                configuration.setRefreshTriggerRange(configuration.getRefreshTriggerRange() + lp.bottomMargin);
+            }
             configuration.setSettled(true);
             getContentBehavior().setHeaderConfig(configuration);
         }
@@ -83,5 +88,18 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
     @Override
     public void refreshError(Throwable throwable) {
         controller.refreshError(throwable);
+    }
+
+
+    public int getInitialVisibleHeight() {
+        int initialVisibleHeight;
+        if (configuration.getHeight() <= 0 || configuration.getVisibleHeight() <= 0) {
+            initialVisibleHeight = configuration.getVisibleHeight();
+        } else if (configuration.getVisibleHeight() >= configuration.getHeight()) {
+            initialVisibleHeight = configuration.getVisibleHeight() + configuration.getTopMargin() + configuration.getBottomMargin();
+        } else {
+            initialVisibleHeight = configuration.getVisibleHeight() + configuration.getBottomMargin();
+        }
+        return initialVisibleHeight;
     }
 }

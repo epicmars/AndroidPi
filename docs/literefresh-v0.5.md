@@ -26,7 +26,9 @@ Content最大最小偏移量的关系用于限定Content滑动范围。
     + Indicator完全不可见
         + visibleHeight为0，那么默认使Indicator完全可见可触发刷新
         + visibleHeight为负，那么默认使Indicator完全可见可触发刷新
-    + Indicator部分可见，那么默认使Indicator完全可见触发刷新，如果不可见部分过小，会导致误触发，设定一个默认偏移量defaultRefreshRange，所有偏移量不能比它小。
+    + Indicator部分可见，那么默认使Indicator完全可见触发刷新
     + Indicator完全可见使用一个固定的默认偏移量defaultRefreshTriggerRange
+
+    实际上都可以统一为使得Indicator完全可见来触发刷新，如果不可见部分过小，会导致误触发，设定两个默认偏移量defaultMinRefreshRange和defaultRefreshTriggerRange来进行配置。如果invisibleHeight在[defaultMinRefreshRange,defaultRefreshTriggerRange]那么直接使用invisibleHeight。否则取invisibleHeight和defaultRefreshTriggerRange中较大的值，这样所有偏移量都是大于等于defaultMinRefreshRange的。
 
 

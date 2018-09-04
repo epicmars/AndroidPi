@@ -91,7 +91,7 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
                 configuration.setRefreshTriggerRange(configuration.getDefaultRefreshTriggerRange());
             } else if (!configuration.isUseDefinedRefreshTriggerRange()){
                 // User doesn't predefined one, we need to ensure the refreshing is triggered when indicator is
-                // totally visible. No matter whether child height is zero or not. If child is already visible,
+                // totally visible, no matter whether child height is zero or not. If child is already visible,
                 // the invisible height will be non-positive, in this case we use the default .
                 if (defaultMinTriggerRange > 0 && invisibleHeight >= defaultMinTriggerRange && invisibleHeight <= configuration.getDefaultRefreshTriggerRange()) {
                     configuration.setRefreshTriggerRange(invisibleHeight);
@@ -120,7 +120,7 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
         // If indicator should be hidden entirely, and hidden part is visible now consume the fling.
         // Otherwise, do nothing.
-        if (controller.isHiddenPartVisible(this)) {
+        if (controller.isHiddenPartVisible(coordinatorLayout, child,this)) {
             return true;
         }
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
@@ -129,9 +129,8 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
     @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         int height = child.getHeight();
-        int parentHeight = coordinatorLayout.getHeight();
         for (ScrollingListener l : mListeners) {
-            l.onStopScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(this, getTopAndBottomOffset(), height, parentHeight), height, type == TYPE_TOUCH);
+            l.onStopScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(coordinatorLayout, child, this, getTopAndBottomOffset()), height, type == TYPE_TOUCH);
         }
     }
 
@@ -152,7 +151,7 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         int offsetDelta = 0;
         if (behavior instanceof ScrollingContentBehavior) {
             ScrollingContentBehavior scrollingContentBehavior = (ScrollingContentBehavior) behavior;
-            offsetDelta = controller.computeOffsetDeltaOnDependentViewChanged(this, scrollingContentBehavior, parent, child, dependency);
+            offsetDelta = controller.computeOffsetDeltaOnDependentViewChanged(parent, child, dependency, this, scrollingContentBehavior);
         }
         if (offsetDelta != 0) {
             // todo: use TYPE_TOUCH or not, may
@@ -164,18 +163,17 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
 
     private void consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout, View child, int offsetDelta, int type) {
         int currentOffset = getTopAndBottomOffset();
-        int parentHeight = coordinatorLayout.getHeight();
         int height = child.getHeight();
         // Before child consume the offset.
         for (ScrollingListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(this, currentOffset, height, parentHeight), height, type == TYPE_TOUCH);
+            l.onPreScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(coordinatorLayout, child, this, currentOffset), height, type == TYPE_TOUCH);
         }
-        float consumed = controller.consumeOffsetOnDependentViewChanged(this, getContentBehavior(), parentHeight, height, currentOffset, offsetDelta);
+        float consumed = controller.consumeOffsetOnDependentViewChanged(coordinatorLayout, child, this, getContentBehavior(), currentOffset, offsetDelta);
         currentOffset = Math.round(currentOffset + consumed);
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
         for (ScrollingListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(this, currentOffset, height, parentHeight), offsetDelta, height, type == TYPE_TOUCH);
+            l.onScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(coordinatorLayout, child, this, currentOffset), offsetDelta, height, type == TYPE_TOUCH);
         }
     }
 

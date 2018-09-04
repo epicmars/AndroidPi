@@ -128,10 +128,10 @@ public class BehaviorController<B extends AnimationOffsetBehavior> implements An
     }
 
     @Override
-    public void loadError(Exception exception) {
+    public void loadError(Throwable throwable) {
         runWithView(() -> {
             if (proxy != null) {
-                proxy.loadError(exception);
+                proxy.loadError(throwable);
             }
         });
     }

@@ -91,6 +91,15 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
     }
 
     @Override
+    public void onAttachedToLayoutParams(@NonNull CoordinatorLayout.LayoutParams params) {
+        super.onAttachedToLayoutParams(params);
+        configuration.setTopMargin(params.topMargin);
+        configuration.setBottomMargin(params.bottomMargin);
+        // Configuration has changed.
+        configuration.setSettled(false);
+    }
+
+    @Override
     public void onDetachedFromLayoutParams() {
         super.onDetachedFromLayoutParams();
         if (handler != null) {
