@@ -29,20 +29,19 @@ public class FooterBehaviorController extends VerticalIndicatorBehaviorControlle
                     return offsetDelta;
                 }
             case MODE_FOLLOW_DOWN:
-                // Scrolling up and current offset has reach the initial visible height.
+                // If scrolling up and current offset has reach the initial visible height, don't follow.
                 if (offsetDelta < 0 && child.getTop() - behavior.getConfiguration().getTopMargin() <= -behavior.getConfiguration().getInitialVisibleHeight() + parent.getHeight()) {
                     return 0;
                 } else {
                     return offsetDelta;
                 }
             case MODE_FOLLOW_UP:
-                // If scrolling down and current offset has reach the initial visible height.
+                // If scrolling down and current offset has reach the initial visible height, don't follow..
                 if (offsetDelta > 0 && child.getTop() - behavior.getConfiguration().getTopMargin() >= -behavior.getConfiguration().getInitialVisibleHeight() + parent.getHeight()) {
                     return 0;
                 } else {
                     return offsetDelta;
                 }
-
             case MODE_FOLLOW:
             default:
                 return offsetDelta;

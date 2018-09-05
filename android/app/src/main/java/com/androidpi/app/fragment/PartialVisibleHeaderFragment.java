@@ -57,7 +57,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 if (listResource.isSuccess()) {
                     headerBehavior.refreshComplete();
                     if (listResource.data.isFirstPage()) {
-                        photoListFragment.setPayloads(listResource.data.getPhotos().subList(0,1));
+                        photoListFragment.setPayloads(listResource.data.getPhotos());
                     } else {
                         photoListFragment.addPayloads(listResource.data.getPhotos());
                     }
@@ -163,36 +163,36 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
             });
 
-            footerBehavior.addOnLoadListener(new OnLoadListener() {
-                @Override
-                public void onLoadStart() {
-                    binding.footerCircleProgress.setVisibility(View.VISIBLE);
-                    binding.footerCircleProgress.resetStyle();
-                }
-
-                @Override
-                public void onReleaseToLoad() {
-                    binding.footerCircleProgress.showCircle();
-                }
-
-                @Override
-                public void onLoad() {
-                    binding.footerCircleProgress.resetStyle();
-                    binding.footerCircleProgress.startLoading();
-                    binding.footerCircleProgress.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            footerBehavior.refreshComplete();
-                        }
-                    }, 2000L);
-                }
-
-                @Override
-                public void onLoadEnd(@Nullable Throwable throwable) {
-                    binding.footerCircleProgress.stopLoading();
-                    binding.footerCircleProgress.setVisibility(View.GONE);
-                }
-            });
+//            footerBehavior.addOnLoadListener(new OnLoadListener() {
+//                @Override
+//                public void onLoadStart() {
+//                    binding.footerCircleProgress.setVisibility(View.VISIBLE);
+//                    binding.footerCircleProgress.resetStyle();
+//                }
+//
+//                @Override
+//                public void onReleaseToLoad() {
+//                    binding.footerCircleProgress.showCircle();
+//                }
+//
+//                @Override
+//                public void onLoad() {
+//                    binding.footerCircleProgress.resetStyle();
+//                    binding.footerCircleProgress.startLoading();
+//                    binding.footerCircleProgress.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            footerBehavior.refreshComplete();
+//                        }
+//                    }, 2000L);
+//                }
+//
+//                @Override
+//                public void onLoadEnd(@Nullable Throwable throwable) {
+//                    binding.footerCircleProgress.stopLoading();
+//                    binding.footerCircleProgress.setVisibility(View.GONE);
+//                }
+//            });
         }
 
         unsplashViewModel.firstPage();

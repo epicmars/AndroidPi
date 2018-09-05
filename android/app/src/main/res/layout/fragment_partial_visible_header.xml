@@ -44,7 +44,6 @@
             android:id="@+id/view_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:lr_minOffset="-32dp"
             app:layout_behavior="@string/lr_refresh_content_behavior">
 
             <fragment

@@ -116,6 +116,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             // If we have set a minimum offset but header's initial visible height is smaller, than use it as the minimum offset.
             configuration.setMinOffset(Math.min(configuration.getMinOffset(), headerConfig.getInitialVisibleHeight()));
 
+            configuration.setHeight(child.getHeight());
             // We have set a minimum offset now, relayout.
             child.requestLayout();
 
@@ -188,9 +189,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             }
         } else if (dyUnconsumed > 0) {
             // Scrolling up.
-            // Can not scroll exceed footer maximum offset.
             int bottom = child.getBottom() + configuration.getBottomMargin();
             int maxFooterTopBottomOffset = coordinatorLayout.getHeight() - footerConfig.getMaxOffset();
+            // Can not scroll exceed footer maximum offset.
             if (bottom <= maxFooterTopBottomOffset)
                 return;
             int offset = MathUtils.clamp(-dyUnconsumed, maxFooterTopBottomOffset - bottom, 0);
@@ -259,6 +260,33 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         return delta;
     }
 
+    private Runnable offsetCallback;
+
+    /**
+     * If view has scroll to a invalid position, reset it, otherwise do nothing.
+     *
+     * @param holdOn
+     */
+    protected void stopScroll(boolean holdOn) {
+        // If content offset is larger than header's visible height or smaller than minimum offset,
+        // which means content has scrolled to a insignificant or invalid position.
+        // We need to reset it.
+        if (getChild().getTop() - configuration.getTopMargin() > headerConfig.getInitialVisibleHeight()
+                || getChild().getTop() - configuration.getTopMargin() < configuration.getMinOffset()
+                || getChild().getBottom() + configuration.getBottomMargin() < -footerConfig.getInitialVisibleHeight() + getParent().getHeight()) {
+            if (getChild() == null || getChild().getHandler() == null) return;
+            // Remove previous pending callback.
+            handler.removeCallbacks(offsetCallback);
+            offsetCallback = new Runnable() {
+                @Override
+                public void run() {
+                    reset(RESET_DURATION);
+                }
+            };
+            handler.postDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
+        }
+    }
+
     /**
      * This will reset the header or footer view to it's original position when it's laid out for the first time.
      */
@@ -271,18 +299,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         // Based on a strong contract that headerVisibleHeight is a distance from parent top.
         int offset = 0;
         if (-bottom + getParent().getHeight() > 0) {
-            // Footer is visible now.
-            if (isContentTooShort()) {
-                // Content height plus header's visible height is shorter than parent height.
-                // So that footer's hidden part is always visible.
-                offset = headerConfig.getInitialVisibleHeight() - top;
-            } else if (bottom < -footerConfig.getInitialVisibleHeight() + getParent().getHeight()) {
-                // Footer's hidden part is visible now.
-                offset = -footerConfig.getInitialVisibleHeight() + getParent().getHeight() - bottom;
-            }
-//            else if (isMinOffsetReached()) {
-//                offset = configuration.getMinOffset() - top;
-//            }
+            offset = -footerConfig.getInitialVisibleHeight() + getParent().getHeight() - bottom;
         } else {
             offset = headerConfig.getInitialVisibleHeight() - top;
         }
@@ -349,32 +366,6 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animationDuration);
     }
 
-    private Runnable offsetCallback;
-
-    /**
-     * If view has scroll to a invalid position, reset it, otherwise do nothing.
-     *
-     * @param holdOn
-     */
-    protected void stopScroll(boolean holdOn) {
-        // If content offset is larger than header's visible height or smaller than minimum offset,
-        // which means content has scrolled to a insignificant or invalid position.
-        // We need to reset it.
-        if (getChild().getTop() - configuration.getTopMargin() > headerConfig.getInitialVisibleHeight()
-                || getChild().getTop() - configuration.getTopMargin() < configuration.getMinOffset()
-                || getChild().getBottom() + configuration.getBottomMargin() < -footerConfig.getInitialVisibleHeight() + getParent().getHeight()) {
-            if (getChild() == null || getChild().getHandler() == null) return;
-            // Remove previous pending callback.
-            handler.removeCallbacks(offsetCallback);
-            offsetCallback = new Runnable() {
-                @Override
-                public void run() {
-                    reset(RESET_DURATION);
-                }
-            };
-            handler.postDelayed(offsetCallback, holdOn ? HOLD_ON_DURATION : 0L);
-        }
-    }
 
     boolean isMinOffsetReached() {
         int top = getChild().getTop() - configuration.getTopMargin();
@@ -409,10 +400,6 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             initialVisibleHeight = headerConfig.getVisibleHeight() + headerConfig.getBottomMargin();
         }
         return initialVisibleHeight;
-    }
-
-    boolean isContentTooShort() {
-        return getChild().getHeight() + configuration.getBottomMargin() + configuration.getTopMargin() + headerConfig.getInitialVisibleHeight() + footerConfig.getInitialVisibleHeight() <= getParent().getHeight() - footerConfig.getRefreshTriggerRange();
     }
 
     @Override
