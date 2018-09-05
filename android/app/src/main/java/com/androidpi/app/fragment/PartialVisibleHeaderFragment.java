@@ -195,7 +195,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
 //            });
         }
 
-        if (savedInstanceState == null || unsplashViewModel.getRandomPhotosResult().getValue() == null) {
+        if (unsplashViewModel.getRandomPhotosResult().getValue() == null) {
             firstPage();
         }
     }

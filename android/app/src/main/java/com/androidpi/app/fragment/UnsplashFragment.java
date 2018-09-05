@@ -121,15 +121,9 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
         });
 
 
-        if (savedInstanceState == null || unsplashViewModel.getRandomPhotosResult().getValue() == null) {
+        if (unsplashViewModel.getRandomPhotosResult().getValue() == null) {
             firstPage();
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unsplashViewModel.getRandomPhotosResult().removeObservers(this);
     }
 
     private void firstPage() {
