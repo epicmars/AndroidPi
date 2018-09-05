@@ -14,7 +14,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/ic_error_outline_black_24dp"
+            app:srcCompat="@drawable/ic_error_outline_black_24dp"
             app:layout_constraintBottom_toTopOf="@+id/tv_message"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -28,7 +28,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:gravity="center"
-            tools:text="oops，出错啦！" />
+            tools:text="Oops，an error occurred！" />
 
     </android.support.constraint.ConstraintLayout>
 

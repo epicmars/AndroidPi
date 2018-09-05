@@ -20,8 +20,6 @@ object LiteRefreshSamples {
             add(LiteRefreshSample("Header follow up.", "Header can follow up with content but not down.", HeaderFollowUpFragment::class.java))
             add(LiteRefreshSample("Header follow down.", "Header can follow down with content but not up", HeaderFollowDownFragment::class.java))
             add(LiteRefreshSample("Header stays still.", "Header doesn't follow down or up with content.", HeaderStillFragment::class.java))
-//            add(LiteRefreshSample("Header Transition", "Header transition.", HeaderTransitionFragment::class.java))
-//            add(LiteRefreshSample("Second Floor", "Second floor like taobao home page.", SecondFloorFragment::class.java))
         }
     }
 }

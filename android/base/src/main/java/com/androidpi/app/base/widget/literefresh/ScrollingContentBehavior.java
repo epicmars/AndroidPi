@@ -2,15 +2,20 @@ package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
+import android.support.v4.view.AbsSavedState;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.androidpi.app.pi.base.R;
 
+import static android.support.v4.view.ViewCompat.TYPE_NON_TOUCH;
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
@@ -25,8 +30,10 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  */
 public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBehavior<V, ContentBehaviorController> {
 
+    private static final int INVALID_OFFSET = Integer.MIN_VALUE;
     private BehaviorConfiguration headerConfig;
     private BehaviorConfiguration footerConfig;
+    private int initialOffset = INVALID_OFFSET;
 
     {
         controller = new ContentBehaviorController(this);
@@ -143,7 +150,11 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             headerConfig.setSettled(true);
             footerConfig.setSettled(true);
             cancelAnimation();
-            setTopAndBottomOffset(headerConfig.getInitialVisibleHeight());
+            if (initialOffset != INVALID_OFFSET) {
+                setContentTopAndBottomOffset(parent, child, initialOffset, TYPE_NON_TOUCH);
+            } else {
+                setTopAndBottomOffset(headerConfig.getInitialVisibleHeight());
+            }
         }
         return handled;
     }
@@ -270,7 +281,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
      *                          not just keep it.
      * @return
      */
-    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offsetDelta,
+    private int consumeOffset(CoordinatorLayout coordinatorLayout, V child, int offsetDelta,
                               int type, boolean consumeRawOffset) {
         int currentOffset = getTopAndBottomOffset();
         // Before child consume the offset.
@@ -298,6 +309,21 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
 
     protected float onConsumeOffset(int current, int max, int delta) {
         return delta;
+    }
+
+    public void setContentTopAndBottomOffset(CoordinatorLayout coordinatorLayout, V child, int offset, int type) {
+        int currentOffset = getTopAndBottomOffset();
+        int offsetDelta = offset - currentOffset;
+        for (ScrollingListener l : mListeners) {
+            l.onPreScroll(coordinatorLayout, child, currentOffset, configuration.getMaxOffset(),
+                    type == TYPE_TOUCH);
+        }
+        setTopAndBottomOffset(offset);
+        coordinatorLayout.dispatchDependentViewsChanged(child);
+        for (ScrollingListener l : mListeners) {
+            l.onScroll(coordinatorLayout, child, currentOffset, offsetDelta,
+                    configuration.getMaxOffset(), type == TYPE_TOUCH);
+        }
     }
 
     private Runnable offsetCallback;
@@ -460,5 +486,61 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
 
     public BehaviorConfiguration getFooterConfig() {
         return footerConfig;
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState(CoordinatorLayout parent, V child) {
+        final Parcelable superState = super.onSaveInstanceState(parent, child);
+        final int topAndBottomOffset = getTopAndBottomOffset();
+        SavedState ss = new SavedState(superState);
+        ss.topAndBottomOffset = topAndBottomOffset;
+        return ss;
+    }
+
+    @Override
+    public void onRestoreInstanceState(CoordinatorLayout parent, V child, Parcelable state) {
+        if (state instanceof SavedState) {
+            super.onRestoreInstanceState(parent, child, ((SavedState) state).getSuperState());
+            final SavedState ss = ((SavedState) state);
+            initialOffset = ss.topAndBottomOffset;
+        } else {
+            super.onRestoreInstanceState(parent, child, state);
+        }
+    }
+
+    protected static class SavedState extends AbsSavedState {
+        private int topAndBottomOffset;
+
+        public SavedState(@NonNull Parcelable superState) {
+            super(superState);
+        }
+
+        public SavedState(@NonNull Parcel source, @Nullable ClassLoader loader) {
+            super(source, loader);
+            topAndBottomOffset = source.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeInt(topAndBottomOffset);
+        }
+
+        public static final Creator<SavedState> CREATOR = new ClassLoaderCreator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel source, ClassLoader loader) {
+                return new SavedState(source, loader);
+            }
+
+            @Override
+            public SavedState createFromParcel(Parcel source) {
+                return new SavedState(source, null);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

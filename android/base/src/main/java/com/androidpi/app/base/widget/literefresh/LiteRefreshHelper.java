@@ -15,9 +15,12 @@ public class LiteRefreshHelper {
             CoordinatorLayout.LayoutParams params =
                     (CoordinatorLayout.LayoutParams) view.getLayoutParams();
             if (params == null) {
-                throw new NullPointerException("You must make sure the view's layout params has " +
-                        "been generated. If used in custom view, the onAttachedToWindow() method " +
-                        "of View is a good hook point where you can make it right.");
+                throw new NullPointerException(String.format(
+                        "Layout params of %s has not been generated yet." +
+                                "If used in custom view, the onAttachedToWindow() callback " +
+                                "method of android.view.View is a good hook point where you can " +
+                                "make it right.",
+                        view.getClass().getName()));
             } else {
                 return (T) params.getBehavior();
             }

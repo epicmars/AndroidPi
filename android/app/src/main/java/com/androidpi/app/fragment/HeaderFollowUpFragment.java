@@ -13,12 +13,4 @@ import com.androidpi.app.databinding.FragmentHeaderFollowUpBinding;
 @BindLayout(R.layout.fragment_header_follow_up)
 public class HeaderFollowUpFragment extends BaseFragment<FragmentHeaderFollowUpBinding> {
 
-    public static HeaderFollowUpFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        HeaderFollowUpFragment fragment = new HeaderFollowUpFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 }

@@ -2,7 +2,6 @@
 title: LiteRefresh v0.6
 date: 2018-09-03 06:48:28 +0800
 ---
-
 ## 对Margin的支持
 ### Indicator初始可见性
 - Header
