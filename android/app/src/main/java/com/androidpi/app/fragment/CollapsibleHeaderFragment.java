@@ -153,6 +153,8 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
             });
         }
 
-        unsplashViewModel.firstPage();
+        if (savedInstanceState == null || unsplashViewModel.getRandomPhotosResult().getValue() == null) {
+            unsplashViewModel.firstPage();
+        }
     }
 }

@@ -18,9 +18,6 @@ import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentUnsplashBinding;
-import com.androidpi.data.remote.dto.ResUnsplashPhoto;
-
-import java.util.List;
 
 /**
  * Created by jastrelax on 2018/8/13.
@@ -112,7 +109,7 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
             public void onRefresh() {
                 isRefresh = true;
                 binding.loadingView.startLoading();
-                refreshPhotos();
+                firstPage();
             }
 
             @Override
@@ -123,7 +120,10 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
             }
         });
 
-        refreshPhotos();
+
+        if (savedInstanceState == null || unsplashViewModel.getRandomPhotosResult().getValue() == null) {
+            firstPage();
+        }
     }
 
     @Override
@@ -132,7 +132,7 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
         unsplashViewModel.getRandomPhotosResult().removeObservers(this);
     }
 
-    private void refreshPhotos() {
+    private void firstPage() {
         unsplashViewModel.firstPage();
     }
 }

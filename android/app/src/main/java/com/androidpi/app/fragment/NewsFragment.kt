@@ -70,7 +70,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         super.onCreate(savedInstanceState)
         // If retainInstance is set to be true, on configuration change,
         // onCreate will not be called, therefore [NewsViewModel] will not be recreated.
-        mNewsModel = ViewModelProviders.of(this, mViewModelFactory)
+        mNewsModel = ViewModelProviders.of(activity!!, mViewModelFactory)
                 .get(NewsViewModel::class.java)
         mNewsCategory = arguments?.getString(KEY_CATEGORY)
         mNewsCategory = if (mNewsCategory == null) "general" else mNewsCategory
