@@ -264,26 +264,25 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
      */
     protected void reset(long animateDuration) {
         if (null == getChild() || getParent() == null) return;
-
         CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) getChild().getLayoutParams());
         int top = getChild().getTop() - lp.topMargin;
         int bottom = getChild().getBottom() + lp.bottomMargin;
         // Reset footer first, then consider header.
         // Based on a strong contract that headerVisibleHeight is a distance from parent top.
-        int offset;
+        int offset = 0;
         if (-bottom + getParent().getHeight() > 0) {
             // Footer is visible now.
-            if (getChild().getHeight() + lp.topMargin + lp.bottomMargin + headerConfig.getInitialVisibleHeight() + footerConfig.getInitialVisibleHeight() < getParent().getHeight()) {
+            if (isContentTooShort()) {
                 // Content height plus header's visible height is shorter than parent height.
                 // So that footer's hidden part is always visible.
                 offset = headerConfig.getInitialVisibleHeight() - top;
-            } else {
-                if (isMinOffsetReached()) {
-                    offset = configuration.getMinOffset() - top;
-                } else {
-                    offset = getParent().getHeight() - bottom;
-                }
+            } else if (bottom < -footerConfig.getInitialVisibleHeight() + getParent().getHeight()) {
+                // Footer's hidden part is visible now.
+                offset = -footerConfig.getInitialVisibleHeight() + getParent().getHeight() - bottom;
             }
+//            else if (isMinOffsetReached()) {
+//                offset = configuration.getMinOffset() - top;
+//            }
         } else {
             offset = headerConfig.getInitialVisibleHeight() - top;
         }
@@ -326,7 +325,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         int bottom = getChild().getBottom() + lp.bottomMargin;
         int offset = 0;
         if (footerConfig.getShowUpWhenRefresh() == null) {
-            offset = - (footerConfig.getInitialVisibleHeight() + footerConfig.getRefreshTriggerRange()) + getParent().getHeight() - bottom;
+            offset = -(footerConfig.getInitialVisibleHeight() + footerConfig.getRefreshTriggerRange()) + getParent().getHeight() - bottom;
         } else {
             if (footerConfig.getShowUpWhenRefresh()) {
                 offset = getParent().getHeight() - footerConfig.getHeight() - bottom;
@@ -339,6 +338,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
 
     /**
      * Make the footer entirely visible.
+     *
      * @param animationDuration
      */
     void showFooter(long animationDuration) {
@@ -357,11 +357,12 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
      * @param holdOn
      */
     protected void stopScroll(boolean holdOn) {
-        int currentOffset = getTopAndBottomOffset();
         // If content offset is larger than header's visible height or smaller than minimum offset,
         // which means content has scrolled to a insignificant or invalid position.
         // We need to reset it.
-        if (currentOffset > headerConfig.getInitialVisibleHeight() || currentOffset < configuration.getMinOffset()) {
+        if (getChild().getTop() - configuration.getTopMargin() > headerConfig.getInitialVisibleHeight()
+                || getChild().getTop() - configuration.getTopMargin() < configuration.getMinOffset()
+                || getChild().getBottom() + configuration.getBottomMargin() < -footerConfig.getInitialVisibleHeight() + getParent().getHeight()) {
             if (getChild() == null || getChild().getHandler() == null) return;
             // Remove previous pending callback.
             handler.removeCallbacks(offsetCallback);
@@ -408,6 +409,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             initialVisibleHeight = headerConfig.getVisibleHeight() + headerConfig.getBottomMargin();
         }
         return initialVisibleHeight;
+    }
+
+    boolean isContentTooShort() {
+        return getChild().getHeight() + configuration.getBottomMargin() + configuration.getTopMargin() + headerConfig.getInitialVisibleHeight() + footerConfig.getInitialVisibleHeight() <= getParent().getHeight() - footerConfig.getRefreshTriggerRange();
     }
 
     @Override

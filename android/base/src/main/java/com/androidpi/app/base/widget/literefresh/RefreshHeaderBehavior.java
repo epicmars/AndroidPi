@@ -32,8 +32,8 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
     public RefreshHeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndicatorBehavior, 0, 0);
-        if (a.hasValue(R.styleable.IndicatorBehavior_lr_headerMode)) {
-            int mode = a.getInt(R.styleable.IndicatorBehavior_lr_headerMode, HeaderBehaviorController.MODE_FOLLOW);
+        if (a.hasValue(R.styleable.IndicatorBehavior_lr_mode)) {
+            int mode = a.getInt(R.styleable.IndicatorBehavior_lr_mode, HeaderBehaviorController.MODE_FOLLOW);
             controller.setMode(mode);
         }
         a.recycle();
@@ -53,6 +53,7 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
             }
             configuration.setHeight(child.getHeight());
             configuration.setInitialVisibleHeight(getInitialVisibleHeight());
+            configuration.setMaxOffset(Math.max(configuration.getMaxOffset(), configuration.getInitialVisibleHeight()));
             if (configuration.getInitialVisibleHeight() <= 0) {
                 configuration.setRefreshTriggerRange(configuration.getRefreshTriggerRange() + lp.bottomMargin);
             }

@@ -26,7 +26,7 @@ public class NestedScrollPhotoListView extends NestedScrollView {
         inflate(context, R.layout.view_nested_scroll_photo_list, this);
         setPhoto(R.id.item1, R.mipmap.photo1);
         setPhoto(R.id.item2, R.mipmap.photo2);
-        setPhoto(R.id.item3, R.mipmap.photo3);
+        setPhoto(R.id.item3, R.mipmap.photo4);
     }
 
     private void setPhoto(int viewId, int drawableId) {

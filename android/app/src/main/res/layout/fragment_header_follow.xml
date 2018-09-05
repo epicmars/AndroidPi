@@ -9,11 +9,9 @@
             android:id="@+id/view_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:lr_visibleHeightRatio="50%"
-            app:lr_headerMode="follow"
-            app:lr_maxOffsetRatio="50%p"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="24dp"
+            app:lr_visibleHeightRatio="100%"
+            app:lr_mode="follow"
+            app:lr_maxOffsetRatio="100%p"
             app:layout_behavior="@string/lr_refresh_header_behavior">
 
             <com.androidpi.app.widget.ProfileHeaderView
@@ -21,24 +19,24 @@
                 android:layout_height="wrap_content"/>
         </FrameLayout>
 
+
+        <com.androidpi.app.widget.ProfileFooterView
+            android:id="@+id/view_footer"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@color/colorPrimary"
+            app:lr_maxOffsetRatio="100%p"
+            app:lr_visibleHeightRatio="100%"
+            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+
         <com.androidpi.app.widget.NestedScrollPhotoListView
             android:id="@+id/view_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="24dp"
             android:background="@android:color/holo_green_light"
             app:layout_behavior="@string/lr_refresh_content_behavior">
         </com.androidpi.app.widget.NestedScrollPhotoListView>
 
-        <View
-            android:id="@+id/view_footer"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="24dp"
-            android:background="@color/colorPrimary"
-            app:layout_behavior="@string/lr_refresh_footer_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

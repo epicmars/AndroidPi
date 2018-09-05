@@ -10,7 +10,7 @@
     </declare-styleable>
 
     <declare-styleable name="IndicatorBehavior">
-        <attr name="lr_headerMode" format="enum">
+        <attr name="lr_mode" format="enum">
             <enum name="follow" value="0"/>
             <enum name="still" value="1"/>
             <enum name="follow_down" value="2"/>

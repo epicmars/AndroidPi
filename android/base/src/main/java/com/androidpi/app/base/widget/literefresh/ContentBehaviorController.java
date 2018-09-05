@@ -64,8 +64,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
                     refreshFooter();
                     break;
                 case STATE_COMPLETE:
-                    onLoadEnd(throwable);
                     stopScroll(true);
+                    onLoadEnd(throwable);
                     break;
                 case STATE_IDLE:
                 default:

@@ -8,10 +8,8 @@
         <com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="24dp"
             app:lr_visibleHeightRatio="100%"
-            app:lr_headerMode="still"
+            app:lr_mode="still"
             app:lr_maxOffsetRatio="100%p"
             app:layout_behavior="@string/lr_refresh_header_behavior">
             <com.androidpi.app.widget.ProfileHeaderView
@@ -19,23 +17,24 @@
                 android:layout_height="wrap_content" />
         </com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout>
 
+
+        <com.androidpi.app.widget.ProfileFooterView
+            android:id="@+id/view_footer"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:lr_maxOffsetRatio="100%p"
+            app:lr_visibleHeightRatio="100%"
+            app:lr_mode="still"
+            android:background="@color/colorPrimary"
+            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+
         <com.androidpi.app.widget.NestedScrollPhotoListView
             android:id="@+id/view_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="24dp"
             android:background="@android:color/holo_green_light"
             app:layout_behavior="@string/lr_refresh_content_behavior">
         </com.androidpi.app.widget.NestedScrollPhotoListView>
 
-        <View
-            android:id="@+id/view_footer"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="24dp"
-            android:background="@color/colorPrimary"
-            app:layout_behavior="@string/lr_refresh_footer_behavior" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>

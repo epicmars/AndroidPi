@@ -13,11 +13,11 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
     }
 
     @Override
-    public int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, View child, View dependency, VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior) {
+    public int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, View child, View dependency, VerticalIndicatorBehavior behavior, ScrollingContentBehavior contentBehavior) {
         // For now we don't care about invisible changes.
         // And when content has reached minimum offset, we should not changed with it.
         // If content has reach it's minimum offset, header may have not changed yet.
-        if (scrollingContentBehavior.isMinOffsetReached() && behavior.getChild().getBottom() + behavior.getConfiguration().getBottomMargin() <= scrollingContentBehavior.getConfiguration().getMinOffset())
+        if (contentBehavior.isMinOffsetReached() && behavior.getChild().getBottom() + behavior.getConfiguration().getBottomMargin() <= contentBehavior.getConfiguration().getMinOffset())
             return 0;
         CoordinatorLayout.LayoutParams dependencyLp = ((CoordinatorLayout.LayoutParams) dependency.getLayoutParams());
         CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
@@ -30,17 +30,27 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
     }
 
     @Override
-    public float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior, ScrollingContentBehavior scrollingContentBehavior, int currentOffset, int offsetDelta) {
+    public float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior, ScrollingContentBehavior contentBehavior, int currentOffset, int offsetDelta) {
         switch (mode) {
             case MODE_STILL:
-                return 0;
+                // If child has reached it's initial position then don't move again.
+                if (child.getBottom() + behavior.getConfiguration().getBottomMargin() == behavior.getConfiguration().getInitialVisibleHeight()) {
+                    return 0;
+                } else {
+                    return offsetDelta;
+                }
             case MODE_FOLLOW_DOWN:
-                if (offsetDelta < 0 && currentOffset <= 0) return 0;
-                else return offsetDelta;
+                // if scroll up and has reached initial visible height.
+                if (offsetDelta < 0 && child.getBottom() + behavior.getConfiguration().getBottomMargin() <= behavior.getConfiguration().getInitialVisibleHeight()) {
+                    return 0;
+                } else {
+                    return offsetDelta;
+                }
             case MODE_FOLLOW_UP:
-                // If scroll down, or scroll up and the bottom has reach content's minimum offset.
-                if ((offsetDelta > 0 && currentOffset >= 0)
-                        || (offsetDelta < 0 && child.getBottom() + behavior.getConfiguration().getBottomMargin() <= scrollingContentBehavior.getConfiguration().getMinOffset())) {
+                // If scroll down and reached initial visible height.
+                if ((offsetDelta > 0 && child.getBottom() + behavior.getConfiguration().getBottomMargin() >= behavior.getConfiguration().getInitialVisibleHeight())
+                        // or if scroll up and it has reached the content's minimum offset.
+                        || (offsetDelta < 0 && child.getBottom() + behavior.getConfiguration().getBottomMargin() <= contentBehavior.getConfiguration().getMinOffset())) {
                     return 0;
                 } else {
                     return offsetDelta;
@@ -61,6 +71,6 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
      */
     @Override
     public boolean isHiddenPartVisible(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior) {
-        return behavior.getTopAndBottomOffset() > -behavior.getConfiguration().getInvisibleHeight();
+        return child.getBottom() + behavior.getConfiguration().getBottomMargin() > behavior.getConfiguration().getInitialVisibleHeight();
     }
 }
