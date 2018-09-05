@@ -34,5 +34,6 @@ public abstract class OffsetAnimator {
      * @param duration animation duration
      * @param listener animaiton listener
      */
-    public abstract void animateOffsetWithDuration(int current, int offset, long duration, AnimationUpdateListener listener);
+    public abstract void animateOffsetWithDuration(int current, int offset, long duration,
+                                                   AnimationUpdateListener listener);
 }

@@ -13,7 +13,8 @@ import timber.log.Timber;
 /**
  * Created by jastrelax on 2018/8/24.
  */
-public class BehaviorController<B extends AnimationOffsetBehavior> implements AnimationOffsetBehavior.ScrollingListener, Loader {
+public class BehaviorController<B extends AnimationOffsetBehavior>
+        implements AnimationOffsetBehavior.ScrollingListener, Loader {
 
     protected BehaviorController proxy;
     protected B behavior;
@@ -26,26 +27,30 @@ public class BehaviorController<B extends AnimationOffsetBehavior> implements An
     }
 
     @Override
-    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch) {
+    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                              int max, boolean isTouch) {
         for (OnScrollListener l : mScrollListeners) {
             l.onStartScroll(child, max, isTouch);
         }
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                            int current, int max, boolean isTouch) {
 
     }
 
     @Override
-    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
+    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                         int current, int delta, int max, boolean isTouch) {
         for (OnScrollListener l : mScrollListeners) {
             l.onScroll(child, current, delta, max, isTouch);
         }
     }
 
     @Override
-    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
+    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                             int current, int max, boolean isTouch) {
         for (OnScrollListener l : mScrollListeners) {
             l.onStopScroll(child, current, max, isTouch);
         }

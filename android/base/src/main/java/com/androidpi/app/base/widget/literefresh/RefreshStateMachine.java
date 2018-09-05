@@ -42,6 +42,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
 
         /**
          * A callback method when refresh state has changed.
+         *
          * @param state      current state
          * @param throwable  throwable when a state has changed if exists
          */
@@ -67,16 +68,19 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
     }
 
     @Override
-    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch) {
+    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                              int max, boolean isTouch) {
 //        Timber.d("onStartScroll: isTouch %b", isTouch);
-        // If current state is ready, when touch event is MotionEvent.ACTION_UP, may trigger a fling that start another scroll immediately.
+        // If current state is ready, when touch event is MotionEvent.ACTION_UP, may trigger a fling
+        // that start another scroll immediately.
         if (!isTouch && currentState == STATE_READY)
             return;
         tryMoveToState(STATE_START);
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                            int current, int max, boolean isTouch) {
 //        Timber.d("onPreScroll: isTouch %b", isTouch);
         if (!stateHandler.isValidOffset(current))
             return;
@@ -88,7 +92,8 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
     }
 
     @Override
-    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
+    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                         int current, int delta, int max, boolean isTouch) {
 //        Timber.d("onScroll: isTouch %b", isTouch);
         if (!stateHandler.isValidOffset(current)) {
 //            Timber.d("not valid: %d", current);
@@ -105,8 +110,10 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
     }
 
     @Override
-    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
-        // When child start dispatching touch events, the MotionEvent.DOWN event may cause a defensive clean up for new gesture.
+    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                             int current, int max, boolean isTouch) {
+        // When child start dispatching touch events, the MotionEvent.DOWN event may cause
+        // a defensive clean up for new gesture.
 //        Timber.d("onStopScroll: isTouch %b", isTouch);
         if (!stateHandler.isValidOffset(current)) {
             return;
@@ -136,7 +143,9 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
                 }
                 return false;
             case STATE_START:
-                if (currentState == STATE_IDLE_RESET || currentState == STATE_IDLE || currentState == STATE_READY) {
+                if (currentState == STATE_IDLE_RESET
+                        || currentState == STATE_IDLE
+                        || currentState == STATE_READY) {
                     currentState = state;
                     onStateChanged(currentState, throwable);
                     return true;
@@ -158,7 +167,8 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
                 }
                 return false;
             case STATE_CANCELLED_RESET:
-                if (currentState == STATE_START || currentState == STATE_READY || currentState == STATE_IDLE_RESET) {
+                if (currentState == STATE_START || currentState == STATE_READY
+                        || currentState == STATE_IDLE_RESET) {
                     currentState = state;
                     onStateChanged(currentState, throwable);
                     tryMoveToState(STATE_IDLE);

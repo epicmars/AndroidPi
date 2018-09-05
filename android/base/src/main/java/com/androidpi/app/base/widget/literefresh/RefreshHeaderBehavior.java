@@ -12,7 +12,8 @@ import com.androidpi.app.pi.base.R;
  * Created by jastrelax on 2017/11/17.
  */
 
-public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBehavior<V, HeaderBehaviorController> implements Refresher{
+public class RefreshHeaderBehavior<V extends View>
+        extends VerticalIndicatorBehavior<V, HeaderBehaviorController> implements Refresher{
 
     {
         controller = new HeaderBehaviorController(this);
@@ -49,7 +50,10 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
                 // We want child can be fully visible by default.
                 configuration.setMaxOffset((int) Math.max(GOLDEN_RATIO * parent.getHeight(), child.getHeight()));
             } else {
-                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(), configuration.getMaxOffsetRatioOfParent() > configuration.getMaxOffsetRatio()? configuration.getMaxOffsetRatio() * parent.getHeight() : configuration.getMaxOffsetRatio() * child.getHeight()));
+                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
+                        configuration.getMaxOffsetRatioOfParent() > configuration.getMaxOffsetRatio()
+                                ? configuration.getMaxOffsetRatio() * parent.getHeight()
+                                : configuration.getMaxOffsetRatio() * child.getHeight()));
             }
             configuration.setHeight(child.getHeight());
             configuration.setInitialVisibleHeight(getInitialVisibleHeight());
@@ -57,7 +61,8 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
                 // IF initial visible height is non-positive, add the bottom margin to refresh trigger range.
                 configuration.setRefreshTriggerRange(configuration.getRefreshTriggerRange() + lp.bottomMargin);
             }
-            configuration.setMaxOffset(Math.max(configuration.getMaxOffset(), configuration.getInitialVisibleHeight() + configuration.getRefreshTriggerRange()));
+            configuration.setMaxOffset(Math.max(configuration.getMaxOffset(),
+                    configuration.getInitialVisibleHeight() + configuration.getRefreshTriggerRange()));
             configuration.setSettled(true);
             getContentBehavior().setHeaderConfig(configuration);
         }
@@ -98,7 +103,8 @@ public class RefreshHeaderBehavior<V extends View> extends VerticalIndicatorBeha
         if (configuration.getHeight() <= 0 || configuration.getVisibleHeight() <= 0) {
             initialVisibleHeight = configuration.getVisibleHeight();
         } else if (configuration.getVisibleHeight() >= configuration.getHeight()) {
-            initialVisibleHeight = configuration.getVisibleHeight() + configuration.getTopMargin() + configuration.getBottomMargin();
+            initialVisibleHeight = configuration.getVisibleHeight() + configuration.getTopMargin()
+                    + configuration.getBottomMargin();
         } else {
             initialVisibleHeight = configuration.getVisibleHeight() + configuration.getBottomMargin();
         }

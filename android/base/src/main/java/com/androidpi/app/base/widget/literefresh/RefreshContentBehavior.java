@@ -10,7 +10,8 @@ import android.view.animation.LinearInterpolator;
  * Created by jastrelax on 2017/11/16.
  */
 
-public class RefreshContentBehavior<V extends View> extends ScrollingContentBehavior<V> implements Refresher{
+public class RefreshContentBehavior<V extends View> extends ScrollingContentBehavior<V>
+        implements Refresher {
 
     public RefreshContentBehavior(Context context) {
         this(context, null);
@@ -50,6 +51,7 @@ public class RefreshContentBehavior<V extends View> extends ScrollingContentBeha
     private float accumulator = 0;
 
     private Interpolator scrollDownInterpolator = new ViscousFluidInterpolator();
+
     @Override
     protected float onConsumeOffset(int current, int max, int delta) {
         float consumed = delta;

@@ -20,7 +20,8 @@ import java.util.Queue;
  * Created by jastrelax on 2017/11/20.
  */
 
-public abstract class AnimationOffsetBehavior<V extends View, CTR extends BehaviorController> extends ViewOffsetBehavior<V> implements Handler.Callback {
+public abstract class AnimationOffsetBehavior<V extends View, CTR extends BehaviorController>
+        extends ViewOffsetBehavior<V> implements Handler.Callback {
 
     static final long HOLD_ON_DURATION = 500L;
     static final long SHOW_DURATION = 300L;
@@ -60,15 +61,19 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         if (configuration == null) {
             configuration = new BehaviorConfiguration();
         }
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior, 0, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.OffsetBehavior,
+                0, 0);
         boolean hasMaxOffsetRatio = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffsetRatio);
         boolean hasMaxOffset = a.hasValue(R.styleable.OffsetBehavior_lr_maxOffset);
         if (hasMaxOffsetRatio) {
-            configuration.setMaxOffsetRatio(a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 1, 0f));
-            configuration.setMaxOffsetRatioOfParent(a.getFraction(R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 2, 0f));
+            configuration.setMaxOffsetRatio(a.getFraction(
+                    R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 1, 0f));
+            configuration.setMaxOffsetRatioOfParent(a.getFraction(
+                    R.styleable.OffsetBehavior_lr_maxOffsetRatio, 1, 2, 0f));
         }
         if (hasMaxOffset) {
-            configuration.setMaxOffset(a.getDimensionPixelOffset(R.styleable.OffsetBehavior_lr_maxOffset, 0));
+            configuration.setMaxOffset(a.getDimensionPixelOffset(
+                    R.styleable.OffsetBehavior_lr_maxOffset, 0));
         }
         // If maxOffset and maxOffsetRatio is not set then use default.
         configuration.setUseDefaultMaxOffset(!hasMaxOffsetRatio && !hasMaxOffset);
@@ -77,8 +82,10 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
     }
 
     @Override
-    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
-        parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
+    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec,
+                                  int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+        parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec,
+                heightUsed);
         if (mParent == null) {
             mParent = parent;
         }
@@ -117,11 +124,13 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         }
     }
 
-    protected void animateOffsetDeltaWithDuration(CoordinatorLayout parent, View child, int offsetDelta, long duration) {
+    protected void animateOffsetDeltaWithDuration(CoordinatorLayout parent, View child,
+                                                  int offsetDelta, long duration) {
         animateOffsetWithDuration(parent, child, getTopAndBottomOffset() + offsetDelta, duration);
     }
 
-    protected void animateOffsetWithDuration(CoordinatorLayout parent, View child, int offset, long duration) {
+    protected void animateOffsetWithDuration(CoordinatorLayout parent, View child, int offset,
+                                             long duration) {
         int current = getTopAndBottomOffset();
         // No need to change offset.
         if (offset == current) {
@@ -135,24 +144,25 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         } else {
             offsetAnimator.cancel();
         }
-        offsetAnimator.animateOffsetWithDuration(current, offset, duration, new OffsetAnimator.AnimationUpdateListener() {
-            @Override
-            public void onAnimationUpdate(int value) {
-                boolean offsetChanged = setTopAndBottomOffset(value);
-                if (!offsetChanged) {
-                    //
-                    parent.dispatchDependentViewsChanged(child);
-                }
-                for (ScrollingListener l : mListeners) {
-                    l.onScroll(getParent(), getChild(), progressBase + value, offset, configuration.getMaxOffset(), false);
-                }
-            }
+        offsetAnimator.animateOffsetWithDuration(current, offset, duration,
+                new OffsetAnimator.AnimationUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(int value) {
+                        boolean offsetChanged = setTopAndBottomOffset(value);
+                        if (!offsetChanged) {
+                            parent.dispatchDependentViewsChanged(child);
+                        }
+                        for (ScrollingListener l : mListeners) {
+                            l.onScroll(getParent(), getChild(), progressBase + value,
+                                    offset, configuration.getMaxOffset(), false);
+                        }
+                    }
 
-            @Override
-            public void onAnimationEnd() {
+                    @Override
+                    public void onAnimationEnd() {
 
-            }
-        });
+                    }
+                });
     }
 
     public CoordinatorLayout getParent() {

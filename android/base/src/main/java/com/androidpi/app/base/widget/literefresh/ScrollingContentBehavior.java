@@ -46,31 +46,38 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             footerConfig = createIndicatorConfig();
             footerConfig.setUseDefaultMaxOffset(true);
         }
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ContentBehavior, 0, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ContentBehavior,
+                0, 0);
         boolean hasMinOffset = a.hasValue(R.styleable.ContentBehavior_lr_minOffset);
         if (hasMinOffset) {
-            configuration.setMinOffset(a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_minOffset, 0));
+            configuration.setMinOffset(a.getDimensionPixelOffset(
+                    R.styleable.ContentBehavior_lr_minOffset, 0));
             configuration.setCachedMinOffset(configuration.getMinOffset());
         }
 
         boolean hasMinOffsetRatio = a.hasValue(R.styleable.ContentBehavior_lr_minOffsetRatio);
         if (hasMinOffsetRatio) {
-            configuration.setMinOffsetRatio(a.getFraction(R.styleable.ContentBehavior_lr_minOffsetRatio, 1, 1, 0f));
-            configuration.setMinOffsetRatioOfParent(a.getFraction(R.styleable.ContentBehavior_lr_minOffsetRatio, 1, 2, 0f));
+            configuration.setMinOffsetRatio(a.getFraction(
+                    R.styleable.ContentBehavior_lr_minOffsetRatio, 1, 1, 0f));
+            configuration.setMinOffsetRatioOfParent(a.getFraction(
+                    R.styleable.ContentBehavior_lr_minOffsetRatio, 1, 2, 0f));
         }
         if (!hasMinOffset && !hasMinOffsetRatio) {
             configuration.setUseDefaultMinOffset(true);
         }
         if (a.hasValue(R.styleable.ContentBehavior_lr_headerVisibleHeight)) {
-            headerConfig.setVisibleHeight(a.getDimensionPixelOffset(R.styleable.ContentBehavior_lr_headerVisibleHeight, 0));
+            headerConfig.setVisibleHeight(a.getDimensionPixelOffset(
+                    R.styleable.ContentBehavior_lr_headerVisibleHeight, 0));
             headerConfig.setInitialVisibleHeight(getHeaderInitialVisibleHeight());
         }
         a.recycle();
     }
 
     @Override
-    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
-        boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
+    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec,
+                                  int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+        boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
+                parentHeightMeasureSpec, heightUsed);
         // The minimum offset is used to limit the content view offset.
         // Besides, the minimum offset and header's visible height are used to reset content.
         // We must make sure after resetting, either it's top reaches the minimum offset or
@@ -88,13 +95,18 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         if (!configuration.isSettled() || !headerConfig.isSettled() || !footerConfig.isSettled()) {
             // Compute max offset, it will not exceed parent height.
             if (configuration.isUseDefaultMaxOffset()) {
-                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(), GOLDEN_RATIO * parent.getHeight()));
+                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
+                        GOLDEN_RATIO * parent.getHeight()));
                 // If header has set a maximum offset and it's positive, then use it.
                 if (!headerConfig.isUseDefaultMaxOffset() && headerConfig.getMaxOffset() > 0) {
                     configuration.setMaxOffset(headerConfig.getMaxOffset());
                 }
             } else {
-                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(), configuration.getMaxOffsetRatioOfParent() > configuration.getMaxOffsetRatio() ? configuration.getMaxOffsetRatio() * parent.getHeight() : configuration.getMaxOffsetRatio() * child.getHeight()));
+                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
+                        configuration.getMaxOffsetRatioOfParent()
+                                > configuration.getMaxOffsetRatio()
+                                ? configuration.getMaxOffsetRatio() * parent.getHeight()
+                                : configuration.getMaxOffsetRatio() * child.getHeight()));
             }
 
             // If footer's max offset is not settled yet.
@@ -106,15 +118,22 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             // Default minimum offset is zero.
             if (!configuration.isUseDefaultMinOffset()) {
                 // If we have set a minimum offset ratio.
-                if (configuration.getMinOffsetRatio() != null && configuration.getMinOffsetRatioOfParent() != null) {
-                    configuration.setMinOffset((int) Math.max(configuration.getMinOffset(), configuration.getMinOffsetRatioOfParent() > configuration.getMinOffsetRatio() ? configuration.getMinOffsetRatio() * parent.getHeight() : configuration.getMinOffsetRatio() * child.getHeight()));
+                if (configuration.getMinOffsetRatio() != null
+                        && configuration.getMinOffsetRatioOfParent() != null) {
+                    configuration.setMinOffset((int) Math.max(configuration.getMinOffset(),
+                            configuration.getMinOffsetRatioOfParent()
+                                    > configuration.getMinOffsetRatio()
+                                    ? configuration.getMinOffsetRatio() * parent.getHeight()
+                                    : configuration.getMinOffsetRatio() * child.getHeight()));
                     // Cache new minimum offset.
                     configuration.setCachedMinOffset(configuration.getMinOffset());
                 }
             }
 
-            // If we have set a minimum offset but header's initial visible height is smaller, than use it as the minimum offset.
-            configuration.setMinOffset(Math.min(configuration.getMinOffset(), headerConfig.getInitialVisibleHeight()));
+            // If we have set a minimum offset but header's initial visible height is smaller,
+            // than use it as the minimum offset.
+            configuration.setMinOffset(Math.min(configuration.getMinOffset(),
+                    headerConfig.getInitialVisibleHeight()));
 
             configuration.setHeight(child.getHeight());
             // We have set a minimum offset now, relayout.
@@ -130,18 +149,23 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
     }
 
     @Override
-    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
+    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout,
+                                       @NonNull V child, @NonNull View directTargetChild,
+                                       @NonNull View target, int axes, int type) {
         boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (start) {
             for (ScrollingListener l : mListeners) {
-                l.onStartScroll(coordinatorLayout, child, configuration.getMaxOffset(), type == TYPE_TOUCH);
+                l.onStartScroll(coordinatorLayout, child, configuration.getMaxOffset(),
+                        type == TYPE_TOUCH);
             }
         }
         return start;
     }
 
     @Override
-    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
+    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
+                                  @NonNull View target, int dx, int dy, @NonNull int[] consumed,
+                                  int type) {
         if (dy > 0) {
             // When scrolling up, compute the top offset which content can reach.
             int topOffset = configuration.getMinOffset();
@@ -165,7 +189,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
     }
 
     @Override
-    public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
+    public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
+                               @NonNull View target, int dxConsumed, int dyConsumed,
+                               int dxUnconsumed, int dyUnconsumed, int type) {
         // If there is unconsumed pixels.
         if (dyUnconsumed < 0) {
             int top = child.getTop() - configuration.getTopMargin();
@@ -173,7 +199,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             // If top position of child can not scroll exceed maximum offset.
             if (top >= configuration.getMaxOffset())
                 return;
-            int offset = MathUtils.clamp(-dyUnconsumed, 0, configuration.getMaxOffset() - top);
+            int offset = MathUtils.clamp(-dyUnconsumed,
+                    0, configuration.getMaxOffset() - top);
             if (offset != 0) {
                 if (top >= headerConfig.getInitialVisibleHeight()) {
                     // When header's hidden part is visible, do not consume none touch scroll,
@@ -183,7 +210,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                     consumeOffset(coordinatorLayout, child, offset, type, false);
                 } else {
                     // Recompute the offset so that the top does not exceed headerVisibleHeight.
-                    offset = MathUtils.clamp(-dyUnconsumed, 0, headerConfig.getInitialVisibleHeight() - top);
+                    offset = MathUtils.clamp(-dyUnconsumed,
+                            0, headerConfig.getInitialVisibleHeight() - top);
                     consumeOffset(coordinatorLayout, child, offset, type, true);
                 }
             }
@@ -203,7 +231,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                     consumeOffset(coordinatorLayout, child, offset, type, false);
                 } else {
                     // Recompute it.
-                    offset = MathUtils.clamp(-dyUnconsumed, -(footerConfig.getInitialVisibleHeight() - coordinatorLayout.getHeight() + bottom), 0);
+                    offset = MathUtils.clamp(-dyUnconsumed,
+                            -(footerConfig.getInitialVisibleHeight()
+                                    - coordinatorLayout.getHeight() + bottom), 0);
                     consumeOffset(coordinatorLayout, child, offset, type, true);
                 }
             }
@@ -211,18 +241,22 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
     }
 
     @Override
-    public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
+    public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
+                                   @NonNull View target, int type) {
         for (ScrollingListener l : mListeners) {
-            l.onStopScroll(coordinatorLayout, child, getTopAndBottomOffset(), configuration.getMaxOffset(), type == TYPE_TOUCH);
+            l.onStopScroll(coordinatorLayout, child, getTopAndBottomOffset(),
+                    configuration.getMaxOffset(), type == TYPE_TOUCH);
         }
     }
 
     @Override
-    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
+    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
+                                    @NonNull View target, float velocityX, float velocityY) {
         int top = child.getTop() - configuration.getTopMargin();
         int bottom = child.getBottom() + configuration.getBottomMargin();
         // If header or footer's hidden part is visible, do not fling.
-        if (top > headerConfig.getInitialVisibleHeight() || (-bottom + getParent().getHeight()) > footerConfig.getInitialVisibleHeight())
+        if (top > headerConfig.getInitialVisibleHeight()
+                || (-bottom + getParent().getHeight()) > footerConfig.getInitialVisibleHeight())
             return true;
         return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
     }
@@ -232,26 +266,32 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
      * @param child
      * @param offsetDelta
      * @param type
-     * @param consumeRawOffset  consume raw offset or not, eg. for a smooth fling action we may not just keep it.
+     * @param consumeRawOffset  consume raw offset or not, eg. for a smooth fling action we may
+     *                          not just keep it.
      * @return
      */
-    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offsetDelta, int type, boolean consumeRawOffset) {
+    private int consumeOffset(CoordinatorLayout coordinatorLayout, View child, int offsetDelta,
+                              int type, boolean consumeRawOffset) {
         int currentOffset = getTopAndBottomOffset();
         // Before child consume the offset.
         for (ScrollingListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child, currentOffset, configuration.getMaxOffset(), type == TYPE_TOUCH);
+            l.onPreScroll(coordinatorLayout, child, currentOffset, configuration.getMaxOffset(),
+                    type == TYPE_TOUCH);
         }
-        float consumed = consumeRawOffset ? offsetDelta : onConsumeOffset(currentOffset, configuration.getMaxOffset(), offsetDelta);
+        float consumed = consumeRawOffset
+                ? offsetDelta
+                : onConsumeOffset(currentOffset, configuration.getMaxOffset(), offsetDelta);
         currentOffset = Math.round(currentOffset + consumed);
         setTopAndBottomOffset(currentOffset);
-//        Timber.d("setTopAndBottomOffset: %d", currentOffset);
-        // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's onNestedScroll().
-        // The content view itself can make some transformation by setTranslationY() that may keep it's drawing rectangle
-        // unchanged while it's offset has changed. In this case CoordinatorLayout will not call onDependentViewChanged().
-        // So We need to call onDependentViewChanged() manually.
+        // In CoordinatorLayout the onChildViewsChanged() will be called after calling behavior's
+        // onNestedScroll(). The content view itself can make some transformation by setTranslationY()
+        // that may keep it's drawing rectangle unchanged while it's offset has changed. In this
+        // case CoordinatorLayout will not call onDependentViewChanged(). So We need to call
+        // onDependentViewChanged() manually.
         coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollingListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child, currentOffset, offsetDelta, configuration.getMaxOffset(), type == TYPE_TOUCH);
+            l.onScroll(coordinatorLayout, child, currentOffset, offsetDelta,
+                    configuration.getMaxOffset(), type == TYPE_TOUCH);
         }
         return currentOffset;
     }
@@ -273,7 +313,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         // We need to reset it.
         if (getChild().getTop() - configuration.getTopMargin() > headerConfig.getInitialVisibleHeight()
                 || getChild().getTop() - configuration.getTopMargin() < configuration.getMinOffset()
-                || getChild().getBottom() + configuration.getBottomMargin() < -footerConfig.getInitialVisibleHeight() + getParent().getHeight()) {
+                || getChild().getBottom() + configuration.getBottomMargin()
+                < -footerConfig.getInitialVisibleHeight() + getParent().getHeight()) {
             if (getChild() == null || getChild().getHandler() == null) return;
             // Remove previous pending callback.
             handler.removeCallbacks(offsetCallback);
@@ -331,7 +372,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
      */
     void showHeader(long animateDuration) {
         if (null == getChild() || null == getParent()) return;
-        int offset = headerConfig.getHeight() + headerConfig.getBottomMargin() - (getChild().getTop() - configuration.getTopMargin());
+        int offset = headerConfig.getHeight() + headerConfig.getBottomMargin()
+                - (getChild().getTop() - configuration.getTopMargin());
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animateDuration);
     }
 
@@ -342,7 +384,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         int bottom = getChild().getBottom() + lp.bottomMargin;
         int offset = 0;
         if (footerConfig.getShowUpWhenRefresh() == null) {
-            offset = -(footerConfig.getInitialVisibleHeight() + footerConfig.getRefreshTriggerRange()) + getParent().getHeight() - bottom;
+            offset = -(footerConfig.getInitialVisibleHeight()
+                    + footerConfig.getRefreshTriggerRange())
+                    + getParent().getHeight() - bottom;
         } else {
             if (footerConfig.getShowUpWhenRefresh()) {
                 offset = getParent().getHeight() - footerConfig.getHeight() - bottom;
@@ -362,7 +406,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         if (null == getChild() || getParent() == null) return;
         CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) getChild().getLayoutParams());
         int bottom = getChild().getBottom() + lp.bottomMargin;
-        int offset = getParent().getHeight() - footerConfig.getHeight() - footerConfig.getTopMargin() - bottom;
+        int offset = getParent().getHeight() - footerConfig.getHeight()
+                - footerConfig.getTopMargin() - bottom;
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset, animationDuration);
     }
 
@@ -381,7 +426,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
 
     public void setHeaderConfig(BehaviorConfiguration headerConfig) {
         this.headerConfig = new BehaviorConfiguration.Builder(headerConfig).setSettled(false).build();
-        configuration.setMinOffset(Math.min(configuration.getCachedMinOffset(), headerConfig.getInitialVisibleHeight()));
+        configuration.setMinOffset(Math.min(configuration.getCachedMinOffset(),
+                headerConfig.getInitialVisibleHeight()));
         requestLayout();
     }
 
@@ -395,7 +441,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         if (headerConfig.getHeight() <= 0 || headerConfig.getVisibleHeight() <= 0) {
             initialVisibleHeight = headerConfig.getVisibleHeight();
         } else if (headerConfig.getVisibleHeight() >= headerConfig.getHeight()) {
-            initialVisibleHeight = headerConfig.getVisibleHeight() + headerConfig.getTopMargin() + headerConfig.getBottomMargin();
+            initialVisibleHeight = headerConfig.getVisibleHeight()
+                    + headerConfig.getTopMargin() + headerConfig.getBottomMargin();
         } else {
             initialVisibleHeight = headerConfig.getVisibleHeight() + headerConfig.getBottomMargin();
         }

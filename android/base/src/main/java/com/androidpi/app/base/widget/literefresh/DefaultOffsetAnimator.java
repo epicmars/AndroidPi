@@ -11,7 +11,8 @@ public class DefaultOffsetAnimator extends OffsetAnimator {
 
     private ValueAnimator mOffsetAnimator;
 
-    public void animateOffsetWithDuration(int current, int offset, long duration, AnimationUpdateListener listener) {
+    public void animateOffsetWithDuration(int current, int offset, long duration,
+                                          AnimationUpdateListener listener) {
         if (mOffsetAnimator == null) {
             mOffsetAnimator = new ValueAnimator();
             mOffsetAnimator.setInterpolator(new DecelerateInterpolator());

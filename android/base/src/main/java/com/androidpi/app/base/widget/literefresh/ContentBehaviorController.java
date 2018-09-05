@@ -12,7 +12,8 @@ import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.*;
 /**
  * Created by jastrelax on 2018/8/24.
  */
-public class ContentBehaviorController extends BehaviorController<ScrollingContentBehavior> implements OnRefreshListener, OnLoadListener {
+public class ContentBehaviorController extends BehaviorController<ScrollingContentBehavior>
+        implements OnRefreshListener, OnLoadListener {
 
     private static final long HOLD_ON_DURATION = 500L;
     private static final long SHOW_DURATION = 300L;
@@ -27,12 +28,14 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         @Override
         public int transform(int currentOffset) {
             // The current offset here is the content's top and bottom offset.
-            return -(currentOffset + behavior.getChild().getHeight()) + behavior.getParent().getHeight();
+            return -(currentOffset + behavior.getChild().getHeight())
+                    + behavior.getParent().getHeight();
         }
 
         @Override
         public int readyRefreshOffset() {
-            return behavior.getFooterConfig().getRefreshTriggerRange() + behavior.getFooterConfig().getInitialVisibleHeight();
+            return behavior.getFooterConfig().getRefreshTriggerRange()
+                    + behavior.getFooterConfig().getInitialVisibleHeight();
         }
 
         @Override
@@ -89,7 +92,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
         @Override
         public int readyRefreshOffset() {
-            return behavior.getHeaderConfig().getRefreshTriggerRange() + behavior.getHeaderConfig().getInitialVisibleHeight();
+            return behavior.getHeaderConfig().getRefreshTriggerRange()
+                    + behavior.getHeaderConfig().getInitialVisibleHeight();
         }
 
         @Override
@@ -145,7 +149,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     }
 
     @Override
-    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int max, boolean isTouch) {
+    public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                              int max, boolean isTouch) {
         for (RefreshStateMachine stateMachine : stateMachines) {
             stateMachine.onStartScroll(coordinatorLayout, child, max, isTouch);
         }
@@ -153,7 +158,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     }
 
     @Override
-    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
+    public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                            int current, int max, boolean isTouch) {
         for (RefreshStateMachine stateMachine : stateMachines) {
             stateMachine.onPreScroll(coordinatorLayout, child, current, max, isTouch);
         }
@@ -161,7 +167,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     }
 
     @Override
-    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int max, boolean isTouch) {
+    public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                         int current, int delta, int max, boolean isTouch) {
         for (RefreshStateMachine stateMachine : stateMachines) {
             stateMachine.onScroll(coordinatorLayout, child, current, delta, max, isTouch);
         }
@@ -169,7 +176,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     }
 
     @Override
-    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int max, boolean isTouch) {
+    public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
+                             int current, int max, boolean isTouch) {
         for (RefreshStateMachine stateMachine : stateMachines) {
             stateMachine.onStopScroll(coordinatorLayout, child, current, max, isTouch);
         }

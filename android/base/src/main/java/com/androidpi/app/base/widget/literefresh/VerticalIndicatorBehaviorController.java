@@ -6,7 +6,8 @@ import android.view.View;
 /**
  * Created by jastrelax on 2018/8/27.
  */
-public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndicatorBehavior> extends BehaviorController<B> {
+public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndicatorBehavior>
+        extends BehaviorController<B> {
 
     /**
      * Follow content view.
@@ -37,11 +38,20 @@ public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndi
         super(behavior);
     }
 
-    public abstract int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, View child, View dependency, VerticalIndicatorBehavior behavior, ScrollingContentBehavior contentBehavior);
+    public abstract int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent,
+                                                                 View child,
+                                                                 View dependency,
+                                                                 VerticalIndicatorBehavior behavior,
+                                                                 ScrollingContentBehavior contentBehavior);
 
-    public abstract float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior, ScrollingContentBehavior contentBehavior, int currentOffset, int offsetDelta);
+    public abstract float consumeOffsetOnDependentViewChanged(CoordinatorLayout parent, View child,
+                                                              VerticalIndicatorBehavior behavior,
+                                                              ScrollingContentBehavior contentBehavior,
+                                                              int currentOffset, int offsetDelta);
 
-    public abstract int transformOffsetCoordinate(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior, int currentOffset);
+    public abstract int transformOffsetCoordinate(CoordinatorLayout parent, View child,
+                                                  VerticalIndicatorBehavior behavior,
+                                                  int currentOffset);
 
     /**
      * Tell if the hidden part of the view is visible.
@@ -51,5 +61,6 @@ public abstract class VerticalIndicatorBehaviorController<B extends VerticalIndi
      * @return true if hidden part of view is visible,
      * otherwise return false.
      */
-    public abstract boolean isHiddenPartVisible(CoordinatorLayout parent, View child, VerticalIndicatorBehavior behavior);
+    public abstract boolean isHiddenPartVisible(CoordinatorLayout parent, View child,
+                                                VerticalIndicatorBehavior behavior);
 }

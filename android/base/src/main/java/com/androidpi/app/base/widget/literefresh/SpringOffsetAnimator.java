@@ -20,7 +20,8 @@ public class SpringOffsetAnimator extends OffsetAnimator {
     }
 
     @Override
-    public void animateOffsetWithDuration(int current, int offset, long duration, AnimationUpdateListener listener) {
+    public void animateOffsetWithDuration(int current, int offset, long duration,
+                                          AnimationUpdateListener listener) {
         if (null == springAnimation) {
             springAnimation = new SpringAnimation(new FloatValueHolder());
         } else {
@@ -37,7 +38,8 @@ public class SpringOffsetAnimator extends OffsetAnimator {
 
         springAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
             @Override
-            public void onAnimationEnd(DynamicAnimation animation, boolean canceled, float value, float velocity) {
+            public void onAnimationEnd(DynamicAnimation animation, boolean canceled, float value,
+                                       float velocity) {
                 setRunning(false);
             }
         });
