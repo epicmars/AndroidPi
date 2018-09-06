@@ -2,6 +2,7 @@ package com.androidpi.app.widget;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -46,17 +47,17 @@ public class LoadingFooterView extends ScrollingHeaderLayout implements OnLoadLi
     }
 
     @Override
-    public void onStartScroll(View view, int max, boolean isTouch) {
+    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
 
     }
 
     @Override
-    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
 
     }
 
     @Override
-    public void onStopScroll(View view, int current, int max, boolean isTouch) {
+    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
 
     }
 

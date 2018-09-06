@@ -1,12 +1,9 @@
 package com.androidpi.app.base.widget.literefresh.widgets;
 
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
-
-import timber.log.Timber;
 
 /**
  * A simple scalable header layout.
@@ -36,12 +33,12 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStartScroll(View view, int max, boolean isTouch) {
+    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
 
     }
 
     @Override
-    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
         int height = getHeight();
         if (current <= height) {
             // Because the view can scroll down and then back. And it will not always reach a position
@@ -61,7 +58,7 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStopScroll(View view, int current, int max, boolean isTouch) {
+    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
 
     }
 }

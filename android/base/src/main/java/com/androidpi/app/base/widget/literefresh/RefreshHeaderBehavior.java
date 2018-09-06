@@ -13,7 +13,7 @@ import com.androidpi.app.pi.base.R;
  */
 
 public class RefreshHeaderBehavior<V extends View>
-        extends VerticalIndicatorBehavior<V, HeaderBehaviorController> implements Refresher{
+        extends VerticalIndicatorBehavior<V, HeaderBehaviorController> implements Refresher {
 
     {
         controller = new HeaderBehaviorController(this);
@@ -32,9 +32,11 @@ public class RefreshHeaderBehavior<V extends View>
 
     public RefreshHeaderBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndicatorBehavior, 0, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.IndicatorBehavior, 0, 0);
         if (a.hasValue(R.styleable.IndicatorBehavior_lr_mode)) {
-            int mode = a.getInt(R.styleable.IndicatorBehavior_lr_mode, HeaderBehaviorController.MODE_FOLLOW);
+            int mode = a.getInt(
+                    R.styleable.IndicatorBehavior_lr_mode, HeaderBehaviorController.MODE_FOLLOW);
             controller.setMode(mode);
         }
         a.recycle();
@@ -44,14 +46,17 @@ public class RefreshHeaderBehavior<V extends View>
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
         if (!configuration.isSettled()) {
-            CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
+            CoordinatorLayout.LayoutParams lp =
+                    ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
             // Compute max offset, it will not exceed parent height.
             if (configuration.isUseDefaultMaxOffset()) {
                 // We want child can be fully visible by default.
-                configuration.setMaxOffset((int) Math.max(GOLDEN_RATIO * parent.getHeight(), child.getHeight()));
+                configuration.setMaxOffset((int) Math.max(GOLDEN_RATIO * parent.getHeight(),
+                        child.getHeight()));
             } else {
                 configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
-                        configuration.getMaxOffsetRatioOfParent() > configuration.getMaxOffsetRatio()
+                        configuration.getMaxOffsetRatioOfParent()
+                                > configuration.getMaxOffsetRatio()
                                 ? configuration.getMaxOffsetRatio() * parent.getHeight()
                                 : configuration.getMaxOffsetRatio() * child.getHeight()));
             }
@@ -97,8 +102,27 @@ public class RefreshHeaderBehavior<V extends View>
         controller.refreshError(throwable);
     }
 
+    @Override
+    protected int getInitialOffset() {
+        return configuration.getVisibleHeight();
+    }
 
-    public int getInitialVisibleHeight() {
+    @Override
+    protected int getMinOffset() {
+        BehaviorConfiguration contentConfig = getContentBehavior().getConfiguration();
+        return contentConfig.getMinOffset() - configuration.getBottomMargin();
+    }
+
+    @Override
+    protected int getMaxOffset() {
+        BehaviorConfiguration contentConfig = getContentBehavior().getConfiguration();
+        return contentConfig.getMaxOffset() -
+                (contentConfig.getMaxOffset() > configuration.getBottomMargin()
+                        ? configuration.getBottomMargin()
+                        : 0);
+    }
+
+    private int getInitialVisibleHeight() {
         int initialVisibleHeight;
         if (configuration.getHeight() <= 0 || configuration.getVisibleHeight() <= 0) {
             initialVisibleHeight = configuration.getVisibleHeight();

@@ -30,3 +30,8 @@ Padding用于限制View内部的内容的边距，因此不影响滑动偏移，
 - 如果Footer不可见
 
     重置Header到初始可见高度
+
+### 问题
+1. 由于Header和Footer均依赖于Content，两者并没有优先级的区别，如果布局过程中Footer先布局，此时Header的Configuration还没有传递给Content，那么算得的剩余空间可能会占据父布局的全部内容空间，由于Footer的初始可见高度取计算的较大值，那么可能导致随后当Header配置完成时计算的值无效。
+
+目前的解决方式是让Footer依赖于Header和Content，那么它会在最后进行布局。

@@ -59,7 +59,8 @@ public class RefreshFooterBehavior<V extends View>
                 configuration.setMaxOffset(child.getHeight());
             } else {
                 configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
-                        configuration.getMaxOffsetRatioOfParent() > configuration.getMaxOffsetRatio()
+                        configuration.getMaxOffsetRatioOfParent()
+                                > configuration.getMaxOffsetRatio()
                                 ? configuration.getMaxOffsetRatio() * parent.getHeight()
                                 : configuration.getMaxOffsetRatio() * child.getHeight()));
             }
@@ -107,7 +108,25 @@ public class RefreshFooterBehavior<V extends View>
     }
 
 
-    public int getInitialVisibleHeight(View child) {
+    @Override
+    protected int getInitialOffset() {
+        return -configuration.getVisibleHeight() + getParent().getHeight();
+    }
+
+    @Override
+    protected int getMinOffset() {
+        return -configuration.getTopMargin();
+    }
+
+    @Override
+    protected int getMaxOffset() {
+        ScrollingContentBehavior contentBehavior = getContentBehavior();
+        return contentBehavior == null
+                ? 0
+                : contentBehavior.getFooterConfig().getMaxOffset() - configuration.getTopMargin();
+    }
+
+    private int getInitialVisibleHeight(View child) {
         int initialVisibleHeight;
         if (configuration.getHeight() <= 0 || configuration.getVisibleHeight() <= 0) {
             initialVisibleHeight = configuration.getVisibleHeight();
@@ -117,14 +136,36 @@ public class RefreshFooterBehavior<V extends View>
         } else {
             initialVisibleHeight = configuration.getVisibleHeight() + configuration.getTopMargin();
         }
+        // If header configuration is not settled when footer is in layout, so we may get a
+        // header's initial visible height is zero and we get a footer's initial visible height that
+        // fill the parent, after that when we compute a right initial visible height that is smaller,
+        // it will not be set.
+        ScrollingContentBehavior contentBehavior = getContentBehavior();
         // If content is too short, there may be extra space left.
-        initialVisibleHeight = Math.max(initialVisibleHeight, getParent().getHeight()
-                - getParent().getPaddingTop()
-                - getParent().getPaddingBottom()
-                - getContentBehavior().getChild().getHeight()
-                - getContentBehavior().getConfiguration().getTopMargin()
-                - getContentBehavior().getConfiguration().getBottomMargin()
-                - getContentBehavior().getHeaderConfig().getInitialVisibleHeight());
-        return initialVisibleHeight;
+        if (contentBehavior == null
+                || getParent().getHeight() == 0
+                || contentBehavior.getChild().getHeight() == 0) {
+            return initialVisibleHeight;
+        } else {
+            return Math.max(initialVisibleHeight, getParent().getHeight()
+                    - getParent().getPaddingTop()
+                    - getParent().getPaddingBottom()
+                    - contentBehavior.getChild().getHeight()
+                    - contentBehavior.getConfiguration().getTopMargin()
+                    - contentBehavior.getConfiguration().getBottomMargin()
+                    - contentBehavior.getHeaderConfig().getInitialVisibleHeight());
+        }
+    }
+
+    @Override
+    public boolean layoutDependsOn(CoordinatorLayout parent, V child, View dependency) {
+        // We want footer layout after content and header.
+        CoordinatorLayout.LayoutParams lp =
+                (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
+        if (null != lp) {
+            CoordinatorLayout.Behavior behavior = lp.getBehavior();
+            return behavior instanceof ScrollingContentBehavior || behavior instanceof RefreshHeaderBehavior;
+        }
+        return false;
     }
 }

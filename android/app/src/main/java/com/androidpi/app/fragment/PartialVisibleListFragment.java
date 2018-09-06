@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.TypedValue;
 import android.view.View;
@@ -26,7 +27,7 @@ import com.androidpi.app.viewholder.UnsplashPhotoHeaderViewHolder;
 import com.androidpi.app.viewholder.UnsplashPhotoListViewHolder;
 import com.androidpi.app.viewholder.items.ErrorItem;
 
-import timber.log.Timber;
+import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * Created by jastrelax on 2018/8/28.
@@ -95,19 +96,19 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
         if (behavior != null) {
             behavior.addOnScrollListener(new OnScrollListener() {
                 @Override
-                public void onStartScroll(View view, int max, boolean isTouch) {
+                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
 //                    Timber.d("onStartScroll: isTouch %b", isTouch);
                 }
 
                 @Override
-                public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
 //                    Timber.d("onScroll: isTouch %b", isTouch);
                 }
 
                 @Override
-                public void onStopScroll(View view, int current, int max, boolean isTouch) {
+                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
 //                    Timber.d("onStopScroll: isTouch %b", isTouch);
-                    if (isTouch && !behavior.getController().isRefreshing()) {
+                    if (type == TYPE_TOUCH && !behavior.getController().isRefreshing()) {
                         binding.circleProgress.resetStyle();
                         binding.circleProgress.setProgress(1f);
                         binding.circleProgress.animate().translationY(-translationDistance);

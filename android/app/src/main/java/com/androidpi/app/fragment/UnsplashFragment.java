@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.view.View;
 
@@ -18,6 +19,8 @@ import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentUnsplashBinding;
+
+import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * Created by jastrelax on 2018/8/13.
@@ -66,15 +69,15 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
 
         headerBehavior.addOnScrollListener(new OnScrollListener() {
             @Override
-            public void onStartScroll(View view, int max, boolean isTouch) {
-                if (isTouch) {
+            public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
+                if (type == TYPE_TOUCH) {
                     binding.loadingView.startProgress();
                     binding.loadingView.setProgress(0);
                 }
             }
 
             @Override
-            public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+            public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
                 float offset = current - view.getHeight();
                 float progress = offset / headerBehavior.getConfiguration().getRefreshTriggerRange();
                 binding.loadingView.setProgress(progress);
@@ -86,7 +89,7 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
             }
 
             @Override
-            public void onStopScroll(View view, int current, int max, boolean isTouch) {
+            public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
 
             }
         });

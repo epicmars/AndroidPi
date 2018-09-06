@@ -1,6 +1,7 @@
 package com.androidpi.app.cweather.ui;
 
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -11,6 +12,8 @@ import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
 import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 import com.androidpi.app.cweather.R;
+
+import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * Created by jastrelax on 2018/8/18.
@@ -45,16 +48,16 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
     }
 
     @Override
-    public void onStartScroll(View view, int max, boolean isTouch) {
-        if (isTouch) {
+    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
+        if (type == TYPE_TOUCH) {
             loadingView.startProgress();
             loadingView.setProgress(0);
         }
     }
 
     @Override
-    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
-        if (!isTouch) return;
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
+        if (type != TYPE_TOUCH) return;
         float height = getHeight();
         if (current > offset) {
             float progress = (current - offset) / height;
@@ -63,7 +66,7 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
     }
 
     @Override
-    public void onStopScroll(View view, int current, int max, boolean isTouch) {
+    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
 
     }
 

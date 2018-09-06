@@ -20,7 +20,7 @@ public class SpringOffsetAnimator extends OffsetAnimator {
     }
 
     @Override
-    public void animateOffsetWithDuration(int current, int offset, long duration,
+    public void animateOffsetWithDuration(int currentOffset, int destOffset, long duration,
                                           AnimationUpdateListener listener) {
         if (null == springAnimation) {
             springAnimation = new SpringAnimation(new FloatValueHolder());
@@ -46,11 +46,11 @@ public class SpringOffsetAnimator extends OffsetAnimator {
 
         SpringForce springForce = new SpringForce()
                 .setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
-                .setFinalPosition(offset);
+                .setFinalPosition(destOffset);
 
         springAnimation
                 .setSpring(springForce)
-                .setStartValue(current);
+                .setStartValue(currentOffset);
 
         springAnimation.start();
         setRunning(true);

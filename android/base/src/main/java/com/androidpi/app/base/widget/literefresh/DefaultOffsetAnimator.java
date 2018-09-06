@@ -11,7 +11,7 @@ public class DefaultOffsetAnimator extends OffsetAnimator {
 
     private ValueAnimator mOffsetAnimator;
 
-    public void animateOffsetWithDuration(int current, int offset, long duration,
+    public void animateOffsetWithDuration(int currentOffset, int destOffset, long duration,
                                           AnimationUpdateListener listener) {
         if (mOffsetAnimator == null) {
             mOffsetAnimator = new ValueAnimator();
@@ -28,7 +28,7 @@ public class DefaultOffsetAnimator extends OffsetAnimator {
             mOffsetAnimator.cancel();
         }
         mOffsetAnimator.setDuration(duration);
-        mOffsetAnimator.setIntValues(current, offset);
+        mOffsetAnimator.setIntValues(currentOffset, destOffset);
         mOffsetAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {

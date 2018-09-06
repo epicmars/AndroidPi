@@ -2,6 +2,7 @@ package com.androidpi.app.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.view.View;
 import com.androidpi.app.R;
 import com.androidpi.app.activity.VideoActivity;
 import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
+
+import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * Created by jastrelax on 2018/8/20.
@@ -31,15 +34,15 @@ public class VideoHeaderView extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStartScroll(View view, int max, boolean isTouch) {
-        if (isTouch) {
+    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
+        if (type == TYPE_TOUCH) {
             launched = false;
         }
     }
 
     @Override
-    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
-        if (!isTouch || launched) return;
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
+        if (type != TYPE_TOUCH || launched) return;
         if ((current /(float) max) >= 0.85f) {
             String sharedElementName = getResources().getString(R.string.transition_header);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) getContext(), this, sharedElementName);
@@ -49,7 +52,7 @@ public class VideoHeaderView extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStopScroll(View view, int current, int max, boolean isTouch) {
+    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
     }
 
 }

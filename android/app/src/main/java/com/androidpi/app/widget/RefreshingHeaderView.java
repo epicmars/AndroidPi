@@ -3,6 +3,7 @@ package com.androidpi.app.widget;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.ImageViewCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -58,12 +59,12 @@ public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRef
     }
 
     @Override
-    public void onStartScroll(View view, int max, boolean isTouch) {
+    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
 
     }
 
     @Override
-    public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
         float height = getHeight();
         if (current <= height) return;
         float scale = Math.max(current / height, 1);
@@ -81,7 +82,7 @@ public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRef
     }
 
     @Override
-    public void onStopScroll(View view, int current, int max, boolean isTouch) {
+    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
 
     }
 

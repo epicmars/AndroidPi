@@ -28,12 +28,11 @@ public abstract class OffsetAnimator {
 
     /**
      * Animate current offset to destination offset with a duration.
-     *
-     * @param current  current offset
-     * @param offset   destination offset
+     * @param currentOffset  current offset
+     * @param destOffset   destination offset
      * @param duration animation duration
      * @param listener animaiton listener
      */
-    public abstract void animateOffsetWithDuration(int current, int offset, long duration,
+    public abstract void animateOffsetWithDuration(int currentOffset, int destOffset, long duration,
                                                    AnimationUpdateListener listener);
 }

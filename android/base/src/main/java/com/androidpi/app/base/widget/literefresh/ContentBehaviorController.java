@@ -150,38 +150,38 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                              int max, boolean isTouch) {
+                              int initial, int min, int max, int type) {
         for (RefreshStateMachine stateMachine : stateMachines) {
-            stateMachine.onStartScroll(coordinatorLayout, child, max, isTouch);
+            stateMachine.onStartScroll(coordinatorLayout, child, initial, min, max, type);
         }
-        super.onStartScroll(coordinatorLayout, child, max, isTouch);
+        super.onStartScroll(coordinatorLayout, child, initial, min, max, type);
     }
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                            int current, int max, boolean isTouch) {
+                            int current, int initial, int min, int max, int type) {
         for (RefreshStateMachine stateMachine : stateMachines) {
-            stateMachine.onPreScroll(coordinatorLayout, child, current, max, isTouch);
+            stateMachine.onPreScroll(coordinatorLayout, child, current, initial, min , max, type);
         }
-        super.onPreScroll(coordinatorLayout, child, current, max, isTouch);
+        super.onPreScroll(coordinatorLayout, child, current, initial, min, max, type);
     }
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         int current, int delta, int max, boolean isTouch) {
+                         int current, int delta, int initial, int min, int max, int type) {
         for (RefreshStateMachine stateMachine : stateMachines) {
-            stateMachine.onScroll(coordinatorLayout, child, current, delta, max, isTouch);
+            stateMachine.onScroll(coordinatorLayout, child, current, delta, initial, min , max, type);
         }
-        super.onScroll(coordinatorLayout, child, current, delta, max, isTouch);
+        super.onScroll(coordinatorLayout, child, current, delta, initial, min, max, type);
     }
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                             int current, int max, boolean isTouch) {
+                             int current, int initial, int min, int max, int type) {
         for (RefreshStateMachine stateMachine : stateMachines) {
-            stateMachine.onStopScroll(coordinatorLayout, child, current, max, isTouch);
+            stateMachine.onStopScroll(coordinatorLayout, child, current, initial, min, max, type);
         }
-        super.onStopScroll(coordinatorLayout, child, current, max, isTouch);
+        super.onStopScroll(coordinatorLayout, child, current, initial, min, max, type);
     }
 
     @Override

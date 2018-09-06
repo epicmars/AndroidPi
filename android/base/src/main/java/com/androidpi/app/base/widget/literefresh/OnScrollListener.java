@@ -1,5 +1,6 @@
 package com.androidpi.app.base.widget.literefresh;
 
+import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
 /**
@@ -8,9 +9,9 @@ import android.view.View;
 
 public interface OnScrollListener {
 
-    void onStartScroll(View view, int max, boolean isTouch);
+    void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type);
 
-    void onScroll(View view, int current, int delta, int max, boolean isTouch);
+    void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type);
 
-    void onStopScroll(View view, int current, int max, boolean isTouch);
+    void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type);
 }

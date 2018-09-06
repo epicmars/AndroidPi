@@ -25,7 +25,6 @@ import com.androidpi.app.viewholder.NewsViewHolder
 import com.androidpi.app.viewholder.items.ErrorItem
 import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import com.androidpi.news.vo.NewsPagination
-import kotlinx.android.synthetic.main.fragment_main.*
 import javax.inject.Inject
 
 /**
@@ -125,16 +124,16 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         headerBehavior  = RefreshHeaderBehavior<View>(context)
         headerBehavior.addOnScrollListener(object : OnScrollListener {
 
-            override fun onStartScroll(view: View, max: Int, isTouch: Boolean) {
+            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, min: Int, max: Int, type: Int) {
                 binding.headerProgress.visibility = View.VISIBLE
                 binding.headerProgress.max = max
             }
 
-            override fun onScroll(view: View, current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, min: Int, max: Int, type: Int) {
                 binding.headerProgress.progress = current
             }
 
-            override fun onStopScroll(view: View, current: Int, max: Int, isTouch: Boolean) {
+            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, min: Int, max: Int, type: Int) {
                 binding.headerProgress.progress = current
             }
 
@@ -181,14 +180,14 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
 
         footerBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onScroll(view: View, current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, min: Int, max: Int, type: Int) {
             }
 
-            override fun onStartScroll(view: View, max: Int, isTouch: Boolean) {
+            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, min: Int, max: Int, type: Int) {
 
             }
 
-            override fun onStopScroll(view: View, current: Int, max: Int, isTouch: Boolean) {
+            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, min: Int, max: Int, type: Int) {
             }
         })
 
@@ -201,16 +200,16 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         contentParams.behavior = contentBehavior
 
         contentBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onStartScroll(view: View, max: Int, isTouch: Boolean) {
+            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, min: Int, max: Int, type: Int) {
                 binding.contentProgress.visibility = View.VISIBLE
                 binding.contentProgress.max = max
             }
 
-            override fun onScroll(view: View, current: Int, delta: Int, max: Int, isTouch: Boolean) {
+            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, min: Int, max: Int, type: Int) {
                 binding.contentProgress.progress = current
             }
 
-            override fun onStopScroll(view: View, current: Int, max: Int, isTouch: Boolean) {
+            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, min: Int, max: Int, type: Int) {
                 binding.contentProgress.progress = current
             }
         })

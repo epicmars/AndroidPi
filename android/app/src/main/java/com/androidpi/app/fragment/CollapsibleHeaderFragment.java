@@ -6,9 +6,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.androidpi.app.R;
@@ -24,8 +23,6 @@ import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentCollapsibleHeaderBinding;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by jastrelax on 2018/8/13.
@@ -94,12 +91,12 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                 ColorDrawable drawable = new ColorDrawable(Color.BLACK);
 
                 @Override
-                public void onStartScroll(View view, int max, boolean isTouch) {
+                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
 
                 }
 
                 @Override
-                public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
                     int visibleHeight = config.getInitialVisibleHeight();
                     if (current <= visibleHeight) {
                         float y = visibleHeight - current;
@@ -121,7 +118,7 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                 }
 
                 @Override
-                public void onStopScroll(View view, int current, int max, boolean isTouch) {
+                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
 
                 }
             });

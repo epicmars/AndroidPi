@@ -12,8 +12,6 @@ import com.androidpi.app.pi.base.R;
 
 import java.util.List;
 
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
-
 /**
  * Super class of header and footer behavior.
  * <p>
@@ -83,8 +81,10 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
     }
 
     @Override
-    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
-        boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
+    public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec,
+                                  int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+        boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
+                parentHeightMeasureSpec, heightUsed);
         if (!configuration.isSettled()) {
             configuration.setHeight(child.getMeasuredHeight());
         }
@@ -98,7 +98,8 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
             cancelAnimation();
             // Compute visible height of child.
             int visibleHeight = (int) Math.max((float) configuration.getVisibleHeight(),
-                    configuration.getVisibleHeightParentRatio() > configuration.getVisibleHeightRatio()
+                    configuration.getVisibleHeightParentRatio()
+                            > configuration.getVisibleHeightRatio()
                             ? configuration.getVisibleHeightRatio() * parent.getHeight()
                             : configuration.getVisibleHeightRatio() * child.getHeight());
             int invisibleHeight = child.getHeight() - visibleHeight;
@@ -132,38 +133,27 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (start) {
             for (ScrollingListener l : mListeners) {
-                l.onStartScroll(coordinatorLayout, child, child.getHeight(),
-                        type == TYPE_TOUCH);
+                l.onStartScroll(coordinatorLayout, child, getInitialOffset(), getMinOffset(),
+                        getMaxOffset(), type);
             }
         }
         return start;
     }
 
     @Override
-    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
-                                    @NonNull View target, float velocityX, float velocityY) {
-        // If indicator should be hidden entirely, and hidden part is visible now consume the fling.
-        // Otherwise, do nothing.
-        if (controller.isHiddenPartVisible(coordinatorLayout, child, this)) {
-            return true;
-        }
-        return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
-    }
-
-    @Override
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child,
                                    @NonNull View target, int type) {
-        int height = child.getHeight();
         for (ScrollingListener l : mListeners) {
-            l.onStopScroll(coordinatorLayout, child,
-                    controller.transformOffsetCoordinate(coordinatorLayout, child, this,
-                            getTopAndBottomOffset()), height, type == TYPE_TOUCH);
+            l.onStopScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
+                    coordinatorLayout, child, this, getTopAndBottomOffset()),
+                    getInitialOffset(), getMinOffset(), getMaxOffset(), type);
         }
     }
 
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, V child, View dependency) {
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
+        CoordinatorLayout.LayoutParams lp =
+                (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         if (null != lp) {
             CoordinatorLayout.Behavior behavior = lp.getBehavior();
             return behavior instanceof ScrollingContentBehavior;
@@ -173,42 +163,42 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
 
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, V child, View dependency) {
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
+        CoordinatorLayout.LayoutParams lp =
+                (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         CoordinatorLayout.Behavior behavior = lp.getBehavior();
-        int offsetDelta = 0;
         if (behavior instanceof ScrollingContentBehavior) {
-            ScrollingContentBehavior scrollingContentBehavior = (ScrollingContentBehavior) behavior;
+            int offsetDelta = 0;
+            ScrollingContentBehavior contentBehavior = (ScrollingContentBehavior) behavior;
             offsetDelta = controller.computeOffsetDeltaOnDependentViewChanged(parent, child,
-                    dependency, this, scrollingContentBehavior);
-        }
-        if (offsetDelta != 0) {
-            // todo: use TYPE_TOUCH or not, may
-            consumeOffsetOnDependentViewChanged(parent, child, offsetDelta, TYPE_TOUCH);
-            return true;
+                    dependency, this, contentBehavior);
+            if (offsetDelta != 0) {
+                consumeOffsetOnDependentViewChanged(parent, child, contentBehavior, offsetDelta, TYPE_UNKNOWN);
+                return true;
+            }
         }
         return false;
     }
 
     private void consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout,
-                                                     View child, int offsetDelta, int type) {
+                                                     View child, ScrollingContentBehavior contentBehavior, int offsetDelta, int type) {
         int currentOffset = getTopAndBottomOffset();
         int height = child.getHeight();
         // Before child consume the offset.
         for (ScrollingListener l : mListeners) {
-            l.onPreScroll(coordinatorLayout, child,
-                    controller.transformOffsetCoordinate(coordinatorLayout, child,
-                            this, currentOffset), height, type == TYPE_TOUCH);
+            l.onPreScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
+                    coordinatorLayout, child, this, currentOffset),
+                    getInitialOffset(), getMinOffset(), height, type);
         }
         float consumed = controller.consumeOffsetOnDependentViewChanged(coordinatorLayout, child,
-                this, getContentBehavior(), currentOffset, offsetDelta);
+                this, contentBehavior, currentOffset, offsetDelta);
         currentOffset = Math.round(currentOffset + consumed);
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
         for (ScrollingListener l : mListeners) {
             l.onScroll(coordinatorLayout, child,
-                    controller.transformOffsetCoordinate(coordinatorLayout, child,
-                            this, currentOffset), offsetDelta, height,
-                    type == TYPE_TOUCH);
+                    controller.transformOffsetCoordinate(
+                            coordinatorLayout, child, this, currentOffset),
+                    offsetDelta, getInitialOffset(), getMinOffset(), getMaxOffset(), type);
         }
     }
 
@@ -242,11 +232,11 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         return null;
     }
 
-    public ScrollingContentBehavior getContentBehavior() {
+    protected ScrollingContentBehavior getContentBehavior() {
         return findDependencyBehavior(getParent(), getChild());
     }
 
-    public View getContentChild() {
+    protected View getContentChild() {
         return findDependencyChild(getParent(), getChild());
     }
 
@@ -258,4 +248,10 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         mParent = null;
         mChild = null;
     }
+
+    protected abstract int getInitialOffset();
+
+    protected abstract int getMinOffset();
+
+    protected abstract int getMaxOffset();
 }

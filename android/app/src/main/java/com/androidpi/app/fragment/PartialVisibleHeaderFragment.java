@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
-import com.androidpi.app.base.widget.literefresh.OnLoadListener;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.OnScrollListener;
 import com.androidpi.app.base.widget.literefresh.RefreshFooterBehavior;
@@ -74,13 +74,13 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
             headerBehavior.addOnScrollListener(new OnScrollListener() {
 
                 @Override
-                public void onStartScroll(View view, int max, boolean isTouch) {
+                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
 //                    binding.circleProgress.setVisibility(View.VISIBLE);
 //                    circularProgressDrawable.start();
                 }
 
                 @Override
-                public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
                     if (current >= headerBehavior.getConfiguration().getHeight() * 0.8f) {
                         if (!isLaunched) {
                             isLaunched = true;
@@ -109,7 +109,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
 
                 @Override
-                public void onStopScroll(View view, int current, int max, boolean isTouch) {
+                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
                 }
             });
 
@@ -147,18 +147,18 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
         if (footerBehavior != null) {
             footerBehavior.addOnScrollListener(new OnScrollListener() {
                 @Override
-                public void onStartScroll(View view, int max, boolean isTouch) {
+                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
 
                 }
 
                 @Override
-                public void onScroll(View view, int current, int delta, int max, boolean isTouch) {
+                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
                     float distance = current;
                     binding.footerCircleProgress.setProgress(distance/footerBehavior.getConfiguration().getRefreshTriggerRange());
                 }
 
                 @Override
-                public void onStopScroll(View view, int current, int max, boolean isTouch) {
+                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
 
                 }
             });
