@@ -66,7 +66,7 @@ public class RefreshFooterBehavior<V extends View>
             configuration.setHeight(child.getHeight());
             configuration.setInitialVisibleHeight(currentInitialVisibleHeight);
             if (configuration.getInitialVisibleHeight() <= 0) {
-                // IF initial visible height is non-positive, add the top margin to refresh trigger range.
+                // If initial visible height is non-positive, add the top margin to refresh trigger range.
                 configuration.setRefreshTriggerRange(configuration.getRefreshTriggerRange() + lp.topMargin);
             }
             // Maximum offset should not be less than initial visible height.
@@ -119,6 +119,8 @@ public class RefreshFooterBehavior<V extends View>
         }
         // If content is too short, there may be extra space left.
         initialVisibleHeight = Math.max(initialVisibleHeight, getParent().getHeight()
+                - getParent().getPaddingTop()
+                - getParent().getPaddingBottom()
                 - getContentBehavior().getChild().getHeight()
                 - getContentBehavior().getConfiguration().getTopMargin()
                 - getContentBehavior().getConfiguration().getBottomMargin()

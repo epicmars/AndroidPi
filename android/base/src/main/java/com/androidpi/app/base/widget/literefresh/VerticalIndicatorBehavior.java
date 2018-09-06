@@ -17,19 +17,16 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 /**
  * Super class of header and footer behavior.
  * <p>
- * The header and footer behaviors are almost the same, the main difference is that
+ * The header and footer behaviors are almost the same, the primary difference is that
  * they have different coordinate system when we trace the bottom and top position
  * of the view to which they attached respectively.
- * view.
  * <p>
- * As we have record the bottom and top offset of the view using the view's default coordinate
- * system, whose original point is the left top point of the parent view. Relative to that original
- * point the right and bottom position is positive.
+ * As we have record the bottom and top offset of the view within the view's default coordinate
+ * system, whose original point is the left top point of the parent view.
  * <p>
  * Now we need to trace how much the header has scroll from the top of the parent view.
- * We need to transform the bottom position of the view to which the header behavior is attached
- * in the coordinate system of the parent view to another one. This coordinate system would be a
- * affine matrix transformation below:
+ * We need to transform the bottom position of the header view from coordinate system of the parent
+ * view to another one. This would be a affine matrix transformation below:
  * <p>
  * <pre>
  *      |1 0 height||x|   |         x|
@@ -37,8 +34,8 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
  *      |0 0      1||1|   |         1|
  * </pre>
  * <p>
- * And we also need to trace how much the footer view has scrolled from the bottom of the parent
- * view, We use top position of the view as the traced point, the coordinate system would be a
+ * We also need to trace how much the footer view has scrolled from the bottom of the parent
+ * view, we use top position of the view as the traced position, the coordinate system would be a
  * affine transformation below:
  * <p>
  * <pre>

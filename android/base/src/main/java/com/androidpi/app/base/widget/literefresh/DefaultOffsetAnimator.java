@@ -47,7 +47,7 @@ public class DefaultOffsetAnimator extends OffsetAnimator {
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-
+                setRunning(true);
             }
         });
         mOffsetAnimator.start();

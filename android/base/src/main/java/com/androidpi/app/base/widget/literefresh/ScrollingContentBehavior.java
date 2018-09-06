@@ -93,7 +93,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         int height = parent.getMeasuredHeight() - configuration.getMinOffset();
         int heightSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
         parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, heightSpec, heightUsed);
-        if (!configuration.isSettled()) {
+        if (!configuration.isSettled() || !headerConfig.isSettled() || !footerConfig.isSettled()) {
             configuration.setHeight(child.getMeasuredHeight());
         }
         return handled;
@@ -166,6 +166,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout,
                                        @NonNull V child, @NonNull View directTargetChild,
                                        @NonNull View target, int axes, int type) {
+        // If scrolling started by touch event we need to invalidate restored initial offset.
+        if (initialOffset != INVALID_OFFSET && type == TYPE_TOUCH) {
+            initialOffset = INVALID_OFFSET;
+        }
         boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (start) {
             for (ScrollingListener l : mListeners) {
