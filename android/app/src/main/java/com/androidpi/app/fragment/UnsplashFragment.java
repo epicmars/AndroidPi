@@ -19,6 +19,9 @@ import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentUnsplashBinding;
+import com.androidpi.data.remote.dto.ResUnsplashPhoto;
+
+import java.util.List;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
@@ -42,6 +45,7 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.imagePagerHeader.setFragmentManager(getChildFragmentManager());
         UnsplashPhotoListFragment fragment = ((UnsplashPhotoListFragment) getChildFragmentManager().findFragmentById(R.id.fragment));
         RefreshHeaderBehavior headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.scaleableHeader);
         unsplashViewModel = getViewModelOfActivity(UnsplashViewModel.class);
@@ -53,7 +57,20 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
                     return;
                 if (listResource.isSuccess()) {
                     if (listResource.data.isFirstPage()) {
-                        fragment.setPayloads(listResource.data.getPhotos());
+                        List<ResUnsplashPhoto> photos = listResource.data.getPhotos();
+                        if (photos == null || photos.isEmpty()) {
+                            fragment.refreshError(new Exception("Empty data."));
+                        } else {
+                            if (photos.size() > 3) {
+                                binding.imagePagerHeader.setImages(photos.subList(0, 3));
+                                fragment.setPayloads(photos.subList(3, photos.size()));
+                            } else {
+                                binding.imagePagerHeader.setImages(photos.subList(0, 1));
+                                if (photos.size() > 1) {
+                                    fragment.setPayloads(photos.subList(1, photos.size()));
+                                }
+                            }
+                        }
                     } else {
                         fragment.addPayloads(listResource.data.getPhotos());
                     }
@@ -70,14 +87,12 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
         headerBehavior.addOnScrollListener(new OnScrollListener() {
             @Override
             public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
-                if (type == TYPE_TOUCH) {
-                    binding.loadingView.startProgress();
-                    binding.loadingView.setProgress(0);
-                }
+                binding.loadingView.startProgress();
+                binding.loadingView.setProgress(0);
             }
 
             @Override
-            public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
+            public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
                 float offset = current - view.getHeight();
                 float progress = offset / headerBehavior.getConfiguration().getRefreshTriggerRange();
                 binding.loadingView.setProgress(progress);

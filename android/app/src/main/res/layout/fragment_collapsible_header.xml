@@ -22,16 +22,21 @@
                 android:layout_marginBottom="24dp"/>
         </FrameLayout>
 
-        <com.androidpi.app.widget.ImagePagerHeaderView
-            android:id="@+id/image_pager_header"
+        <com.androidpi.app.widget.NestedHorizonView
+            android:id="@+id/view_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             app:layout_behavior="@string/lr_refresh_header_behavior"
             app:lr_mode="follow_up"
             app:lr_maxOffsetRatio="100%p"
-            app:lr_visibleHeightRatio="100%"
-            android:background="@android:color/white"/>
+            app:lr_visibleHeightRatio="100%">
+
+            <com.androidpi.app.widget.ImagePagerHeaderView
+                android:id="@+id/image_pager_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.androidpi.app.widget.NestedHorizonView>
 
         <FrameLayout
             android:id="@+id/view_content"
@@ -51,7 +56,6 @@
             android:id="@+id/view_footer"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:background="@color/colorAccent"
             app:layout_behavior="@string/lr_refresh_footer_behavior" />
 
         <android.support.design.widget.AppBarLayout
@@ -65,11 +69,11 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:background="?colorPrimary"
-                app:navigationIcon="?homeAsUpIndicator"
+                android:layout_height="?android:actionBarSize"
+                android:background="@color/colorPrimary"
+                app:navigationIcon="?android:homeAsUpIndicator"
                 app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
-                app:title="Photos on Unsplash"></android.support.v7.widget.Toolbar>
+                app:title="Photos on Unsplash"/>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

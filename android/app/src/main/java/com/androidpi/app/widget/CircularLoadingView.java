@@ -38,7 +38,7 @@ public class CircularLoadingView extends AppCompatImageView {
         drawable.setStyle(CircularProgressDrawable.DEFAULT);
     }
 
-    public void showCircle() {
+    public void fillCircle() {
         drawable.setStrokeWidth(drawable.getStrokeWidth() + drawable.getCenterRadius());
         drawable.setCenterRadius(0.1f);
     }

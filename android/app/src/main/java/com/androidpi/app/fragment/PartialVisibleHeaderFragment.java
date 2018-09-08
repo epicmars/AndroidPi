@@ -52,18 +52,19 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
             public void onChanged(@Nullable Resource<UnsplashPhotoPage> listResource) {
                 if (listResource == null)
                     return;
-                if (listResource.data == null)
+                UnsplashPhotoPage page = listResource.data;
+                if (page == null)
                     return;
                 if (listResource.isSuccess()) {
                     headerBehavior.refreshComplete();
-                    if (listResource.data.isFirstPage()) {
-                        photoListFragment.setPayloads(listResource.data.getPhotos());
+                    if (page.isFirstPage()) {
+                        photoListFragment.setPayloads(page.getPhotos());
                     } else {
-                        photoListFragment.addPayloads(listResource.data.getPhotos());
+                        photoListFragment.addPayloads(page.getPhotos());
                     }
                 } else if (listResource.isError()) {
                     headerBehavior.refreshError(listResource.throwable);
-                    if (listResource.data.isFirstPage()) {
+                    if (page.isFirstPage()) {
                         photoListFragment.refreshError(listResource.throwable);
                     }
                 }
@@ -80,8 +81,8 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
 
                 @Override
-                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
-                    if (current >= headerBehavior.getConfiguration().getHeight() * 0.8f) {
+                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
+                    if (current >= view.getHeight() * 0.8f) {
                         if (!isLaunched) {
                             isLaunched = true;
                             view.postDelayed(new Runnable() {
@@ -101,8 +102,9 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                         return;
                     }
                     if (current >= headerBehavior.getConfiguration().getVisibleHeight()) {
-                        float distance = current - headerBehavior.getConfiguration().getVisibleHeight();
-                        binding.circleProgress.setProgress(distance/headerBehavior.getConfiguration().getRefreshTriggerRange());
+                        final float distance = current - initial;
+                        final float triggerRange = trigger - initial;
+                        binding.circleProgress.setProgress(distance/triggerRange);
                     } else {
                         binding.circleProgress.setProgress(0f);
                     }
@@ -122,7 +124,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
 
                 @Override
                 public void onReleaseToRefresh() {
-                    binding.circleProgress.showCircle();
+                    binding.circleProgress.fillCircle();
                 }
 
                 @Override
@@ -152,9 +154,8 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
 
                 @Override
-                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
-                    float distance = current;
-                    binding.footerCircleProgress.setProgress(distance/footerBehavior.getConfiguration().getRefreshTriggerRange());
+                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
+                    binding.footerCircleProgress.setProgress(Math.max(0f, (float) current / trigger));
                 }
 
                 @Override
@@ -172,7 +173,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
 //
 //                @Override
 //                public void onReleaseToLoad() {
-//                    binding.footerCircleProgress.showCircle();
+//                    binding.footerCircleProgress.fillCircle();
 //                }
 //
 //                @Override
@@ -196,7 +197,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
         }
 
         if (unsplashViewModel.getRandomPhotosResult().getValue() == null) {
-            firstPage();
+            headerBehavior.refresh();
         }
     }
 

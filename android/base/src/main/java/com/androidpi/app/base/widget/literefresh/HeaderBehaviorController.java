@@ -21,7 +21,7 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
         // And when content has reached minimum offset, we should not changed with it.
         // If content has reach it's minimum offset, header may have not changed yet.
         if (contentBehavior.isMinOffsetReached()
-                && behavior.getChild().getBottom() + behavior.getConfiguration().getBottomMargin()
+                && child.getBottom() + behavior.getConfiguration().getBottomMargin()
                 <= contentBehavior.getConfiguration().getMinOffset()) {
             return 0;
         }

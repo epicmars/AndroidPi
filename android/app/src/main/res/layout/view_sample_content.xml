@@ -9,15 +9,15 @@
 
         <include
             android:id="@+id/item1"
-            layout="@layout/view_holder_unsplash_photo_list"/>
+            layout="@layout/sample_unsplash_photo"/>
 
         <include
             android:id="@+id/item2"
-            layout="@layout/view_holder_unsplash_photo_list"/>
+            layout="@layout/sample_unsplash_photo"/>
 
         <include
             android:id="@+id/item3"
-            layout="@layout/view_holder_unsplash_photo_list"/>
+            layout="@layout/sample_unsplash_photo"/>
 
     </LinearLayout>
 </layout>

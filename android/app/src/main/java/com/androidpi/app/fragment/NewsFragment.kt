@@ -129,7 +129,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 binding.headerProgress.max = max
             }
 
-            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
                 binding.headerProgress.progress = current
             }
 
@@ -180,7 +180,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
 
         footerBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
             }
 
             override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, min: Int, max: Int, type: Int) {
@@ -205,7 +205,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 binding.contentProgress.max = max
             }
 
-            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
                 binding.contentProgress.progress = current
             }
 
@@ -243,7 +243,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (null == savedInstanceState || mNewsModel.mNews.value == null) {
+        if (mNewsModel.mNews.value == null) {
             headerBehavior.refresh()
         }
     }

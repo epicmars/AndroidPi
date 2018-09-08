@@ -95,7 +95,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         int current, int delta, int initial, int min, int max, int type) {
+                         int current, int delta, int initial, int trigger, int min, int max, int type) {
 //        Timber.d("onScroll: isTouch %b", isTouch);
         if (!stateHandler.isValidOffset(current)) {
 //            Timber.d("not valid: %d", current);

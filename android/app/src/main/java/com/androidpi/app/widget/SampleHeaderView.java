@@ -8,19 +8,19 @@ import com.androidpi.app.R;
 /**
  * Created by jastrelax on 2018/8/28.
  */
-public class ProfileHeaderView extends ConstraintLayout {
+public class SampleHeaderView extends ConstraintLayout {
 
-    public ProfileHeaderView(Context context) {
+    public SampleHeaderView(Context context) {
         this(context, null);
     }
 
-    public ProfileHeaderView(Context context, AttributeSet attrs) {
+    public SampleHeaderView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ProfileHeaderView(Context context, AttributeSet attrs, int defStyle) {
+    public SampleHeaderView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.view_profile_header, this);
+        inflate(context, R.layout.view_sample_header, this);
     }
 
 }

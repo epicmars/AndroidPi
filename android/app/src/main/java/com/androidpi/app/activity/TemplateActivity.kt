@@ -60,17 +60,13 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>() {
             view.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val window = window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = Color.TRANSPARENT
         }
 
-        // 明亮主题的状态栏，字体为黑色
+        // Status bar in light theme, the text and icon should be dark.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (com.androidpi.app.pi.base.R.style.AppTheme_NoActionBar_Light === getThemeRes()) {
                 view.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN

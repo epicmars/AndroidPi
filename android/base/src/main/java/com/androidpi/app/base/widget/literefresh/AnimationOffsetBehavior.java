@@ -35,7 +35,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
 
         void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int initial, int min, int max, int type);
 
-        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int initial, int min, int max, int type);
+        void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int initial, int trigger, int min, int max, int type);
 
         void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int initial, int min, int max, int type);
     }
@@ -86,8 +86,16 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
     @Override
     public boolean onMeasureChild(CoordinatorLayout parent, V child, int parentWidthMeasureSpec,
                                   int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+        // Let parent measure it first.
         parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec,
                 heightUsed);
+        return true;
+    }
+
+    @Override
+    public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
+        boolean handled = super.onLayoutChild(parent, child, layoutDirection);
+
         if (mParent == null) {
             mParent = parent;
         }
@@ -96,7 +104,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         }
         // Execute pending actions which need view to be initialized.
         handler.sendEmptyMessage(MSG_VIEW_INITIATED);
-        return true;
+        return handled;
     }
 
     @Override
@@ -106,6 +114,9 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         configuration.setBottomMargin(params.bottomMargin);
         // Configuration has changed.
         configuration.setSettled(false);
+        if (handler == null) {
+            handler = new Handler(this);
+        }
     }
 
     @Override
@@ -128,13 +139,13 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
 
     protected void animateOffsetDeltaWithDuration(CoordinatorLayout parent, View child,
                                                   int offsetDelta, int initialOffset,
-                                                  int minOffset, int maxOffset, long duration, int type) {
+                                                  int triggerOffset, int minOffset, int maxOffset, long duration, int type) {
         animateOffsetWithDuration(parent, child, getTopAndBottomOffset() + offsetDelta,
-                initialOffset, minOffset, maxOffset, duration, type);
+                initialOffset, triggerOffset, minOffset, maxOffset, duration, type);
     }
 
     protected void animateOffsetWithDuration(CoordinatorLayout parent, View child, int destOffset,
-                                             int initialOffset, int minOffset, int maxOffset,
+                                             int initialOffset, int triggerOffset, int minOffset, int maxOffset,
                                              long duration, int type) {
         int current = getTopAndBottomOffset();
         // No need to change offset.
@@ -152,6 +163,7 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
         offsetAnimator.animateOffsetWithDuration(current, destOffset, duration,
                 new OffsetAnimator.AnimationUpdateListener() {
                     private int last;
+
                     @Override
                     public void onAnimationUpdate(int value) {
                         boolean offsetChanged = setTopAndBottomOffset(value);
@@ -159,8 +171,8 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
                             parent.dispatchDependentViewsChanged(child);
                         }
                         for (ScrollingListener l : mListeners) {
-                            l.onScroll(getParent(), getChild(),  value,
-                                    value - last, initialOffset, minOffset, maxOffset, type);
+                            l.onScroll(getParent(), getChild(), value,
+                                    value - last, initialOffset, triggerOffset, minOffset, maxOffset, type);
                         }
                         last = value;
                     }

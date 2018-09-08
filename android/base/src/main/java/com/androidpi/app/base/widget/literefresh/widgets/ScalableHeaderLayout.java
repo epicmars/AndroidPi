@@ -38,7 +38,7 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
         int height = getHeight();
         if (current <= height) {
             // Because the view can scroll down and then back. And it will not always reach a position

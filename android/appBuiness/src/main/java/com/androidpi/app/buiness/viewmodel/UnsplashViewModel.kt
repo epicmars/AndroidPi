@@ -18,6 +18,10 @@ import io.reactivex.schedulers.Schedulers
  */
 class UnsplashViewModel : ViewModel() {
 
+    companion object {
+        const val PAGE_SIZE = 12
+    }
+
     val randomPhotosResult = MutableLiveData<Resource<UnsplashPhotoPage>>()
 
     private val api: UnsplashApi
@@ -28,7 +32,7 @@ class UnsplashViewModel : ViewModel() {
         api = RetrofitClientFactory.newRetrofit(UnsplashApi.BASE_URL).create(UnsplashApi::class.java)
     }
 
-    fun getRandomPhotos(count: Int = 10, page: Int = 0) {
+    fun getRandomPhotos(count: Int = PAGE_SIZE, page: Int = 0) {
         this.page = page
         api.randomPhotos(count = count)
                 .subscribeOn(Schedulers.io())
@@ -39,6 +43,7 @@ class UnsplashViewModel : ViewModel() {
                     }
 
                     override fun onSubscribe(d: Disposable) {
+                        randomPhotosResult.value = Resource.loading(UnsplashPhotoPage(page, null))
                     }
 
                     override fun onError(e: Throwable) {

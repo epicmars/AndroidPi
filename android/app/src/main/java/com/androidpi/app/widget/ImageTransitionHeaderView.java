@@ -50,7 +50,7 @@ public class ImageTransitionHeaderView extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
         if (type != TYPE_TOUCH || data == null || launched) return;
         if ((current /(float) max) >= 1f) {
             String sharedElementName = getResources().getString(R.string.transition_header);

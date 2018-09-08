@@ -18,7 +18,7 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 /**
  * Created by jastrelax on 2018/8/18.
  */
-public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefreshListener{
+public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefreshListener {
 
     private LoadingView loadingView;
     private float offset;
@@ -49,15 +49,12 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
 
     @Override
     public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
-        if (type == TYPE_TOUCH) {
-            loadingView.startProgress();
-            loadingView.setProgress(0);
-        }
+        loadingView.startProgress();
+        loadingView.setProgress(0);
     }
 
     @Override
-    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
-        if (type != TYPE_TOUCH) return;
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
         float height = getHeight();
         if (current > offset) {
             float progress = (current - offset) / height;

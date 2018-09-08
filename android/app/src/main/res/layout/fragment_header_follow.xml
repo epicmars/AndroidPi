@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <com.androidpi.app.widget.SampleHeaderView
             android:id="@+id/view_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:lr_visibleHeightRatio="100%"
-            app:lr_mode="follow"
+            app:layout_behavior="@string/lr_refresh_header_behavior"
             app:lr_maxOffsetRatio="100%p"
-            app:layout_behavior="@string/lr_refresh_header_behavior">
+            app:lr_mode="follow"
+            app:lr_visibleHeightRatio="50%" />
 
-            <com.androidpi.app.widget.ProfileHeaderView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </FrameLayout>
-
-
-        <com.androidpi.app.widget.ProfileFooterView
+        <com.androidpi.app.widget.SampleFooterView
             android:id="@+id/view_footer"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="@color/colorPrimary"
+            app:layout_behavior="@string/lr_refresh_footer_behavior"
             app:lr_maxOffsetRatio="100%p"
-            app:lr_visibleHeightRatio="100%"
-            app:layout_behavior="@string/lr_refresh_footer_behavior" />
+            app:lr_visibleHeightRatio="100%" />
 
-        <com.androidpi.app.widget.NestedScrollPhotoListView
+        <com.androidpi.app.widget.SampleContentView
             android:id="@+id/view_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_green_light"
-            app:layout_behavior="@string/lr_refresh_content_behavior">
-        </com.androidpi.app.widget.NestedScrollPhotoListView>
+            android:paddingTop="64dp"
+            app:lr_minOffset="64dp"
+            app:layout_behavior="@string/lr_refresh_content_behavior"/>
 
+        <com.androidpi.app.widget.SampleAnchoredView
+            android:id="@+id/view_anchored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/view_content"
+            app:layout_anchorGravity="top|center_horizontal" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

@@ -13,6 +13,7 @@ object LiteRefreshSamples {
         init {
             add(LiteRefreshSample("News", "A news feed.", NewsFragment::class.java))
             add(LiteRefreshSample("Unsplash", "An gallery of photos from unsplash.", UnsplashFragment::class.java))
+            add(LiteRefreshSample("Movies", "Movie data from The Movie Db.", MoviePagerFragment::class.java))
             add(LiteRefreshSample("Collapsible header.", "A scrollable list with a collapsible header.", CollapsibleHeaderFragment::class.java))
             add(LiteRefreshSample("Partial visible RecyclerView.", "A recycler view that is partial visible.", PartialVisibleListFragment::class.java))
             add(LiteRefreshSample("Partial visible header.", "A recycler view with a partial visible header.", PartialVisibleHeaderFragment::class.java))

@@ -14,7 +14,6 @@ import com.androidpi.app.R;
 import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
-import com.androidpi.app.base.widget.literefresh.BehaviorConfiguration;
 import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.OnScrollListener;
@@ -23,6 +22,9 @@ import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentCollapsibleHeaderBinding;
+import com.androidpi.data.remote.dto.ResUnsplashPhoto;
+
+import java.util.List;
 
 /**
  * Created by jastrelax on 2018/8/13.
@@ -48,7 +50,7 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RefreshHeaderBehavior headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.imagePagerHeader);
+        RefreshHeaderBehavior headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewHeader);
         RefreshContentBehavior contentBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewContent);
 
         binding.circleProgress.setColor(getResources().getColor(R.color.colorAccent));
@@ -63,7 +65,20 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                     return;
                 if (listResource.isSuccess()) {
                     if (listResource.data.isFirstPage()) {
-                        fragment.setPayloads(listResource.data.getPhotos());
+                        List<ResUnsplashPhoto> photos = listResource.data.getPhotos();
+                        if (photos == null || photos.isEmpty()) {
+                            fragment.refreshError(new Exception("Empty data."));
+                        } else {
+                            if (photos.size() > 3) {
+                                binding.imagePagerHeader.setImages(photos.subList(0, 3));
+                                fragment.setPayloads(photos.subList(3, photos.size()));
+                            } else {
+                                binding.imagePagerHeader.setImages(photos.subList(0, 1));
+                                if (photos.size() > 1) {
+                                    fragment.setPayloads(photos.subList(1, photos.size()));
+                                }
+                            }
+                        }
                     } else {
                         fragment.addPayloads(listResource.data.getPhotos());
                     }
@@ -85,7 +100,6 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
         });
 
         if (headerBehavior != null) {
-            BehaviorConfiguration config = headerBehavior.getConfiguration();
             contentBehavior.addOnScrollListener(new OnScrollListener() {
 
                 ColorDrawable drawable = new ColorDrawable(Color.BLACK);
@@ -96,24 +110,23 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                 }
 
                 @Override
-                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
-                    int visibleHeight = config.getInitialVisibleHeight();
-                    if (current <= visibleHeight) {
-                        float y = visibleHeight - current;
-                        binding.imagePagerHeader.setTranslationY(y / 2);
-                        float alpha = 1 - (float) current / visibleHeight;
+                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
+                    if (current <= initial) {
+                        float y = initial - current;
+                        binding.viewHeader.setTranslationY(y / 2);
+                        float alpha = 1 - (float) current / initial;
                         drawable.setAlpha((int) (alpha * 196));
-                        binding.imagePagerHeader.setForeground(drawable);
+                        binding.viewHeader.setForeground(drawable);
                     }
 
-                    binding.circleProgress.setProgress(Math.max(0f, (float) (current - config.getHeight())) / config.getRefreshTriggerRange());
+                    binding.circleProgress.setProgress(Math.max(0f, (float) current / trigger));
 
-                    if (current >= contentBehavior.getConfiguration().getMinOffset()) {
-                        float rangeMax = visibleHeight - contentBehavior.getConfiguration().getMinOffset();
-                        float distance = current - contentBehavior.getConfiguration().getMinOffset();
+                    if (current >= min) {
+                        float rangeMax = initial - min;
+                        float distance = current - min;
                         float alpha = 1 - distance / rangeMax;
                         binding.appBar.setAlpha(alpha);
-                        binding.appBar.setTranslationY(alpha * contentBehavior.getConfiguration().getMinOffset());
+                        binding.appBar.setTranslationY(alpha * min);
                     }
                 }
 
@@ -132,7 +145,7 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
 
                 @Override
                 public void onReleaseToRefresh() {
-                    binding.circleProgress.showCircle();
+                    binding.circleProgress.fillCircle();
                 }
 
                 @Override

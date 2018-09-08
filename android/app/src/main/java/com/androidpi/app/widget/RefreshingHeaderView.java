@@ -64,7 +64,7 @@ public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRef
     }
 
     @Override
-    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
         float height = getHeight();
         if (current <= height) return;
         float scale = Math.max(current / height, 1);

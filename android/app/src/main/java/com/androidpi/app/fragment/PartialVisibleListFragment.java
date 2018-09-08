@@ -23,6 +23,7 @@ import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentPartialVisibleListBinding;
 import com.androidpi.app.items.HeaderUnsplashPhoto;
 import com.androidpi.app.viewholder.ErrorViewHolder;
+import com.androidpi.app.viewholder.LoadingViewHolder;
 import com.androidpi.app.viewholder.UnsplashPhotoHeaderViewHolder;
 import com.androidpi.app.viewholder.UnsplashPhotoListViewHolder;
 import com.androidpi.app.viewholder.items.ErrorItem;
@@ -52,7 +53,10 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
         super.onCreate(savedInstanceState);
         unsplashViewModel = getViewModelOfActivity(UnsplashViewModel.class);
         adapter = new RecyclerAdapter();
-        adapter.register(UnsplashPhotoHeaderViewHolder.class, UnsplashPhotoListViewHolder.class, ErrorViewHolder.class);
+        adapter.register(UnsplashPhotoHeaderViewHolder.class,
+                UnsplashPhotoListViewHolder.class,
+                ErrorViewHolder.class,
+                LoadingViewHolder.class);
     }
 
     @Override
@@ -87,7 +91,6 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
             }
         });
 
-
         final float translationDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 128, view.getResources().getDisplayMetrics());
         binding.circleProgress.resetStyle();
         binding.circleProgress.setProgress(1f);
@@ -97,17 +100,14 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
             behavior.addOnScrollListener(new OnScrollListener() {
                 @Override
                 public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
-//                    Timber.d("onStartScroll: isTouch %b", isTouch);
                 }
 
                 @Override
-                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
-//                    Timber.d("onScroll: isTouch %b", isTouch);
+                public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
                 }
 
                 @Override
                 public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
-//                    Timber.d("onStopScroll: isTouch %b", isTouch);
                     if (type == TYPE_TOUCH && !behavior.getController().isRefreshing()) {
                         binding.circleProgress.resetStyle();
                         binding.circleProgress.setProgress(1f);
@@ -129,13 +129,16 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
 //                    Timber.d("onReleaseToRefresh");
                     binding.circleProgress.resetStyle();
                     binding.circleProgress.setProgress(1f);
-                    binding.circleProgress.showCircle();
+                    binding.circleProgress.fillCircle();
                     binding.circleProgress.animate().translationY(0);
                 }
 
                 @Override
                 public void onRefresh() {
 //                    Timber.d("onRefresh");
+                    if (binding.circleProgress.getTranslationY() != 0) {
+                        binding.circleProgress.setTranslationY(0);
+                    }
                     binding.circleProgress.resetStyle();
                     binding.circleProgress.startLoading();
                     unsplashViewModel.firstPage();
@@ -150,6 +153,10 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
                     binding.circleProgress.animate().translationY(-translationDistance);
                 }
             });
+        }
+
+        if (unsplashViewModel.getRandomPhotosResult().getValue() == null) {
+            behavior.refresh();
         }
     }
 }

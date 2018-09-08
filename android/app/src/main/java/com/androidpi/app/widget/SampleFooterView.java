@@ -9,18 +9,18 @@ import com.androidpi.app.R;
 /**
  * Created by jastrelax on 2018/9/5.
  */
-public class ProfileFooterView extends ConstraintLayout{
+public class SampleFooterView extends ConstraintLayout{
 
-    public ProfileFooterView(Context context) {
+    public SampleFooterView(Context context) {
         this(context, null);
     }
 
-    public ProfileFooterView(Context context, AttributeSet attrs) {
+    public SampleFooterView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ProfileFooterView(Context context, AttributeSet attrs, int defStyle) {
+    public SampleFooterView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.view_profile_footer, this);
+        inflate(context, R.layout.view_sample_footer, this);
     }
 }

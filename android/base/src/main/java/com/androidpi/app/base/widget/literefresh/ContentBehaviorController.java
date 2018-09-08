@@ -168,11 +168,11 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         int current, int delta, int initial, int min, int max, int type) {
+                         int current, int delta, int initial, int trigger, int min, int max, int type) {
         for (RefreshStateMachine stateMachine : stateMachines) {
-            stateMachine.onScroll(coordinatorLayout, child, current, delta, initial, min , max, type);
+            stateMachine.onScroll(coordinatorLayout, child, current, delta, initial, trigger, min , max, type);
         }
-        super.onScroll(coordinatorLayout, child, current, delta, initial, min, max, type);
+        super.onScroll(coordinatorLayout, child, current, delta, initial, trigger, min, max, type);
     }
 
     @Override

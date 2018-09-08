@@ -119,6 +119,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             configuration.setHeight(child.getHeight());
             // We have set a minimum offset now, relayout.
             child.requestLayout();
+
             configuration.setSettled(true);
             headerConfig.setSettled(true);
             footerConfig.setSettled(true);
@@ -328,7 +329,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollingListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, currentOffset, offsetDelta,
-                    headerConfig.getInitialVisibleHeight(), configuration.getMinOffset(),
+                    headerConfig.getInitialVisibleHeight(),
+                    headerConfig.getInitialVisibleHeight()
+                            + headerConfig.getRefreshTriggerRange(),
+                    configuration.getMinOffset(),
                     configuration.getMaxOffset(), type);
         }
         return currentOffset;
@@ -350,7 +354,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         coordinatorLayout.dispatchDependentViewsChanged(child);
         for (ScrollingListener l : mListeners) {
             l.onScroll(coordinatorLayout, child, currentOffset, offsetDelta,
-                    headerConfig.getInitialVisibleHeight(), configuration.getMinOffset(),
+                    headerConfig.getInitialVisibleHeight(),
+                    headerConfig.getInitialVisibleHeight()
+                            + headerConfig.getRefreshTriggerRange(),
+                    configuration.getMinOffset(),
                     configuration.getMaxOffset(), type);
         }
     }
@@ -401,9 +408,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         }
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset,
                 headerConfig.getInitialVisibleHeight(),
+                headerConfig.getInitialVisibleHeight()
+                        + headerConfig.getRefreshTriggerRange(),
                 configuration.getMinOffset(),
-                configuration.getMaxOffset(),
-                animateDuration, TYPE_NON_TOUCH);
+                configuration.getMaxOffset(), animateDuration, TYPE_NON_TOUCH);
     }
 
     void refreshHeader(long animateDuration) {
@@ -424,9 +432,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         }
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset,
                 headerConfig.getInitialVisibleHeight(),
+                headerConfig.getInitialVisibleHeight()
+                        + headerConfig.getRefreshTriggerRange(),
                 configuration.getMinOffset(),
-                configuration.getMaxOffset(),
-                animateDuration, TYPE_NON_TOUCH);
+                configuration.getMaxOffset(), animateDuration, TYPE_NON_TOUCH);
     }
 
 
@@ -439,9 +448,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                 - (getChild().getTop() - configuration.getTopMargin());
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset,
                 headerConfig.getInitialVisibleHeight(),
+                headerConfig.getInitialVisibleHeight()
+                        + headerConfig.getRefreshTriggerRange(),
                 configuration.getMinOffset(),
-                configuration.getMaxOffset(),
-                animateDuration, TYPE_NON_TOUCH);
+                configuration.getMaxOffset(), animateDuration, TYPE_NON_TOUCH);
     }
 
 
@@ -463,8 +473,11 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         }
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset,
                 headerConfig.getInitialVisibleHeight(),
+                headerConfig.getInitialVisibleHeight()
+                        + headerConfig.getRefreshTriggerRange(),
                 configuration.getMinOffset(),
-                configuration.getMaxOffset(), animationDuration, TYPE_NON_TOUCH);
+                configuration.getMaxOffset(),
+                animationDuration, TYPE_NON_TOUCH);
     }
 
     /**
@@ -480,8 +493,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                 - footerConfig.getTopMargin() - bottom;
         animateOffsetDeltaWithDuration(getParent(), getChild(), offset,
                 headerConfig.getInitialVisibleHeight(),
-                configuration.getMinOffset(),
-                configuration.getMaxOffset(), animationDuration, TYPE_NON_TOUCH);
+                headerConfig.getInitialVisibleHeight()
+                        + headerConfig.getRefreshTriggerRange(),
+                configuration.getMinOffset(), configuration.getMaxOffset(), animationDuration, TYPE_NON_TOUCH);
     }
 
 

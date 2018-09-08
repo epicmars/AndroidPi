@@ -2,6 +2,7 @@ package com.androidpi.app.base.widget.literefresh;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -21,7 +22,10 @@ public class RefreshHeaderBehavior<V extends View>
         runWithView(new Runnable() {
             @Override
             public void run() {
-                controller.setProxy(getContentBehavior().getController());
+                ScrollingContentBehavior contentBehavior = getContentBehavior(getParent(), getChild());
+                if (contentBehavior != null) {
+                    controller.setProxy(contentBehavior.getController());
+                }
             }
         });
     }
@@ -69,7 +73,10 @@ public class RefreshHeaderBehavior<V extends View>
             configuration.setMaxOffset(Math.max(configuration.getMaxOffset(),
                     configuration.getInitialVisibleHeight() + configuration.getRefreshTriggerRange()));
             configuration.setSettled(true);
-            getContentBehavior().setHeaderConfig(configuration);
+            ScrollingContentBehavior contentBehavior = getContentBehavior(parent, child);
+            if (contentBehavior != null) {
+                contentBehavior.setHeaderConfig(configuration);
+            }
         }
         return handled;
     }
@@ -103,25 +110,37 @@ public class RefreshHeaderBehavior<V extends View>
     }
 
     @Override
-    protected int getInitialOffset() {
+    protected int getInitialOffset(@NonNull CoordinatorLayout parent, @NonNull View child) {
         return configuration.getVisibleHeight();
     }
 
     @Override
-    protected int getMinOffset() {
-        BehaviorConfiguration contentConfig = getContentBehavior().getConfiguration();
+    protected int getRefreshTriggerOffset(@NonNull CoordinatorLayout parent, @NonNull View child) {
+        return configuration.getVisibleHeight() + configuration.getRefreshTriggerRange();
+    }
+
+    @Override
+    protected int getMinOffset(@NonNull CoordinatorLayout parent, @NonNull View child) {
+        BehaviorConfiguration contentConfig = getContentBehavior(parent, child).getConfiguration();
         return contentConfig.getMinOffset() - configuration.getBottomMargin();
     }
 
     @Override
-    protected int getMaxOffset() {
-        BehaviorConfiguration contentConfig = getContentBehavior().getConfiguration();
+    protected int getMaxOffset(@NonNull CoordinatorLayout parent, @NonNull View child) {
+        BehaviorConfiguration contentConfig = getContentBehavior(parent, child).getConfiguration();
         return contentConfig.getMaxOffset() -
                 (contentConfig.getMaxOffset() > configuration.getBottomMargin()
                         ? configuration.getBottomMargin()
                         : 0);
     }
 
+    /**
+     * The initial visible height is original visible height involved with vertical margins.
+     * Primarily, it's used as a initial offset by content view to lay itself out and compute
+     * some offsets when needed.
+     *
+     * @return header view's initial visible height.
+     */
     private int getInitialVisibleHeight() {
         int initialVisibleHeight;
         if (configuration.getHeight() <= 0 || configuration.getVisibleHeight() <= 0) {

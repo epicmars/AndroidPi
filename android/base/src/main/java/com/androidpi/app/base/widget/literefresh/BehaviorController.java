@@ -42,9 +42,9 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         int current, int delta, int initial, int min, int max, int type) {
+                         int current, int delta, int initial, int trigger, int min, int max, int type) {
         for (OnScrollListener l : mScrollListeners) {
-            l.onScroll(coordinatorLayout, child, current, delta, initial, min, max, type);
+            l.onScroll(coordinatorLayout, child, current, delta, initial, trigger, min, max, type);
         }
     }
 

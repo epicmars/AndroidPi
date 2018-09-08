@@ -77,7 +77,8 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         configuration.setRefreshTriggerRange(a.getDimensionPixelOffset(
                 R.styleable.OffsetBehavior_lr_triggerRange, 0));
         a.recycle();
-        defaultMinTriggerRange = context.getResources().getDimensionPixelOffset(R.dimen.defaultMinTriggerRange);
+        defaultMinTriggerRange = context.getResources().getDimensionPixelOffset(
+                R.dimen.defaultMinTriggerRange);
     }
 
     @Override
@@ -133,8 +134,10 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         boolean start = (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         if (start) {
             for (ScrollingListener l : mListeners) {
-                l.onStartScroll(coordinatorLayout, child, getInitialOffset(), getMinOffset(),
-                        getMaxOffset(), type);
+                l.onStartScroll(coordinatorLayout, child,
+                        getInitialOffset(coordinatorLayout, child),
+                        getMinOffset(coordinatorLayout, child),
+                        getMaxOffset(coordinatorLayout, child), type);
             }
         }
         return start;
@@ -146,7 +149,9 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         for (ScrollingListener l : mListeners) {
             l.onStopScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
                     coordinatorLayout, child, this, getTopAndBottomOffset()),
-                    getInitialOffset(), getMinOffset(), getMaxOffset(), type);
+                    getInitialOffset(coordinatorLayout, child),
+                    getMinOffset(coordinatorLayout, child),
+                    getMaxOffset(coordinatorLayout, child), type);
         }
     }
 
@@ -167,27 +172,54 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
                 (CoordinatorLayout.LayoutParams) dependency.getLayoutParams();
         CoordinatorLayout.Behavior behavior = lp.getBehavior();
         if (behavior instanceof ScrollingContentBehavior) {
-            int offsetDelta = 0;
             ScrollingContentBehavior contentBehavior = (ScrollingContentBehavior) behavior;
-            offsetDelta = controller.computeOffsetDeltaOnDependentViewChanged(parent, child,
-                    dependency, this, contentBehavior);
-            if (offsetDelta != 0) {
-                consumeOffsetOnDependentViewChanged(parent, child, contentBehavior, offsetDelta, TYPE_UNKNOWN);
-                return true;
+            if (isLayedOut()) {
+                return onDependenceOffsetChanged(parent, child, dependency, contentBehavior,
+                        this);
+            } else {
+                runWithView(new Runnable() {
+                    @Override
+                    public void run() {
+                        onDependenceOffsetChanged(parent, child, dependency, contentBehavior,
+                                VerticalIndicatorBehavior.this);
+                    }
+                });
             }
         }
         return false;
     }
 
+    private boolean isLayedOut() {
+        return getParent() != null && getChild() != null;
+    }
+
+    private boolean onDependenceOffsetChanged(CoordinatorLayout parent, V child, View dependency,
+                                              ScrollingContentBehavior contentBehavior,
+                                              VerticalIndicatorBehavior behavior) {
+        final int offsetDelta = controller.computeOffsetDeltaOnDependentViewChanged(parent, child,
+                dependency, this, contentBehavior);
+        if (offsetDelta != 0) {
+            consumeOffsetOnDependentViewChanged(parent, child, contentBehavior, offsetDelta,
+                    TYPE_UNKNOWN);
+            return true;
+        }
+        return false;
+    }
+
     private void consumeOffsetOnDependentViewChanged(CoordinatorLayout coordinatorLayout,
-                                                     View child, ScrollingContentBehavior contentBehavior, int offsetDelta, int type) {
+                                                     View child,
+                                                     ScrollingContentBehavior contentBehavior,
+                                                     int offsetDelta, int type) {
         int currentOffset = getTopAndBottomOffset();
         int height = child.getHeight();
         // Before child consume the offset.
         for (ScrollingListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
-                    coordinatorLayout, child, this, currentOffset),
-                    getInitialOffset(), getMinOffset(), height, type);
+                    coordinatorLayout, child, this, currentOffset
+                    ),
+                    getInitialOffset(coordinatorLayout, child),
+                    getMinOffset(coordinatorLayout, child),
+                    height, type);
         }
         float consumed = controller.consumeOffsetOnDependentViewChanged(coordinatorLayout, child,
                 this, contentBehavior, currentOffset, offsetDelta);
@@ -195,10 +227,14 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         // If the offset is already at the top don't reset it again.
         setTopAndBottomOffset(currentOffset);
         for (ScrollingListener l : mListeners) {
-            l.onScroll(coordinatorLayout, child,
-                    controller.transformOffsetCoordinate(
-                            coordinatorLayout, child, this, currentOffset),
-                    offsetDelta, getInitialOffset(), getMinOffset(), getMaxOffset(), type);
+            l.onScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
+                    coordinatorLayout, child, this, currentOffset
+                    ),
+                    offsetDelta, getInitialOffset(coordinatorLayout, child),
+                    getRefreshTriggerOffset(coordinatorLayout, child),
+                    getMinOffset(coordinatorLayout, child),
+                    getMaxOffset(coordinatorLayout, child),
+                    type);
         }
     }
 
@@ -232,26 +268,15 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         return null;
     }
 
-    protected ScrollingContentBehavior getContentBehavior() {
-        return findDependencyBehavior(getParent(), getChild());
+    protected ScrollingContentBehavior getContentBehavior(CoordinatorLayout parent, View child) {
+        return findDependencyBehavior(parent, child);
     }
 
-    protected View getContentChild() {
-        return findDependencyChild(getParent(), getChild());
-    }
+    protected abstract int getInitialOffset(@NonNull CoordinatorLayout parent, @NonNull View child);
 
-    @Override
-    public void onDetachedFromLayoutParams() {
-        super.onDetachedFromLayoutParams();
-        cancelAnimation();
-        mListeners.clear();
-        mParent = null;
-        mChild = null;
-    }
+    protected abstract int getRefreshTriggerOffset(@NonNull CoordinatorLayout parent, @NonNull View child);
 
-    protected abstract int getInitialOffset();
+    protected abstract int getMinOffset(@NonNull CoordinatorLayout parent, @NonNull View child);
 
-    protected abstract int getMinOffset();
-
-    protected abstract int getMaxOffset();
+    protected abstract int getMaxOffset(@NonNull CoordinatorLayout parent, @NonNull View child);
 }

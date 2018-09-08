@@ -52,7 +52,7 @@ public class LoadingFooterView extends ScrollingHeaderLayout implements OnLoadLi
     }
 
     @Override
-    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int min, int max, int type) {
+    public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
 
     }
 

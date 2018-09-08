@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:lr_headerVisibleHeight="-180dp"
-            app:layout_behavior="@string/lr_refresh_content_behavior"/>
+            app:layout_behavior="@string/lr_refresh_content_behavior"
+            tools:listitem="@layout/view_holder_unsplash_photo_list"/>
 
         <com.androidpi.app.widget.CircularLoadingView
             android:id="@+id/circle_progress"
