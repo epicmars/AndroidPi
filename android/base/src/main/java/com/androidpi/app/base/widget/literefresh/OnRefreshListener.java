@@ -12,7 +12,7 @@ import android.support.annotation.Nullable;
 public interface OnRefreshListener {
 
     /**
-     * The start of refreshing.
+     * The start of a refreshing lifecycle.
      */
     void onRefreshStart();
 

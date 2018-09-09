@@ -13,7 +13,8 @@ public class HeaderBehaviorController extends VerticalIndicatorBehaviorControlle
     }
 
     @Override
-    public int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent, View child,
+    public int computeOffsetDeltaOnDependentViewChanged(CoordinatorLayout parent,
+                                                        View child,
                                                         View dependency,
                                                         VerticalIndicatorBehavior behavior,
                                                         ScrollingContentBehavior contentBehavior) {

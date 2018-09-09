@@ -18,7 +18,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/iv_author"
+                android:id="@+id/tv_author"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:background="@drawable/bg_gradient_bottom"

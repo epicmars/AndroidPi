@@ -29,6 +29,10 @@
             android:visibility="gone"
             android:background="@color/text_gray"/>
 
+        <com.androidpi.app.widget.SampleToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/pager_content"
             android:layout_width="match_parent"

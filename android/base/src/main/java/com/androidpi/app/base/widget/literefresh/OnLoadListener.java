@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 public interface OnLoadListener {
 
     /**
-     * The start of loading.
+     * The start of a loading lifecycle.
      */
     void onLoadStart();
 

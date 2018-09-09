@@ -24,5 +24,7 @@
     <string name="loading_complete">Loading complete.</string>
     <string name="no_more_date">No more data.</string>
 
+    <string name="unsplash_photo_format">Photo by %1$s on Unsplash</string>
+
 
 </resources>

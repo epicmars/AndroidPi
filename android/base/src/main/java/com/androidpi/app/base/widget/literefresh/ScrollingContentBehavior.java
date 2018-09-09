@@ -205,20 +205,24 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                                   int type) {
         if (dy > 0) {
             // When scrolling up, compute the top offset which content can reach.
-            int topOffset = configuration.getMinOffset();
             int top = child.getTop() - configuration.getTopMargin();
-            if (top <= topOffset)
+            // If already reach minimum offset.
+            if (top <= configuration.getMinOffset())
                 return;
-            int offset = MathUtils.clamp(-dy, topOffset - top, 0);
+            int offset = MathUtils.clamp(-dy, configuration.getMinOffset() - top, 0);
             if (offset != 0) {
                 consumeOffset(coordinatorLayout, child, offset, type, true);
                 consumed[1] = -offset;
             }
         } else if (dy < 0) {
             int bottom = child.getBottom() + configuration.getBottomMargin();
+            // If already reach the bottom of parent view.
+            if (bottom >= coordinatorLayout.getHeight()) {
+                return;
+            }
             // When scrolling down, if footer is still visible.
-            if (bottom < coordinatorLayout.getHeight()) {
-                int offset = MathUtils.clamp(-dy, 0, coordinatorLayout.getHeight() - bottom);
+            int offset = MathUtils.clamp(-dy, 0, coordinatorLayout.getHeight() - bottom);
+            if (offset != 0) {
                 consumeOffset(coordinatorLayout, child, offset, type, true);
                 consumed[1] = -offset;
             }
@@ -231,35 +235,38 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                                int dxUnconsumed, int dyUnconsumed, int type) {
         // If there is unconsumed pixels.
         if (dyUnconsumed < 0) {
-            int top = child.getTop() - configuration.getTopMargin();
             // Scrolling down.
-            // If top position of child can not scroll exceed maximum offset.
-            if (top >= configuration.getMaxOffset())
+            final int top = child.getTop() - configuration.getTopMargin();
+            final int maxOffset = configuration.getMaxOffset();
+            // Top position of child can not scroll exceed maximum offset.
+            if (top >= maxOffset)
                 return;
-            int offset = MathUtils.clamp(-dyUnconsumed,
-                    0, configuration.getMaxOffset() - top);
+            int offset = MathUtils.clamp(-dyUnconsumed, 0, maxOffset - top);
             if (offset != 0) {
                 if (top >= headerConfig.getInitialVisibleHeight()) {
                     // When header's hidden part is visible, do not consume none touch scroll,
-                    // content can scroll to the maximum offset with the touch.
+                    // content can scroll to the maximum offset with the touch event only.
                     if (type != TYPE_TOUCH)
                         return;
                     consumeOffset(coordinatorLayout, child, offset, type, false);
                 } else {
-                    // Recompute the offset so that the top does not exceed headerVisibleHeight.
-                    offset = MathUtils.clamp(-dyUnconsumed,
-                            0, headerConfig.getInitialVisibleHeight() - top);
+                    // Header's hidden part is not visible yet.
+                    // Recompute the offset so that the top does not exceed header's initial
+                    // visible height no matter what type of touch event is.
+                    // todo: add overshot feature to make scrolling motion more nature.
+                    offset = MathUtils.clamp(-dyUnconsumed, 0,
+                            headerConfig.getInitialVisibleHeight() - top);
                     consumeOffset(coordinatorLayout, child, offset, type, true);
                 }
             }
         } else if (dyUnconsumed > 0) {
             // Scrolling up.
-            int bottom = child.getBottom() + configuration.getBottomMargin();
-            int maxFooterTopBottomOffset = coordinatorLayout.getHeight() - footerConfig.getMaxOffset();
+            final int bottom = child.getBottom() + configuration.getBottomMargin();
+            final int footerMaxOffset = coordinatorLayout.getHeight() - footerConfig.getMaxOffset();
             // Can not scroll exceed footer maximum offset.
-            if (bottom <= maxFooterTopBottomOffset)
+            if (bottom <= footerMaxOffset)
                 return;
-            int offset = MathUtils.clamp(-dyUnconsumed, maxFooterTopBottomOffset - bottom, 0);
+            int offset = MathUtils.clamp(-dyUnconsumed, footerMaxOffset - bottom, 0);
             if (offset != 0) {
                 if (coordinatorLayout.getHeight() - bottom >= footerConfig.getInitialVisibleHeight()) {
                     // If footer's hidden part is visible, ignore fling too.
@@ -267,7 +274,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                         return;
                     consumeOffset(coordinatorLayout, child, offset, type, false);
                 } else {
-                    // Recompute it.
+                    // Footer's hidden part is not visible yet.
+                    // Recompute it, so that bottom doesn't exceed footer's initial visible height
+                    // no matter what type of touch event is.
                     offset = MathUtils.clamp(-dyUnconsumed,
                             -(footerConfig.getInitialVisibleHeight()
                                     - coordinatorLayout.getHeight() + bottom), 0);
@@ -533,6 +542,12 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         requestLayout();
     }
 
+    /**
+     * Get an initial visible height for the sake of we don't have a header view actually,
+     * i.e. this behavior is used by a standalone content view without any header view.
+     *
+     * @return
+     */
     private int getHeaderInitialVisibleHeight() {
         int initialVisibleHeight;
         if (headerConfig.getHeight() <= 0 || headerConfig.getVisibleHeight() <= 0) {

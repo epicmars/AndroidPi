@@ -16,14 +16,13 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:background="@android:color/holo_green_light"
+            android:background="@color/colorAccent"
             app:layout_behavior="@string/lr_refresh_footer_behavior"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorAccent"
             tools:listitem="@layout/view_holder_lite_refresh_sample"
             app:layout_behavior="@string/lr_refresh_content_behavior"/>
 
