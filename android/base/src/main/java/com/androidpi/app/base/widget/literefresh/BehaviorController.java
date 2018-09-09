@@ -18,9 +18,9 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
 
     protected BehaviorController proxy;
     protected B behavior;
-    protected List<OnScrollListener> mScrollListeners = new ArrayList<>();
-    protected List<OnRefreshListener> mRefreshListeners = new ArrayList<>();
-    protected List<OnLoadListener> mLoadListeners = new ArrayList<>();
+    protected List<OnScrollListener> mScrollListeners;
+    protected List<OnRefreshListener> mRefreshListeners;
+    protected List<OnLoadListener> mLoadListeners;
 
     public BehaviorController(B behavior) {
         this.behavior = behavior;
@@ -29,6 +29,9 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                               int initial, int trigger, int min, int max, int type) {
+        if (mScrollListeners == null) {
+            return;
+        }
         for (OnScrollListener l : mScrollListeners) {
             l.onStartScroll(coordinatorLayout, child, initial, trigger, min, max, type);
         }
@@ -42,7 +45,10 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
 
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                         int current, int delta, int initial, int trigger, int min, int max, int type) {
+                         int current, int delta, int initial, int trigger, int min, int max,
+                         int type) {
+        if (mScrollListeners == null)
+            return;
         for (OnScrollListener l : mScrollListeners) {
             l.onScroll(coordinatorLayout, child, current, delta, initial, trigger, min, max, type);
         }
@@ -51,6 +57,9 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                              int current, int initial, int trigger, int min, int max, int type) {
+        if (mScrollListeners == null) {
+            return;
+        }
         for (OnScrollListener l : mScrollListeners) {
             l.onStopScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
         }
@@ -154,16 +163,20 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
     }
 
     public void copyRemainListeners() {
-        Iterator<OnRefreshListener> iterator = mRefreshListeners.iterator();
-        while (iterator.hasNext()) {
-            proxy.addOnRefreshListener(iterator.next());
-            iterator.remove();
+        if (mRefreshListeners != null && !mRefreshListeners.isEmpty()) {
+            Iterator<OnRefreshListener> iterator = mRefreshListeners.iterator();
+            while (iterator.hasNext()) {
+                proxy.addOnRefreshListener(iterator.next());
+                iterator.remove();
+            }
         }
 
-        Iterator<OnLoadListener> loadListenerIterator = mLoadListeners.iterator();
-        while (loadListenerIterator.hasNext()) {
-            proxy.addOnLoadListener(loadListenerIterator.next());
-            loadListenerIterator.remove();
+        if (mLoadListeners != null && !mLoadListeners.isEmpty()) {
+            Iterator<OnLoadListener> loadListenerIterator = mLoadListeners.iterator();
+            while (loadListenerIterator.hasNext()) {
+                proxy.addOnLoadListener(loadListenerIterator.next());
+                loadListenerIterator.remove();
+            }
         }
     }
 
@@ -176,14 +189,27 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
     }
 
     public void addOnScrollListener(OnScrollListener listener) {
-        if (null == listener)
+        if (null == listener) {
             return;
+        }
+        if (mScrollListeners != null && mScrollListeners.contains(listener)) {
+            return;
+        }
+        if (mScrollListeners == null) {
+            mScrollListeners = new ArrayList<>();
+        }
         mScrollListeners.add(listener);
     }
 
     public void addOnRefreshListener(OnRefreshListener listener) {
         if (null == listener) {
             return;
+        }
+        if (mRefreshListeners != null && mRefreshListeners.contains(listener)) {
+            return;
+        }
+        if (mRefreshListeners == null) {
+            mRefreshListeners = new ArrayList<>();
         }
         runWithView(new Runnable() {
             @Override
@@ -201,6 +227,12 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
         if (null == listener) {
             return;
         }
+        if (mLoadListeners != null && mLoadListeners.contains(listener)) {
+            return;
+        }
+        if (mLoadListeners == null) {
+            mLoadListeners = new ArrayList<>();
+        }
         runWithView(new Runnable() {
             @Override
             public void run() {
@@ -211,6 +243,14 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
                 }
             }
         });
+    }
+
+    protected boolean hasOnLoadListeners() {
+        return mLoadListeners != null && !mLoadListeners.isEmpty();
+    }
+
+    protected boolean hasOnRefreshListeners() {
+        return mRefreshListeners != null && !mRefreshListeners.isEmpty();
     }
 
     protected void runWithView(Runnable runnable) {

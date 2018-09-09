@@ -40,7 +40,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
          *
          * @return true if the controller has refresh listeners set, false otherwise
          */
-        boolean hasRefreshListeners();
+        boolean hasRefreshStateListeners();
 
         /**
          * A callback method when refresh state has changed.
@@ -125,7 +125,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
             return;
         }
         // If there are refresh listeners and we have reach beyond the trigger point.
-        if (!(stateHandler.hasRefreshListeners() && tryMoveToState(STATE_REFRESH))) {
+        if (!(stateHandler.hasRefreshStateListeners() && tryMoveToState(STATE_REFRESH))) {
             // If not refresh, then reset.
             if (!tryMoveToState(STATE_REFRESH_RESET)) {
                 tryMoveToState(STATE_CANCELLED_RESET);

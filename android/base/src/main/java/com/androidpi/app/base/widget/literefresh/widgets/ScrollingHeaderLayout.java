@@ -37,6 +37,7 @@ public abstract class ScrollingHeaderLayout extends FrameLayout implements OnScr
             if (behavior == null) {
                 behavior = new RefreshHeaderBehavior(getContext());
                 params.setBehavior(behavior);
+                setLayoutParams(params);
             }
             behavior.addOnScrollListener(this);
         } catch (Exception ignore) {

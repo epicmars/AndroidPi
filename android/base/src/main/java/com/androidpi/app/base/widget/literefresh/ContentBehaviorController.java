@@ -39,8 +39,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         }
 
         @Override
-        public boolean hasRefreshListeners() {
-            return mLoadListeners != null && !mLoadListeners.isEmpty();
+        public boolean hasRefreshStateListeners() {
+            return hasOnLoadListeners();
         }
 
         @Override
@@ -97,8 +97,8 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         }
 
         @Override
-        public boolean hasRefreshListeners() {
-            return mRefreshListeners != null && !mRefreshListeners.isEmpty();
+        public boolean hasRefreshStateListeners() {
+            return hasOnRefreshListeners();
         }
 
         @Override
@@ -186,6 +186,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onLoadStart() {
+        if (!hasOnLoadListeners()) {
+            return;
+        }
         for (OnLoadListener l : mLoadListeners) {
             l.onLoadStart();
         }
@@ -193,6 +196,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onReleaseToLoad() {
+        if (!hasOnLoadListeners()) {
+            return;
+        }
         for (OnLoadListener l : mLoadListeners) {
             l.onReleaseToLoad();
         }
@@ -200,6 +206,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onLoad() {
+        if (!hasOnLoadListeners()) {
+            return;
+        }
         for (OnLoadListener l : mLoadListeners) {
             l.onLoad();
         }
@@ -207,6 +216,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onLoadEnd(Throwable throwable) {
+        if (!hasOnLoadListeners()) {
+            return;
+        }
         for (OnLoadListener l : mLoadListeners) {
             l.onLoadEnd(throwable);
         }
@@ -214,6 +226,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onRefreshStart() {
+        if (!hasOnRefreshListeners()) {
+            return;
+        }
         for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshStart();
         }
@@ -221,6 +236,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onReleaseToRefresh() {
+        if (!hasOnRefreshListeners()) {
+            return;
+        }
         for (OnRefreshListener l : mRefreshListeners) {
             l.onReleaseToRefresh();
         }
@@ -228,6 +246,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onRefresh() {
+        if (!hasOnRefreshListeners()) {
+            return;
+        }
         for (OnRefreshListener l : mRefreshListeners) {
             l.onRefresh();
         }
@@ -235,6 +256,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onRefreshEnd(Throwable throwable) {
+        if (!hasOnRefreshListeners()) {
+            return;
+        }
         for (OnRefreshListener l : mRefreshListeners) {
             l.onRefreshEnd(throwable);
         }
@@ -317,4 +341,5 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     void stopScroll(boolean holdOn) {
         behavior.stopScroll(holdOn);
     }
+
 }
