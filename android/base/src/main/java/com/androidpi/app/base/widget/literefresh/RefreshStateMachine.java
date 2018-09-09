@@ -71,7 +71,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                              int initial, int min, int max, int type) {
+                              int initial, int trigger, int min, int max, int type) {
 //        Timber.d("onStartScroll: isTouch %b", isTouch);
         // If current state is ready, when touch event is MotionEvent.ACTION_UP, may trigger a fling
         // that start another scroll immediately.
@@ -82,7 +82,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                            int current, int initial, int min, int max, int type) {
+                            int current, int initial, int trigger, int min, int max, int type) {
 //        Timber.d("onPreScroll: isTouch %b", isTouch);
         if (!stateHandler.isValidOffset(current))
             return;
@@ -113,7 +113,7 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                             int current, int initial, int min, int max, int type) {
+                             int current, int initial, int trigger, int min, int max, int type) {
         // When child start dispatching touch events, the MotionEvent.DOWN event may cause
         // a defensive clean up for new gesture.
 //        Timber.d("onStopScroll: isTouch %b", isTouch);

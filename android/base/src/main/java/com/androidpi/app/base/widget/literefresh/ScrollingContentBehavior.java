@@ -191,8 +191,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         if (start) {
             for (ScrollingListener l : mListeners) {
                 l.onStartScroll(coordinatorLayout, child, headerConfig.getInitialVisibleHeight(),
-                        configuration.getMinOffset(),
-                        configuration.getMaxOffset(), type);
+                        headerConfig.getInitialVisibleHeight()
+                                + headerConfig.getRefreshTriggerRange(),
+                        configuration.getMinOffset(), configuration.getMaxOffset(), type);
             }
         }
         return start;
@@ -281,7 +282,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
                                    @NonNull View target, int type) {
         for (ScrollingListener l : mListeners) {
             l.onStopScroll(coordinatorLayout, child, getTopAndBottomOffset(),
-                    headerConfig.getInitialVisibleHeight(), configuration.getMinOffset(),
+                    headerConfig.getInitialVisibleHeight(),
+                    headerConfig.getInitialVisibleHeight()
+                            + headerConfig.getRefreshTriggerRange(),
+                    configuration.getMinOffset(),
                     configuration.getMaxOffset(), type);
         }
     }
@@ -313,8 +317,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         // Before child consume the offset.
         for (ScrollingListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, currentOffset,
-                    headerConfig.getInitialVisibleHeight(), configuration.getMinOffset(),
-                    configuration.getMaxOffset(), type);
+                    headerConfig.getInitialVisibleHeight(),
+                    headerConfig.getInitialVisibleHeight()
+                            + headerConfig.getRefreshTriggerRange(),
+                    configuration.getMinOffset(), configuration.getMaxOffset(), type);
         }
         float consumed = consumeRawOffset
                 ? offsetDelta
@@ -347,8 +353,10 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         int offsetDelta = offset - currentOffset;
         for (ScrollingListener l : mListeners) {
             l.onPreScroll(coordinatorLayout, child, currentOffset,
-                    headerConfig.getInitialVisibleHeight(), configuration.getMinOffset(),
-                    configuration.getMaxOffset(), type);
+                    headerConfig.getInitialVisibleHeight(),
+                    headerConfig.getInitialVisibleHeight()
+                            + headerConfig.getRefreshTriggerRange(),
+                    configuration.getMinOffset(), configuration.getMaxOffset(), type);
         }
         setTopAndBottomOffset(offset);
         coordinatorLayout.dispatchDependentViewsChanged(child);

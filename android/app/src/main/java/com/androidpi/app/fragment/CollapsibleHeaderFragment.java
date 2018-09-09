@@ -105,12 +105,13 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                 ColorDrawable drawable = new ColorDrawable(Color.BLACK);
 
                 @Override
-                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
+                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
 
                 }
 
                 @Override
                 public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
+                    // set header's translation
                     if (current <= initial) {
                         float y = initial - current;
                         binding.viewHeader.setTranslationY(y / 2);
@@ -119,8 +120,10 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                         binding.viewHeader.setForeground(drawable);
                     }
 
+                    // set progress
                     binding.circleProgress.setProgress(Math.max(0f, (float) current / trigger));
 
+                    // set appbar's translation
                     if (current >= min) {
                         float rangeMax = initial - min;
                         float distance = current - min;
@@ -131,7 +134,7 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                 }
 
                 @Override
-                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
+                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
 
                 }
             });
@@ -139,7 +142,6 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
             headerBehavior.addOnRefreshListener(new OnRefreshListener() {
                 @Override
                 public void onRefreshStart() {
-                    binding.circleProgress.setVisibility(View.VISIBLE);
                     binding.circleProgress.resetStyle();
                 }
 
@@ -150,7 +152,6 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
 
                 @Override
                 public void onRefresh() {
-                    binding.circleProgress.resetStyle();
                     binding.circleProgress.startLoading();
                     unsplashViewModel.firstPage();
                 }
@@ -158,13 +159,12 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
                 @Override
                 public void onRefreshEnd(@Nullable Throwable throwable) {
                     binding.circleProgress.stopLoading();
-                    binding.circleProgress.setVisibility(View.GONE);
                 }
             });
         }
 
         if (unsplashViewModel.getRandomPhotosResult().getValue() == null) {
-            unsplashViewModel.firstPage();
+            headerBehavior.refresh();
         }
     }
 }

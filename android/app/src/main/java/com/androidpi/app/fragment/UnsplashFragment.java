@@ -23,8 +23,6 @@ import com.androidpi.data.remote.dto.ResUnsplashPhoto;
 
 import java.util.List;
 
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
-
 /**
  * Created by jastrelax on 2018/8/13.
  */
@@ -40,7 +38,7 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
         return fragment;
     }
 
-    boolean isRefresh = false;
+    int triggerOffset;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -86,25 +84,21 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
 
         headerBehavior.addOnScrollListener(new OnScrollListener() {
             @Override
-            public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
-                binding.loadingView.startProgress();
-                binding.loadingView.setProgress(0);
+            public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
+                triggerOffset = trigger - initial;
             }
 
             @Override
             public void onScroll(CoordinatorLayout parent, View view, int current, int delta, int initial, int trigger, int min, int max, int type) {
-                float offset = current - view.getHeight();
-                float progress = offset / headerBehavior.getConfiguration().getRefreshTriggerRange();
+                float offset = current - initial;
+                float triggerRange = trigger - initial;
+                float progress = offset / (trigger - initial);
                 binding.loadingView.setProgress(progress);
-                // Because the scrolling event is dispatched before the refresh event.
-                // The logic here should not depend on the refresh state.
-                if (delta > 0 || !isRefresh) {
-                    binding.loadingView.setTranslationY(MathUtils.clamp(offset, 0, headerBehavior.getConfiguration().getRefreshTriggerRange()));
-                }
+                binding.loadingView.setTranslationY(MathUtils.clamp(offset, 0, triggerRange));
             }
 
             @Override
-            public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
+            public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
 
             }
         });
@@ -113,34 +107,30 @@ public class UnsplashFragment extends BaseFragment<FragmentUnsplashBinding> {
 
             @Override
             public void onRefreshStart() {
-                binding.loadingView.animate().cancel();
                 binding.loadingView.startProgress();
             }
 
             @Override
             public void onReleaseToRefresh() {
-                binding.loadingView.setTranslationY(headerBehavior.getConfiguration().getRefreshTriggerRange());
+                binding.loadingView.setTranslationY(triggerOffset);
                 binding.loadingView.readyToLoad();
             }
 
             @Override
             public void onRefresh() {
-                isRefresh = true;
                 binding.loadingView.startLoading();
                 firstPage();
             }
 
             @Override
             public void onRefreshEnd(Throwable throwable) {
-                isRefresh = false;
                 binding.loadingView.finishLoading();
-                binding.loadingView.animate().setDuration(300).translationY(0);
             }
         });
 
 
         if (unsplashViewModel.getRandomPhotosResult().getValue() == null) {
-            firstPage();
+            headerBehavior.refresh();
         }
     }
 

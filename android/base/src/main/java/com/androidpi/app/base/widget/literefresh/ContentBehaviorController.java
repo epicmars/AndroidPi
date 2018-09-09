@@ -150,20 +150,20 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                              int initial, int min, int max, int type) {
+                              int initial, int trigger, int min, int max, int type) {
         for (RefreshStateMachine stateMachine : stateMachines) {
-            stateMachine.onStartScroll(coordinatorLayout, child, initial, min, max, type);
+            stateMachine.onStartScroll(coordinatorLayout, child, initial, trigger, min, max, type);
         }
-        super.onStartScroll(coordinatorLayout, child, initial, min, max, type);
+        super.onStartScroll(coordinatorLayout, child, initial, trigger, min, max, type);
     }
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                            int current, int initial, int min, int max, int type) {
+                            int current, int initial, int trigger, int min, int max, int type) {
         for (RefreshStateMachine stateMachine : stateMachines) {
-            stateMachine.onPreScroll(coordinatorLayout, child, current, initial, min , max, type);
+            stateMachine.onPreScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
         }
-        super.onPreScroll(coordinatorLayout, child, current, initial, min, max, type);
+        super.onPreScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
     }
 
     @Override
@@ -177,11 +177,11 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                             int current, int initial, int min, int max, int type) {
+                             int current, int initial, int trigger, int min, int max, int type) {
         for (RefreshStateMachine stateMachine : stateMachines) {
-            stateMachine.onStopScroll(coordinatorLayout, child, current, initial, min, max, type);
+            stateMachine.onStopScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
         }
-        super.onStopScroll(coordinatorLayout, child, current, initial, min, max, type);
+        super.onStopScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
     }
 
     @Override

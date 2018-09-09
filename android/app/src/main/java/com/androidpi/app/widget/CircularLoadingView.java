@@ -44,11 +44,13 @@ public class CircularLoadingView extends AppCompatImageView {
     }
 
     public void startLoading() {
+        resetStyle();
         drawable.start();
     }
 
     public void stopLoading() {
         drawable.stop();
+        setProgress(1f);
     }
 
     public void setColor(int color) {

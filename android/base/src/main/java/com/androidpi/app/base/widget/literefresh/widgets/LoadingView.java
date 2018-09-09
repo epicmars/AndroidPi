@@ -78,13 +78,13 @@ public class LoadingView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (state == STATE_ON_LOADING || state == STATE_IDLE || state == STATE_FINISH) {
+        if (state == STATE_ON_LOADING || state == STATE_IDLE) {
             for (int i = 0; i < 12; i++) {
                 paint.setAlpha(31 + (i + current) % 12 * 224 / 12);
                 canvas.drawLine(centerX, centerY + gapLength, centerX, centerY + gapLength + lineLength, paint);
                 canvas.rotate(-30, centerX, centerY);
             }
-        } else if (state == STATE_ON_PROGRESS) {
+        } else if (state == STATE_ON_PROGRESS || state == STATE_FINISH) {
             // i is the index of segment
             for (int i = 12; i >= 1; i--) {
                 if (i <= 12 - progress) {
@@ -107,11 +107,6 @@ public class LoadingView extends View{
         }
     }
 
-    public void startProgress() {
-        state = STATE_IDLE;
-        invalidate();
-    }
-
     public void setProgress(float percent) {
         if (state < STATE_READY) {
             percent = MathUtils.clamp(percent, 0f, 1f);
@@ -119,6 +114,11 @@ public class LoadingView extends View{
             state = STATE_ON_PROGRESS;
             invalidate();
         }
+    }
+
+    public void startProgress() {
+        state = STATE_IDLE;
+        invalidate();
     }
 
     public void startLoading() {

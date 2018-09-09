@@ -31,13 +31,13 @@ public abstract class AnimationOffsetBehavior<V extends View, CTR extends Behavi
 
     interface ScrollingListener {
 
-        void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int initial, int min, int max, int type);
+        void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int initial, int trigger, int min, int max, int type);
 
-        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int initial, int min, int max, int type);
+        void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int initial, int trigger, int min, int max, int type);
 
         void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int delta, int initial, int trigger, int min, int max, int type);
 
-        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int initial, int min, int max, int type);
+        void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, int current, int initial, int trigger, int min, int max, int type);
     }
 
     private static final int MSG_VIEW_INITIATED = 1;

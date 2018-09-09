@@ -99,7 +99,7 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
         if (behavior != null) {
             behavior.addOnScrollListener(new OnScrollListener() {
                 @Override
-                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
+                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
                 }
 
                 @Override
@@ -107,7 +107,7 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
                 }
 
                 @Override
-                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
+                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
                     if (type == TYPE_TOUCH && !behavior.getController().isRefreshing()) {
                         binding.circleProgress.resetStyle();
                         binding.circleProgress.setProgress(1f);
@@ -139,7 +139,6 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
                     if (binding.circleProgress.getTranslationY() != 0) {
                         binding.circleProgress.setTranslationY(0);
                     }
-                    binding.circleProgress.resetStyle();
                     binding.circleProgress.startLoading();
                     unsplashViewModel.firstPage();
                 }

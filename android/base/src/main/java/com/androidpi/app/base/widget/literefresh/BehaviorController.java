@@ -28,15 +28,15 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
 
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                              int initial, int min, int max, int type) {
+                              int initial, int trigger, int min, int max, int type) {
         for (OnScrollListener l : mScrollListeners) {
-            l.onStartScroll(coordinatorLayout, child, initial, min, max, type);
+            l.onStartScroll(coordinatorLayout, child, initial, trigger, min, max, type);
         }
     }
 
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                            int current, int initial, int min, int max, int type) {
+                            int current, int initial, int trigger, int min, int max, int type) {
 
     }
 
@@ -50,9 +50,9 @@ public class BehaviorController<B extends AnimationOffsetBehavior>
 
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
-                             int current, int initial, int min, int max, int type) {
+                             int current, int initial, int trigger, int min, int max, int type) {
         for (OnScrollListener l : mScrollListeners) {
-            l.onStopScroll(coordinatorLayout, child, current, initial, min, max, type);
+            l.onStopScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
         }
     }
 

@@ -34,7 +34,7 @@ public class VideoHeaderView extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
+    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
         if (type == TYPE_TOUCH) {
             launched = false;
         }
@@ -52,7 +52,7 @@ public class VideoHeaderView extends ScrollingHeaderLayout {
     }
 
     @Override
-    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
+    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
     }
 
 }

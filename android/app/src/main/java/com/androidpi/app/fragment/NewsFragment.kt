@@ -124,7 +124,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         headerBehavior  = RefreshHeaderBehavior<View>(context)
         headerBehavior.addOnScrollListener(object : OnScrollListener {
 
-            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
                 binding.headerProgress.visibility = View.VISIBLE
                 binding.headerProgress.max = max
             }
@@ -133,7 +133,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 binding.headerProgress.progress = current
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
                 binding.headerProgress.progress = current
             }
 
@@ -183,11 +183,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
             }
 
-            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
 
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
             }
         })
 
@@ -200,7 +200,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         contentParams.behavior = contentBehavior
 
         contentBehavior.addOnScrollListener(object : OnScrollListener {
-            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
                 binding.contentProgress.visibility = View.VISIBLE
                 binding.contentProgress.max = max
             }
@@ -209,7 +209,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 binding.contentProgress.progress = current
             }
 
-            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, min: Int, max: Int, type: Int) {
+            override fun onStopScroll(parent: CoordinatorLayout, view: View, current: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
                 binding.contentProgress.progress = current
             }
         })

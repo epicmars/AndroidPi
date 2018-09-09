@@ -13,8 +13,6 @@ import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
 import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 import com.androidpi.app.cweather.R;
 
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
-
 /**
  * Created by jastrelax on 2018/8/18.
  */
@@ -48,9 +46,8 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
     }
 
     @Override
-    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
-        loadingView.startProgress();
-        loadingView.setProgress(0);
+    public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
+
     }
 
     @Override
@@ -63,7 +60,7 @@ public class WeatherHeaderView extends ScrollingHeaderLayout implements OnRefres
     }
 
     @Override
-    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
+    public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
 
     }
 

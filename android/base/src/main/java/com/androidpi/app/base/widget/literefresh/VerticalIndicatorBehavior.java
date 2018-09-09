@@ -136,8 +136,8 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
             for (ScrollingListener l : mListeners) {
                 l.onStartScroll(coordinatorLayout, child,
                         getInitialOffset(coordinatorLayout, child),
-                        getMinOffset(coordinatorLayout, child),
-                        getMaxOffset(coordinatorLayout, child), type);
+                        getRefreshTriggerOffset(coordinatorLayout, child),
+                        getMinOffset(coordinatorLayout, child), getMaxOffset(coordinatorLayout, child), type);
             }
         }
         return start;
@@ -150,8 +150,8 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
             l.onStopScroll(coordinatorLayout, child, controller.transformOffsetCoordinate(
                     coordinatorLayout, child, this, getTopAndBottomOffset()),
                     getInitialOffset(coordinatorLayout, child),
-                    getMinOffset(coordinatorLayout, child),
-                    getMaxOffset(coordinatorLayout, child), type);
+                    getRefreshTriggerOffset(coordinatorLayout, child),
+                    getMinOffset(coordinatorLayout, child), getMaxOffset(coordinatorLayout, child), type);
         }
     }
 
@@ -218,8 +218,8 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
                     coordinatorLayout, child, this, currentOffset
                     ),
                     getInitialOffset(coordinatorLayout, child),
-                    getMinOffset(coordinatorLayout, child),
-                    height, type);
+                    getRefreshTriggerOffset(coordinatorLayout, child),
+                    getMinOffset(coordinatorLayout, child), height, type);
         }
         float consumed = controller.consumeOffsetOnDependentViewChanged(coordinatorLayout, child,
                 this, contentBehavior, currentOffset, offsetDelta);

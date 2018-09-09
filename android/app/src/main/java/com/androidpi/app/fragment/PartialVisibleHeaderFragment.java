@@ -75,7 +75,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
             headerBehavior.addOnScrollListener(new OnScrollListener() {
 
                 @Override
-                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
+                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
 //                    binding.circleProgress.setVisibility(View.VISIBLE);
 //                    circularProgressDrawable.start();
                 }
@@ -111,7 +111,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
 
                 @Override
-                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
+                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
                 }
             });
 
@@ -129,7 +129,6 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
 
                 @Override
                 public void onRefresh() {
-                    binding.circleProgress.resetStyle();
                     binding.circleProgress.startLoading();
                     if (!isLaunched) {
                         unsplashViewModel.firstPage();
@@ -149,7 +148,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
         if (footerBehavior != null) {
             footerBehavior.addOnScrollListener(new OnScrollListener() {
                 @Override
-                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int min, int max, int type) {
+                public void onStartScroll(CoordinatorLayout parent, View view, int initial, int trigger, int min, int max, int type) {
 
                 }
 
@@ -159,7 +158,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
 
                 @Override
-                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int min, int max, int type) {
+                public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
 
                 }
             });
