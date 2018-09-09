@@ -1,11 +1,14 @@
 package com.androidpi.app.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+
+import com.androidpi.app.R;
 
 /**
  * Created by jastrelax on 2018/8/30.
@@ -24,9 +27,12 @@ public class CircularLoadingView extends AppCompatImageView {
 
     public CircularLoadingView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularLoadingView, 0, 0);
+        int color = a.getColor(R.styleable.CircularLoadingView_lr_circle_color, Color.WHITE);
+        a.recycle();
         drawable = new CircularProgressDrawable(getContext());
         drawable.setStyle(CircularProgressDrawable.DEFAULT);
-        drawable.setColorSchemeColors(Color.WHITE);
+        drawable.setColorSchemeColors(color);
         setImageDrawable(drawable);
     }
 

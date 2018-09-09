@@ -27,4 +27,8 @@
     <declare-styleable name="LoadingView">
         <attr name="lr_color" format="reference|color"/>
     </declare-styleable>
+
+    <declare-styleable name="CircularLoadingView">
+        <attr name="lr_circle_color" format="reference|color"/>
+    </declare-styleable>
 </resources>

@@ -7,6 +7,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:id="@+id/view_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:layout_anchor="@id/view_header"
+            app:layout_anchorGravity="top|center_horizontal">
+            <com.androidpi.app.widget.CircularLoadingView
+                android:id="@+id/circle_progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="24dp"
+                app:lr_circle_color="@color/colorPrimary"/>
+        </FrameLayout>
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/view_header"
             android:layout_width="match_parent"
