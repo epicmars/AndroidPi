@@ -5,7 +5,7 @@
         <attr name="lr_maxOffsetRatio" format="reference|fraction"/>
         <attr name="lr_visibleHeight" format="reference|dimension"/>
         <attr name="lr_visibleHeightRatio" format="reference|fraction"/>
-        <attr name="lr_triggerRange" format="reference|dimension"/>
+        <attr name="lr_triggerOffset" format="reference|dimension"/>
         <attr name="lr_showUpWhenRefresh" format="reference|boolean"/>
     </declare-styleable>
 

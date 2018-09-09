@@ -16,7 +16,7 @@
             android:transitionName="@string/transition_header"
             app:layout_behavior="@string/lr_refresh_header_behavior"
             app:lr_maxOffsetRatio="120%p"
-            app:lr_triggerRange="96dp"
+            app:lr_triggerOffset="96dp"
             app:lr_visibleHeight="180dp">
 
             <ImageView

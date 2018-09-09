@@ -73,9 +73,9 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
         }
 
         configuration.setUseDefinedRefreshTriggerRange(a.hasValue(
-                R.styleable.OffsetBehavior_lr_triggerRange));
+                R.styleable.OffsetBehavior_lr_triggerOffset));
         configuration.setRefreshTriggerRange(a.getDimensionPixelOffset(
-                R.styleable.OffsetBehavior_lr_triggerRange, 0));
+                R.styleable.OffsetBehavior_lr_triggerOffset, 0));
         a.recycle();
         defaultMinTriggerRange = context.getResources().getDimensionPixelOffset(
                 R.dimen.defaultMinTriggerRange);

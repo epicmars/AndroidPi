@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             app:layout_behavior="@string/lr_refresh_header_behavior"
             app:lr_maxOffsetRatio="100%p"
-            app:lr_triggerRange="96dp"
+            app:lr_triggerOffset="96dp"
             app:lr_visibleHeightRatio="100%">
 
             <com.androidpi.app.widget.NestedHorizonView
