@@ -17,22 +17,22 @@ import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 /**
  * Created by jastrelax on 2018/8/31.
  */
-public class LoadingFooterView extends ScrollingHeaderLayout implements OnLoadListener{
+public class FooterLoadingView extends ScrollingHeaderLayout implements OnLoadListener{
 
     private TextView tvMessage;
     private LoadingView loadingView;
 
-    public LoadingFooterView(Context context) {
+    public FooterLoadingView(Context context) {
         this(context, null);
     }
 
-    public LoadingFooterView(Context context, AttributeSet attrs) {
+    public FooterLoadingView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LoadingFooterView(Context context, AttributeSet attrs, int defStyle) {
+    public FooterLoadingView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.view_loading_footer, this);
+        inflate(context, R.layout.view_footer_loading, this);
         tvMessage = findViewById(R.id.tv_message);
         loadingView = findViewById(R.id.loading_view);
     }

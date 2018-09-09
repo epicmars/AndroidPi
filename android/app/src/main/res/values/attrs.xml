@@ -4,4 +4,8 @@
         <attr name="tag" format="string|reference"/>
         <attr name="label" format="string|reference"/>
     </declare-styleable>
+    
+    <declare-styleable name="ImagePagerHeaderView">
+        <attr name="auto_flip" format="boolean|reference"/>
+    </declare-styleable>
 </resources>

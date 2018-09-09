@@ -52,11 +52,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"/>
 
-            <com.androidpi.app.widget.LoadingFooterView
+            <com.androidpi.app.widget.FooterLoadingView
                 android:id="@+id/scroll_footer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </com.androidpi.app.widget.LoadingFooterView>
+            </com.androidpi.app.widget.FooterLoadingView>
 
         </android.support.design.widget.CoordinatorLayout>
     </LinearLayout>

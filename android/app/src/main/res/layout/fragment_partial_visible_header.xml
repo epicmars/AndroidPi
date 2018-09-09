@@ -47,19 +47,41 @@
             android:layout_height="wrap_content"
             app:layout_behavior="@string/lr_refresh_content_behavior" />
 
-        <FrameLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/view_footer"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@color/colorAccent"
             app:layout_behavior="@string/lr_refresh_footer_behavior">
+
+            <TextView
+                android:id="@+id/footer_tv_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.androidpi.app.widget.CircularLoadingView
                 android:id="@+id/footer_circle_progress"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_gravity="center" />
-        </FrameLayout>
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_photo"

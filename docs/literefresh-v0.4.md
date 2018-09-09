@@ -53,3 +53,7 @@ RefreshContentBehavior              RefreshHeaderBehavior           RefreshFoote
     static final int STATE_COMPLETE = 7;                 // 完成
     static final int STATE_IDLE_RESET = 8;               // 初始并重置
 ```
+
+## 刷新状态机的问题与改进
+对于已经进入到状态3，4，7，8的情况会自动进回到IDLE状态，由于滑动还在继续，仍然会导致新的状态转移，而实际上是不需要进行多余的状态转换的。
+

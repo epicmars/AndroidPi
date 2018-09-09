@@ -20,7 +20,6 @@
             android:id="@+id/view_footer"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="@color/colorPrimary"
             app:layout_behavior="@string/lr_refresh_footer_behavior"
             app:lr_maxOffsetRatio="100%p" />
 

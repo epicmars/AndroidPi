@@ -80,7 +80,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
             val pagination : NewsPagination? = t.data
             if (t.isSuccess) {
                 if (pagination == null) {
-                    mAdapter.setPayloads(ErrorItem("数据为空"))
+                    mAdapter.setPayloads(ErrorItem("Empty data"))
                     return@Observer
                 }
                 if (pagination.isFirstPage()) {
@@ -92,11 +92,12 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
                 }
             } else if (t.isError) {
                 if (pagination == null) {
+                    mAdapter.setPayloads(ErrorItem("Empty data"))
                     return@Observer
                 }
                 if (pagination.isFirstPage()) {
-                    refreshFinished()
-                    mAdapter.setPayloads(ErrorItem("加载失败"))
+                    refreshFinished(t.throwable)
+                    mAdapter.setPayloads(ErrorItem("Loading failed"))
                 } else {
                     loadFinished(t.throwable as Exception)
                 }
@@ -248,11 +249,15 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         }
     }
 
-    fun refreshFinished() {
-        headerBehavior.refreshComplete()
+    fun refreshFinished(exception: Throwable? = null) {
+        if (exception == null) {
+            headerBehavior.refreshComplete()
+        } else {
+            headerBehavior.refreshError(exception)
+        }
     }
 
-    fun loadFinished(exception: Exception?) {
+    fun loadFinished(exception: Throwable?) {
         if (exception == null) {
             footerBehavior.loadComplete()
         } else {

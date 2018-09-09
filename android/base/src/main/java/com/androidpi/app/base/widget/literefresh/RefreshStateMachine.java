@@ -73,8 +73,8 @@ public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingLis
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                               int initial, int trigger, int min, int max, int type) {
 //        Timber.d("onStartScroll: isTouch %b", isTouch);
-        // If current state is ready, when touch event is MotionEvent.ACTION_UP, may trigger a fling
-        // that start another scroll immediately.
+        // If current state is ready, when touch event is MotionEvent.ACTION_UP, may be followed a
+        // fling that start another scroll immediately.
         if (type != TYPE_TOUCH && currentState == STATE_READY)
             return;
         tryMoveToState(STATE_START);

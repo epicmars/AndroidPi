@@ -36,6 +36,7 @@ import static com.androidpi.app.buiness.viewmodel.TheMovieDbViewModel.TRENDING_T
 @BindLayout(R.layout.fragment_movie_pager)
 public class MoviePagerFragment extends BaseFragment<FragmentMoviePagerBinding> {
 
+    private static final int MAX_COVER_SIZE = 5;
     MoviePagerAdapter pagerAdapter;
     TheMovieDbViewModel viewModel;
 
@@ -117,12 +118,12 @@ public class MoviePagerFragment extends BaseFragment<FragmentMoviePagerBinding> 
     }
 
     private List<ResTrendingPage.ResultsBean> selectRandomCovers(List<ResTrendingPage.ResultsBean> origin) {
-        if (origin == null || origin.size() <= 3)
+        if (origin == null || origin.size() <= MAX_COVER_SIZE)
             return origin;
         int size = origin.size();
         Random random = new Random();
         List<ResTrendingPage.ResultsBean> selected = new ArrayList<>();
-        while (selected.size() < 3) {
+        while (selected.size() < MAX_COVER_SIZE) {
             ResTrendingPage.ResultsBean result = origin.get(random.nextInt(size));
             if (selected.contains(result))
                 continue;

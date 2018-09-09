@@ -15,6 +15,7 @@ import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
 import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
+import com.androidpi.app.base.widget.literefresh.OnLoadListener;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
 import com.androidpi.app.base.widget.literefresh.OnScrollListener;
 import com.androidpi.app.base.widget.literefresh.RefreshFooterBehavior;
@@ -163,36 +164,38 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
                 }
             });
 
-//            footerBehavior.addOnLoadListener(new OnLoadListener() {
-//                @Override
-//                public void onLoadStart() {
-//                    binding.footerCircleProgress.setVisibility(View.VISIBLE);
-//                    binding.footerCircleProgress.resetStyle();
-//                }
-//
-//                @Override
-//                public void onReleaseToLoad() {
-//                    binding.footerCircleProgress.fillCircle();
-//                }
-//
-//                @Override
-//                public void onLoad() {
-//                    binding.footerCircleProgress.resetStyle();
-//                    binding.footerCircleProgress.startLoading();
-//                    binding.footerCircleProgress.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            footerBehavior.refreshComplete();
-//                        }
-//                    }, 2000L);
-//                }
-//
-//                @Override
-//                public void onLoadEnd(@Nullable Throwable throwable) {
-//                    binding.footerCircleProgress.stopLoading();
-//                    binding.footerCircleProgress.setVisibility(View.GONE);
-//                }
-//            });
+            footerBehavior.addOnLoadListener(new OnLoadListener() {
+                @Override
+                public void onLoadStart() {
+                    binding.footerCircleProgress.setVisibility(View.VISIBLE);
+                    binding.footerTvMessage.setVisibility(View.GONE);
+                    binding.footerCircleProgress.resetStyle();
+                }
+
+                @Override
+                public void onReleaseToLoad() {
+                    binding.footerCircleProgress.fillCircle();
+                }
+
+                @Override
+                public void onLoad() {
+                    binding.footerCircleProgress.startLoading();
+                    binding.footerCircleProgress.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            footerBehavior.loadComplete();
+                        }
+                    }, 2000L);
+                }
+
+                @Override
+                public void onLoadEnd(@Nullable Throwable throwable) {
+                    binding.footerCircleProgress.stopLoading();
+                    binding.footerCircleProgress.setVisibility(View.GONE);
+                    binding.footerTvMessage.setVisibility(View.VISIBLE);
+                    binding.footerTvMessage.setText("Mocked loading complete.");
+                }
+            });
         }
 
         if (unsplashViewModel.getRandomPhotosResult().getValue() == null) {
