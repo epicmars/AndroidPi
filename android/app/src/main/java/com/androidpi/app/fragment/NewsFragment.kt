@@ -254,9 +254,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
     fun loadFinished(exception: Exception?) {
         if (exception == null) {
-            footerBehavior.refreshComplete()
+            footerBehavior.loadComplete()
         } else {
-            footerBehavior.refreshError(exception)
+            footerBehavior.loadError(exception)
         }
     }
 

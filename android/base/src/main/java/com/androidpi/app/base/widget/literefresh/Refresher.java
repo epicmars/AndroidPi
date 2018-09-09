@@ -10,4 +10,9 @@ package com.androidpi.app.base.widget.literefresh;
  */
 public interface Refresher extends RefreshController{
 
+    void refresh();
+
+    void refreshComplete();
+
+    void refreshError(Throwable throwable);
 }

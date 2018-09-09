@@ -15,7 +15,7 @@ import com.androidpi.app.pi.base.R;
  */
 
 public class RefreshFooterBehavior<V extends View>
-        extends VerticalIndicatorBehavior<V, FooterBehaviorController> implements Refresher {
+        extends VerticalIndicatorBehavior<V, FooterBehaviorController> implements Loader {
 
     {
         controller = new FooterBehaviorController(this);
@@ -92,17 +92,17 @@ public class RefreshFooterBehavior<V extends View>
     }
 
     @Override
-    public void refresh() {
+    public void load() {
         controller.load();
     }
 
     @Override
-    public void refreshComplete() {
+    public void loadComplete() {
         controller.loadComplete();
     }
 
     @Override
-    public void refreshError(Throwable throwable) {
+    public void loadError(Throwable throwable) {
         controller.loadError(throwable);
     }
 

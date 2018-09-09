@@ -14,7 +14,7 @@ import timber.log.Timber;
  * Created by jastrelax on 2018/8/24.
  */
 public class BehaviorController<B extends AnimationOffsetBehavior>
-        implements AnimationOffsetBehavior.ScrollingListener, Loader {
+        implements AnimationOffsetBehavior.ScrollingListener, Refresher, Loader {
 
     protected BehaviorController proxy;
     protected B behavior;

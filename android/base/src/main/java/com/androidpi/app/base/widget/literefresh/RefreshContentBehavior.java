@@ -11,7 +11,7 @@ import android.view.animation.LinearInterpolator;
  */
 
 public class RefreshContentBehavior<V extends View> extends ScrollingContentBehavior<V>
-        implements Refresher {
+        implements Refresher, Loader {
 
     public RefreshContentBehavior(Context context) {
         this(context, null);
@@ -46,6 +46,21 @@ public class RefreshContentBehavior<V extends View> extends ScrollingContentBeha
     @Override
     public void refreshError(Throwable throwable) {
         controller.refreshError(throwable);
+    }
+
+    @Override
+    public void load() {
+        controller.load();
+    }
+
+    @Override
+    public void loadComplete() {
+        controller.loadComplete();
+    }
+
+    @Override
+    public void loadError(Throwable throwable) {
+        controller.loadError(throwable);
     }
 
     private float accumulator = 0;

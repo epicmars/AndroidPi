@@ -5,9 +5,4 @@ package com.androidpi.app.base.widget.literefresh;
  */
 public interface RefreshController {
 
-    void refresh();
-
-    void refreshComplete();
-
-    void refreshError(Throwable throwable);
 }
