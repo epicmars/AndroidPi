@@ -387,6 +387,9 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
      * @param holdOn
      */
     protected void stopScroll(boolean holdOn) {
+        // There is an issue that when a refresh complete immediately, the show header or footer
+        // animation may be just started, need to be cancelled.
+        cancelAnimation();
         // If content offset is larger than header's visible height or smaller than minimum offset,
         // which means content has scrolled to a insignificant or invalid position.
         // We need to reset it.

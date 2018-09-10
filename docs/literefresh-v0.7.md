@@ -23,4 +23,4 @@ date: 2018-09-05 21:53:35 +0800
 4. 接口优化（todo）
 对于BehaviorConfiguration的使用，Header与Content的配置如何暴露与使用的问题，例如Header和Footer分别有初始可见高度和触发偏移量，这两个配置对Content的配置而言没有实际意义。
 
-5. LoadingView状态异常。
+5. LoadingView状态异常，无网络情况下Weather的LoadingView在加载完成后未复位。

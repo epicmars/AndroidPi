@@ -52,7 +52,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
                 binding.tvDescription.text = weatherBean.description.capitalize()
                 binding.tvTemperature.text = getString(R.string.format_temperature, mainBean.temp - 273.15)
             } else if (resCurrentWeatherResource.isError) {
-                behavior.refreshComplete()
+                behavior.refreshError(resCurrentWeatherResource.throwable)
             }
         })
 

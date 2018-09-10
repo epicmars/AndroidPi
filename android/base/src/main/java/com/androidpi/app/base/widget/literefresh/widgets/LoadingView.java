@@ -37,7 +37,7 @@ public class LoadingView extends View{
     private ValueAnimator valueAnimator;
     private int progress;
     private int state = STATE_IDLE;
-    private float angle;
+    private float animationRotationAngle;
 
     public LoadingView(Context context) {
         this(context, null);
@@ -97,8 +97,8 @@ public class LoadingView extends View{
             }
         } else if (state == STATE_READY) {
             // do the rotation
-            angle += 5;
-            canvas.rotate(angle , centerX, centerY);
+            animationRotationAngle += 5;
+            canvas.rotate(animationRotationAngle, centerX, centerY);
             for (int i = 0; i < 12; i++) {
                 paint.setAlpha(31 + 11 * 224 / 12);
                 canvas.drawLine(centerX, centerY + gapLength, centerX, centerY + gapLength + lineLength, paint);
