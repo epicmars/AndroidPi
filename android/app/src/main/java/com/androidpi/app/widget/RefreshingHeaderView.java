@@ -24,7 +24,7 @@ import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
 
 public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRefreshListener{
 
-    private TextView mTvState;
+    private TextView tvState;
     private LoadingView loadingView;
     private ImageView ivArrow;
     private ObjectAnimator rotateUpAnimator;
@@ -43,7 +43,7 @@ public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRef
         super(context, attrs, defStyle);
         inflate(context, R.layout.view_scrolling_down_header, this);
 
-        mTvState = findViewById(R.id.tv_state);
+        tvState = findViewById(R.id.tv_state);
         ivArrow = findViewById(R.id.iv_arrow);
         ImageViewCompat.setImageTintList(ivArrow, ColorStateList.valueOf(getResources().getColor(R.color.text_gray)));
         loadingView = findViewById(R.id.loading_view);
@@ -91,7 +91,7 @@ public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRef
         loadingView.setVisibility(GONE);
         ivArrow.setVisibility(VISIBLE);
         rotateDown();
-        mTvState.setText("下拉更新");
+        tvState.setText("下拉更新");
     }
 
     @Override
@@ -99,19 +99,19 @@ public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRef
         loadingView.setVisibility(GONE);
         ivArrow.setVisibility(VISIBLE);
         rotateUp();
-        mTvState.setText("释放以更新");
+        tvState.setText("释放以更新");
     }
 
     @Override
     public void onRefresh() {
         loadingView.setVisibility(VISIBLE);
         ivArrow.setVisibility(GONE);
-        mTvState.setText("更新中...");
+        tvState.setText("更新中...");
     }
 
     @Override
     public void onRefreshEnd(Throwable throwable) {
-        mTvState.setText("更新完成");
+        tvState.setText("更新完成");
     }
 
     private void rotateUp() {

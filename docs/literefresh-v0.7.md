@@ -19,8 +19,11 @@ date: 2018-09-05 21:53:35 +0800
 2. 在状态恢复过程中重新创建了实例，此时Content在首次布局中先于Header和Footer进行恢复并设置偏移量，这时会引起Header或Footer的onDependentViewChanged被回调并相应地进行偏移量的设置，但这时Header和Footer还未进行布局，此时parent和child还未初始化，导致空指针异常。(solved)
 
 3. 在Movie详情页中，图像加载异常的问题。
+(partially solved 2018-09-10 21:51:45) 将adjustViewBound去掉可以解决该问题
+(solved 2018-09-11 00:09:57) 由于布局时高度发生变化，需要重新设置偏移量
 
 4. 接口优化（todo）
 对于BehaviorConfiguration的使用，Header与Content的配置如何暴露与使用的问题，例如Header和Footer分别有初始可见高度和触发偏移量，这两个配置对Content的配置而言没有实际意义。
 
 5. LoadingView状态异常，无网络情况下Weather的LoadingView在加载完成后未复位。
+(solved 2018-09-10 21:32:02)

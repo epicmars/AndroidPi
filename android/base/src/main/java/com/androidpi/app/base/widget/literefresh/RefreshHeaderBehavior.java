@@ -64,7 +64,6 @@ public class RefreshHeaderBehavior<V extends View>
                                 ? configuration.getMaxOffsetRatio() * parent.getHeight()
                                 : configuration.getMaxOffsetRatio() * child.getHeight()));
             }
-            configuration.setHeight(child.getHeight());
             configuration.setInitialVisibleHeight(getInitialVisibleHeight());
             if (configuration.getInitialVisibleHeight() <= 0) {
                 // IF initial visible height is non-positive, add the bottom margin to refresh trigger range.
@@ -77,6 +76,10 @@ public class RefreshHeaderBehavior<V extends View>
             if (contentBehavior != null) {
                 contentBehavior.setHeaderConfig(configuration);
             }
+
+            // The header's height may have changed, it can occur in such a situation when you set
+            // adjustViewBound to true in a image view's layout attributes and then load image async.
+            setTopAndBottomOffset(-configuration.getInvisibleHeight());
         }
         return handled;
     }
@@ -135,7 +138,7 @@ public class RefreshHeaderBehavior<V extends View>
     }
 
     /**
-     * The initial visible height is original visible height involved with vertical margins.
+     * The initial visible height is original visible height with vertical margins included.
      * Primarily, it's used as a initial offset by content view to lay itself out and compute
      * some offsets when needed.
      *
