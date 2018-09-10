@@ -9,6 +9,7 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 /**
  * Created by jastrelax on 2018/8/24.
  */
+@Deprecated
 public class RefreshStateMachine implements AnimationOffsetBehavior.ScrollingListener, Refresher {
 
     public interface RefreshStateHandler {

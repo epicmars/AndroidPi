@@ -7,7 +7,7 @@ import android.view.View;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.androidpi.app.base.widget.literefresh.RefreshStateMachine.*;
+import static com.androidpi.app.base.widget.literefresh.StateMachine.*;
 
 /**
  * Created by jastrelax on 2018/8/24.
@@ -19,7 +19,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     private static final long SHOW_DURATION = 300L;
     private static final long RESET_DURATION = 300L;
 
-    private final RefreshStateHandler footerStateHandler = new RefreshStateHandler() {
+    private final StateMachine.StateHandler footerStateHandler = new StateMachine.StateHandler() {
         @Override
         public boolean isValidOffset(int currentOffset) {
             return transform(currentOffset) > behavior.getFooterConfig().getInitialVisibleHeight();
@@ -44,6 +44,16 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         }
 
         @Override
+        public void resetRefreshOffset() {
+            refreshFooter();
+        }
+
+        @Override
+        public void resetOffset() {
+            reset();
+        }
+
+        @Override
         public void onStateChanged(int state, Throwable throwable) {
 //            Timber.d("footer state: %d", state);
             switch (state) {
@@ -55,12 +65,6 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
                     break;
                 case STATE_CANCELLED:
                     stopScroll(false);
-                    break;
-                case STATE_CANCELLED_RESET:
-                    reset();
-                    break;
-                case STATE_REFRESH_RESET:
-                    refreshFooter();
                     break;
                 case STATE_REFRESH:
                     onLoad();
@@ -77,7 +81,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         }
     };
 
-    private RefreshStateHandler headerStateHandler = new RefreshStateHandler() {
+    private StateMachine.StateHandler headerStateHandler = new StateMachine.StateHandler() {
 
         @Override
         public boolean isValidOffset(int currentOffset) {
@@ -102,6 +106,16 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         }
 
         @Override
+        public void resetRefreshOffset() {
+            refreshHeader();
+        }
+
+        @Override
+        public void resetOffset() {
+            reset();
+        }
+
+        @Override
         public void onStateChanged(int state, Throwable throwable) {
 //            Timber.d("header state: %d", state);
             switch (state) {
@@ -113,12 +127,6 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
                     break;
                 case STATE_CANCELLED:
                     stopScroll(false);
-                    break;
-                case STATE_CANCELLED_RESET:
-                    reset();
-                    break;
-                case STATE_REFRESH_RESET:
-                    refreshHeader();
                     break;
                 case STATE_REFRESH:
                     onRefresh();
@@ -135,9 +143,9 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
         }
     };
 
-    private RefreshStateMachine headerStateMachine = new RefreshStateMachine(headerStateHandler);
-    private RefreshStateMachine footerStateMachine = new RefreshStateMachine(footerStateHandler);
-    private Set<RefreshStateMachine> stateMachines = new LinkedHashSet<RefreshStateMachine>(2) {
+    private StateMachine headerStateMachine = new StateMachine(headerStateHandler);
+    private StateMachine footerStateMachine = new StateMachine(footerStateHandler);
+    private Set<StateMachine> stateMachines = new LinkedHashSet<StateMachine>(2) {
         {
             add(headerStateMachine);
             add(footerStateMachine);
@@ -151,7 +159,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     @Override
     public void onStartScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                               int initial, int trigger, int min, int max, int type) {
-        for (RefreshStateMachine stateMachine : stateMachines) {
+        for (StateMachine stateMachine : stateMachines) {
             stateMachine.onStartScroll(coordinatorLayout, child, initial, trigger, min, max, type);
         }
         super.onStartScroll(coordinatorLayout, child, initial, trigger, min, max, type);
@@ -160,7 +168,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     @Override
     public void onPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                             int current, int initial, int trigger, int min, int max, int type) {
-        for (RefreshStateMachine stateMachine : stateMachines) {
+        for (StateMachine stateMachine : stateMachines) {
             stateMachine.onPreScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
         }
         super.onPreScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
@@ -169,7 +177,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     @Override
     public void onScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                          int current, int delta, int initial, int trigger, int min, int max, int type) {
-        for (RefreshStateMachine stateMachine : stateMachines) {
+        for (StateMachine stateMachine : stateMachines) {
             stateMachine.onScroll(coordinatorLayout, child, current, delta, initial, trigger, min , max, type);
         }
         super.onScroll(coordinatorLayout, child, current, delta, initial, trigger, min, max, type);
@@ -178,7 +186,7 @@ public class ContentBehaviorController extends BehaviorController<ScrollingConte
     @Override
     public void onStopScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child,
                              int current, int initial, int trigger, int min, int max, int type) {
-        for (RefreshStateMachine stateMachine : stateMachines) {
+        for (StateMachine stateMachine : stateMachines) {
             stateMachine.onStopScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);
         }
         super.onStopScroll(coordinatorLayout, child, current, initial, trigger, min, max, type);

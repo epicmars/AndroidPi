@@ -133,6 +133,7 @@ public class LoadingView extends View{
 
     public void finishLoading() {
         state = STATE_FINISH;
+        progress = 12;
         invalidate();
     }
 
