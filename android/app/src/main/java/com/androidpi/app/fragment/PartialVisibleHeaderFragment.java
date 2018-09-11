@@ -23,6 +23,7 @@ import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentPartialVisibleHeaderBinding;
+import com.androidpi.common.image.glide.GlideApp;
 
 /**
  * Created by jastrelax on 2018/8/26.
@@ -45,6 +46,7 @@ public class PartialVisibleHeaderFragment extends BaseFragment<FragmentPartialVi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        GlideApp.with(view).load(R.mipmap.photo4).into(binding.ivPhoto);
         headerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewHeader);
         footerBehavior = LiteRefreshHelper.getAttachedBehavior(binding.viewFooter);
         photoListFragment = ((UnsplashPhotoListFragment) getChildFragmentManager().findFragmentById(R.id.fragment_list));

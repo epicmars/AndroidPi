@@ -9,14 +9,15 @@ import android.view.View;
 
 import com.androidpi.app.R;
 import com.androidpi.app.activity.VideoActivity;
-import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.OnScrollListener;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * Created by jastrelax on 2018/8/20.
  */
-public class VideoHeaderView extends ScrollingHeaderLayout {
+public class VideoHeaderView extends RefreshHeaderLayout implements OnScrollListener{
 
     private boolean launched;
 

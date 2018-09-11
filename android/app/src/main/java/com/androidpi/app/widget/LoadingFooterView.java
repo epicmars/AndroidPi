@@ -10,29 +10,31 @@ import android.widget.TextView;
 import com.androidpi.app.R;
 import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
 import com.androidpi.app.base.widget.literefresh.OnLoadListener;
+import com.androidpi.app.base.widget.literefresh.OnScrollListener;
 import com.androidpi.app.base.widget.literefresh.RefreshFooterBehavior;
 import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
-import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshFooterLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 
 /**
  * Created by jastrelax on 2018/8/31.
  */
-public class FooterLoadingView extends ScrollingHeaderLayout implements OnLoadListener{
+public class LoadingFooterView extends RefreshFooterLayout implements OnScrollListener, OnLoadListener{
 
     private TextView tvMessage;
     private LoadingView loadingView;
 
-    public FooterLoadingView(Context context) {
+    public LoadingFooterView(Context context) {
         this(context, null);
     }
 
-    public FooterLoadingView(Context context, AttributeSet attrs) {
+    public LoadingFooterView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FooterLoadingView(Context context, AttributeSet attrs, int defStyle) {
+    public LoadingFooterView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.view_footer_loading, this);
+        inflate(context, R.layout.view_loading_footer, this);
         tvMessage = findViewById(R.id.tv_message);
         loadingView = findViewById(R.id.loading_view);
     }
@@ -42,6 +44,7 @@ public class FooterLoadingView extends ScrollingHeaderLayout implements OnLoadLi
         super.onAttachedToWindow();
         RefreshFooterBehavior footerBehavior = LiteRefreshHelper.getAttachedBehavior(this);
         if (footerBehavior != null) {
+            footerBehavior.addOnScrollListener(this);
             footerBehavior.addOnLoadListener(this);
         }
     }

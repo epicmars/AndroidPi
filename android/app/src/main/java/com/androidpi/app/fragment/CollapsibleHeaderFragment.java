@@ -92,13 +92,6 @@ public class CollapsibleHeaderFragment extends BaseFragment<FragmentCollapsibleH
             }
         });
 
-        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Toolbar navigation button clicked.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         if (headerBehavior != null) {
             contentBehavior.addOnScrollListener(new OnScrollListener() {
 

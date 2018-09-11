@@ -58,22 +58,15 @@
             android:layout_height="100dp"
             app:layout_behavior="@string/lr_refresh_footer_behavior" />
 
-        <android.support.design.widget.AppBarLayout
+        <com.androidpi.app.widget.SampleToolbar
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="72dp"
             android:layout_marginTop="-72dp"
             android:paddingTop="16dp"
+            app:toolbar_background="@color/colorPrimary"
+            app:toolbar_title="Photos on Unsplash"
             android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?android:actionBarSize"
-                android:background="@color/colorPrimary"
-                app:navigationIcon="?android:homeAsUpIndicator"
-                app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
-                app:title="Photos on Unsplash"/>
-        </android.support.design.widget.AppBarLayout>
+        </com.androidpi.app.widget.SampleToolbar>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

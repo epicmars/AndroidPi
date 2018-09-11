@@ -12,7 +12,6 @@
             android:id="@+id/scaleableHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior="@string/lr_refresh_header_behavior"
             app:lr_maxOffsetRatio="100%p"
             app:lr_triggerOffset="96dp"
             app:lr_visibleHeightRatio="100%">
@@ -54,6 +53,9 @@
         <com.androidpi.app.widget.SampleToolbar
             android:id="@+id/sample_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.androidpi.app.widget.SampleToolbar>
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:theme="@style/AppTheme.NoActionBar.AppBarOverlay"
+            app:elevation="0dp" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>

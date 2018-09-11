@@ -93,28 +93,34 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         int height = parent.getMeasuredHeight() - configuration.getMinOffset();
         int heightSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
         parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, heightSpec, heightUsed);
-        configuration.setHeight(child.getMeasuredHeight());
         return handled;
     }
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        if (!configuration.isSettled() || !headerConfig.isSettled() || !footerConfig.isSettled()) {
-
-            // Header and footer's configurations must be performed before the content's,
-            // and header's configuration before footer.
-
-            // Config footer.
-            configFooter(parent);
-
-            // Compute max offset, it will not exceed parent height.
-            configMaxOffset(parent, child);
-
-            // Compute content view's minimum offset.
-            configMinOffset(parent, child);
-
+        // If child view's height have changed.
+        if (configuration.getHeight() != child.getHeight()) {
             configuration.setHeight(child.getHeight());
+            configuration.setSettled(false);
+        }
+        // Header and footer's configurations must be performed before the content's,
+        // and header's configuration before footer.
+
+        // Config footer.
+        configFooter(parent);
+
+        // Compute max offset, it will not exceed parent height.
+        configMaxOffset(parent, child);
+
+        // Compute content view's minimum offset.
+        configMinOffset(parent, child);
+
+        if (!configuration.isSettled() || !headerConfig.isSettled() || !footerConfig.isSettled()) {
+            // If we have set a minimum offset but header's initial visible height is smaller,
+            // than use it as the minimum offset.
+            configuration.setMinOffset(Math.min(configuration.getMinOffset(),
+                    headerConfig.getInitialVisibleHeight()));
             // We have set a minimum offset now, relayout.
             child.requestLayout();
 
@@ -133,19 +139,25 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
 
     private void configMaxOffset(CoordinatorLayout parent, V child) {
         if (configuration.isUseDefaultMaxOffset()) {
-            configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
-                    GOLDEN_RATIO * parent.getHeight()));
+            configuration.setMaxOffset(
+                    (int) Math.max(configuration.getMaxOffset(),
+                            GOLDEN_RATIO * parent.getHeight()));
             // If header has set a maximum offset and it's positive, then use it.
             if (!headerConfig.isUseDefaultMaxOffset() && headerConfig.getMaxOffset() > 0) {
                 configuration.setMaxOffset(headerConfig.getMaxOffset());
             }
         } else {
-            configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
-                    configuration.getMaxOffsetRatioOfParent()
-                            > configuration.getMaxOffsetRatio()
-                            ? configuration.getMaxOffsetRatio() * parent.getHeight()
-                            : configuration.getMaxOffsetRatio() * child.getHeight()));
+            configuration.setMaxOffset(
+                    (int) Math.max(configuration.getMaxOffset(),
+                            configuration.getMaxOffsetRatioOfParent()
+                                    > configuration.getMaxOffsetRatio()
+                                    ? configuration.getMaxOffsetRatio() * parent.getHeight()
+                                    : configuration.getMaxOffsetRatio() * child.getHeight()));
         }
+        // Content's max offset should be larger than header's, otherwise the refresh trigger
+        // range may not be reached.
+        configuration.setMaxOffset(
+                Math.max(configuration.getMaxOffset(), headerConfig.getMaxOffset()));
     }
 
     private void configMinOffset(CoordinatorLayout parent, V child) {
@@ -164,10 +176,6 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
             }
         }
 
-        // If we have set a minimum offset but header's initial visible height is smaller,
-        // than use it as the minimum offset.
-        configuration.setMinOffset(Math.min(configuration.getMinOffset(),
-                headerConfig.getInitialVisibleHeight()));
     }
 
     private void configFooter(CoordinatorLayout parent) {
@@ -531,8 +539,8 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
 
     public void setHeaderConfig(BehaviorConfiguration headerConfig) {
         this.headerConfig = new BehaviorConfiguration.Builder(headerConfig).setSettled(false).build();
-        // headerConfig.getInitialVisibleHeight may be zero at first time and cause the minimum
-        // offset set to zero, we use cahced one to set it right.
+        // headerConfig.getInitialVisibleHeight may be zero when created for the first time and
+        // cause the minimum offset set to zero, we use the cached one to set it right.
         configuration.setMinOffset(Math.min(configuration.getCachedMinOffset(),
                 headerConfig.getInitialVisibleHeight()));
         requestLayout();

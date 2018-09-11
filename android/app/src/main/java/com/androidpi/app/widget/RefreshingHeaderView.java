@@ -14,15 +14,16 @@ import android.widget.TextView;
 import com.androidpi.app.R;
 import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
 import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
+import com.androidpi.app.base.widget.literefresh.OnScrollListener;
 import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
-import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 
 /**
  * Created by jastrelax on 2017/11/21.
  */
 
-public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRefreshListener{
+public class RefreshingHeaderView extends RefreshHeaderLayout implements OnScrollListener, OnRefreshListener{
 
     private TextView tvState;
     private LoadingView loadingView;
@@ -55,6 +56,7 @@ public class RefreshingHeaderView extends ScrollingHeaderLayout implements OnRef
         RefreshHeaderBehavior behavior = LiteRefreshHelper.getAttachedBehavior(this);
         if (behavior != null) {
             behavior.addOnRefreshListener(this);
+            behavior.addOnScrollListener(this);
         }
     }
 

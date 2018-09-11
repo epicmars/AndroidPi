@@ -12,7 +12,8 @@ import android.widget.ImageView;
 
 import com.androidpi.app.R;
 import com.androidpi.app.activity.TemplateActivity;
-import com.androidpi.app.base.widget.literefresh.widgets.ScrollingHeaderLayout;
+import com.androidpi.app.base.widget.literefresh.OnScrollListener;
+import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
 import com.androidpi.app.fragment.FragmentFactory;
 import com.androidpi.app.fragment.ImageFragment;
 import com.androidpi.common.image.glide.GlideApp;
@@ -22,7 +23,7 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 /**
  * Created by jastrelax on 2018/8/19.
  */
-public class ImageTransitionHeaderView extends ScrollingHeaderLayout {
+public class ImageTransitionHeaderView extends RefreshHeaderLayout implements OnScrollListener{
 
     private Bundle data;
     private ImageView ivImage;

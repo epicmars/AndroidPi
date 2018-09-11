@@ -86,17 +86,16 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
                                   int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
                 parentHeightMeasureSpec, heightUsed);
-        if (configuration.getHeight() != child.getMeasuredHeight()) {
-            configuration.setHeight(child.getMeasuredHeight());
-            configuration.setSettled(false);
-        }
         return handled;
     }
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        cancelAnimation();
+        if (configuration.getHeight() != child.getHeight()) {
+            configuration.setHeight(child.getHeight());
+            configuration.setSettled(false);
+        }
         // Compute visible height of child.
         int visibleHeight = (int) Math.max((float) configuration.getVisibleHeight(),
                 configuration.getVisibleHeightParentRatio()

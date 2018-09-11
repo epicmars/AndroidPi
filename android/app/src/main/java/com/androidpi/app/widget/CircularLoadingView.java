@@ -3,7 +3,6 @@ package com.androidpi.app.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -16,6 +15,7 @@ import com.androidpi.app.R;
 public class CircularLoadingView extends AppCompatImageView {
 
     private CircularProgressDrawable drawable;
+    private boolean isStyleReset = true;
 
     public CircularLoadingView(Context context) {
         this(context, null);
@@ -42,20 +42,28 @@ public class CircularLoadingView extends AppCompatImageView {
 
     public void resetStyle() {
         drawable.setStyle(CircularProgressDrawable.DEFAULT);
+        isStyleReset = true;
     }
 
     public void fillCircle() {
+        setProgress(1f);
         drawable.setStrokeWidth(drawable.getStrokeWidth() + drawable.getCenterRadius());
         drawable.setCenterRadius(0.1f);
+        isStyleReset = false;
     }
 
     public void startLoading() {
-        resetStyle();
+        if (!isStyleReset) {
+            resetStyle();
+        }
         drawable.start();
     }
 
     public void stopLoading() {
         drawable.stop();
+        if (!isStyleReset) {
+            resetStyle();
+        }
         setProgress(1f);
     }
 

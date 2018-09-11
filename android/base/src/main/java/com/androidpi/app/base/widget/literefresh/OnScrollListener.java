@@ -9,7 +9,7 @@ import android.view.View;
  * <p>
  * To make the api more close to human visual instinct, the offset used in the callback method of
  * this interface is transformed. As we are scrolling vertically, we only care about offset in the
- * vertical axis, i.e. axis y in the ascii figures below.
+ * vertical axis, i.e. axis y.
  * <p>
  * For header view we use the bottom of the view along the axis y as the coordinate.
  * for content view we use the top the the view along axis y as the coordinate, their coordinate
@@ -43,9 +43,9 @@ import android.view.View;
  *
  * </pre>
  * <p>
- * The footer view we use the top of the view along the axis y as the coordinate to compute offset,
- * it's coordinate system's original point is at the left-bottom corner of parent view, as show in
- * the figure below.
+ * Fot the footer view we use the top of the view along the axis y as the coordinate to compute
+ * offset, it's coordinate system's original point is at the left-bottom corner of parent view,
+ * as show in the figure below.
  * <p>
  * <pre>
  *                      y (footer_top_y)

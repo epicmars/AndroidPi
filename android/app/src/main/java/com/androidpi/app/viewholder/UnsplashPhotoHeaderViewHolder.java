@@ -7,6 +7,7 @@ import com.androidpi.app.base.ui.BaseViewHolder;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.databinding.ViewHolderUnsplashPhotoHeaderBinding;
 import com.androidpi.app.items.HeaderUnsplashPhoto;
+import com.androidpi.common.image.glide.GlideApp;
 
 /**
  * Created by jastrelax on 2018/8/28.
@@ -20,5 +21,6 @@ public class UnsplashPhotoHeaderViewHolder extends BaseViewHolder<ViewHolderUnsp
 
     @Override
     public <T> void onBind(T data, int position) {
+        GlideApp.with(itemView).load(R.mipmap.photo8).into(binding.ivPhoto);
     }
 }

@@ -126,7 +126,6 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         headerBehavior.addOnScrollListener(object : OnScrollListener {
 
             override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
-                binding.headerProgress.visibility = View.VISIBLE
                 binding.headerProgress.max = max
             }
 
@@ -162,7 +161,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         // Set footer behavior.
         val footerParams = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
-        footerBehavior = RefreshFooterBehavior<View>(context)
+        footerBehavior = RefreshFooterBehavior(context)
         footerBehavior.addOnLoadListener(object : OnLoadListener {
             override fun onLoadStart() {
 
@@ -202,7 +201,6 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         contentBehavior.addOnScrollListener(object : OnScrollListener {
             override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
-                binding.contentProgress.visibility = View.VISIBLE
                 binding.contentProgress.max = max
             }
 

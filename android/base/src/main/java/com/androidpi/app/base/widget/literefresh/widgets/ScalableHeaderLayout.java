@@ -5,6 +5,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.androidpi.app.base.widget.literefresh.OnScrollListener;
+import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
+
 /**
  * A simple scalable header layout.
  *
@@ -12,13 +15,13 @@ import android.view.View;
  *
  * If you implement a custom view that extends this view directly
  * and add a {@link com.androidpi.app.base.widget.literefresh.OnScrollListener} to it's
- * attached behavior, the order of which the listeners are added may be out of order.
- * In that case when you make scale or translation to your view, it may be conflict with
- * the changes that have been make here.
+ * attached behavior, the order of the added listeners may be out of order.
+ * In that case when you make scale or translation to your extended view, it may be conflict with
+ * the view property changes that have been made here.
  *
  * Created by jastrelax on 2018/8/12.
  */
-public class ScalableHeaderLayout extends ScrollingHeaderLayout {
+public class ScalableHeaderLayout extends RefreshHeaderLayout implements OnScrollListener {
 
     public ScalableHeaderLayout(Context context) {
         this(context, null);
@@ -30,6 +33,7 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
 
     public ScalableHeaderLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        behavior.addOnScrollListener(this);
     }
 
     @Override
@@ -60,5 +64,15 @@ public class ScalableHeaderLayout extends ScrollingHeaderLayout {
     @Override
     public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
 
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
+        RefreshHeaderBehavior behavior = (RefreshHeaderBehavior) params.getBehavior();
+        if (behavior != null) {
+            // todo : remove scroll listener
+        }
     }
 }

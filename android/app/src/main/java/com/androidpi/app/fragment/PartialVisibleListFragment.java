@@ -109,7 +109,6 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
                 @Override
                 public void onStopScroll(CoordinatorLayout parent, View view, int current, int initial, int trigger, int min, int max, int type) {
                     if (type == TYPE_TOUCH && !behavior.getController().isRefreshing()) {
-                        binding.circleProgress.resetStyle();
                         binding.circleProgress.setProgress(1f);
                         binding.circleProgress.animate().translationY(-translationDistance);
                     }
@@ -127,8 +126,6 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
                 @Override
                 public void onReleaseToRefresh() {
 //                    Timber.d("onReleaseToRefresh");
-                    binding.circleProgress.resetStyle();
-                    binding.circleProgress.setProgress(1f);
                     binding.circleProgress.fillCircle();
                     binding.circleProgress.animate().translationY(0);
                 }
@@ -147,8 +144,6 @@ public class PartialVisibleListFragment extends BaseFragment<FragmentPartialVisi
                 public void onRefreshEnd(@Nullable Throwable throwable) {
 //                    Timber.d("onRefreshEnd");
                     binding.circleProgress.stopLoading();
-                    binding.circleProgress.resetStyle();
-                    binding.circleProgress.setProgress(1f);
                     binding.circleProgress.animate().translationY(-translationDistance);
                 }
             });

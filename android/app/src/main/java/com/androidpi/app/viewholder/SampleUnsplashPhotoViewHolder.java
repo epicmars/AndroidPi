@@ -7,6 +7,7 @@ import com.androidpi.app.base.ui.BaseViewHolder;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.databinding.ViewHolderSampleUnsplashPhotoBinding;
 import com.androidpi.app.viewholder.items.SampleUnsplashPhoto;
+import com.androidpi.common.image.glide.GlideApp;
 
 /**
  * Created by jastrelax on 2018/9/9.
@@ -24,7 +25,7 @@ public class SampleUnsplashPhotoViewHolder extends BaseViewHolder<ViewHolderSamp
             SampleUnsplashPhoto unsplashPhoto = ((SampleUnsplashPhoto) data);
             binding.tvAuthor.setText(itemView.getResources()
                     .getString(R.string.unsplash_photo_format, unsplashPhoto.getAuthor()));
-            binding.ivPhoto.setImageResource(unsplashPhoto.getPhotoResId());
+            GlideApp.with(itemView).load(unsplashPhoto.getPhotoResId()).into(binding.ivPhoto);
         }
     }
 }
