@@ -86,45 +86,43 @@ public abstract class VerticalIndicatorBehavior<V extends View, CTR extends Vert
                                   int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         boolean handled = super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
                 parentHeightMeasureSpec, heightUsed);
+        if (configuration.getHeight() != child.getMeasuredHeight()) {
+            configuration.setHeight(child.getMeasuredHeight());
+            configuration.setSettled(false);
+        }
         return handled;
     }
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
-        if (configuration.getHeight() != child.getHeight()) {
-            configuration.setHeight(child.getHeight());
-            configuration.setSettled(false);
-        }
-        if (!configuration.isSettled()) {
-            cancelAnimation();
-            // Compute visible height of child.
-            int visibleHeight = (int) Math.max((float) configuration.getVisibleHeight(),
-                    configuration.getVisibleHeightParentRatio()
-                            > configuration.getVisibleHeightRatio()
-                            ? configuration.getVisibleHeightRatio() * parent.getHeight()
-                            : configuration.getVisibleHeightRatio() * child.getHeight());
-            int invisibleHeight = child.getHeight() - visibleHeight;
-            // Compute refresh trigger range.
-            if (configuration.getRefreshTriggerRange() < 0) {
-                // User define a invalid trigger range, use the default.
-                configuration.setRefreshTriggerRange(configuration.getDefaultRefreshTriggerRange());
-            } else if (!configuration.isUseDefinedRefreshTriggerRange()) {
-                // User doesn't predefined one, we need to ensure the refreshing is triggered when
-                // indicator is totally visible, no matter whether child height is zero or not.
-                // If child is already visible, the invisible height will be non-positive, in this
-                // case we use the default .
-                if (defaultMinTriggerRange > 0 && invisibleHeight >= defaultMinTriggerRange
-                        && invisibleHeight <= configuration.getDefaultRefreshTriggerRange()) {
-                    configuration.setRefreshTriggerRange(invisibleHeight);
-                } else {
-                    configuration.setRefreshTriggerRange(Math.max(invisibleHeight,
-                            configuration.getDefaultRefreshTriggerRange()));
-                }
-            } // Otherwise we use predefined trigger range.
-            configuration.setVisibleHeight(visibleHeight);
-            configuration.setInvisibleHeight(invisibleHeight);
-        }
+        cancelAnimation();
+        // Compute visible height of child.
+        int visibleHeight = (int) Math.max((float) configuration.getVisibleHeight(),
+                configuration.getVisibleHeightParentRatio()
+                        > configuration.getVisibleHeightRatio()
+                        ? configuration.getVisibleHeightRatio() * parent.getHeight()
+                        : configuration.getVisibleHeightRatio() * child.getHeight());
+        int invisibleHeight = child.getHeight() - visibleHeight;
+        // Compute refresh trigger range.
+        if (configuration.getRefreshTriggerRange() < 0) {
+            // User define a invalid trigger range, use the default.
+            configuration.setRefreshTriggerRange(configuration.getDefaultRefreshTriggerRange());
+        } else if (!configuration.isUseDefinedRefreshTriggerRange()) {
+            // User doesn't predefined one, we need to ensure the refreshing is triggered when
+            // indicator is totally visible, no matter whether child height is zero or not.
+            // If child is already visible, the invisible height will be non-positive, in this
+            // case we use the default .
+            if (defaultMinTriggerRange > 0 && invisibleHeight >= defaultMinTriggerRange
+                    && invisibleHeight <= configuration.getDefaultRefreshTriggerRange()) {
+                configuration.setRefreshTriggerRange(invisibleHeight);
+            } else {
+                configuration.setRefreshTriggerRange(Math.max(invisibleHeight,
+                        configuration.getDefaultRefreshTriggerRange()));
+            }
+        } // Otherwise we use predefined trigger range.
+        configuration.setVisibleHeight(visibleHeight);
+        configuration.setInvisibleHeight(invisibleHeight);
         return handled;
     }
 

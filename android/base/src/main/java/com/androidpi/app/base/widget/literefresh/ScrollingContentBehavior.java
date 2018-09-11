@@ -93,9 +93,7 @@ public class ScrollingContentBehavior<V extends View> extends AnimationOffsetBeh
         int height = parent.getMeasuredHeight() - configuration.getMinOffset();
         int heightSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
         parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, heightSpec, heightUsed);
-        if (!configuration.isSettled() || !headerConfig.isSettled() || !footerConfig.isSettled()) {
-            configuration.setHeight(child.getMeasuredHeight());
-        }
+        configuration.setHeight(child.getMeasuredHeight());
         return handled;
     }
 

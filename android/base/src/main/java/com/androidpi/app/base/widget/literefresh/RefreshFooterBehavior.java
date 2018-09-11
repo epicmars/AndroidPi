@@ -49,35 +49,34 @@ public class RefreshFooterBehavior<V extends View>
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
+        CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
+        // Compute max offset, it will not exceed parent height.
+        if (configuration.isUseDefaultMaxOffset()) {
+            // We want footer can be just fully visible by default.
+            configuration.setMaxOffset(child.getHeight());
+        } else {
+            configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
+                    configuration.getMaxOffsetRatioOfParent()
+                            > configuration.getMaxOffsetRatio()
+                            ? configuration.getMaxOffsetRatio() * parent.getHeight()
+                            : configuration.getMaxOffsetRatio() * child.getHeight()));
+        }
         // The height of content may have changed, so does the footer's initial visible height.
         final int lastInitialVisibleHeight = configuration.getInitialVisibleHeight();
         final int currentInitialVisibleHeight = getInitialVisibleHeight(parent, child);
         if (lastInitialVisibleHeight != currentInitialVisibleHeight) {
             configuration.setSettled(false);
         }
+        configuration.setInitialVisibleHeight(currentInitialVisibleHeight);
+        if (configuration.getInitialVisibleHeight() <= 0) {
+            // If initial visible height is non-positive, add the top margin to refresh trigger range.
+            configuration.setRefreshTriggerRange(configuration.getRefreshTriggerRange() + lp.topMargin);
+        }
+        // Maximum offset should not be less than initial visible height.
+        configuration.setMaxOffset(Math.max(configuration.getMaxOffset(),
+                configuration.getInitialVisibleHeight() + configuration.getRefreshTriggerRange()));
         if (!configuration.isSettled()) {
-            CoordinatorLayout.LayoutParams lp = ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
-            // Compute max offset, it will not exceed parent height.
-            if (configuration.isUseDefaultMaxOffset()) {
-                // We want footer can be just fully visible by default.
-                configuration.setMaxOffset(child.getHeight());
-            } else {
-                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
-                        configuration.getMaxOffsetRatioOfParent()
-                                > configuration.getMaxOffsetRatio()
-                                ? configuration.getMaxOffsetRatio() * parent.getHeight()
-                                : configuration.getMaxOffsetRatio() * child.getHeight()));
-            }
-            configuration.setInitialVisibleHeight(currentInitialVisibleHeight);
-            if (configuration.getInitialVisibleHeight() <= 0) {
-                // If initial visible height is non-positive, add the top margin to refresh trigger range.
-                configuration.setRefreshTriggerRange(configuration.getRefreshTriggerRange() + lp.topMargin);
-            }
-            // Maximum offset should not be less than initial visible height.
-            configuration.setMaxOffset(Math.max(configuration.getMaxOffset(),
-                    configuration.getInitialVisibleHeight() + configuration.getRefreshTriggerRange()));
             configuration.setSettled(true);
-
             ScrollingContentBehavior contentBehavior = getContentBehavior(parent, child);
             if (contentBehavior != null) {
                 contentBehavior.setFooterConfig(configuration);
@@ -140,7 +139,7 @@ public class RefreshFooterBehavior<V extends View>
     }
 
     /**
-     * The initial visible height is original visible height involved with vertical margins.
+     * The initial visible height is original visible height with vertical margins included.
      * Primarily, it's used as a initial offset by content view to lay itself out and compute
      * some offsets when needed.
      * <p>
@@ -164,8 +163,8 @@ public class RefreshFooterBehavior<V extends View>
         } else {
             initialVisibleHeight = configuration.getVisibleHeight() + configuration.getTopMargin();
         }
-        // If header configuration is not settled when footer is in layout, so we may get a
-        // header's initial visible height is zero and we get a footer's initial visible height that
+        // If header configuration is not settled when footer is in layout, we would see
+        // header's initial visible height is zero then we get footer's initial visible height that
         // fill the parent, after that when we compute a right initial visible height that is smaller,
         // it will not be set.
         ScrollingContentBehavior contentBehavior = getContentBehavior(parent, child);

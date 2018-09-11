@@ -49,28 +49,28 @@ public class RefreshHeaderBehavior<V extends View>
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, child, layoutDirection);
+        CoordinatorLayout.LayoutParams lp =
+                ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
+        // Compute max offset, it will not exceed parent height.
+        if (configuration.isUseDefaultMaxOffset()) {
+            // We want child can be fully visible by default.
+            configuration.setMaxOffset((int) Math.max(GOLDEN_RATIO * parent.getHeight(),
+                    child.getHeight()));
+        } else {
+            configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
+                    configuration.getMaxOffsetRatioOfParent()
+                            > configuration.getMaxOffsetRatio()
+                            ? configuration.getMaxOffsetRatio() * parent.getHeight()
+                            : configuration.getMaxOffsetRatio() * child.getHeight()));
+        }
+        configuration.setInitialVisibleHeight(getInitialVisibleHeight());
+        if (configuration.getInitialVisibleHeight() <= 0) {
+            // IF initial visible height is non-positive, add the bottom margin to refresh trigger range.
+            configuration.setRefreshTriggerRange(configuration.getRefreshTriggerRange() + lp.bottomMargin);
+        }
+        configuration.setMaxOffset(Math.max(configuration.getMaxOffset(),
+                configuration.getInitialVisibleHeight() + configuration.getRefreshTriggerRange()));
         if (!configuration.isSettled()) {
-            CoordinatorLayout.LayoutParams lp =
-                    ((CoordinatorLayout.LayoutParams) child.getLayoutParams());
-            // Compute max offset, it will not exceed parent height.
-            if (configuration.isUseDefaultMaxOffset()) {
-                // We want child can be fully visible by default.
-                configuration.setMaxOffset((int) Math.max(GOLDEN_RATIO * parent.getHeight(),
-                        child.getHeight()));
-            } else {
-                configuration.setMaxOffset((int) Math.max(configuration.getMaxOffset(),
-                        configuration.getMaxOffsetRatioOfParent()
-                                > configuration.getMaxOffsetRatio()
-                                ? configuration.getMaxOffsetRatio() * parent.getHeight()
-                                : configuration.getMaxOffsetRatio() * child.getHeight()));
-            }
-            configuration.setInitialVisibleHeight(getInitialVisibleHeight());
-            if (configuration.getInitialVisibleHeight() <= 0) {
-                // IF initial visible height is non-positive, add the bottom margin to refresh trigger range.
-                configuration.setRefreshTriggerRange(configuration.getRefreshTriggerRange() + lp.bottomMargin);
-            }
-            configuration.setMaxOffset(Math.max(configuration.getMaxOffset(),
-                    configuration.getInitialVisibleHeight() + configuration.getRefreshTriggerRange()));
             configuration.setSettled(true);
             ScrollingContentBehavior contentBehavior = getContentBehavior(parent, child);
             if (contentBehavior != null) {
