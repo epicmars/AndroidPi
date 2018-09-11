@@ -8,7 +8,7 @@ import static com.androidpi.app.base.vm.vo.Resource.Status.*;
 /**
  * A generic class that holds a value with its loading status.
  *
- * @param <T>
+ * @param <T> type of the held value
  */
 public class Resource<T> {
 
