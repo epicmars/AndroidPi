@@ -14,10 +14,6 @@ import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.ui.RecyclerAdapter;
 import com.androidpi.app.base.vm.vo.Resource;
-import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
-import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
-import com.androidpi.app.base.widget.literefresh.OnScrollListener;
-import com.androidpi.app.base.widget.literefresh.RefreshContentBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentPartialVisibleListBinding;
@@ -27,6 +23,10 @@ import com.androidpi.app.viewholder.LoadingViewHolder;
 import com.androidpi.app.viewholder.UnsplashPhotoHeaderViewHolder;
 import com.androidpi.app.viewholder.UnsplashPhotoListViewHolder;
 import com.androidpi.app.viewholder.items.ErrorItem;
+import com.androidpi.literefresh.LiteRefreshHelper;
+import com.androidpi.literefresh.OnRefreshListener;
+import com.androidpi.literefresh.OnScrollListener;
+import com.androidpi.literefresh.behavior.RefreshContentBehavior;
 
 import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 

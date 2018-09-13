@@ -8,11 +8,11 @@ import android.view.View
 
 import com.androidpi.app.base.ui.BaseFragment
 import com.androidpi.app.base.ui.BindLayout
-import com.androidpi.app.base.widget.literefresh.OnRefreshListener
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior
 import com.androidpi.app.cweather.R
 import com.androidpi.app.cweather.databinding.FragmentWeatherBinding
 import com.androidpi.app.cweather.viewmodel.WeatherViewModel
+import com.androidpi.literefresh.OnRefreshListener
+import com.androidpi.literefresh.behavior.RefreshHeaderBehavior
 
 /**
  * Created by jastrelax on 2018/8/18.

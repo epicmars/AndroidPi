@@ -16,13 +16,15 @@ import com.androidpi.app.base.di.Injectable
 import com.androidpi.app.base.ui.BaseFragment
 import com.androidpi.app.base.ui.BindLayout
 import com.androidpi.app.base.ui.RecyclerAdapter
-import com.androidpi.app.base.widget.literefresh.*
 import com.androidpi.app.buiness.view.NewsView
 import com.androidpi.app.buiness.viewmodel.NewsViewModel
 import com.androidpi.app.databinding.FragmentNewsBinding
 import com.androidpi.app.viewholder.ErrorViewHolder
 import com.androidpi.app.viewholder.NewsViewHolder
 import com.androidpi.app.viewholder.items.ErrorItem
+import com.androidpi.literefresh.behavior.RefreshContentBehavior
+import com.androidpi.literefresh.behavior.RefreshFooterBehavior
+import com.androidpi.literefresh.behavior.RefreshHeaderBehavior
 import com.androidpi.news.model.NewsListModel.Companion.PAGE_SIZE
 import com.androidpi.news.vo.NewsPagination
 import javax.inject.Inject
@@ -123,7 +125,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         //
         val headerParams = binding.scrollHeader.layoutParams as CoordinatorLayout.LayoutParams
         headerBehavior  = RefreshHeaderBehavior<View>(context)
-        headerBehavior.addOnScrollListener(object : OnScrollListener {
+        headerBehavior.addOnScrollListener(object : com.androidpi.literefresh.OnScrollListener {
 
             override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
                 binding.headerProgress.max = max
@@ -139,7 +141,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
 
         })
 
-        headerBehavior.addOnRefreshListener(object : OnRefreshListener {
+        headerBehavior.addOnRefreshListener(object : com.androidpi.literefresh.OnRefreshListener {
 
             override fun onRefreshStart() {
             }
@@ -162,7 +164,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         // Set footer behavior.
         val footerParams = binding.scrollFooter.layoutParams as CoordinatorLayout.LayoutParams
         footerBehavior = RefreshFooterBehavior(context)
-        footerBehavior.addOnLoadListener(object : OnLoadListener {
+        footerBehavior.addOnLoadListener(object : com.androidpi.literefresh.OnLoadListener {
             override fun onLoadStart() {
 
             }
@@ -179,7 +181,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         })
 
 
-        footerBehavior.addOnScrollListener(object : OnScrollListener {
+        footerBehavior.addOnScrollListener(object : com.androidpi.literefresh.OnScrollListener {
             override fun onScroll(parent: CoordinatorLayout, view: View, current: Int, delta: Int, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
             }
 
@@ -199,7 +201,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(), NewsView {
         val contentBehavior = RefreshContentBehavior<View>(context)
         contentParams.behavior = contentBehavior
 
-        contentBehavior.addOnScrollListener(object : OnScrollListener {
+        contentBehavior.addOnScrollListener(object : com.androidpi.literefresh.OnScrollListener {
             override fun onStartScroll(parent: CoordinatorLayout, view: View, initial: Int, trigger: Int, min: Int, max: Int, type: Int) {
                 binding.contentProgress.max = max
             }

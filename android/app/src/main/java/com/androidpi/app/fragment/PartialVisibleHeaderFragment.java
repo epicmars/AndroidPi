@@ -14,16 +14,16 @@ import com.androidpi.app.activity.TemplateActivity;
 import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
-import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
-import com.androidpi.app.base.widget.literefresh.OnLoadListener;
-import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
-import com.androidpi.app.base.widget.literefresh.OnScrollListener;
-import com.androidpi.app.base.widget.literefresh.RefreshFooterBehavior;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.buiness.viewmodel.UnsplashViewModel;
 import com.androidpi.app.buiness.vo.UnsplashPhotoPage;
 import com.androidpi.app.databinding.FragmentPartialVisibleHeaderBinding;
 import com.androidpi.common.image.glide.GlideApp;
+import com.androidpi.literefresh.LiteRefreshHelper;
+import com.androidpi.literefresh.OnLoadListener;
+import com.androidpi.literefresh.OnRefreshListener;
+import com.androidpi.literefresh.OnScrollListener;
+import com.androidpi.literefresh.behavior.RefreshFooterBehavior;
+import com.androidpi.literefresh.behavior.RefreshHeaderBehavior;
 
 /**
  * Created by jastrelax on 2018/8/26.

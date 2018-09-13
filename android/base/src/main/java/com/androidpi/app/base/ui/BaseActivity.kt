@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
-import android.databinding.DataBindingUtil.setContentView
 import android.databinding.ViewDataBinding
 import android.graphics.Color
 import android.os.Build
@@ -19,7 +18,6 @@ import com.androidpi.app.pi.base.R
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 

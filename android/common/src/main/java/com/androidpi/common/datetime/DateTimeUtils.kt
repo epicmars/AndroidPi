@@ -4,10 +4,6 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Created by jastrelax on 2017/6/17.
- */
-
 object DateTimeUtils {
 
     val ONE_SECONDS_MS = 1000
@@ -15,10 +11,10 @@ object DateTimeUtils {
     val ONE_HOUR_MS = ONE_MINUTE_MS * 60
     val ONE_DAY_MS = ONE_HOUR_MS * 24
 
-    val FORMAT_STANDARD: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-    val FORMAT_DATE: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-    val FORMAT_TIME: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
-    val FORMAT_TIME_HH_mm: DateFormat = SimpleDateFormat("HH:mm", Locale.CHINA)
+    val FORMAT_STANDARD: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val FORMAT_DATE: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+    val FORMAT_TIME: DateFormat = SimpleDateFormat("HH:mm:ss")
+    val FORMAT_TIME_HH_mm: DateFormat = SimpleDateFormat("HH:mm")
 
     fun formatDateTime(date: Date): String {
         return FORMAT_STANDARD.format(date)

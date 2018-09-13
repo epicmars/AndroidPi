@@ -5,14 +5,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.androidpi.app.base.ui.UiUtils;
-import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
-import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
-import com.androidpi.app.base.widget.literefresh.OnScrollListener;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
-import com.androidpi.app.base.widget.literefresh.widgets.LoadingView;
-import com.androidpi.app.base.widget.literefresh.widgets.RefreshHeaderLayout;
+import com.androidpi.app.base.utils.UiUtils;
 import com.androidpi.app.cweather.R;
+import com.androidpi.literefresh.LiteRefreshHelper;
+import com.androidpi.literefresh.OnRefreshListener;
+import com.androidpi.literefresh.OnScrollListener;
+import com.androidpi.literefresh.behavior.RefreshHeaderBehavior;
+import com.androidpi.literefresh.widget.LoadingView;
+import com.androidpi.literefresh.widget.RefreshHeaderLayout;
 
 /**
  * Created by jastrelax on 2018/8/18.

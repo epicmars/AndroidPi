@@ -22,7 +22,7 @@
             app:layout_behavior="@string/lr_refresh_content_behavior">
         </com.androidpi.app.widget.SampleContentView>
 
-        <com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout
+        <com.androidpi.literefresh.widget.ScalableHeaderLayout
             android:id="@+id/view_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout>
+        </com.androidpi.literefresh.widget.ScalableHeaderLayout>
 
         <com.androidpi.app.widget.SampleAnchoredView
             android:id="@+id/view_anchored"

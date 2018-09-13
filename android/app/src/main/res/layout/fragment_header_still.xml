@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout
+        <com.androidpi.literefresh.widget.ScalableHeaderLayout
             android:id="@+id/view_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
             <com.androidpi.app.widget.SampleHeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </com.androidpi.app.base.widget.literefresh.widgets.ScalableHeaderLayout>
+        </com.androidpi.literefresh.widget.ScalableHeaderLayout>
 
         <com.androidpi.app.widget.SampleFooterView
             android:id="@+id/view_footer"

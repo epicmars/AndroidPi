@@ -14,13 +14,13 @@ import com.androidpi.app.R;
 import com.androidpi.app.base.ui.BaseFragment;
 import com.androidpi.app.base.ui.BindLayout;
 import com.androidpi.app.base.vm.vo.Resource;
-import com.androidpi.app.base.widget.literefresh.LiteRefreshHelper;
-import com.androidpi.app.base.widget.literefresh.OnRefreshListener;
-import com.androidpi.app.base.widget.literefresh.OnScrollListener;
-import com.androidpi.app.base.widget.literefresh.RefreshHeaderBehavior;
 import com.androidpi.app.buiness.viewmodel.TheMovieDbViewModel;
 import com.androidpi.app.databinding.FragmentMoviePagerBinding;
 import com.androidpi.data.remote.dto.ResTrendingPage;
+import com.androidpi.literefresh.LiteRefreshHelper;
+import com.androidpi.literefresh.OnRefreshListener;
+import com.androidpi.literefresh.OnScrollListener;
+import com.androidpi.literefresh.behavior.RefreshHeaderBehavior;
 
 import java.util.ArrayList;
 import java.util.List;
