@@ -17,9 +17,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            url 'https://dl.bintray.com/jastrelax/maven'
-        }
         google()
         mavenCentral()
         jcenter()

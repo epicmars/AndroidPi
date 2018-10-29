@@ -96,8 +96,11 @@ dependencies {
     // circle indicator
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
-    implementation 'com.androidpi:literefresh:0.8.0-alpha'
-    implementation 'com.androidpi:literefresh-widget:0.8.0-alpha'
+    implementation 'com.androidpi:literefresh:0.9.1-alpha'
+    implementation 'com.androidpi:literefresh-widgets:0.9.1-alpha'
+
+    implementation 'com.androidpi:layoutbinder:1.0.0'
+    kapt 'com.androidpi:layoutbinder-compiler:1.0.0'
 
     implementation project(':appBuiness')
     implementation project(':base')

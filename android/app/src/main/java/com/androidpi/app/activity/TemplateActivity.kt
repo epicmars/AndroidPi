@@ -1,19 +1,12 @@
 package com.androidpi.app.activity
 
-import android.app.Activity
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.databinding.DataBindingUtil.setContentView
-import android.databinding.ViewDataBinding
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import com.androidpi.app.R
@@ -45,7 +38,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>() {
         try {
             val ft = supportFragmentManager.beginTransaction()
             val fragment = factory?.create()
-            ft.replace(R.id.content, fragment)
+            ft.replace(R.id.content, fragment!!)
             ft.commitAllowingStateLoss()
         } catch (e: Exception) {
             Timber.e(e)
